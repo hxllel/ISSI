@@ -10,12 +10,14 @@ export function Alumno() {
         navigate(`/alumno/inscripcion/${id}`);
     };
 
+
     return (
         <div>
             <h1>Alumno {id}</h1>
             <div style={{ marginTop: 8 }}>
                 <button onClick={handleIns}>Inscribirse</button>
                 <button style={{ marginLeft: 8 }} onClick={() => navigate(`/alumno/horarios/${id}`)}>Ver Horarios</button>
+                <button style={{ marginLeft: 8 }} onClick={() => navigate(`/alumno/editarDatos/${id}`)}>Editar datos personales</button>
             </div>
 
         </div>

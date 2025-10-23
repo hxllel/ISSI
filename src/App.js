@@ -1,6 +1,6 @@
 import './App.css';
 import { useState } from 'react';
-import { Formulario } from './components/Formulario';
+import { Formulario } from './components/formulario/Formulario';
 import { Alumno } from './components/alumno/Alumno';
 import { Administrador } from './components/admin/Administrador';
 import { Profesor } from './components/profesor/Profesor';
@@ -17,6 +17,7 @@ import { EditarGrupo } from './components/admin/EditarGrupo';
 import { Distribucion } from './components/admin/Distribucion';
 import { Inscripcion } from './components/alumno/Inscripcion';
 import Horarios from './components/alumno/Horarios';
+import {EditarDatos} from './components/alumno/EditarDatosPersonales';
 function App() {
   const [success, setSuccess] = useState("");
   const [id2, setId2] = useState("");
@@ -54,6 +55,7 @@ function App() {
         <Route path="administrador/gestionarCursos/editarCurso/:id" element={<EditarGrupo />} />
         <Route path="administrador/gestionarCursos/distribucionHorarios/:id" element={<Distribucion />} />
         <Route path ="alumno/inscripcion/:id" element={<Inscripcion />} />
+        <Route path = "alumno/editarDatos/:id" element ={<EditarDatos />} />
       </Routes>
     </BrowserRouter>
   </div>
