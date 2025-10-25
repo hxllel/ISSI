@@ -7,12 +7,33 @@ export function Inscripcion() {
     const navigate = useNavigate();
     const [grupos, setGrupos] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen2, setModalOpen2] = useState(false);
     const [id_dis, setId_dis] = useState("");
     const [distri, setDistri] = useState([]);
     const [gruposagg, setGruposagg] = useState([]);
     const [creditos, setCreditos] = useState([]);
+    const [borr, setBorr] = useState([]);
+    const [idgru, setIdgru] = useState("");
+    const [del, setdel] = useState(null);
 
-
+    const [d, setd] = useState(null);
+    useEffect(() => {
+        fetch("http://localhost:4000/ConsultarBorrador", { credentials: "include", })
+            .then((res) => res.json())
+            .then((data) => {
+                const borr = Array.isArray(data && data.horario) ? data.horario : [];
+                setBorr(borr);
+                console.log('ObtenerGrupo response count =', borr.length);
+            })
+            .catch((err) => {
+                console.error("Error al obtener el horario:", err);
+                setBorr([]);
+            });
+    }, []);
+    const handleClickDel = (id) => {
+        setdel(true);
+        setIdgru(id);
+    }
     useEffect(() => {
 
         fetch(`http://localhost:4000/Grupos/${id}`, { credentials: "include", })
@@ -45,6 +66,39 @@ export function Inscripcion() {
         }
     }, [modalOpen, id_dis]);
 
+    useEffect(() => {
+        fetch("http://localhost:4000/Con", { credentials: "include" })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    setGruposagg(data.tempGrupo);
+                    setCreditos(data.creditos);
+                }
+            })
+    })
+
+    const handleClickD = (id) => {
+        setd(true);
+        setIdgru(id);
+    }
+
+    useEffect(() => {
+        if (d) {
+            fetch(`http://localhost:4000/EliminarBorrador/${idgru}`, { method: "POST", credentials: "include" })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert("Se ha eliminado la materia de tu borrador de horario");
+                    } else {
+                        alert("No se ha podido eliminar la materia al borrador de horario");
+                    }
+                })
+                .catch((err) => console.error("Error al eliminar borrador:", err))
+                .finally(() => setd(false));
+
+        }
+    }, [del, idgru]);
+
     const handleClickAdd = (id) => {
 
         fetch(`http://localhost:4000/Agregar/${id}`, { credentials: "include", method: "POST" })
@@ -52,8 +106,8 @@ export function Inscripcion() {
             then(data => {
                 if (data.success) {
                     alert("Se ha agregado la materia a tu horario");
-                    setGruposagg(data.tempGrupo);
-                    setCreditos(data.creditos);
+                    //setGruposagg(data.tempGrupo);
+                    //setCreditos(data.creditos);
 
 
                 }
@@ -73,8 +127,8 @@ export function Inscripcion() {
             then(data => {
                 if (data.success) {
                     alert("Se ha eliminado la materia a tu horario");
-                    setGruposagg(data.tempGrupo);
-                    setCreditos(data.creditos);
+                    //setGruposagg(data.tempGrupo);
+                    //setCreditos(data.creditos);
 
                 }
                 else {
@@ -83,6 +137,41 @@ export function Inscripcion() {
             }).catch(err => console.error("Error: ", err));
 
     }
+
+    const handleClickImport = () => {
+        fetch("http://localhost:4000/ImportarHorario", { credentials: "include", method: "POST" })
+            .then(res => res.json())
+            .then(data => {
+                if (data.fatal) {
+                    alert(`NO SE HA AGREGADO NINGUNA MATERIA, ${data.msg}`);
+
+                }
+                else if (data.success) {
+                    alert(`Se ha agregado todas las materias a su horario`);
+                }
+                else {
+                    alert(`Se han agregado algunas materias ${data.msg}`);
+                }
+            }).catch(err => console.error("Error ", err));
+
+    }
+
+    useEffect(() => {
+        if (del) {
+            fetch(`http://localhost:4000/EliminarBorrador/${idgru}`, { method: "POST", credentials: "include" })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert("Se ha eliminado la materia de tu borrador de horario");
+                    } else {
+                        alert("No se ha podido eliminar la materia al borrador de horario");
+                    }
+                })
+                .catch((err) => console.error("Error al eliminar borrador:", err))
+                .finally(() => setdel(false));
+
+        }
+    }, [del, idgru]);
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -108,7 +197,8 @@ export function Inscripcion() {
 
     return (<section>
 
-        <button>Importar del borrador</button>
+        <button onClick={() => { handleClickImport() }} >Importar del borrador</button>
+        <button onClick={() => { setModalOpen2(true) }}>Visualizar borrador de horario</button>
 
         <h1>Grupos disponibles</h1>
         <table border="1" cellPadding={5}>
@@ -257,7 +347,54 @@ export function Inscripcion() {
             </table>
 
         </Modal>
+        <Modal open={modalOpen2} onClose={() => setModalOpen2(false)}>
+            <h1>Borrador de horario</h1>
+            <table border="1" cellPadding={5}>
+                <thead>
+                    <tr>
+                        <th>Grupo</th>
+                        <th>Profesor</th>
+                        <th>Calificacion del profesor</th>
+                        <th>Materia</th>
+                        <th>Cupo</th>
+                        <th>Creditos Necesarios </th>
+                        <th>Lunes</th>
+                        <th>Martes</th>
+                        <th>Miercoles</th>
+                        <th>Jueves</th>
+                        <th>Viernes</th>
+                        <th>Es valido</th>
+                        <th>Acciones</th>
 
+                    </tr>
+                </thead>
+                <tbody>
+                    {borr.length > 0 ? (
+                        borr.map((dato) => (
+                            <tr key={dato.id}>
+                                <td>{dato.Grupo.nombre}</td>
+                                <td>{dato.profesor.nombre} {dato.profesor.ape_paterno} {dato.profesor.ape_materno} </td>
+                                <td>{dato.calificacion}</td>
+                                <td>{dato.materia}</td>
+                                <td>{dato.Grupo.cupo}</td>
+                                <td>{dato.Grupo.Unidad_Aprendizaje.credito}</td>
+                                <td>{dato.horas_lun || " "}</td>
+                                <td>{dato.horas_mar || " "}</td>
+                                <td>{dato.horas_mie || " "}</td>
+                                <td>{dato.horas_jue || " "}</td>
+                                <td>{dato.horas_vie || " "}</td>
+                                <td>{dato.valido === 1 ? "Es valido" : " No es valido"}</td>
+                                <td><button onClick={() => handleClickD(dato.id_grupo)}>Retirar del borrador</button></td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr colSpan="12"><td>No hay datos disponibles</td></tr>
+                    )}
+                </tbody>
+
+            </table>
+
+        </Modal>
 
 
     </section>);
