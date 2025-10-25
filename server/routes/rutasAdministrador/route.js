@@ -131,10 +131,13 @@ module.exports = (passport) => {
         const {grado, nombre, apellido_p, apellido_m, fecha_nacimiento, tipo_sangre, CURP, nacionalidad, calle, numero_ex, numero_in, codigo_postal, colonia, delegacion, ciudad, telefono, correo, RFC } = req.body;
         const contra = uuidv4().replace(/-/g, "").substring(0, 15);
         try{
+            console.log(contra);
+            const salt = await bcrypt.genSalt(10);
+            const contraHashed = await bcrypt.hash(contra, salt);
 
             const CrearProfesor = await bd.DatosPersonales.create({
                 id:RFC,
-                contrasena: contra,
+                contrasena: contraHashed,
                 tipo_usuario: "profesor",
                 nombre: nombre,
                 ape_paterno: apellido_p,

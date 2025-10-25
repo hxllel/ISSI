@@ -14,6 +14,8 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   const [idgru, setIdgru] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
+  const [del, setdel] = useState(null);
+
 
   useEffect(() => {
     fetch("http://localhost:4000/ObtenerGrupo", { credentials: "include", })
@@ -49,6 +51,11 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
     setIdgru(id);
   }
 
+  const handleClickDel = (id) => {
+    setdel(true);
+    setIdgru(id);
+  }
+
 
   useEffect(() => {
     if (add) {
@@ -65,6 +72,23 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
         .finally(() => setAdd(false));
     }
   }, [add, idgru]);
+
+  useEffect(() => {
+    if (del) {
+      fetch(`http://localhost:4000/EliminarBorrador/${idgru}`, { method: "POST", credentials: "include" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Se ha eliminado la materia de tu borrador de horario");
+          } else {
+            alert("No se ha podido eliminar la materia al borrador de horario");
+          }
+        })
+        .catch((err) => console.error("Error al eliminar borrador:", err))
+        .finally(() => setAdd(false));
+
+    }
+  }, [del, idgru]);
 
 
 
@@ -146,6 +170,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
               <th>Calificacion del profesor</th>
               <th>Materia</th>
               <th>Cupo</th>
+              <th>Creditos Necesarios </th>
               <th>Lunes</th>
               <th>Martes</th>
               <th>Miercoles</th>
@@ -165,13 +190,14 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
                   <td>{dato.calificacion}</td>
                   <td>{dato.materia}</td>
                   <td>{dato.Grupo.cupo}</td>
+                  <td>{dato.Grupo.Unidad_Aprendizaje.credito}</td>
                   <td>{dato.horas_lun || " "}</td>
                   <td>{dato.horas_mar || " "}</td>
                   <td>{dato.horas_mie || " "}</td>
                   <td>{dato.horas_jue || " "}</td>
                   <td>{dato.horas_vie || " "}</td>
                   <td>{dato.valido === 1 ? "Es valido" : " No es valido"}</td>
-                  <td><button>Retirar del borrador</button></td>
+                  <td><button onClick={() => handleClickDel(dato.id_grupo)}>Retirar del borrador</button></td>
                 </tr>
               ))
             ) : (
