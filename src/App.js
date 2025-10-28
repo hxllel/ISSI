@@ -4,6 +4,7 @@ import { Formulario } from "./components/formulario/Formulario";
 import { Alumno } from "./components/alumno/Alumno";
 import { Administrador } from "./components/admin/Administrador";
 import { Profesor } from "./components/profesor/Profesor";
+import { ClasesImpartidas } from "./components/profesor/ClasesImpartidas";
 import { RegistrarAlumnos } from "./components/admin/RegistrarAlumnos";
 import { RegistrarProfesores } from "./components/admin/RegistrarProfesores";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -47,6 +48,7 @@ function App() {
 
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/profesor/:id" element={<Profesor />} />
+          <Route path="/profesor/:id/clases" element={<ClasesImpartidas />} />
           <Route
             path="administrador/gestionarCursos"
             element={<GestionarCursos />}

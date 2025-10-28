@@ -60,7 +60,6 @@ export function GestionarCursos() {
         <section>
             <h1>Gestionar Cursos</h1>
             <button onClick={handleClickCur}>Registrar Grupo</button>
-            <button>Importar csv</button>
             <table border="1" cellPadding={5}>
                 <thead>
                     <tr>
