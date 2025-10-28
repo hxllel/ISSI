@@ -75,7 +75,7 @@ function App() {
             element={<RegistrarAlumnos />}
           />
           <Route
-            path="administrador/gestionarAlumnos/editarAlumno/:id"
+            path="/admin/gestionarAlumnos/editarAlumnos/:id"
             element={<EditarAlumnos />}
           />
           <Route

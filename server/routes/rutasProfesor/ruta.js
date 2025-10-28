@@ -31,7 +31,7 @@ module.exports = (passport) => {
 
   router.post("/GuardarAsistencias", async (req, res) => {
     try {
-      const { grupo, asistencias } = req.body; // 👈 lo que manda React
+      const { grupo, asistencias } = req.body;
       const currentDate = new Date();
 
       if (!asistencias || !Array.isArray(asistencias)) {
