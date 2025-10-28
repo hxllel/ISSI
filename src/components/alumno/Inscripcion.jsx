@@ -43,7 +43,7 @@ export function Inscripcion() {
                 )
                 .catch(err => console.error("Error la distribucion de horas del grupo:", err));
         }
-    }, [modalOpen, id_dis]);
+    }, [modalOpen, id_dis]); 
 
     const handleClickAdd = (id) => {
 

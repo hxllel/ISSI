@@ -281,7 +281,7 @@ VALUES (
         'maria_lopez@gmail.com',
         'doctorado en ciencias',
         'activo'
-    );
+    )
 
 insert into
     carrera (

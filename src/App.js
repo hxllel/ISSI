@@ -16,6 +16,9 @@ import { EditarProfesores } from './components/admin/EditarProfesores';
 import { EditarGrupo } from './components/admin/EditarGrupo';
 import { Distribucion } from './components/admin/Distribucion.jsx';
 import { Inscripcion } from './components/alumno/Inscripcion.jsx';
+import { EditarDatos } from './components/alumno/EditarDatosPersonales.jsx';
+import  Horarios  from "./components/alumno/Horarios";
+
 function App() {
   const [success, setSuccess] = useState("");
   const [id2, setId2] = useState("");
@@ -38,6 +41,7 @@ function App() {
           )
         } />
         <Route path="/alumno/:id" element={<Alumno />} />
+        <Route path="/alumno/horarios/:id" element={<Horarios />} />
 
         <Route path="/administrador" element={<Administrador />} />
         <Route path="/profesor" element={<Profesor />} />
@@ -47,11 +51,12 @@ function App() {
         <Route path="administrador/gestionarProfesores" element={<GestionarProfesores />} />
         <Route path="administrador/gestionarAlumnos" element={<GestionarAlumnos />} />
         <Route path="administrador/gestionarAlumnos/registrarAlumno" element={<RegistrarAlumnos />} />
-        <Route path="administrador/admin/gestionarAlumnos/editarAlumno/:id" element={<EditarAlumnos />} />
+        <Route path="/admin/gestionarAlumnos/editarAlumnos/:id" element={<EditarAlumnos />} />
         <Route path="administrador/gestionarProfesores/editarProfesor/:id" element={<EditarProfesores />} />
         <Route path="administrador/gestionarCursos/editarCurso/:id" element={<EditarGrupo />} />
         <Route path="administrador/gestionarCursos/distribucionHorarios/:id" element={<Distribucion />} />
         <Route path ="alumno/inscripcion/:id" element={<Inscripcion />} />
+        <Route path ="/alumno/editarDatos/:id" element={<EditarDatos/>} />
       </Routes>
     </BrowserRouter>
   </div>

@@ -20,8 +20,7 @@ export function GestionarAlumnos() {
   const handleClickProf = () => navigate("../administrador/gestionarProfesores");
   const handleClickCursos = () => navigate("../administrador/gestionarCursos");
   const handleRegistrar = () => navigate("registrarAlumno");
-  const handleClickEdit = (id) => {
-        navigate(`editarAlumno/${id}`);
+  const handleClickEdit = (id) => { navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
     };
   const handleAbrirModal = (id) => {
     setMostrarModal(true);
@@ -81,7 +80,7 @@ export function GestionarAlumnos() {
           <button onClick={handleClickCursos} className="menu-item">Cursos</button>
           <button className="menu-item">Informes</button>
         </nav>
-        <button className="cerrar-sesion">⎋ Cerrar Sesión</button>
+        <button className="logout">Cerrar sesión</button>
       </aside>
 
       {/* CONTENIDO PRINCIPAL */}

@@ -82,7 +82,7 @@ export function RegistrarAlumnos() {
             {/* Sidebar */}
             <aside className="sidebar">
                 <div className="logo">
-                    <img src="ipn.png" alt="Logo" className="logo-img" />
+                    <img src="/ipn.png" alt="Logo" className="logo-img" />
                     <span>Gestión Escolar</span>
                 </div>
                 <nav className="menu">

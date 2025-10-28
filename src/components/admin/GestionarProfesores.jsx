@@ -68,7 +68,7 @@ export function GestionarProfesores() {
           <button onClick={handleClickCursos} className="menu-item">Cursos</button>
           <button className="menu-item">Informes</button>
         </nav>
-        <button className="cerrar-sesion">⎋ Cerrar Sesión</button>
+        <button className="logout">Cerrar sesión</button>
       </aside>
 
       {/* CONTENIDO PRINCIPAL */}
