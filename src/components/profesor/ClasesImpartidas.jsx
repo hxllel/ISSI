@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 
 export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const params = useParams();
   const [datos, setDatos] = useState([]);
+    const navigate = useNavigate();
 
   const profesorId = propProfesorId || params.id;
 
   // removed states related to borrador/modal since not used
 
-
+    const handleClickLista = (id) =>{
+        navigate(`/profesor/PaseLista/${id}`);
+    }
   useEffect(() => {
     fetch(`http://localhost:4000/ObtenerCursos/Prof/:${profesorId}`, { credentials: "include" })
       .then((res) => res.json())
@@ -270,6 +273,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
                 <td>
                   <button style={{ marginLeft: 8 }} onClick={() => handleGenerarPDF(dato)}>Generar lista PDF</button>
                   <button style={{ marginLeft: 8 }} onClick={() => handleExportExcel(dato)}>Exportar lista Excel</button>
+                  <button style={{ marginLeft: 8 }} onClick={() => handleClickLista(dato.id)}>Pasar Lista</button>
                 </td>
               </tr>
             )

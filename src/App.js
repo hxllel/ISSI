@@ -19,6 +19,7 @@ import { Distribucion } from "./components/admin/Distribucion";
 import { Inscripcion } from "./components/alumno/Inscripcion";
 import Horarios from "./components/alumno/Horarios";
 import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
+import { PaseLista } from "./components/profesor/PaseLista";
 function App() {
   const [success, setSuccess] = useState("");
   const [id2, setId2] = useState("");
