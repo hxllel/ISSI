@@ -418,6 +418,34 @@ router.post("/AgregarDist/:id", async (req, res) => {
             console.error("Error al obtener los cursos: ", error);
         }
     });
+    router.get("/ObtenerCursos/Prof/:id", async(req,res)=>{
+        const us = req.user.id;
+        try{
+            const cursos = await bd.Grupo.findAll({
+                include: [                     
+                    {
+
+                        model: bd.DatosPersonales,
+                        atributes :["nombre", "ape_paterno", "ape_materno"]
+                    },
+                    {
+                    
+                        model: bd.Unidad_Aprendizaje,
+                        atributes: ["nombre", "carrera"],
+                     
+                    }
+                ],
+                where: {id_prof: us},
+                raw: true,
+                nest: true
+            }); 
+            
+            res.json({cursos: cursos});
+             
+        }catch(error){
+            console.error("Error al obtener los cursos: ", error);
+        }
+    });
 
     router.get("/ObtenerUA", async(req,res)=>{
 
@@ -429,6 +457,25 @@ router.post("/AgregarDist/:id", async (req, res) => {
             console.error("Error al obtener las UA: ", error);
         }
     });
+
+        router.get("/ObtenerInscritos/:id", async(req,res)=>{
+            const {id} = req.params;
+            try{
+                const inscritos = await bd.Mat_Inscritos.findAll({
+                    where: { id_grupo: id },
+                    include: [
+                        { model: bd.Horario, include: [{ model: bd.DatosPersonales }] },
+                        { model: bd.Grupo, include: [{ model: bd.DatosPersonales }, { model: bd.Unidad_Aprendizaje }] }
+                    ],
+                    raw: true,
+                    nest: true
+                });
+                return res.json({ inscritos: inscritos });
+            }catch(error){
+                console.error("Error al obtener los inscritos: ", error);
+                return res.status(500).json({ error: "Error interno al obtener inscritos" });
+            }
+        });
 
 
     router.delete("/EliminarAlumno/:id", async(req,res)=>{
