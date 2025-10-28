@@ -91,6 +91,7 @@ function App() {
           />
           <Route path="alumno/inscripcion/:id" element={<Inscripcion />} />
           <Route path="alumno/editarDatos/:id" element={<EditarDatos />} />
+          <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
         </Routes>
       </BrowserRouter>
     </div>

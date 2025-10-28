@@ -209,6 +209,15 @@ create table borrador_horario (
     CONSTRAINT FK_BOR_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
 );
 
+create table lista (
+    id varchar(15) not null,
+    id_inscrito varchar(15) not null,
+    fecha date not null,
+    asistencia varchar(15) not null,
+    CONSTRAINT PK_LIS PRIMARY KEY (id),
+    CONSTRAINT FK_LIS_MAI FOREIGN KEY (id_inscrito) REFERENCES mat_inscritos (id)
+);
+
 INSERT INTO
     datos_personales (
         id,
