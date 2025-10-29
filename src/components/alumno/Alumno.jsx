@@ -8,6 +8,7 @@ export function Alumno() {
   const { id } = useParams();
 
   const [alumno, setAlumno] = useState(null);
+  const [horario, setHorario] = useState([]);
 
     useEffect(() => {
   fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
@@ -19,6 +20,14 @@ export function Alumno() {
     .catch(() => setAlumno(null));
 }, [id]);
 
+  useEffect(()=>{
+    fetch(`http://localhost:4000/ObtenerHorario/${id}`, {credentials : "include"})
+    .then((res) => res.json())
+    .then((data) => {
+      setHorario(data.horario);
+    })
+    .catch(() => setAlumno(null));
+  }, [id]);
 
 
   const handleIns = () => {navigate(`/alumno/inscripcion/${id}`);};
@@ -65,65 +74,45 @@ export function Alumno() {
         <section className="horario-section">
           <h2>Horario Semanal</h2>
           <table className="horario-table">
-            <thead>
-              <tr>
-                <th>Profesor</th>
-                <th>Materia</th>
-                <th>Lunes</th>
-                <th>Martes</th>
-                <th>Miércoles</th>
-                <th>Jueves</th>
-                <th>Viernes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Dr. Ricardo Pérez</td>
-                <td>Cálculo Diferencial</td>
-                <td><span className="horario">09:00 - 10:30</span></td>
-                <td></td>
-                <td><span className="horario">09:00 - 10:30</span></td>
-                <td></td>
-                <td><span className="horario">09:00 - 10:30</span></td>
-              </tr>
-              <tr>
-                <td>Mtra. Ana García</td>
-                <td>Programación Orientada a Objetos</td>
-                <td></td>
-                <td><span className="horario">11:00 - 13:00</span></td>
-                <td></td>
-                <td><span className="horario">11:00 - 13:00</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Lic. Luis Hernández</td>
-                <td>Historia Universal Moderna</td>
-                <td><span className="horario">14:00 - 15:30</span></td>
-                <td></td>
-                <td><span className="horario">14:00 - 15:30</span></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Dra. Laura Rojas</td>
-                <td>Física Clásica</td>
-                <td><span className="horario">09:00 - 10:30</span></td>
-                <td></td>
-                <td></td>
-                <td><span className="horario">09:00 - 10:30</span></td>
-                <td><span className="horario">09:00 - 10:30</span></td>
-              </tr>
-              <tr>
-                <td>Mtro. Carlos Salazar</td>
-                <td>Electrónica Analógica</td>
-                <td><span className="horario">11:00 - 13:00</span></td>
-                <td></td>
-                <td><span className="horario">11:00 - 13:00</span></td>
-                <td></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+  <thead>
+    <tr>
+      <th>Profesor</th>
+      <th>Materia</th>
+      <th>Lunes</th>
+      <th>Martes</th>
+      <th>Miércoles</th>
+      <th>Jueves</th>
+      <th>Viernes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {horario.map((h, index) => (
+      <tr key={index}>
+        <td>{h.profesor}</td>
+        <td>{h.materia}</td>
+
+        {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dia) => {
+          const distrib = h.distribuciones.filter((d) => d.dia === dia);
+          return (
+            <td key={dia}>
+              {distrib.length > 0 ? (
+                distrib.map((d, i) => (
+                  <div key={i} className="horario">
+                    {d.hora_ini} - {d.hora_fin}
+                  </div>
+                ))
+              ) : (
+                ""
+              )}
+            </td>
+          );
+        })}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+
 
           <div className="boton-container">
             <button className="comprobante-btn">

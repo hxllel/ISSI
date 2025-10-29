@@ -10,7 +10,16 @@ export function PaseLista() {
   useEffect(() => {
     fetch(`http://localhost:4000/AlumnosInscritos/${id}`, { credentials: "include" })
       .then((res) => res.json())
-      .then((data) => setAlumnos(data.alumnos))
+      .then((data) =>{
+        if(data.success){
+            setAlumnos(data.alumnos)
+        }
+        else{
+          alert("Ya no puede pasar lista del dia de hoy");
+          navigate(`/profesor/${data.profe}`);
+
+        }
+      }) 
       .catch((err) => console.error("Error al obtener los alumnos", err));
   }, [id]);
 
@@ -30,7 +39,7 @@ export function PaseLista() {
       asistencia,
     }));
 
-    fetch("http://localhost:4000/GuardarAsistencias", {
+    fetch(`http://localhost:4000/GuardarAsistencias/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -40,7 +49,7 @@ export function PaseLista() {
       .then((data) =>   
         {if(data.success){
                 alert(data.msg);
-                navigate(`/profesor/${id}`);
+                navigate(`/profesor/${data.profe}`);
             }})
       .catch((err) => console.error("Error al enviar asistencias:", err));
   };
@@ -78,7 +87,7 @@ export function PaseLista() {
           </tbody>
         </table>
 
-        <button type="submit">Enviar Pase de Lista</button>
+        <button type="submit">Guardar</button>
       </form>
     </section>
   );
