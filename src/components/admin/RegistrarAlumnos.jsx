@@ -5,6 +5,7 @@ import "./RegistrarAlumnos.css";
 export function RegistrarAlumnos() {
     const navigate = useNavigate();
     
+    const [id, setId] = useState("");
     const [nombre, setNombre] = useState("")
     const [apellido_p, setApellido_p] = useState("")
     const [apellido_m, setApellido_m] = useState("")
@@ -58,7 +59,7 @@ export function RegistrarAlumnos() {
             credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                nombre, apellido_p, apellido_m, fecha_nacimiento, tipo_sangre,
+                id, nombre, apellido_p, apellido_m, fecha_nacimiento, tipo_sangre,
                 CURP, nacionalidad, calle, numero_ex, numero_in, codigo_postal,
                 colonia, delegacion, ciudad, telefono, correo, carreraSeleccionada
             }),
@@ -69,7 +70,9 @@ export function RegistrarAlumnos() {
             const data = JSON.parse(text);
             if (data.success) {
                 alert("Alumno registrado correctamente");
-            } else {
+
+                navigate(`../administrador/gestionarAlumnos`)         
+               } else {
                 setError2(true);
             }
         } catch (error) {
@@ -293,11 +296,11 @@ export function RegistrarAlumnos() {
                                     </div>
 
                                     <div className="form-group">
-                                        <label>Créditos Disponibles</label>
+                                        <label>Boleta</label>
                                         <input 
                                             type="number" 
-                                            value={creditos_disponibles} 
-                                            onChange={(e) => setCreditos_disponibles(parseInt(e.target.value) || 0)}
+                                            value={id} 
+                                            onChange={(e) => setId(parseInt(e.target.value) || 0)}
                                             min="0"
                                         />
                                     </div>
@@ -322,17 +325,6 @@ export function RegistrarAlumnos() {
                                         />
                                     </div>
 
-                                    <div className="form-group">
-                                        <label>Estado</label>
-                                        <select 
-                                            value={estado} 
-                                            onChange={(e) => setEstado(e.target.value)}
-                                            className="estado-select"
-                                        >
-                                            <option value="Activo">Activo</option>
-                                            <option value="Inactivo">Inactivo</option>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
 

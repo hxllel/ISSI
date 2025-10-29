@@ -170,7 +170,6 @@ export function RegistrarProfesores() {
                                             />
                                         </div>
                                     </div>
-
                                     <div className="form-row">
                                         <div className="form-group">
                                             <label>CURP *</label>
