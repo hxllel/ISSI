@@ -10,6 +10,25 @@ module.exports = (passport) => {
   router.get("/AlumnosInscritos/:id", async (req, res) => {
     const { id } = req.params;
 
+    const currentDate = new Date().toISOString().split("T")[0];
+    const val = await bd.Lista.count({
+      where: { fecha: currentDate },
+      include: [
+        {
+          model: bd.Mat_Inscritos,
+          where: { id_grupo: id },
+        },
+      ],
+    });
+    const prof = await bd.DatosPersonales.findOne({
+      include: [
+        {
+          model: bd.Grupo,
+          where: { id: id },
+        },
+      ],
+    });
+
     const alum = await bd.DatosPersonales.findAll({
       where: { tipo_usuario: "alumno" },
       include: [
@@ -26,14 +45,27 @@ module.exports = (passport) => {
         },
       ],
     });
-    return res.json({ alumnos: alum });
+
+    if (val > 0) {
+      return res.json({ success: false, profe: prof.id });
+    } else {
+      return res.json({ alumnos: alum, success: true, profe: prof.id });
+    }
   });
 
-  router.post("/GuardarAsistencias", async (req, res) => {
+  router.post("/GuardarAsistencias/:id", async (req, res) => {
     try {
       const { grupo, asistencias } = req.body;
-      const currentDate = new Date();
-
+      const { id } = req.params;
+      const currentDate = new Date().toISOString().split("T")[0];
+      const prof = await bd.DatosPersonales.findOne({
+        include: [
+          {
+            model: bd.Grupo,
+            where: { id: id },
+          },
+        ],
+      });
       if (!asistencias || !Array.isArray(asistencias)) {
         return res.status(400).json({
           success: false,
@@ -65,6 +97,7 @@ module.exports = (passport) => {
       return res.json({
         success: true,
         msg: "Se registró la asistencia de hoy correctamente",
+        profe: prof.id,
       });
     } catch (err) {
       console.error("Error al registrar asistencias:", err);

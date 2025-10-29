@@ -162,6 +162,10 @@ Grupo.belongsTo(DatosPersonales, {
   constraints: true,
 });
 
+DatosPersonales.hasOne(Grupo, {
+  foreignKey: "id_prof",
+  targetKey: "id",
+});
 const Distribucion = sequelize.define(
   "Distribucion",
   {
@@ -179,6 +183,10 @@ Distribucion.belongsTo(Grupo, {
   targetKey: "id",
 });
 
+Grupo.hasMany(Distribucion, {
+  foreignKey: "id_grupo",
+  targetKey: "id",
+});
 const Horario = sequelize.define(
   "Horario",
   {
@@ -335,12 +343,16 @@ const Lista = sequelize.define(
   {
     id: { type: DataTypes.STRING(15), primaryKey: true },
     id_inscrito: { type: DataTypes.STRING(15), allowNull: false },
-    fecha: { type: DataTypes.DATE, allowNull: false },
+    fecha: { type: DataTypes.DATEONLY, allowNull: false },
     asistencia: { type: DataTypes.STRING(15), allowNull: false },
   },
   { tableName: "lista", timestamps: false }
 );
 Lista.belongsTo(Mat_Inscritos, {
+  foreignKey: "id_inscrito",
+  targetKey: "id",
+});
+Mat_Inscritos.hasMany(Lista, {
   foreignKey: "id_inscrito",
   targetKey: "id",
 });

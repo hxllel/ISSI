@@ -7,6 +7,88 @@ const { raw } = require("mysql2");
 module.exports = (passport) => {
   const router = express.Router();
 
+  router.get("/ObtenerHorario/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const datos = await bd.Horario.findAll({
+        where: { id_alumno: id },
+        include: [
+          {
+            model: bd.Mat_Inscritos,
+            include: [
+              {
+                model: bd.Grupo,
+                attributes: ["nombre", "turno"],
+                include: [
+                  {
+                    model: bd.Distribucion,
+                    attributes: ["hora_ini", "hora_fin", "dia"],
+                  },
+                  {
+                    model: bd.Unidad_Aprendizaje,
+                    attributes: ["nombre"],
+                  },
+                  {
+                    model: bd.DatosPersonales,
+                    attributes: ["nombre", "ape_paterno", "ape_materno"],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      const materias = [];
+
+      datos.forEach((hor) => {
+        hor.Mat_Inscritos.forEach((ins) => {
+          const grupo = ins.Grupo;
+          const prof = grupo?.DatosPersonale;
+          const materia = grupo?.Unidad_Aprendizaje?.nombre;
+
+          const base = {
+            materia: materia || "Sin materia",
+            grupo: grupo?.nombre || "Sin grupo",
+            turno: grupo?.turno || "Sin turno",
+            profesor: prof
+              ? `${prof.nombre} ${prof.ape_paterno} ${prof.ape_materno}`
+              : "Sin profesor",
+            distribuciones: grupo?.Distribucions?.map((d) => ({
+              dia: d.dia,
+              hora_ini: d.hora_ini,
+              hora_fin: d.hora_fin,
+            })) || [
+              {
+                dia: "Sin día",
+                hora_ini: "",
+                hora_fin: "",
+              },
+            ],
+          };
+
+          materias.push(base);
+        });
+      });
+
+      const horarioUnificado = Object.values(
+        materias.reduce((acc, curr) => {
+          const key = `${curr.materia}-${curr.grupo}-${curr.turno}`;
+          if (!acc[key]) {
+            acc[key] = { ...curr, distribuciones: [] };
+          }
+          acc[key].distribuciones.push(...curr.distribuciones);
+          return acc;
+        }, {})
+      );
+      res.json({ horario: horarioUnificado });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error al obtener el horario" });
+    }
+  });
+
   router.get("/Grupos/:id", async (req, res) => {
     const us = req.user.id;
 
