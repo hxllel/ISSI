@@ -184,6 +184,8 @@ create table ua_aprobada (
     unidad_aprendizaje varchar(25) not null,
     calificacion_final float not null,
     semestre int not null,
+    periodo varchar(25) not null,
+    fecha date not null,
     metodo_aprobado varchar(15) not null,
     CONSTRAINT PK_UAA PRIMARY KEY (id),
     CONSTRAINT FK_UAA_KAR FOREIGN KEY (id_kardex) REFERENCES kardex (id)
@@ -341,14 +343,14 @@ values (
         'Programacion I',
         8,
         'Ingenieria en Sistemas Computacionales',
-        1
+        2
     ),
     (
         'UA003',
         'Calculo',
         8,
         'Ingenieria en Sistemas Computacionales',
-        1
+        3
     ),
     (
         'UA004',
@@ -363,4 +365,266 @@ values (
         8,
         'Ingenieria en Inteligencia Artificial',
         1
+    );
+
+INSERT INTO
+    datos_personales (
+        id,
+        contrasena,
+        tipo_usuario,
+        nombre,
+        ape_paterno,
+        ape_materno,
+        fecha_nacimiento,
+        tipo_sangre,
+        CURP,
+        nacionalidad,
+        calle,
+        num_exterior,
+        num_interior,
+        codigo_postal,
+        colonia,
+        delegacion,
+        ciudad,
+        telefono,
+        email,
+        situacion,
+        carrera
+    )
+VALUES (
+        "2023631211",
+        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
+        "alumno",
+        "Jorge",
+        "Garcia",
+        "Prieto",
+        "2002-11-15",
+        "O+",
+        "JGP",
+        "Mexicana",
+        "Las lomas",
+        "13",
+        "205",
+        "1234",
+        "Juarez",
+        "Iztacalco",
+        "CDMX",
+        "1234",
+        "1234@gmail.com",
+        "activo",
+        "Ingenieria en Sistemas Computacionales"
+    ),
+    (
+        "2023631212",
+        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
+        "alumno",
+        "Mariana",
+        "Lopez",
+        "Santos",
+        "2003-05-09",
+        "A+",
+        "MLS030509MDFLPR03",
+        "Mexicana",
+        "Av. del Trabajo",
+        "45",
+        "2B",
+        "07890",
+        "Industrial",
+        "Gustavo A. Madero",
+        "CDMX",
+        "5512345678",
+        "mariana.lopez@gmail.com",
+        "activo",
+        "Ingenieria en Sistemas Computacionales"
+    ),
+    (
+        "2023631213",
+        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
+        "alumno",
+        "Carlos",
+        "Ramirez",
+        "Hernandez",
+        "2001-09-22",
+        "B+",
+        "CRH010922HDFRMN07",
+        "Mexicana",
+        "Calle Reforma",
+        "88",
+        "1A",
+        "06400",
+        "Centro",
+        "Cuauhtémoc",
+        "CDMX",
+        "5523456789",
+        "carlos.ramirez@gmail.com",
+        "activo",
+        "Ingenieria en Sistemas Computacionales"
+    );
+
+INSERT INTO
+    kardex (
+        id,
+        id_alumno,
+        promedio,
+        situacion_academica,
+        semestres_restantes
+    )
+VALUES (
+        "K2023631211",
+        "2023631211",
+        8.7,
+        "Regular",
+        10
+    ),
+    (
+        "K2023631212",
+        "2023631212",
+        9.1,
+        "Regular",
+        10
+    ),
+    (
+        "K2023631213",
+        "2023631213",
+        7.5,
+        "Regular",
+        10
+    );
+
+INSERT INTO
+    ua_aprobada (
+        id,
+        id_kardex,
+        unidad_aprendizaje,
+        calificacion_final,
+        semestre,
+        periodo,
+        fecha,
+        metodo_aprobado
+    )
+VALUES
+    -- Alumno: Jorge Garcia Prieto
+    (
+        "UAA001",
+        "K2023631211",
+        "Matematicas Discretas",
+        9.0,
+        1,
+        "2024-1",
+        "2024-06-10",
+        "Ordinario"
+    ),
+    (
+        "UAA002",
+        "K2023631211",
+        "Programacion I",
+        8.5,
+        2,
+        "2024-2",
+        "2024-12-15",
+        "Ordinario"
+    ),
+    (
+        "UAA003",
+        "K2023631211",
+        "Calculo",
+        8.7,
+        3,
+        "2025-1",
+        "2025-06-20",
+        "Ordinario"
+    ),
+
+-- Alumna: Mariana Lopez Santos
+(
+    "UAA004",
+    "K2023631212",
+    "Matematicas Discretas",
+    9.3,
+    1,
+    "2024-1",
+    "2024-06-10",
+    "Ordinario"
+),
+(
+    "UAA005",
+    "K2023631212",
+    "Programacion I",
+    9.0,
+    2,
+    "2024-2",
+    "2024-12-15",
+    "Ordinario"
+),
+(
+    "UAA006",
+    "K2023631212",
+    "Calculo",
+    8.8,
+    3,
+    "2025-1",
+    "2025-06-20",
+    "ETS"
+),
+
+-- Alumno: Carlos Ramirez Hernandez
+(
+    "UAA007",
+    "K2023631213",
+    "Matematicas Discretas",
+    7.9,
+    1,
+    "2024-1",
+    "2024-06-10",
+    "Extraordinario"
+),
+(
+    "UAA008",
+    "K2023631213",
+    "Programacion I",
+    8.2,
+    2,
+    "2024-2",
+    "2024-12-15",
+    "Ordinario"
+),
+(
+    "UAA009",
+    "K2023631213",
+    "Calculo",
+    7.5,
+    3,
+    "2025-1",
+    "2025-06-20",
+    "Recurse"
+);
+
+INSERT INTO
+    estudiante (
+        id,
+        id_usuario,
+        promedio,
+        creditos_disponibles,
+        estado_academico
+    )
+VALUES (
+        'EST001',
+        '2023631211',
+        0.0,
+        25,
+        'Regular'
+    ),
+    (
+        'EST002',
+        '2023631212',
+        0.0,
+        25,
+        'Regular'
+    ),
+    (
+        'EST003',
+        '2023631213',
+        0.0,
+        25,
+        'Regular'
     );

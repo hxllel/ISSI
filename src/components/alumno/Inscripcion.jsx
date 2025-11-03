@@ -15,8 +15,23 @@ export function Inscripcion() {
     const [borr, setBorr] = useState([]);
     const [idgru, setIdgru] = useState("");
     const [del, setdel] = useState(null);
+    const [cursadas ,setCursadas] = useState([]);
 
     const [d, setd] = useState(null);
+
+    useEffect(() => {
+  fetch("http://localhost:4000/ObtenerHistorial", { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      // Extrae solo los nombres de UA aprobadas
+      const nombres = data.historial?.map(h => h.unidad_aprendizaje) || [];
+      setCursadas(nombres);
+    })
+    .catch((err) => {
+      console.error("Error", err);
+    });
+}, []);
+
     useEffect(() => {
         fetch("http://localhost:4000/ConsultarBorrador", { credentials: "include", })
             .then((res) => res.json())
@@ -108,8 +123,6 @@ export function Inscripcion() {
                     alert("Se ha agregado la materia a tu horario");
                     //setGruposagg(data.tempGrupo);
                     //setCreditos(data.creditos);
-
-
                 }
                 else {
                     if (data.err) {
@@ -224,7 +237,7 @@ export function Inscripcion() {
                             <td>{grupo.cupo > 0 ? "Disponible" : "Lleno"}</td>
                             <td>{grupo.cupo}</td>
                             <td>
-                                <button onClick={() => { handleClickAdd(grupo.id) }} disabled={grupo.cupo <= 0 || gruposagg.includes(grupo.id)}>Seleccionar</button>
+                                <button onClick={() => { handleClickAdd(grupo.id) }} disabled={grupo.cupo <= 0 || gruposagg.includes(grupo.id) || cursadas.includes(grupo.Unidad_Aprendizaje.nombre)}>Seleccionar</button>
                                 <button onClick={() => { handleClickAbrir(grupo.id) }}>Mostrar Horario</button>
                             </td>
                         </tr>

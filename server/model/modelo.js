@@ -293,6 +293,8 @@ const UA_Aprobada = sequelize.define(
     unidad_aprendizaje: { type: DataTypes.STRING(25), allowNull: false },
     calificacion_final: { type: DataTypes.FLOAT, allowNull: false },
     semestre: { type: DataTypes.INTEGER, allowNull: false },
+    periodo: { type: DataTypes.STRING(25), allowNull: false },
+    fecha: { type: DataTypes.DATE, allowNull: false },
     metodo_aprobado: { type: DataTypes.STRING(15), allowNull: false },
   },
   { tableName: "ua_aprobada", timestamps: false }

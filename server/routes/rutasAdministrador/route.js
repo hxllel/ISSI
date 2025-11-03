@@ -253,7 +253,6 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
-      console.log("Alumno obtenido: ", alumno);
       return res.json({ alumno: alumno });
     } catch (error) {
       console.error("Error al obtener la informacion del alumno: ", error);
