@@ -515,6 +515,7 @@ module.exports = (passport) => {
         const id = req.user.id;
 
         console.log("creditos restantes", creditos_restantes);
+        console.log("ID: ", id);
 
         const idh = await bd.Horario.findOne({
           where: { id_alumno: id },

@@ -628,3 +628,9 @@ VALUES (
         25,
         'Regular'
     );
+
+INSERT INTO
+    horario (id, id_alumno)
+values ('abc', '2023631211'),
+    ('def', '2023631212'),
+    ('ghi', '2023631213');
