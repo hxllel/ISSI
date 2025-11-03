@@ -31,7 +31,8 @@ export function Alumno() {
 
   const handleIns = () => {navigate(`/alumno/inscripcion/${id}`);};
   const handleEditPer = () => {navigate(`/alumno/editarDatos/${id}`);};
-    const handleHorarios = () => {navigate(`/alumno/horarios/${id}`);};
+  const handleHorarios = () => { navigate(`/alumno/horarios/${id}`);};
+  const handleChat = () => {navigate(`/alumno/Chat`, { state: { alumnoId: id } });};
 
   const handleDescargarComprobante = () => {
     try {
@@ -145,7 +146,7 @@ export function Alumno() {
       <aside className="sidebar">
         <div className="logo">
           <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>Gestión Escolar</span>
+          <span>SAES-R</span>
         </div>
         <nav className="menu">
           <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item active">
@@ -154,7 +155,7 @@ export function Alumno() {
           <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
           <button className="menu-item" onClick={handleHorarios}>Horarios</button>
           <button className="menu-item" onClick = {() => navigate("/alumno/Kardex")}>Kardex</button>
-          <button className="menu-item">Asistente de Chat</button>
+          <button className="menu-item" onClick={handleChat}>Asistente de Chat</button>
           <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
         </nav>
         <button className="logout">Cerrar sesión</button>

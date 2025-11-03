@@ -120,7 +120,7 @@ const Unidad_Aprendizaje = sequelize.define(
   "Unidad_Aprendizaje",
   {
     id: { type: DataTypes.STRING(15), primaryKey: true },
-    nombre: { type: DataTypes.STRING(25), allowNull: false },
+    nombre: { type: DataTypes.STRING(100), allowNull: false },
     credito: { type: DataTypes.FLOAT, allowNull: false },
     carrera: { type: DataTypes.STRING(50), allowNull: false },
     semestre: { type: DataTypes.INTEGER, allowNull: false },
@@ -313,7 +313,7 @@ const Borrador_Horario = sequelize.define(
     id_alumno: { type: DataTypes.STRING(15), allowNull: false },
     id_profesor: { type: DataTypes.STRING(15), allowNull: false },
     calificacion: { type: DataTypes.STRING(25), allowNull: false },
-    materia: { type: DataTypes.STRING(25), allowNull: false },
+    materia: { type: DataTypes.STRING(100), allowNull: false },
     horas_lun: { type: DataTypes.STRING(50), allowNull: true },
     horas_mar: { type: DataTypes.STRING(50), allowNull: true },
     horas_mie: { type: DataTypes.STRING(50), allowNull: true },
@@ -338,6 +338,29 @@ Borrador_Horario.belongsTo(DatosPersonales, {
 Borrador_Horario.belongsTo(Grupo, {
   foreignKey: "id_grupo",
   targetKey: "id",
+});
+
+// Nuevo modelo: Mensajes del chatbot
+const Mensaje_Chat = sequelize.define(
+  "Mensaje_Chat",
+  {
+    id: { type: DataTypes.STRING(15), primaryKey: true },
+    id_usuario: { type: DataTypes.STRING(15), allowNull: false },
+    fecha: { type: DataTypes.DATE, allowNull: false },
+    pregunta_realizada: { type: DataTypes.TEXT, allowNull: false },
+    respuesta_obtenida: { type: DataTypes.TEXT, allowNull: true },
+  },
+  { tableName: "mensaje_chat", timestamps: false }
+);
+
+// Asociación: cada mensaje pertenece a un DatosPersonales (usuario)
+Mensaje_Chat.belongsTo(DatosPersonales, {
+  foreignKey: "id_usuario",
+  targetKey: "id",
+});
+DatosPersonales.hasMany(Mensaje_Chat, {
+  foreignKey: "id_usuario",
+  sourceKey: "id",
 });
 
 const Lista = sequelize.define(
@@ -375,6 +398,7 @@ async function SincronizarModelo() {
     await Kardex.sync();
     await UA_Aprobada.sync();
     await Borrador_Horario.sync();
+    await Mensaje_Chat.sync();
     await Lista.sync();
     console.log("Los modelos fueron sincronizados correctamente");
   } catch (err) {
@@ -416,4 +440,5 @@ module.exports = {
   Carrera,
   Borrador_Horario,
   Lista,
+  Mensaje_Chat,
 };

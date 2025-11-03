@@ -2,6 +2,7 @@ import "./App.css";
 import { useState } from "react";
 import { Formulario } from "./components/formulario/Formulario";
 import { Alumno } from "./components/alumno/Alumno";
+import { ChatbotAsistente } from "./components/alumno/Chat";
 import { Administrador } from "./components/admin/Administrador";
 import { Profesor } from "./components/profesor/Profesor";
 import { ClasesImpartidas } from "./components/profesor/ClasesImpartidas";
@@ -47,6 +48,7 @@ function App() {
             }
           />
           <Route path="/alumno/:id" element={<Alumno />} />
+          <Route path="/alumno/Chat" element={<ChatbotAsistente />} />
           <Route path="/alumno/horarios/:id" element={<Horarios />} />
 
           <Route path="/administrador" element={<Administrador />} />
