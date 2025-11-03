@@ -188,7 +188,6 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         });
       }
 
-      // Convertir a CSV
       const csvContent = [headers.join(','), ...rows.map(r => r.map(cell => '"' + String(cell ?? '').replace(/"/g, '""') + '"').join(','))].join('\n');
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

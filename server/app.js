@@ -16,7 +16,9 @@ const rutaProfesor = require("./routes/rutasProfesor/ruta.js");
 
 const app = express();
 app.set("port", 4000);
-app.use(express.json());
+// Aumentar límite para permitir imágenes en base64
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ limit: "5mb", extended: true }));
 app.use(
   cors({
     origin: "http://localhost:3000",

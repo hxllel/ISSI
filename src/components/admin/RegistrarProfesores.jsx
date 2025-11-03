@@ -62,7 +62,8 @@ export function RegistrarProfesores() {
                 telefono, 
                 correo, 
                 RFC, 
-                grado 
+                grado,
+                fotoBase64: foto || null
             }),
         });
          if (res.ok) {
@@ -301,7 +302,29 @@ export function RegistrarProfesores() {
                                         />
                                     </div>
 
-                                    
+                                    <div className="form-group">
+                                        <label>Foto (opcional)</label>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => {
+                                                const file = e.target.files && e.target.files[0];
+                                                if (!file) { setFoto(null); return; }
+                                                const reader = new FileReader();
+                                                reader.onload = () => {
+                                                    setFoto(typeof reader.result === 'string' ? reader.result : null);
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }}
+                                        />
+                                        {foto && (
+                                            <div style={{ marginTop: 8 }}>
+                                                <img src={foto} alt="Previsualización" style={{ maxWidth: 180, borderRadius: 6, border: '1px solid #ddd' }} />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                                                        
 
                                 </div>
                             </div>

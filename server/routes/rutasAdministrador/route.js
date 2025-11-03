@@ -26,6 +26,7 @@ module.exports = (passport) => {
       ciudad,
       telefono,
       correo,
+      fotoBase64,
     } = req.body;
 
     var ano = new Date().getFullYear();
@@ -40,6 +41,17 @@ module.exports = (passport) => {
     const salt = await bcrypt.genSalt(10);
     const contraHashed = await bcrypt.hash(contra, salt);
     try {
+      // Procesar foto si se envió
+      let fotoBuffer = null;
+      if (fotoBase64) {
+        try {
+          const base64Data = typeof fotoBase64 === 'string' && fotoBase64.includes(',') ? fotoBase64.split(',')[1] : fotoBase64;
+          fotoBuffer = Buffer.from(base64Data, 'base64');
+        } catch (e) {
+          console.warn('No se pudo procesar fotoBase64 en registro, se ignora la foto.');
+        }
+      }
+
       const crearAlumno = await bd.DatosPersonales.create({
         id: id,
         contrasena: contraHashed,
@@ -60,6 +72,7 @@ module.exports = (passport) => {
         ciudad: ciudad,
         telefono: telefono,
         email: correo,
+        foto: fotoBuffer,
         carrera: carr.nombre,
         situacion: "activo",
       });
@@ -169,12 +182,24 @@ module.exports = (passport) => {
       telefono,
       correo,
       RFC,
+      fotoBase64,
     } = req.body;
     const contra = uuidv4().replace(/-/g, "").substring(0, 15);
     try {
       console.log(contra);
       const salt = await bcrypt.genSalt(10);
       const contraHashed = await bcrypt.hash(contra, salt);
+
+      // Procesar foto si se envió
+      let fotoBuffer = null;
+      if (fotoBase64) {
+        try {
+          const base64Data = typeof fotoBase64 === 'string' && fotoBase64.includes(',') ? fotoBase64.split(',')[1] : fotoBase64;
+          fotoBuffer = Buffer.from(base64Data, 'base64');
+        } catch (e) {
+          console.warn('No se pudo procesar fotoBase64 en registro de profesor, se ignora la foto.');
+        }
+      }
 
       const CrearProfesor = await bd.DatosPersonales.create({
         id: RFC,
@@ -197,6 +222,7 @@ module.exports = (passport) => {
         ciudad: ciudad,
         telefono: telefono,
         email: correo,
+        foto: fotoBuffer,
         grado: grado,
         situacion: "activo",
       });
@@ -376,36 +402,83 @@ module.exports = (passport) => {
       email,
       carrera,
     } = req.body;
-    try {
-      const actualizarAlumno = await bd.DatosPersonales.update(
-        {
-          nombre: nombre,
-          ape_paterno: ape_paterno,
-          ape_materno: ape_materno,
-          fecha_nacimiento: fecha_nacimiento,
-          tipo_sangre: tipo_sangre,
-          CURP: CURP,
-          nacionalidad: nacionalidad,
-          calle: calle,
-          num_exterior: num_exterior,
-          num_interior: num_interior,
-          codigo_postal: codigo_postal,
-          colonia: colonia,
-          delegacion: delegacion,
-          ciudad: ciudad,
-          telefono: telefono,
-          email: email,
-          carrera: carrera,
-        },
-        {
-          where: { id: id, tipo_usuario: "alumno" },
-        }
-      );
-      console.log("Alumno actualizado: ");
-      return res.json({ success: true });
-    } catch (error) {
-      console.error("Error al actualizar el alumno: ", error);
-    }
+      try {
+          const fields = {
+              nombre,
+              ape_paterno,
+              ape_materno,
+              fecha_nacimiento,
+              tipo_sangre,
+              CURP,
+              nacionalidad,
+              calle,
+              num_exterior,
+              num_interior,
+              codigo_postal,
+              colonia,
+              delegacion,
+              ciudad,
+              telefono,
+              email,
+              carrera
+          };
+
+          if (req.body.fotoBase64) {
+              try {
+                  const base64Data = typeof req.body.fotoBase64 === 'string' && req.body.fotoBase64.includes(',') ? req.body.fotoBase64.split(',')[1] : req.body.fotoBase64;
+                  fields.foto = Buffer.from(base64Data, 'base64');
+              } catch (e) {
+                  console.warn('No se pudo procesar fotoBase64, ignorando campo foto.');
+              }
+          }
+
+          await bd.DatosPersonales.update(fields, { where: { id: id, tipo_usuario: "alumno" } });
+          console.log("Alumno actualizado: ");
+          return res.json({ success: true });
+      } catch (error) {
+          console.error("Error al actualizar el alumno: ", error);
+          return res.status(500).json({ success: false, error: 'Error al actualizar el alumno' });
+      }
+  });
+
+  // Obtener foto de alumno en binario para consumo en otras vistas
+  router.get('/Alumno/Foto/:id', async (req, res) => {
+      const { id } = req.params;
+      try {
+          const alumno = await bd.DatosPersonales.findOne({
+              attributes: ['foto'],
+              where: { id: id, tipo_usuario: 'alumno' },
+              raw: true
+          });
+          if (!alumno || !alumno.foto) {
+              return res.status(404).send('Foto no encontrada');
+          }
+          res.setHeader('Content-Type', 'image/jpeg');
+          return res.end(alumno.foto);
+      } catch (e) {
+          console.error('Error al obtener foto del alumno:', e);
+          return res.status(500).send('Error interno');
+      }
+  });
+
+  // Obtener foto de profesor en binario para consumo en otras vistas
+  router.get('/Profesor/Foto/:id', async (req, res) => {
+      const { id } = req.params;
+      try {
+          const profesor = await bd.DatosPersonales.findOne({
+              attributes: ['foto'],
+              where: { id: id, tipo_usuario: 'profesor' },
+              raw: true
+          });
+          if (!profesor || !profesor.foto) {
+              return res.status(404).send('Foto no encontrada');
+          }
+          res.setHeader('Content-Type', 'image/jpeg');
+          return res.end(profesor.foto);
+      } catch (e) {
+          console.error('Error al obtener foto del profesor:', e);
+          return res.status(500).send('Error interno');
+      }
   });
 
   router.delete("/EliminarDist/:id", async (req, res) => {
@@ -442,34 +515,47 @@ module.exports = (passport) => {
       email,
       grado,
       RFC,
+      fotoBase64,
     } = req.body;
     try {
+      const fields = {
+        nombre,
+        ape_paterno,
+        ape_materno,
+        fecha_nacimiento,
+        tipo_sangre,
+        CURP,
+        nacionalidad,
+        calle,
+        num_exterior,
+        num_interior,
+        codigo_postal,
+        colonia,
+        delegacion,
+        ciudad,
+        telefono,
+        email,
+        grado,
+      };
+
+      if (fotoBase64) {
+        try {
+          const base64Data = typeof fotoBase64 === 'string' && fotoBase64.includes(',') ? fotoBase64.split(',')[1] : fotoBase64;
+          fields.foto = Buffer.from(base64Data, 'base64');
+        } catch (e) {
+          console.warn('No se pudo procesar fotoBase64 en edición de profesor, se ignora la foto.');
+        }
+      }
+
       const actualizarProfesor = await bd.DatosPersonales.update(
-        {
-          nombre: nombre,
-          ape_paterno: ape_paterno,
-          ape_materno: ape_materno,
-          fecha_nacimiento: fecha_nacimiento,
-          tipo_sangre: tipo_sangre,
-          CURP: CURP,
-          nacionalidad: nacionalidad,
-          calle: calle,
-          num_exterior: num_exterior,
-          num_interior: num_interior,
-          codigo_postal: codigo_postal,
-          colonia: colonia,
-          delegacion: delegacion,
-          ciudad: ciudad,
-          telefono: telefono,
-          email: email,
-          grado: grado,
-        },
+        fields,
         { where: { id: id, tipo_usuario: "profesor" } }
       );
       console.log("Profesor actualizado: ");
       return res.json({ success: true });
     } catch (error) {
       console.error("Error al actualizar el profesor: ", error);
+      return res.status(500).json({ success: false, error: 'Error al actualizar el profesor' });
     }
   });
   router.get("/ObtenerCursos", async (req, res) => {

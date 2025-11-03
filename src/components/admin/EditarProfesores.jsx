@@ -27,6 +27,8 @@ export function EditarProfesores() {
 
     });
 
+    const [fotoBase64, setFotoBase64] = useState(null);
+
     useEffect(() => {
         fetch(`http://localhost:4000/ObtenerProfesor/${id}`, { credentials: "include", })
             .then(res => res.json())
@@ -45,11 +47,16 @@ export function EditarProfesores() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const payload = { ...profesor };
+        if (fotoBase64) {
+            payload.fotoBase64 = fotoBase64;
+        }
+
         fetch(`http://localhost:4000/EditarProfesor/${id}`, {
             method: "PUT",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(profesor),
+            body: JSON.stringify(payload),
         })
             .then(res => res.json())
             .then(data => {
@@ -60,6 +67,17 @@ export function EditarProfesores() {
                     alert("Error al editar el profesor");
                 }
             }).catch(err => console.error("Error al editar el profesor:", err));
+    };
+
+    const handleFotoChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = reader.result;
+            setFotoBase64(typeof result === 'string' ? result : null);
+        };
+        reader.readAsDataURL(file);
     };
 
     return (
@@ -102,6 +120,14 @@ export function EditarProfesores() {
                 <input type="text" name="RFC" value={profesor.RFC} onChange={handleChange} />
                 <label>Grado:</label>
                 <input type="text" name="grado" value={profesor.grado} onChange={handleChange} />
+
+                <label>Foto (opcional):</label>
+                <input type="file" accept="image/*" onChange={handleFotoChange} />
+                {fotoBase64 && (
+                    <div style={{ margin: '8px 0' }}>
+                        <img src={fotoBase64} alt="Previsualización" style={{ maxWidth: '200px', borderRadius: '6px', border: '1px solid #ddd' }} />
+                    </div>
+                )}
 
                 <button type="submit">Guardar Cambios</button>
             </form>

@@ -26,6 +26,7 @@ export function EditarAlumnos() {
     });
 
     const [carreras, setCarreras] = useState([]);
+    const [fotoBase64, setFotoBase64] = useState(null);
 
     useEffect(() => {
         fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include", })
@@ -50,11 +51,14 @@ export function EditarAlumnos() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        const payload = { ...alumno };
+        if (fotoBase64) {
+            payload.fotoBase64 = fotoBase64;
+        }
         fetch(`http://localhost:4000/EditarAlumno/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(alumno),
+            body: JSON.stringify(payload),
         })
             .then(res => res.json())
             .then(data => {
@@ -66,6 +70,17 @@ export function EditarAlumnos() {
                 }
             })
             .catch(err => console.error("Error al editar el alumno:", err));
+    };
+
+    const handleFotoChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = reader.result; // data URL: data:image/...;base64,XXXX
+            setFotoBase64(typeof result === 'string' ? result : null);
+        };
+        reader.readAsDataURL(file);
     };
 
     return (
@@ -118,6 +133,14 @@ export function EditarAlumnos() {
                         </option>
                     ))}
                 </select>
+
+                <label>Foto (opcional):</label>
+                <input type="file" accept="image/*" onChange={handleFotoChange} />
+                {fotoBase64 && (
+                    <div style={{ margin: '8px 0' }}>
+                        <img src={fotoBase64} alt="Previsualización" style={{ maxWidth: '200px', borderRadius: '6px', border: '1px solid #ddd' }} />
+                    </div>
+                )}
 
                 <button type="submit">Editar Alumno</button>
             </form>

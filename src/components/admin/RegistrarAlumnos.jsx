@@ -61,7 +61,8 @@ export function RegistrarAlumnos() {
             body: JSON.stringify({
                 id, nombre, apellido_p, apellido_m, fecha_nacimiento, tipo_sangre,
                 CURP, nacionalidad, calle, numero_ex, numero_in, codigo_postal,
-                colonia, delegacion, ciudad, telefono, correo, carreraSeleccionada
+                colonia, delegacion, ciudad, telefono, correo, carreraSeleccionada,
+                fotoBase64: foto || null
             }),
         });
 
@@ -100,10 +101,10 @@ export function RegistrarAlumnos() {
                 <button className="logout">Cerrar sesión</button>
             </aside>
 
-            {/* Contenido principal */}
+            
             <main className="main-content">
                 <section className="gestion-alumnos">
-                    {/* Header con título y búsqueda */}
+                    
                     <div className="header-section">
                         <h1>Gestión de Alumnos</h1>
                         <div className="search-container">
@@ -115,7 +116,6 @@ export function RegistrarAlumnos() {
                         </div>
                     </div>
 
-                    {/* Menú de navegación */}
                     <nav className="alumnos-nav">
                         <button className="nav-btn active">Registrar Alumno</button>
                         <button className="nav-btn">Editar Alumno</button>
@@ -131,7 +131,7 @@ export function RegistrarAlumnos() {
 
                         <form className="formulario" onSubmit={handleSubmit}>
                             <div className="form-grid">
-                                {/* Información Personal */}
+                                
                                 <div className="form-section">
                                     <h3>Información Personal</h3>
                                     <div className="form-group">
@@ -202,6 +202,28 @@ export function RegistrarAlumnos() {
                                                 placeholder="Ej: Mexicana"
                                             />
                                         </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Foto (opcional)</label>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => {
+                                                const file = e.target.files && e.target.files[0];
+                                                if (!file) { setFoto(null); return; }
+                                                const reader = new FileReader();
+                                                reader.onload = () => {
+                                                    setFoto(typeof reader.result === 'string' ? reader.result : null);
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }}
+                                        />
+                                        {foto && (
+                                            <div style={{ marginTop: 8 }}>
+                                                <img src={foto} alt="Previsualización" style={{ maxWidth: 180, borderRadius: 6, border: '1px solid #ddd' }} />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
