@@ -20,6 +20,8 @@ import { Inscripcion } from "./components/alumno/Inscripcion";
 import Horarios from "./components/alumno/Horarios";
 import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
 import { PaseLista } from "./components/profesor/PaseLista";
+import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
+
 function App() {
   const [success, setSuccess] = useState("");
   const [id2, setId2] = useState("");
@@ -93,6 +95,8 @@ function App() {
           <Route path="alumno/inscripcion/:id" element={<Inscripcion />} />
           <Route path="alumno/editarDatos/:id" element={<EditarDatos />} />
           <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
+
+          <Route path="/alumno/Kardex" element={<HistorialAcademico />} />
         </Routes>
       </BrowserRouter>
     </div>

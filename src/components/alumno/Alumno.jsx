@@ -14,7 +14,6 @@ export function Alumno() {
   fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
     .then((res) => res.json())
     .then((data) => {
-      // data.alumno es el objeto que quieres
       setAlumno(data.alumno || null);
     })
     .catch(() => setAlumno(null));
@@ -48,7 +47,7 @@ export function Alumno() {
           </button>
           <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
           <button className="menu-item" onClick={handleHorarios}>Horarios</button>
-          <button className="menu-item">Kardex</button>
+          <button className="menu-item" onClick = {() => navigate("/alumno/Kardex")}>Kardex</button>
           <button className="menu-item">Asistente de Chat</button>
           <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
         </nav>

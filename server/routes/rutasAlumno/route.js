@@ -506,7 +506,7 @@ module.exports = (passport) => {
   });
 
   router.post("/Inscribirse", async (req, res) => {
-    if (req.session.tempGrupos == []) {
+    if (req.session.tempGrupos.length === 0) {
       return res.json({ success: false });
     } else {
       try {
@@ -514,9 +514,7 @@ module.exports = (passport) => {
         const creditos_restantes = req.session.creditos;
         const id = req.user.id;
 
-        console.log("IDS", ids);
         console.log("creditos restantes", creditos_restantes);
-        console.log("ID US", id);
 
         const idh = await bd.Horario.findOne({
           where: { id_alumno: id },
@@ -779,6 +777,24 @@ module.exports = (passport) => {
       return res
         .status(500)
         .json({ success: false, message: "Error interno del servidor" });
+    }
+  });
+
+  router.get("/ObtenerHistorial", async (req, res) => {
+    const us = req.user.id;
+    try {
+      const k = await bd.Kardex.findOne({ where: { id_alumno: us } });
+      const sems = await bd.UA_Aprobada.findAll({
+        where: { id_kardex: k.id },
+        raw: true,
+        nest: true,
+      });
+
+      const semestres = [...new Set(sems.map((s) => s.semestre))];
+
+      return res.json({ historial: sems, semestres: semestres });
+    } catch (err) {
+      console.log(err);
     }
   });
 
