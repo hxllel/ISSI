@@ -9,16 +9,25 @@ export function HistorialAcademico() {
 
   useEffect(() => {
     fetch("http://localhost:4000/ObtenerHistorial", { credentials: "include" })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 401) {
+          alert("Sesión expirada. Por favor inicia sesión nuevamente.");
+          navigate("/");
+          return null;
+        }
+        return res.json();
+      })
       .then((data) => {
+        if (!data) return; // Si fue 401, data será null
         setHistorial(data.historial || []);
         setSemestres(data.semestres || []);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("Error al obtener historial:", err);
         setHistorial([]);
         setSemestres([]);
       });
-  }, []);
+  }, [navigate]);
 
   // Renderiza una tabla por semestre
   const renderSeccion = (semestre) => {

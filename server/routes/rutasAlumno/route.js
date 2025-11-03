@@ -7,6 +7,24 @@ const { raw } = require("mysql2");
 module.exports = (passport) => {
   const router = express.Router();
 
+  // Nueva ruta: devuelve JSON para que el frontend realice la navegación al Chat
+  // Se normaliza la ruta para usar la misma convención de capitalización que el resto
+  router.get("/Chat/:id", (req, res) => {
+    try {
+      const { id } = req.params;
+      // Respondemos con JSON en vez de redirigir. El frontend debe usar este JSON para navegar.
+      return res.json({
+        success: true,
+        alumnoId: id,
+        path: `/alumno/chat/${id}`,
+        message: "Navegue en el cliente al path indicado para mostrar la vista de chat",
+      });
+    } catch (err) {
+      console.error("Error en /Alumno/Chat/:id ->", err);
+      return res.status(500).json({ success: false, error: "Error al obtener datos para el chat" });
+    }
+  });
+
   router.get("/ObtenerHorario/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -60,12 +78,12 @@ module.exports = (passport) => {
               hora_ini: d.hora_ini,
               hora_fin: d.hora_fin,
             })) || [
-              {
-                dia: "Sin día",
-                hora_ini: "",
-                hora_fin: "",
-              },
-            ],
+                {
+                  dia: "Sin día",
+                  hora_ini: "",
+                  hora_fin: "",
+                },
+              ],
           };
 
           materias.push(base);
@@ -90,8 +108,14 @@ module.exports = (passport) => {
   });
 
   router.get("/Grupos/:id", async (req, res) => {
-    const us = req.user.id;
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        error: "Usuario no autenticado",
+      });
+    }
 
+    const us = req.user.id;
     const { id } = req.params;
 
     const cre = await bd.Estudiante.findOne({
@@ -260,9 +284,8 @@ module.exports = (passport) => {
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.nombre || g.Unidad_Aprendizaje.Nombre)) ||
             "",
-          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${
-            datosProf.ape_materno || ""
-          }`.trim(),
+          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${datosProf.ape_materno || ""
+            }`.trim(),
           calificacion_profesor: datosProf.calificacion || null,
           cupo: g.cupo,
           dias,
@@ -366,6 +389,13 @@ module.exports = (passport) => {
   });
 
   router.get("/Con", async (req, res) => {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        error: "Usuario no autenticado",
+      });
+    }
+
     const us = req.user.id;
     const cre = await bd.Estudiante.findOne({
       where: { id_usuario: us },
@@ -590,6 +620,13 @@ module.exports = (passport) => {
   });
 
   router.get("/ConsultarBorrador", async (req, res) => {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        error: "Usuario no autenticado",
+      });
+    }
+
     try {
       const borr = await bd.Borrador_Horario.findAll({
         where: { id_alumno: req.user.id },
@@ -615,7 +652,11 @@ module.exports = (passport) => {
       });
       return res.json({ horario: borr });
     } catch (err) {
-      console.log(err);
+      console.error("Error en /ConsultarBorrador:", err);
+      return res.status(500).json({
+        success: false,
+        error: "Error al consultar el borrador",
+      });
     }
   });
 
@@ -782,9 +823,22 @@ module.exports = (passport) => {
   });
 
   router.get("/ObtenerHistorial", async (req, res) => {
+    // Validar que el usuario esté autenticado
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        error: "Usuario no autenticado. Por favor inicia sesión.",
+      });
+    }
+
     const us = req.user.id;
     try {
       const k = await bd.Kardex.findOne({ where: { id_alumno: us } });
+
+      if (!k) {
+        return res.json({ historial: [], semestres: [] });
+      }
+
       const sems = await bd.UA_Aprobada.findAll({
         where: { id_kardex: k.id },
         raw: true,
@@ -795,7 +849,37 @@ module.exports = (passport) => {
 
       return res.json({ historial: sems, semestres: semestres });
     } catch (err) {
-      console.log(err);
+      console.error("Error en /ObtenerHistorial:", err);
+      return res.status(500).json({
+        success: false,
+        error: "Error al obtener el historial académico",
+      });
+    }
+  });
+
+  // Obtener mensajes previos del chatbot para un usuario
+  router.get("/MensajesChat/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Opcional: validar que el usuario autenticado sea el mismo que solicita
+      if (req.user && req.user.id !== id && req.user.tipo_usuario !== 'administrador') {
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permiso para acceder a estos mensajes",
+        });
+      }
+
+      // Buscar mensajes asociados al usuario, ordenados por fecha asc
+      const mensajes = await bd.Mensaje_Chat.findAll({
+        where: { id_usuario: id },
+        order: [["fecha", "ASC"]],
+        raw: true,
+      });
+      return res.json({ success: true, messages: mensajes });
+    } catch (err) {
+      console.error("Error al obtener MensajesChat/:id ->", err);
+      return res.status(500).json({ success: false, error: "Error al obtener mensajes" });
     }
   });
 
