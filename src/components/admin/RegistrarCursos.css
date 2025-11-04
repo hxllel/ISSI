@@ -68,3 +68,60 @@
 .rc-alert{ margin-top:16px; padding:12px 14px; border-radius:14px; border:1px solid; font-weight:700; }
 .rc-alert.ok{ color:var(--ok); background:#f1fbf5; border-color:#a8e6c1; }
 .rc-alert.error{ color:var(--err); background:#fff2f1; border-color:#ffc8c1; }
+
+/* ===== Estilo directo para el formulario actual ===== */
+
+.formulario{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* Etiquetas dentro del formulario */
+.formulario label{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:700;
+  color:#111827;
+  margin:4px 0 4px;
+}
+
+/* Línea tenue después del texto de la etiqueta (imitando rc-field) */
+.formulario label::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--azul-10);
+  margin-left:8px;
+  opacity:.8;
+}
+
+/* Inputs y selects dentro del formulario */
+.formulario input,
+.formulario select{
+  width:100%;
+  border:1px solid var(--borde);
+  border-radius:var(--radius-md);
+  padding:10px 12px;
+  outline:none;
+  background:#fff;
+  font-size:.95rem;
+  transition:border .2s, box-shadow .2s, transform .03s ease;
+}
+
+.formulario input:focus,
+.formulario select:focus{
+  border-color:var(--azul);
+  box-shadow:var(--focus);
+}
+
+.formulario input:active{
+  transform:translateY(.5px);
+}
+
+/* Botón del formulario */
+.formulario button{
+  margin-top:16px;
+  align-self:flex-end;
+}

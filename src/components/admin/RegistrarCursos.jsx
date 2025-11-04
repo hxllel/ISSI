@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import "./RegistrarCursos.css"; // 👈 Se agrega el CSS del segundo
 
 export function RegistrarCursos() {
     const navigate = useNavigate();
@@ -46,27 +47,25 @@ export function RegistrarCursos() {
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id_profesor, id_UA, turno, nombre, carrera: carreragru }),
-            }).then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("grupo creado con éxito");
-                        navigate(`/administrador/gestionarCursos`)
-                    } else {
-                        alert("Error al crear el grupo");
-                    }
-                })
-                .catch(err => console.error("Error al crear el grupo:", err));;
+            });
 
+            const data = await res.json();
 
+            if (data.success) {
+                alert("Grupo creado con éxito");
+                navigate(`/administrador/gestionarCursos`);
+            } else {
+                alert("Error al crear el grupo");
+            }
         } catch (error) {
             console.error("Error al registrar el curso:", error);
         }
     };
 
     return (
-        <section>
-            <form className="formulario" onSubmit={handleSubmit}>
-                <label>Numero del grupo:</label>
+        <section className="rc-wrap">
+            <form className="formulario rc-card" onSubmit={handleSubmit}>
+                <label>Número del grupo:</label>
                 <input
                     type="number"
                     name="nombre"
@@ -111,7 +110,9 @@ export function RegistrarCursos() {
                     <option value="Vespertino">Vespertino</option>
                 </select>
 
-                <button type="submit">Registrar Curso</button>
+                <button className="rc-btn primary" type="submit">
+                    Registrar Curso
+                </button>
             </form>
         </section>
     );
