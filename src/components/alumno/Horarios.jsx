@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { FiPlus, FiEye, FiDownload } from "react-icons/fi";
 import Modal from "../Modal";
+import  "./Horarios.css";
 
 
 export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
@@ -16,7 +18,8 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
 
   const [del, setdel] = useState(null);
 
-
+  const navigate = useNavigate();
+  const { id } = useParams();
   useEffect(() => {
     fetch("http://localhost:4000/ObtenerGrupo", { credentials: "include", })
       .then((res) => res.json())
@@ -91,20 +94,40 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   }, [del, idgru]);
 
 
+    const handleIns = () => {navigate(`/alumno/inscripcion/${id}`);};
+    const handleEditPer = () => {navigate(`/alumno/datosPersonales/${id}`);};
+    const handleHorarios = () => {navigate(`/alumno/horarios/${id}`);};
+    const handleLogout = () => {navigate(`/`);};
+
 
   return (
     <section>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2>Horarios de Clase</h2>
 
+      <aside className="sidebar">
+        <div className="logo">
+          <img src="/ipn.png" alt="Logo" className="logo-img" />
+          <span>Gestión Escolar</span>
+        </div>
+        <nav className="menu">
+          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item">Inicio</button>
+          <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
+          <button className="menu-item active" onClick={handleHorarios}>Horarios</button>
+          <button className="menu-item">Kardex</button>
+          <button className="menu-item">Asistente de Chat</button>
+          <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
+        </nav>
+        <button className="logout" onClick={handleLogout}>Cerrar sesión</button>
+      </aside>
+    <main className="main-content">
+      <section className="gestion-alumnos">
+                    <div className="header-section">
+                        <h1>Horarios de Clase</h1>
+                    </div>
+      
 
-        {onClose ? <button onClick={onClose}>Cerrar</button> : null}
-      </div>
-
-      <button onClick={() => setModalOpen(true)}>Ver borrador de horario</button>
-
-
-      <table border="1" cellPadding={5}>
+      
+      <section className="gestion-alumnos">
+      <table className="horario-table1">
         <thead>
           <tr>
             <th>ID</th>
@@ -154,7 +177,10 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
                 <td>{horasPorDia('Miercoles') || ' '}</td>
                 <td>{horasPorDia('Jueves') || ' '}</td>
                 <td>{horasPorDia('Viernes') || ' '}</td>
-                <td><button onClick={() => handleClickAdd(dato.id)} disabled={borr.some(b => b.id_grupo === dato.id)}>Agregar al borrador de horario</button></td>
+                <td><button type="button" className="submit-btn" onClick={() => handleClickAdd(dato.id)} disabled={borr.some(b => b.id_grupo === dato.id)}>
+                  <FiPlus style={{ marginRight: "8px" }} />
+                  Agregar al borrador
+                  </button></td>
               </tr>
             )
           })}
@@ -197,7 +223,8 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
                   <td>{dato.horas_jue || " "}</td>
                   <td>{dato.horas_vie || " "}</td>
                   <td>{dato.valido === 1 ? "Es valido" : " No es valido"}</td>
-                  <td><button onClick={() => handleClickDel(dato.id_grupo)}>Retirar del borrador</button></td>
+                  <td><button type="button" className="submit-btn" onClick={() => handleClickDel(dato.id_grupo)}>
+                    Retirar del borrador</button></td>
                 </tr>
               ))
             ) : (
@@ -208,6 +235,25 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
         </table>
 
       </Modal>
+      
+     
+        
+        <div className="download-button">
+          <button type="button" className="submit-btn" onClick={() => setModalOpen(true)}>
+        <FiEye style={{ marginRight: "8px" }} />
+        Ver borrador
+        </button>
+        
+          <button type="button" className="submit-btn" >
+        <FiDownload style={{ marginRight: "8px" }} />
+        Descargar Horario
+        </button>
+        </div>
+
+      </section>
+      
+      </section>
+      </main>
     </section>
 
 
