@@ -1,0 +1,105 @@
+/* Solo aplicar a la sección de editar datos */
+.editar-datos-section {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+}
+
+.editar-datos-section h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.editar-datos-section form.formulario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 20px;
+}
+
+/* Añadir un poco de espacio arriba dentro del formulario para separar el texto del borde superior */
+.editar-datos-section .formulario {
+    padding-top: 12px;
+}
+
+/* Separar los encabezados de sección del borde superior */
+.form-section h3 {
+    margin-top: 16px;
+    margin-bottom: 10px; /* espaciar también con el contenido siguiente */
+    color: #333;
+}
+
+.editar-datos-section form label {
+    display: block;
+    margin-bottom: 500px;
+    font-weight: bold;
+    color: #555;
+}
+
+.editar-datos-section form input,
+.editar-datos-section form select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.editar-datos-section form input:focus,
+.editar-datos-section form select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+.editar-datos-section form button {
+    grid-column: span 2;
+    padding: 10px 15px;
+    margin-top: 10px;
+    background-color: #6e1c07;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s all;
+}
+
+.editar-datos-section form button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+    .editar-datos-section form.formulario {
+        grid-template-columns: 1fr;
+    }
+}
+
+.submit-btn {
+  background-color: #5f1717;   /* color de fondo */
+  color: white;                /* color del texto */
+  border: none;                /* sin borde */
+  padding: 10px 20px;          /* espacio interno */
+  border-radius: 8px;          /* bordes redondeados */
+  font-family: 'Montserrat', sans-serif; /* fuente */
+  font-weight: 600;
+  cursor: pointer;             /* cambia el cursor */
+  transition: background-color 0.3s ease; /* animación suave */
+  margin: 5px 0;
+}
+
+/* Efecto al pasar el mouse */
+.submit-btn:hover {
+  background-color: #7a1f1f; /* color más claro u oscuro */
+}
+
+.button-group {
+  display: flex;
+  justify-content: center; /* centra los botones */
+  gap: 15px;                /* separa los botones */
+  margin: 20px 0;           /* espacio arriba y abajo */
+}
