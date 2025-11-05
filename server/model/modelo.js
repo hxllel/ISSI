@@ -25,29 +25,29 @@ const DatosPersonales = sequelize.define(
   "DatosPersonales",
   {
     id: { type: DataTypes.STRING(15), primaryKey: true },
-    contrasena: { type: DataTypes.STRING(200), allowNull: false },
-    tipo_usuario: { type: DataTypes.STRING(15), allowNull: false },
-    nombre: { type: DataTypes.STRING(25), allowNull: false },
-    ape_paterno: { type: DataTypes.STRING(25), allowNull: false },
-    ape_materno: { type: DataTypes.STRING(25), allowNull: false },
+    contrasena: { type: DataTypes.TEXT, allowNull: false },
+    tipo_usuario: { type: DataTypes.TEXT, allowNull: false },
+    nombre: { type: DataTypes.TEXT, allowNull: false },
+    ape_paterno: { type: DataTypes.TEXT, allowNull: false },
+    ape_materno: { type: DataTypes.TEXT, allowNull: false },
     fecha_nacimiento: { type: DataTypes.DATE, allowNull: false },
-    RFC: { type: DataTypes.STRING(50) },
-    tipo_sangre: { type: DataTypes.STRING(15), allowNull: false },
-    CURP: { type: DataTypes.STRING(50), allowNull: false },
-    nacionalidad: { type: DataTypes.STRING(50), allowNull: false },
-    calle: { type: DataTypes.STRING(50), allowNull: false },
-    num_exterior: { type: DataTypes.STRING(50), allowNull: false },
-    num_interior: { type: DataTypes.STRING(50), allowNull: false },
-    codigo_postal: { type: DataTypes.STRING(50), allowNull: false },
-    colonia: { type: DataTypes.STRING(50), allowNull: false },
-    delegacion: { type: DataTypes.STRING(50), allowNull: false },
-    ciudad: { type: DataTypes.STRING(50), allowNull: false },
-    telefono: { type: DataTypes.STRING(50), allowNull: false },
-    email: { type: DataTypes.STRING(50), allowNull: false },
+    RFC: { type: DataTypes.TEXT },
+    tipo_sangre: { type: DataTypes.TEXT, allowNull: false },
+    CURP: { type: DataTypes.TEXT, allowNull: false },
+    nacionalidad: { type: DataTypes.TEXT, allowNull: false },
+    calle: { type: DataTypes.TEXT, allowNull: false },
+    num_exterior: { type: DataTypes.TEXT, allowNull: false },
+    num_interior: { type: DataTypes.TEXT, allowNull: false },
+    codigo_postal: { type: DataTypes.TEXT, allowNull: false },
+    colonia: { type: DataTypes.TEXT, allowNull: false },
+    delegacion: { type: DataTypes.TEXT, allowNull: false },
+    ciudad: { type: DataTypes.TEXT, allowNull: false },
+    telefono: { type: DataTypes.TEXT, allowNull: false },
+    email: { type: DataTypes.TEXT, allowNull: false },
     foto: { type: DataTypes.BLOB },
-    grado: { type: DataTypes.STRING(50) },
-    carrera: { type: DataTypes.STRING(40) },
-    situacion: { type: DataTypes.STRING(50) },
+    grado: { type: DataTypes.TEXT },
+    carrera: { type: DataTypes.TEXT },
+    situacion: { type: DataTypes.TEXT },
     calificacion: { type: DataTypes.INTEGER },
   },
   { tableName: "datos_personales", timestamps: false }
@@ -60,8 +60,8 @@ const DatosMedicos = sequelize.define(
     id_usuario: { type: DataTypes.STRING(15), allowNull: false },
     peso: { type: DataTypes.FLOAT, allowNull: false },
     altura: { type: DataTypes.FLOAT, allowNull: false },
-    tipo_sangre: { type: DataTypes.STRING(5), allowNull: false },
-    nss: { type: DataTypes.STRING(30), allowNull: false },
+    tipo_sangre: { type: DataTypes.TEXT, allowNull: false },
+    nss: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "datos_medicos", timestamps: false }
 );
@@ -78,7 +78,7 @@ const Enfermedades = sequelize.define(
   {
     id: { type: DataTypes.STRING(15), primaryKey: true },
     id_dat_med: { type: DataTypes.STRING(15), allowNull: false },
-    descri: { type: DataTypes.STRING(500), allowNull: false },
+    descri: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "enfermedades", timestamps: false }
 );
@@ -95,7 +95,7 @@ const Estudiante = sequelize.define(
     id_usuario: { type: DataTypes.STRING(15), allowNull: false },
     promedio: { type: DataTypes.FLOAT, allowNull: false },
     creditos_disponibles: { type: DataTypes.FLOAT, allowNull: false },
-    estado_academico: { type: DataTypes.STRING(50), allowNull: false },
+    estado_academico: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "estudiante", timestamps: false }
 );
@@ -110,7 +110,7 @@ const Carrera = sequelize.define(
   {
     nombre: { type: DataTypes.STRING(40), primaryKey: true },
     creditos_iniciales: { type: DataTypes.INTEGER, allowNull: false },
-    prefijo_grupo: { type: DataTypes.STRING(10), allowNull: false },
+    prefijo_grupo: { type: DataTypes.TEXT, allowNull: false },
     duracion_max: { type: DataTypes.INTEGER, allowNull: false },
   },
   { tableName: "carrera", timestamps: false }
@@ -120,7 +120,7 @@ const Unidad_Aprendizaje = sequelize.define(
   "Unidad_Aprendizaje",
   {
     id: { type: DataTypes.STRING(15), primaryKey: true },
-    nombre: { type: DataTypes.STRING(100), allowNull: false },
+    nombre: { type: DataTypes.TEXT, allowNull: false },
     credito: { type: DataTypes.FLOAT, allowNull: false },
     carrera: { type: DataTypes.STRING(50), allowNull: false },
     semestre: { type: DataTypes.INTEGER, allowNull: false },
@@ -138,10 +138,10 @@ const Grupo = sequelize.define(
   "Grupo",
   {
     id: { type: DataTypes.STRING(15), primaryKey: true },
-    nombre: { type: DataTypes.STRING(25), allowNull: false },
+    nombre: { type: DataTypes.TEXT, allowNull: false },
     id_ua: { type: DataTypes.STRING(15), allowNull: false, references: {} },
     id_prof: { type: DataTypes.STRING(15), allowNull: false },
-    turno: { type: DataTypes.STRING(15), allowNull: false },
+    turno: { type: DataTypes.TEXT, allowNull: false },
     cupo: { type: DataTypes.INTEGER, allowNull: false },
   },
   { tableName: "grupo", timestamps: false }
@@ -166,14 +166,15 @@ DatosPersonales.hasOne(Grupo, {
   foreignKey: "id_prof",
   targetKey: "id",
 });
+
 const Distribucion = sequelize.define(
   "Distribucion",
   {
     id: { type: DataTypes.STRING(15), primaryKey: true },
     id_grupo: { type: DataTypes.STRING(15), allowNull: false },
-    hora_ini: { type: DataTypes.STRING(15), allowNull: false },
-    hora_fin: { type: DataTypes.STRING(15), allowNull: false },
-    dia: { type: DataTypes.STRING(15), allowNull: false },
+    hora_ini: { type: DataTypes.TEXT, allowNull: false },
+    hora_fin: { type: DataTypes.TEXT, allowNull: false },
+    dia: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "distribucion", timestamps: false }
 );
@@ -187,6 +188,7 @@ Grupo.hasMany(Distribucion, {
   foreignKey: "id_grupo",
   targetKey: "id",
 });
+
 const Horario = sequelize.define(
   "Horario",
   {
@@ -224,7 +226,6 @@ Mat_Inscritos.belongsTo(Horario, {
   foreignKey: "id_horario",
   targetKey: "id",
 });
-
 Mat_Inscritos.belongsTo(Grupo, {
   foreignKey: "id_grupo",
   targetKey: "id",
@@ -253,16 +254,13 @@ const Resena = sequelize.define(
     id_profesor: { type: DataTypes.STRING(15), allowNull: false },
     id_alumno: { type: DataTypes.STRING(15), allowNull: false },
     calificacion: { type: DataTypes.FLOAT, allowNull: false },
-    comentarios: { type: DataTypes.STRING(200), allowNull: true },
+    comentarios: { type: DataTypes.TEXT, allowNull: true },
     fecha: { type: DataTypes.DATE, allowNull: false },
   },
   { tableName: "resena", timestamps: false }
 );
 
-Resena.belongsTo(DatosPersonales, {
-  foreignKey: "id_alumno",
-  targetKey: "id",
-});
+Resena.belongsTo(DatosPersonales, { foreignKey: "id_alumno", targetKey: "id" });
 Resena.belongsTo(DatosPersonales, {
   foreignKey: "id_profesor",
   targetKey: "id",
@@ -274,36 +272,30 @@ const Kardex = sequelize.define(
     id: { type: DataTypes.STRING(15), primaryKey: true },
     id_alumno: { type: DataTypes.STRING(15), allowNull: false },
     promedio: { type: DataTypes.FLOAT, allowNull: false },
-    situacion_academica: { type: DataTypes.STRING(25), allowNull: false },
+    situacion_academica: { type: DataTypes.TEXT, allowNull: false },
     semestres_restantes: { type: DataTypes.INTEGER, allowNull: false },
   },
   { tableName: "kardex", timestamps: false }
 );
 
-Kardex.belongsTo(DatosPersonales, {
-  foreignKey: "id_alumno",
-  targetKey: "id",
-});
+Kardex.belongsTo(DatosPersonales, { foreignKey: "id_alumno", targetKey: "id" });
 
 const UA_Aprobada = sequelize.define(
   "UA_Aprobada",
   {
     id: { type: DataTypes.STRING(15), primaryKey: true },
     id_kardex: { type: DataTypes.STRING(15), allowNull: false },
-    unidad_aprendizaje: { type: DataTypes.STRING(25), allowNull: false },
+    unidad_aprendizaje: { type: DataTypes.TEXT, allowNull: false },
     calificacion_final: { type: DataTypes.FLOAT, allowNull: false },
     semestre: { type: DataTypes.INTEGER, allowNull: false },
-    periodo: { type: DataTypes.STRING(25), allowNull: false },
+    periodo: { type: DataTypes.TEXT, allowNull: false },
     fecha: { type: DataTypes.DATE, allowNull: false },
-    metodo_aprobado: { type: DataTypes.STRING(15), allowNull: false },
+    metodo_aprobado: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "ua_aprobada", timestamps: false }
 );
 
-UA_Aprobada.belongsTo(Kardex, {
-  foreignKey: "id_kardex",
-  targetKey: "id",
-});
+UA_Aprobada.belongsTo(Kardex, { foreignKey: "id_kardex", targetKey: "id" });
 
 const Borrador_Horario = sequelize.define(
   "Borrador_Horario",
@@ -312,13 +304,13 @@ const Borrador_Horario = sequelize.define(
     id_grupo: { type: DataTypes.STRING(15), allowNull: false },
     id_alumno: { type: DataTypes.STRING(15), allowNull: false },
     id_profesor: { type: DataTypes.STRING(15), allowNull: false },
-    calificacion: { type: DataTypes.STRING(25), allowNull: false },
-    materia: { type: DataTypes.STRING(100), allowNull: false },
-    horas_lun: { type: DataTypes.STRING(50), allowNull: true },
-    horas_mar: { type: DataTypes.STRING(50), allowNull: true },
-    horas_mie: { type: DataTypes.STRING(50), allowNull: true },
-    horas_jue: { type: DataTypes.STRING(50), allowNull: true },
-    horas_vie: { type: DataTypes.STRING(50), allowNull: true },
+    calificacion: { type: DataTypes.TEXT, allowNull: false },
+    materia: { type: DataTypes.TEXT, allowNull: false },
+    horas_lun: { type: DataTypes.TEXT, allowNull: true },
+    horas_mar: { type: DataTypes.TEXT, allowNull: true },
+    horas_mie: { type: DataTypes.TEXT, allowNull: true },
+    horas_jue: { type: DataTypes.TEXT, allowNull: true },
+    horas_vie: { type: DataTypes.TEXT, allowNull: true },
     creditos_necesarios: { type: DataTypes.FLOAT, allowNull: false },
     valido: { type: DataTypes.INTEGER, allowNull: false, defaultValue: true },
   },
@@ -340,7 +332,6 @@ Borrador_Horario.belongsTo(Grupo, {
   targetKey: "id",
 });
 
-// Nuevo modelo: Mensajes del chatbot
 const Mensaje_Chat = sequelize.define(
   "Mensaje_Chat",
   {
@@ -353,7 +344,6 @@ const Mensaje_Chat = sequelize.define(
   { tableName: "mensaje_chat", timestamps: false }
 );
 
-// Asociación: cada mensaje pertenece a un DatosPersonales (usuario)
 Mensaje_Chat.belongsTo(DatosPersonales, {
   foreignKey: "id_usuario",
   targetKey: "id",
@@ -369,16 +359,26 @@ const Lista = sequelize.define(
     id: { type: DataTypes.STRING(15), primaryKey: true },
     id_inscrito: { type: DataTypes.STRING(15), allowNull: false },
     fecha: { type: DataTypes.DATEONLY, allowNull: false },
-    asistencia: { type: DataTypes.STRING(15), allowNull: false },
+    asistencia: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "lista", timestamps: false }
 );
-Lista.belongsTo(Mat_Inscritos, {
-  foreignKey: "id_inscrito",
-  targetKey: "id",
-});
-Mat_Inscritos.hasMany(Lista, {
-  foreignKey: "id_inscrito",
+
+Lista.belongsTo(Mat_Inscritos, { foreignKey: "id_inscrito", targetKey: "id" });
+Mat_Inscritos.hasMany(Lista, { foreignKey: "id_inscrito", targetKey: "id" });
+
+const Contador = sequelize.define(
+  "Contador",
+  {
+    id_profesor: { type: DataTypes.STRING(15), primaryKey: true },
+    suma: { type: DataTypes.INTEGER, allowNull: false },
+    registrados: { type: DataTypes.INTEGER, allowNull: false },
+  },
+  { tableName: "contador", timestamps: false }
+);
+
+Contador.belongsTo(DatosPersonales, {
+  foreignKey: "id_profesor",
   targetKey: "id",
 });
 
@@ -400,6 +400,7 @@ async function SincronizarModelo() {
     await Borrador_Horario.sync();
     await Mensaje_Chat.sync();
     await Lista.sync();
+    await Contador.sync();
     console.log("Los modelos fueron sincronizados correctamente");
   } catch (err) {
     console.error("Error al sincronizar", err);
@@ -407,21 +408,12 @@ async function SincronizarModelo() {
 }
 
 DatosPersonales.prototype.validPassword = async function (password) {
-  console.log("Intentando validar contraseña:", password);
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-  console.log("Contraseña hasheada:", hashedPassword);
-  console.log("Hash almacenado:", this.contrasena);
-  try {
-    const result = bcrypt.compareSync(password, this.contrasena);
-    console.log("Resultado de la comparación:", result);
-    return result;
-  } catch (error) {
-    console.error("Error al validar contraseña:", error);
-    return false;
-  }
+  const result = bcrypt.compareSync(password, this.contrasena);
+  return result;
 };
+
 SincronizarModelo();
+
 module.exports = {
   sequelize,
   DatosPersonales,
@@ -441,4 +433,5 @@ module.exports = {
   Borrador_Horario,
   Lista,
   Mensaje_Chat,
+  Contador,
 };

@@ -32,203 +32,213 @@ DROP TABLE IF EXISTS ua_aprobada;
 
 DROP TABLE IF EXISTS borrador_horario;
 
-create table datos_personales (
-    id varchar(15) not null,
-    contrasena varchar(200) not null,
-    tipo_usuario varchar(15) not null,
-    nombre varchar(25) not null,
-    ape_paterno varchar(25) not null,
-    ape_materno varchar(25) not null,
-    fecha_nacimiento date not null,
-    RFC varchar(50),
-    tipo_sangre varchar(15) not null,
-    CURP varchar(50) not null,
-    nacionalidad varchar(50) not null,
-    calle varchar(50) not null,
-    num_exterior varchar(50) not null,
-    num_interior varchar(50) not null,
-    codigo_postal varchar(50) not null,
-    colonia varchar(50) not null,
-    delegacion varchar(50) not null,
-    telefono varchar(50) not null,
-    ciudad varchar(50) not null,
-    email varchar(50) not null,
+DROP TABLE IF EXISTS mensaje_chat;
+
+DROP TABLE IF EXISTS contador;
+
+CREATE TABLE datos_personales (
+    id VARCHAR(15) NOT NULL,
+    contrasena TEXT NOT NULL,
+    tipo_usuario TEXT NOT NULL,
+    nombre TEXT NOT NULL,
+    ape_paterno TEXT NOT NULL,
+    ape_materno TEXT NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    RFC TEXT,
+    tipo_sangre TEXT NOT NULL,
+    CURP TEXT NOT NULL,
+    nacionalidad TEXT NOT NULL,
+    calle TEXT NOT NULL,
+    num_exterior TEXT NOT NULL,
+    num_interior TEXT NOT NULL,
+    codigo_postal TEXT NOT NULL,
+    colonia TEXT NOT NULL,
+    delegacion TEXT NOT NULL,
+    telefono TEXT NOT NULL,
+    ciudad TEXT NOT NULL,
+    email TEXT NOT NULL,
     foto BLOB,
-    grado varchar(50),
-    carrera varchar(40),
-    situacion varchar(50),
-    calificacion int,
+    grado TEXT,
+    carrera TEXT,
+    situacion TEXT,
+    calificacion FLOAT,
     CONSTRAINT PK_USUARIOS PRIMARY KEY (id)
 );
 
-create table datos_medicos (
-    id varchar(15) not null,
-    id_usuario varchar(15) not null,
-    peso float not null,
-    altura float not null,
-    tipo_sangre varchar(5) not null,
-    nss varchar(30) not null,
+CREATE TABLE datos_medicos (
+    id VARCHAR(15) NOT NULL,
+    id_usuario VARCHAR(15) NOT NULL,
+    peso FLOAT NOT NULL,
+    altura FLOAT NOT NULL,
+    tipo_sangre TEXT NOT NULL,
+    nss TEXT NOT NULL,
     CONSTRAINT PK_DM PRIMARY KEY (id),
     CONSTRAINT FK_DM_DP FOREIGN KEY (id_usuario) REFERENCES datos_personales (id)
 );
 
-create table enfermedades (
-    id varchar(15) not null,
-    id_dat_med varchar(15) not null,
-    descri varchar(500) not null,
+CREATE TABLE enfermedades (
+    id VARCHAR(15) NOT NULL,
+    id_dat_med VARCHAR(15) NOT NULL,
+    descri TEXT NOT NULL,
     CONSTRAINT PK_E PRIMARY KEY (id),
     CONSTRAINT FK_E_DM FOREIGN KEY (id_dat_med) REFERENCES datos_medicos (id)
 );
 
-create table estudiante (
-    id varchar(15) not null,
-    id_usuario varchar(15) not null,
-    promedio float not null,
-    creditos_disponibles float not null,
-    estado_academico varchar(50) not null,
-    constraint PK_ES PRIMARY KEY (id),
+CREATE TABLE estudiante (
+    id VARCHAR(15) NOT NULL,
+    id_usuario VARCHAR(15) NOT NULL,
+    promedio FLOAT NOT NULL,
+    creditos_disponibles FLOAT NOT NULL,
+    estado_academico TEXT NOT NULL,
+    CONSTRAINT PK_ES PRIMARY KEY (id),
     CONSTRAINT FK_ES_DP FOREIGN KEY (id_usuario) REFERENCES datos_personales (id)
 );
 
-create table carrera (
-    nombre varchar(40) not null,
-    creditos_iniciales int not null,
-    prefijo_grupo varchar(10) not null,
-    duracion_max int not null,
+CREATE TABLE carrera (
+    nombre VARCHAR(40) NOT NULL,
+    creditos_iniciales INT NOT NULL,
+    prefijo_grupo TEXT NOT NULL,
+    duracion_max INT NOT NULL,
     CONSTRAINT PK_CAR PRIMARY KEY (nombre)
 );
 
-create table unidad_de_aprendizaje (
-    id varchar(15) not null,
-    nombre varchar(100) not null,
-    credito float not null,
-    carrera varchar(50),
-    semestre int not null,
+CREATE TABLE unidad_de_aprendizaje (
+    id VARCHAR(15) NOT NULL,
+    nombre TEXT NOT NULL,
+    credito FLOAT NOT NULL,
+    carrera VARCHAR(40),
+    semestre INT NOT NULL,
     CONSTRAINT PK_UA PRIMARY KEY (id),
     CONSTRAINT FK_UA_CAR FOREIGN KEY (carrera) REFERENCES carrera (nombre)
 );
 
-create table grupo (
-    id varchar(15) not null,
-    nombre varchar(25) not null,
-    id_ua varchar(15) not null,
-    id_prof varchar(15) not null,
-    turno varchar(15) not null,
-    cupo int not null,
+CREATE TABLE grupo (
+    id VARCHAR(15) NOT NULL,
+    nombre TEXT NOT NULL,
+    id_ua VARCHAR(15) NOT NULL,
+    id_prof VARCHAR(15) NOT NULL,
+    turno TEXT NOT NULL,
+    cupo INT NOT NULL,
     CONSTRAINT PK_GRU PRIMARY KEY (id),
     CONSTRAINT FK_GRU_DP FOREIGN KEY (id_prof) REFERENCES datos_personales (id),
     CONSTRAINT FK_GRU_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id)
 );
 
-create table distribucion (
-    id varchar(15) not null,
-    id_grupo varchar(15) not null,
-    hora_ini varchar(15) not null,
-    hora_fin varchar(15) not null,
-    dia varchar(15) not null,
+CREATE TABLE distribucion (
+    id VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    hora_ini TEXT NOT NULL,
+    hora_fin TEXT NOT NULL,
+    dia TEXT NOT NULL,
     CONSTRAINT PK_DIS PRIMARY KEY (id),
     CONSTRAINT FK_DIS_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
 );
 
-create table horario (
-    id varchar(15) not null,
-    id_alumno varchar(15) not null,
+CREATE TABLE horario (
+    id VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
     CONSTRAINT PK_HOR PRIMARY KEY (id),
     CONSTRAINT FK_HOR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-create table mat_inscritos (
-    id varchar(15) not null,
-    id_horario varchar(15) not null,
-    id_grupo varchar(15) not null,
-    calificacion float,
+CREATE TABLE mat_inscritos (
+    id VARCHAR(15) NOT NULL,
+    id_horario VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    calificacion FLOAT,
     CONSTRAINT PK_MAT PRIMARY KEY (id),
     CONSTRAINT FK_MAT_HOR FOREIGN KEY (id_horario) REFERENCES horario (id),
     CONSTRAINT FK_MAT_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
 );
 
-create table inscripcion (
-    id varchar(15) not null,
-    id_alumno varchar(15) not null,
-    fecha_hora_in timestamp not null,
-    fecha_hora_cad timestamp not null,
+CREATE TABLE inscripcion (
+    id VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    fecha_hora_in TIMESTAMP NOT NULL,
+    fecha_hora_cad TIMESTAMP NOT NULL,
     CONSTRAINT PK_INS PRIMARY KEY (id),
     CONSTRAINT FK_INS_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-create table resena (
-    id varchar(15) not null,
-    id_profesor varchar(15) not null,
-    id_alumno varchar(15) not null,
-    calificacion float not null,
-    comentarios varchar(200),
-    fecha date not null,
+CREATE TABLE resena (
+    id VARCHAR(15) NOT NULL,
+    id_profesor VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    calificacion FLOAT NOT NULL,
+    comentarios TEXT,
+    fecha DATE NOT NULL,
     CONSTRAINT PK_RE PRIMARY KEY (id),
     CONSTRAINT FK_RE_PRO FOREIGN KEY (id_profesor) REFERENCES datos_personales (id),
     CONSTRAINT FK_RE_ALU FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-create table kardex (
-    id varchar(15) not null,
-    id_alumno varchar(15) not null,
-    promedio float not null,
-    situacion_academica varchar(25) not null,
-    semestres_restantes int not null,
+CREATE TABLE kardex (
+    id VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    promedio FLOAT NOT NULL,
+    situacion_academica TEXT NOT NULL,
+    semestres_restantes INT NOT NULL,
     CONSTRAINT PK_KAR PRIMARY KEY (id),
     CONSTRAINT FK_KAR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-create table ua_aprobada (
-    id varchar(15) not null,
-    id_kardex varchar(15) not null,
-    unidad_aprendizaje varchar(100) not null,
-    calificacion_final float not null,
-    semestre int not null,
-    periodo varchar(25) not null,
-    fecha date not null,
-    metodo_aprobado varchar(15) not null,
+CREATE TABLE ua_aprobada (
+    id VARCHAR(15) NOT NULL,
+    id_kardex VARCHAR(15) NOT NULL,
+    unidad_aprendizaje TEXT NOT NULL,
+    calificacion_final FLOAT NOT NULL,
+    semestre INT NOT NULL,
+    periodo TEXT NOT NULL,
+    fecha DATE NOT NULL,
+    metodo_aprobado TEXT NOT NULL,
     CONSTRAINT PK_UAA PRIMARY KEY (id),
     CONSTRAINT FK_UAA_KAR FOREIGN KEY (id_kardex) REFERENCES kardex (id)
 );
 
-create table borrador_horario (
-    id varchar(15) not null,
-    id_grupo varchar(15) not null,
-    id_alumno varchar(15) not null,
-    id_profesor varchar(15) not null,
-    calificacion varchar(25) not null,
-    materia varchar(25) not null,
-    horas_lun varchar(50),
-    horas_mar varchar(50),
-    horas_mie varchar(50),
-    horas_jue varchar(50),
-    horas_vie varchar(50),
-    creditos_necesarios float not null,
-    valido tinyint(1),
+CREATE TABLE borrador_horario (
+    id VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    id_profesor VARCHAR(15) NOT NULL,
+    calificacion TEXT NOT NULL,
+    materia TEXT NOT NULL,
+    horas_lun TEXT,
+    horas_mar TEXT,
+    horas_mie TEXT,
+    horas_jue TEXT,
+    horas_vie TEXT,
+    creditos_necesarios FLOAT NOT NULL,
+    valido TINYINT(1),
     CONSTRAINT PK_BOR PRIMARY KEY (id),
     CONSTRAINT FK_BOR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id),
     CONSTRAINT FK_BOR_PRO FOREIGN KEY (id_profesor) REFERENCES datos_personales (id),
     CONSTRAINT FK_BOR_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
 );
 
-create table lista (
-    id varchar(15) not null,
-    id_inscrito varchar(15) not null,
-    fecha date not null,
-    asistencia varchar(15) not null,
+CREATE TABLE lista (
+    id VARCHAR(15) NOT NULL,
+    id_inscrito VARCHAR(15) NOT NULL,
+    fecha DATE NOT NULL,
+    asistencia TEXT NOT NULL,
     CONSTRAINT PK_LIS PRIMARY KEY (id),
     CONSTRAINT FK_LIS_MAI FOREIGN KEY (id_inscrito) REFERENCES mat_inscritos (id)
 );
 
--- Nueva tabla para almacenar mensajes del chatbot
-create table mensaje_chat (
-    id varchar(15) not null,
-    id_usuario varchar(15) not null,
-    fecha datetime not null,
-    pregunta_realizada text not null,
-    respuesta_obtenida text,
+CREATE TABLE mensaje_chat (
+    id VARCHAR(15) NOT NULL,
+    id_usuario VARCHAR(15) NOT NULL,
+    fecha DATETIME NOT NULL,
+    pregunta_realizada TEXT NOT NULL,
+    respuesta_obtenida TEXT,
     CONSTRAINT PK_MEN PRIMARY KEY (id),
     CONSTRAINT FK_MEN_DP FOREIGN KEY (id_usuario) REFERENCES datos_personales (id)
+);
+
+CREATE TABLE contador (
+    id_profesor VARCHAR(15) NOT NULL,
+    suma INTEGER NOT NULL,
+    registrados INTEGER NOT NULL,
+    CONSTRAINT FK_CON_DP FOREIGN KEY (id_profesor) REFERENCES datos_personales (id)
 );
 
 INSERT INTO
