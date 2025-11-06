@@ -14,6 +14,10 @@ const rutaAdministrador = require("./routes/rutasAdministrador/route.js");
 const rutaAlumno = require("./routes/rutasAlumno/route.js");
 const rutaProfesor = require("./routes/rutasProfesor/ruta.js");
 
+// importa las rutas API
+const carreraRoutes = require("./routes/carreraRoutes");
+const uaRoutes = require("./routes/uaRoutes");
+
 const app = express();
 app.set("port", 4000);
 // Aumentar límite para permitir imágenes en base64
@@ -39,9 +43,16 @@ app.use(flash());
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Rutas existentes con passport
 app.use("/", rutaMain(passport));
 app.use("/", rutaAdministrador(passport));
 app.use("/", rutaAlumno(passport));
 app.use("/", rutaProfesor(passport));
 
+// monta las rutas API
+app.use("/api/carreras", carreraRoutes);
+app.use("/api/unidades", uaRoutes);
+
 app.listen(app.get("port"));
+

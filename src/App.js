@@ -22,6 +22,9 @@ import Horarios from "./components/alumno/Horarios";
 import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
 import { PaseLista } from "./components/profesor/PaseLista";
 import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
+import { Carreras } from "./pages/Carreras";      
+import { Unidades } from "./pages/Unidades";     
+
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -62,6 +65,10 @@ function App() {
             path="administrador/gestionarCursos/registrarCurso"
             element={<RegistrarCursos />}
           />
+         
+           <Route path="administrador/carreras" element={<Carreras />} />
+           <Route path="administrador/unidades" element={<Unidades />} />
+
           <Route
             path="administrador/gestionarProfesores/registrarProfesor"
             element={<RegistrarProfesores />}
