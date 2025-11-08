@@ -862,11 +862,18 @@ module.exports = (passport) => {
     try {
       const { id } = req.params;
 
-      // Opcional: validar que el usuario autenticado sea el mismo que solicita
-      if (req.user && req.user.id !== id && req.user.tipo_usuario !== 'administrador') {
+      if (req.user.id !== id && req.user.tipo_usuario !== 'administrador') {
         return res.status(403).json({
           success: false,
           error: "No tienes permiso para acceder a estos mensajes",
+        });
+      }
+
+      // Validar formato de ID
+      if (!id || id.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: "ID de usuario inválido",
         });
       }
 
@@ -876,10 +883,131 @@ module.exports = (passport) => {
         order: [["fecha", "ASC"]],
         raw: true,
       });
+
+
       return res.json({ success: true, messages: mensajes });
     } catch (err) {
-      console.error("Error al obtener MensajesChat/:id ->", err);
       return res.status(500).json({ success: false, error: "Error al obtener mensajes" });
+    }
+  });
+
+  // Guardar mensaje de chat en la base de datos
+  router.post("/GuardarMensajeChat", async (req, res) => {
+    try {
+      const { id_usuario, pregunta_realizada, respuesta_obtenida } = req.body;
+
+      // Validar que el usuario esté autenticado y sea el mismo que intenta guardar
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({
+          success: false,
+          error: "Usuario no autenticado",
+        });
+      }
+
+      if (req.user.id !== id_usuario) {
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permiso para guardar mensajes de otro usuario",
+        });
+      }
+
+      // Validar que al menos la pregunta esté presente
+      if (!pregunta_realizada || pregunta_realizada.trim() === "") {
+        return res.status(400).json({
+          success: false,
+          error: "La pregunta no puede estar vacía",
+        });
+      }
+
+      // Validar longitud de pregunta
+      if (pregunta_realizada.length > 5000) {
+        return res.status(400).json({
+          success: false,
+          error: "La pregunta es demasiado larga (máximo 5000 caracteres)",
+        });
+      }
+
+      // Generar ID único para el mensaje
+      const id = uuidv4().replace(/-/g, "").substring(0, 15);
+      const fecha = new Date();
+
+      // Crear el mensaje en BD
+      const mensaje = await bd.Mensaje_Chat.create({
+        id: id,
+        id_usuario: id_usuario,
+        fecha: fecha,
+        pregunta_realizada: pregunta_realizada,
+        respuesta_obtenida: respuesta_obtenida || null,
+      });
+
+      return res.json({
+        success: true,
+        mensaje: mensaje,
+        message: "Mensaje guardado correctamente",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: "Error al guardar el mensaje",
+      });
+    }
+  });
+
+  // Actualizar respuesta de un mensaje de chat existente
+  router.put("/ActualizarMensajeChat/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { respuesta_obtenida } = req.body;
+
+      // Validar que el usuario esté autenticado
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({
+          success: false,
+          error: "Usuario no autenticado",
+        });
+      }
+
+      // Validar que la respuesta no sea vacía si se proporciona
+      if (respuesta_obtenida !== null && respuesta_obtenida !== undefined && respuesta_obtenida.trim() === "") {
+        return res.status(400).json({
+          success: false,
+          error: "La respuesta no puede estar vacía",
+        });
+      }
+
+      // Buscar el mensaje
+      const mensaje = await bd.Mensaje_Chat.findByPk(id);
+
+      if (!mensaje) {
+        return res.status(404).json({
+          success: false,
+          error: "Mensaje no encontrado",
+        });
+      }
+
+      // Validar que el usuario sea el propietario del mensaje o admin
+      if (mensaje.id_usuario !== req.user.id && req.user.tipo_usuario !== 'administrador') {
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permiso para actualizar este mensaje",
+        });
+      }
+
+      // Actualizar la respuesta
+      await mensaje.update({
+        respuesta_obtenida: respuesta_obtenida || null,
+      });
+
+      return res.json({
+        success: true,
+        mensaje: mensaje,
+        message: "Respuesta guardada correctamente",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: "Error al actualizar el mensaje",
+      });
     }
   });
 
