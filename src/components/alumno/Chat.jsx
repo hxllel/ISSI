@@ -169,7 +169,7 @@ export function ChatbotAsistente() {
       while (retries > 0 && !botResponseText) {
         try {
           const controller = new AbortController()
-          const timeoutId = setTimeout(() => controller.abort(), 45000)
+          const timeoutId = setTimeout(() => controller.abort(), 150000)
 
           const startTime = performance.now()
           const response = await fetch("http://localhost:8000/generate/", {
