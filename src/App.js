@@ -22,6 +22,8 @@ import Horarios from "./components/alumno/Horarios";
 import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
 import { PaseLista } from "./components/profesor/PaseLista";
 import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
+import { MateriasReprobadas } from "./components/alumno/MateriasReprobadas";
+import { ETS } from "./components/admin/ETS";
 import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
@@ -113,6 +115,12 @@ function App() {
           <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
 
           <Route path="/alumno/Kardex" element={<HistorialAcademico />} />
+
+          <Route
+            path="/alumno/MateriasReprobadas"
+            element={<MateriasReprobadas />}
+          />
+          <Route path="/administrador/ETS" element={<ETS />} />
         </Routes>
       </BrowserRouter>
     </div>

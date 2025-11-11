@@ -165,6 +165,13 @@ Grupo.belongsTo(DatosPersonales, {
   constraints: true,
 });
 
+Unidad_Aprendizaje.hasMany(Grupo, {
+  foreignKey: "id_ua",
+  targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
+});
 DatosPersonales.hasOne(Grupo, {
   foreignKey: "id_prof",
   targetKey: "id",
@@ -385,6 +392,96 @@ Contador.belongsTo(DatosPersonales, {
   targetKey: "id",
 });
 
+const Materia_Reprobada = sequelize.define(
+  "Materia_Reprobada",
+  {
+    id: { type: DataTypes.STRING(15), primaryKey: true },
+    id_estudiante: { type: DataTypes.STRING(15), allowNull: false },
+    id_ua: { type: DataTypes.STRING(15), allowNull: false },
+    periodos_restantes: { type: DataTypes.INTEGER, allowNull: false },
+    recurse: { type: DataTypes.INTEGER, allowNull: false },
+    estado_actual: { type: DataTypes.TEXT, allowNull: false },
+  },
+  { tableName: "materia_reprobada", timestamps: false }
+);
+
+Materia_Reprobada.belongsTo(Estudiante, {
+  foreignKey: "id_estudiante",
+  targetKey: "id",
+});
+
+Materia_Reprobada.belongsTo(Unidad_Aprendizaje, {
+  foreignKey: "id_ua",
+  targetKey: "id",
+});
+
+Estudiante.hasMany(Materia_Reprobada, {
+  foreignKey: "id_estudiante",
+  sourceKey: "id",
+});
+
+Unidad_Aprendizaje.hasMany(Materia_Reprobada, {
+  foreignKey: "id_ua",
+  sourceKey: "id",
+});
+
+const ETS_grupo = sequelize.define(
+  "ETS_Grupo",
+  {
+    id: { type: DataTypes.STRING(15), primaryKey: true },
+    id_ua: { type: DataTypes.STRING(15), allowNull: false },
+    id_aplicante: { type: DataTypes.STRING(15), allowNull: false },
+    turno: { type: DataTypes.TEXT, allowNull: false },
+    hora_inicio: { type: DataTypes.TEXT, allowNull: false },
+    hora_final: { type: DataTypes.TEXT, allowNull: false },
+    fecha: { type: DataTypes.DATEONLY, allowNull: false },
+  },
+  { tableName: "ets_grupo", timestamps: false }
+);
+
+ETS_grupo.belongsTo(Unidad_Aprendizaje, {
+  foreignKey: "id_ua",
+  targetKey: "id",
+});
+
+Unidad_Aprendizaje.hasMany(ETS_grupo, { foreignKey: "id_ua", targetKey: "id" });
+ETS_grupo.belongsTo(DatosPersonales, {
+  foreignKey: "id_aplicante",
+  targetKey: "id",
+});
+DatosPersonales.hasMany(ETS_grupo, {
+  foreignKey: "id_aplicante",
+  sourceKey: "id",
+});
+
+const ETS = sequelize.define(
+  "ETS",
+  {
+    id: { type: DataTypes.STRING(15), primaryKey: true },
+    id_mr: { type: DataTypes.STRING(15), allowNull: false },
+    id_grupo: { type: DataTypes.STRING(15), allowNull: false },
+    comprobante: { type: DataTypes.BLOB("long") },
+    validado: { type: DataTypes.INTEGER, allowNull: false },
+    calificado: { type: DataTypes.FLOAT, allowNull: false },
+  },
+  { tableName: "ets", timestamps: false }
+);
+
+ETS.belongsTo(ETS_grupo, {
+  foreignKey: "id_grupo",
+  targetKey: "id",
+});
+
+ETS.belongsTo(Materia_Reprobada, {
+  foreignKey: "id_mr",
+  targetKey: "id",
+});
+
+Materia_Reprobada.hasMany(ETS, {
+  foreignKey: "id_mr",
+  sourceKey: "id",
+});
+
 const Avisos = sequelize.define(
   "Avisos",
   {
@@ -431,6 +528,9 @@ async function SincronizarModelo() {
     await Mensaje_Chat.sync();
     await Lista.sync();
     await Contador.sync();
+    await Materia_Reprobada.sync();
+    await ETS_grupo.sync();
+    await ETS.sync();
     await Avisos.sync();
     await FechasRelevantes.sync();
     console.log("Los modelos fueron sincronizados correctamente");
@@ -466,6 +566,9 @@ module.exports = {
   Lista,
   Mensaje_Chat,
   Contador,
+  Materia_Reprobada,
+  ETS_grupo,
+  ETS,
   Avisos,
   FechasRelevantes,
 };

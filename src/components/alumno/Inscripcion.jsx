@@ -18,6 +18,7 @@ export function Inscripcion() {
   const [del, setdel] = useState(null);
   const [d, setd] = useState(null);
   const [cursadas, setCursadas] = useState([]);
+  const [NoReinscripcion, setNoRe] = useState([]);
 
   // --- HISTORIAL DE CURSADAS ---
   useEffect(() => {
@@ -42,6 +43,14 @@ export function Inscripcion() {
         console.error("Error al obtener el horario:", err);
         setBorr([]);
       });
+  }, []);
+
+  useEffect(() =>{
+    fetch("http://localhost:4000/NoReinscripcion", {credentials : "include"})
+    .then((res) => res.json())
+    .then((data) =>{
+      setNoRe(data.grupos);
+    }).catch((err) =>{console.log("Error")});
   }, []);
 
   const handleClickDel = (id) => {
@@ -108,6 +117,7 @@ export function Inscripcion() {
               ? "Se ha eliminado la materia de tu borrador de horario"
               : "No se ha podido eliminar la materia al borrador de horario"
           );
+            window.location.reload();
         })
         .catch((err) => console.error("Error al eliminar borrador:", err))
         .finally(() => setd(false));
@@ -124,6 +134,8 @@ export function Inscripcion() {
       .then((data) => {
         if (data.success) alert("Se ha agregado la materia a tu horario");
         else alert(`No se ha podido agregar: ${data.err || ""}`);
+                    window.location.reload();
+
       })
       .catch((err) => console.error("Error: ", err));
   };
@@ -141,6 +153,8 @@ export function Inscripcion() {
             ? "Se ha eliminado la materia a tu horario"
             : "No se ha podido eliminar a tu horario"
         );
+                    window.location.reload();
+
       })
       .catch((err) => console.error("Error: ", err));
   };
@@ -156,6 +170,8 @@ export function Inscripcion() {
         if (data.fatal) alert(`NO SE HA AGREGADO NINGUNA MATERIA, ${data.msg}`);
         else if (data.success) alert("Se han agregado todas las materias a su horario");
         else alert(`Se han agregado algunas materias: ${data.msg}`);
+                    window.location.reload();
+
       })
       .catch((err) => console.error("Error ", err));
   };
@@ -174,6 +190,8 @@ export function Inscripcion() {
               ? "Se ha eliminado la materia de tu borrador de horario"
               : "No se ha podido eliminar la materia al borrador de horario"
           );
+                              window.location.reload();
+
         })
         .catch((err) => console.error("Error al eliminar borrador:", err))
         .finally(() => setdel(false));
@@ -193,6 +211,8 @@ export function Inscripcion() {
         if (data.success) {
           alert("Se ha inscrito satisfactoriamente");
           navigate(`/alumno/${id}`);
+            window.location.reload();
+
         } else alert("Ha ocurrido un error");
       });
   };
@@ -284,7 +304,8 @@ export function Inscripcion() {
                           disabled={
                             grupo.cupo <= 0 ||
                             gruposagg.includes(grupo.id) ||
-                            cursadas.includes(grupo.Unidad_Aprendizaje.nombre)
+                            cursadas.includes(grupo.Unidad_Aprendizaje.nombre) ||
+                            NoReinscripcion.includes(grupo.Unidad_Aprendizaje.id)
                           }
                         >
                           Seleccionar
