@@ -24,6 +24,7 @@ import { PaseLista } from "./components/profesor/PaseLista";
 import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
 import { Carreras } from "./pages/Carreras";      
 import { Unidades } from "./pages/Unidades";     
+import DatosMedicos from "./pages/DatosMedicos";
 
 
 function App() {
@@ -101,6 +102,8 @@ function App() {
             path="administrador/gestionarCursos/distribucionHorarios/:id"
             element={<Distribucion />}
           />
+          <Route path="administrador/datosMedicos" element={<DatosMedicos />} />
+
           <Route path="alumno/inscripcion/:id" element={<Inscripcion />} />
           <Route path="alumno/editarDatos/:id" element={<EditarDatos />} />
           <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
