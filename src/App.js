@@ -23,10 +23,9 @@ import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
 import { PaseLista } from "./components/profesor/PaseLista";
 import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
 import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
-import { Carreras } from "./pages/Carreras";      
-import { Unidades } from "./pages/Unidades";     
-import DatosMedicos from "./pages/DatosMedicos";
-
+import { Carreras } from "./pages/Carreras";
+import { Unidades } from "./pages/Unidades";
+import { DatosMedicos } from "./pages/DatosMedicos";
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -55,7 +54,10 @@ function App() {
           <Route path="/alumno/:id" element={<Alumno />} />
           <Route path="/alumno/Chat" element={<ChatbotAsistente />} />
           <Route path="/alumno/horarios/:id" element={<Horarios />} />
-          <Route path="/alumno/evaluacion/:id" element={<EvaluacionProfesores />} />
+          <Route
+            path="/alumno/evaluacion/:id"
+            element={<EvaluacionProfesores />}
+          />
 
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/profesor/:id" element={<Profesor />} />
@@ -68,9 +70,9 @@ function App() {
             path="administrador/gestionarCursos/registrarCurso"
             element={<RegistrarCursos />}
           />
-         
-           <Route path="administrador/carreras" element={<Carreras />} />
-           <Route path="administrador/unidades" element={<Unidades />} />
+
+          <Route path="administrador/carreras" element={<Carreras />} />
+          <Route path="administrador/unidades" element={<Unidades />} />
 
           <Route
             path="administrador/gestionarProfesores/registrarProfesor"

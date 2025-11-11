@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 const API = 'http://localhost:4000';
 
-export default function DatosMedicos() {
+export function DatosMedicos() {
   const [idUsuario, setIdUsuario] = useState('');
   const [dm, setDm] = useState(null); // objeto datos medicos
   const [enfs, setEnfs] = useState([]);
@@ -140,7 +140,7 @@ export default function DatosMedicos() {
 
   const eliminarEnf = async (enf) => {
     if (!dm) return;
-    if (!confirm('¿Eliminar enfermedad?')) return;
+    if (!window.confirm('¿Eliminar enfermedad?')) return;
     try {
       const res = await fetch(`${API}/api/datos-medicos/${encodeURIComponent(dm.id)}/enfermedades/${encodeURIComponent(enf.id)}`, {
         method: 'DELETE',
