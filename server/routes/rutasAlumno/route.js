@@ -953,6 +953,89 @@ module.exports = (passport) => {
     }
   });
 
+  // Actualizar o crear registro en la tabla 'contador' para un profesor
+  router.post("/ActualizarContadorProfesor", async (req, res) => {
+    try {
+      // Requerir usuario autenticado
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({ success: false, error: 'Usuario no autenticado' });
+      }
+      const { profesor, alumnoId, suma } = req.body;
+
+      if (!profesor || suma === undefined || suma === null) {
+        return res.status(400).json({ success: false, error: "Faltan datos (profesor o suma)" });
+      }
+
+      // Intentar localizar al profesor por nombre completo
+      const nombreCompleto = profesor.trim();
+
+      // Buscar por concatenación de nombre y apellidos
+      let prof = await bd.DatosPersonales.findOne({
+        where: bd.sequelize.where(
+          bd.sequelize.fn(
+            'concat',
+            bd.sequelize.col('nombre'),
+            ' ',
+            bd.sequelize.col('ape_paterno'),
+            ' ',
+            bd.sequelize.col('ape_materno')
+          ),
+          nombreCompleto
+        )
+      });
+
+      // Si no se encontró con la concatenación exacta, intentar búsqueda LIKE
+      if (!prof) {
+        prof = await bd.DatosPersonales.findOne({
+          where: bd.sequelize.where(
+            bd.sequelize.fn(
+              'concat',
+              bd.sequelize.col('nombre'),
+              ' ',
+              bd.sequelize.col('ape_paterno'),
+              ' ',
+              bd.sequelize.col('ape_materno')
+            ),
+            { [Op.like]: `%${nombreCompleto}%` }
+          )
+        });
+      }
+
+      if (!prof) {
+        return res.status(404).json({ success: false, error: 'Profesor no encontrado' });
+      }
+
+      const idProf = prof.id;
+
+      // Buscar registro en Contador
+      let contador = await bd.Contador.findByPk(idProf);
+
+      if (contador) {
+        // Actualizar sumas y registrados
+        const nuevaSuma = parseInt(contador.suma || 0, 10) + parseInt(suma, 10);
+        const nuevosRegistrados = parseInt(contador.registrados || 0, 10) + 1;
+        await bd.Contador.update(
+          { suma: nuevaSuma, registrados: nuevosRegistrados },
+          { where: { id_profesor: idProf } }
+        );
+        contador = await bd.Contador.findByPk(idProf);
+      } else {
+        // Crear nuevo registro
+        const crear = await bd.Contador.create({
+          id_profesor: idProf,
+          suma: parseInt(suma, 10),
+          registrados: 1,
+        });
+        contador = crear;
+      }
+
+      return res.json({ success: true, registrado: contador.registrados });
+    } catch (err) {
+      console.error('Error en /ActualizarContadorProfesor:', err);
+      return res.status(500).json({ success: false, error: 'Error interno al actualizar contador' });
+    }
+  });
+
   // Actualizar respuesta de un mensaje de chat existente
   router.put("/ActualizarMensajeChat/:id", async (req, res) => {
     try {
@@ -1007,6 +1090,46 @@ module.exports = (passport) => {
       return res.status(500).json({
         success: false,
         error: "Error al actualizar el mensaje",
+      });
+    }
+  });
+
+  // Validar si es tiempo de evaluar profesores
+  router.get("/ValidarFechaEvaluacion", async (req, res) => {
+    try {
+      const fechas = await bd.FechasRelevantes.findOne();
+      
+      if (!fechas || !fechas.evalu_profe) {
+        return res.json({ 
+          valido: false, 
+          mensaje: "No hay fechas de evaluación configuradas" 
+        });
+      }
+
+      const fechaEvaluacion = new Date(fechas.evalu_profe);
+      const hoy = new Date();
+      
+      // normalizar fechas para comparar solo dia/mes/año
+      const fechaEvalNorm = new Date(fechaEvaluacion.getFullYear(), fechaEvaluacion.getMonth(), fechaEvaluacion.getDate());
+      const hoyNorm = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+      
+      if (hoyNorm.getTime() === fechaEvalNorm.getTime()) {
+        return res.json({ 
+          valido: true, 
+          mensaje: "Es momento de evaluar a tus profesores" 
+        });
+      } else {
+        return res.json({ 
+          valido: false, 
+          mensaje: "Aún no es tiempo de evaluar a tus profesores",
+          fechaEvaluacion: fechaEvaluacion.toLocaleDateString('es-MX')
+        });
+      }
+    } catch (err) {
+      console.error('Error en /ValidarFechaEvaluacion:', err);
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Error al validar fecha de evaluación' 
       });
     }
   });
