@@ -23,6 +23,10 @@ import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
 import { PaseLista } from "./components/profesor/PaseLista";
 import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
 import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
+import { Carreras } from "./pages/Carreras";      
+import { Unidades } from "./pages/Unidades";     
+import DatosMedicos from "./pages/DatosMedicos";
+
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -64,6 +68,10 @@ function App() {
             path="administrador/gestionarCursos/registrarCurso"
             element={<RegistrarCursos />}
           />
+         
+           <Route path="administrador/carreras" element={<Carreras />} />
+           <Route path="administrador/unidades" element={<Unidades />} />
+
           <Route
             path="administrador/gestionarProfesores/registrarProfesor"
             element={<RegistrarProfesores />}
@@ -96,6 +104,8 @@ function App() {
             path="administrador/gestionarCursos/distribucionHorarios/:id"
             element={<Distribucion />}
           />
+          <Route path="administrador/datosMedicos" element={<DatosMedicos />} />
+
           <Route path="alumno/inscripcion/:id" element={<Inscripcion />} />
           <Route path="alumno/editarDatos/:id" element={<EditarDatos />} />
           <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
