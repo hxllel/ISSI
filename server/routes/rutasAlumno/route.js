@@ -895,15 +895,18 @@ module.exports = (passport) => {
     try {
       const { id } = req.params;
 
-      // Opcional: validar que el usuario autenticado sea el mismo que solicita
-      if (
-        req.user &&
-        req.user.id !== id &&
-        req.user.tipo_usuario !== "administrador"
-      ) {
+      if (req.user.id !== id && req.user.tipo_usuario !== 'administrador') {
         return res.status(403).json({
           success: false,
           error: "No tienes permiso para acceder a estos mensajes",
+        });
+      }
+
+      // Validar formato de ID
+      if (!id || id.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: "ID de usuario inválido",
         });
       }
 
@@ -913,6 +916,8 @@ module.exports = (passport) => {
         order: [["fecha", "ASC"]],
         raw: true,
       });
+
+
       return res.json({ success: true, messages: mensajes });
     } catch (err) {
       console.error("Error al obtener MensajesChat/:id ->", err);
@@ -1122,6 +1127,253 @@ module.exports = (passport) => {
       console.log(err);
     }
   });
+      return res.status(500).json({ success: false, error: "Error al obtener mensajes" });
+    }
+  });
+
+  // Guardar mensaje de chat en la base de datos
+  router.post("/GuardarMensajeChat", async (req, res) => {
+    try {
+      const { id_usuario, pregunta_realizada, respuesta_obtenida } = req.body;
+
+      // Validar que el usuario esté autenticado y sea el mismo que intenta guardar
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({
+          success: false,
+          error: "Usuario no autenticado",
+        });
+      }
+
+      if (req.user.id !== id_usuario) {
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permiso para guardar mensajes de otro usuario",
+        });
+      }
+
+      // Validar que al menos la pregunta esté presente
+      if (!pregunta_realizada || pregunta_realizada.trim() === "") {
+        return res.status(400).json({
+          success: false,
+          error: "La pregunta no puede estar vacía",
+        });
+      }
+
+      // Validar longitud de pregunta
+      if (pregunta_realizada.length > 5000) {
+        return res.status(400).json({
+          success: false,
+          error: "La pregunta es demasiado larga (máximo 5000 caracteres)",
+        });
+      }
+
+      // Generar ID único para el mensaje
+      const id = uuidv4().replace(/-/g, "").substring(0, 15);
+      const fecha = new Date();
+
+      // Crear el mensaje en BD
+      const mensaje = await bd.Mensaje_Chat.create({
+        id: id,
+        id_usuario: id_usuario,
+        fecha: fecha,
+        pregunta_realizada: pregunta_realizada,
+        respuesta_obtenida: respuesta_obtenida || null,
+      });
+
+      return res.json({
+        success: true,
+        mensaje: mensaje,
+        message: "Mensaje guardado correctamente",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: "Error al guardar el mensaje",
+      });
+    }
+  });
+
+  // Actualizar o crear registro en la tabla 'contador' para un profesor
+  router.post("/ActualizarContadorProfesor", async (req, res) => {
+    try {
+      // Requerir usuario autenticado
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({ success: false, error: 'Usuario no autenticado' });
+      }
+      const { profesor, alumnoId, suma } = req.body;
+
+      if (!profesor || suma === undefined || suma === null) {
+        return res.status(400).json({ success: false, error: "Faltan datos (profesor o suma)" });
+      }
+
+      // Intentar localizar al profesor por nombre completo
+      const nombreCompleto = profesor.trim();
+
+      // Buscar por concatenación de nombre y apellidos
+      let prof = await bd.DatosPersonales.findOne({
+        where: bd.sequelize.where(
+          bd.sequelize.fn(
+            'concat',
+            bd.sequelize.col('nombre'),
+            ' ',
+            bd.sequelize.col('ape_paterno'),
+            ' ',
+            bd.sequelize.col('ape_materno')
+          ),
+          nombreCompleto
+        )
+      });
+
+      // Si no se encontró con la concatenación exacta, intentar búsqueda LIKE
+      if (!prof) {
+        prof = await bd.DatosPersonales.findOne({
+          where: bd.sequelize.where(
+            bd.sequelize.fn(
+              'concat',
+              bd.sequelize.col('nombre'),
+              ' ',
+              bd.sequelize.col('ape_paterno'),
+              ' ',
+              bd.sequelize.col('ape_materno')
+            ),
+            { [Op.like]: `%${nombreCompleto}%` }
+          )
+        });
+      }
+
+      if (!prof) {
+        return res.status(404).json({ success: false, error: 'Profesor no encontrado' });
+      }
+
+      const idProf = prof.id;
+
+      // Buscar registro en Contador
+      let contador = await bd.Contador.findByPk(idProf);
+
+      if (contador) {
+        // Actualizar sumas y registrados
+        const nuevaSuma = parseInt(contador.suma || 0, 10) + parseInt(suma, 10);
+        const nuevosRegistrados = parseInt(contador.registrados || 0, 10) + 1;
+        await bd.Contador.update(
+          { suma: nuevaSuma, registrados: nuevosRegistrados },
+          { where: { id_profesor: idProf } }
+        );
+        contador = await bd.Contador.findByPk(idProf);
+      } else {
+        // Crear nuevo registro
+        const crear = await bd.Contador.create({
+          id_profesor: idProf,
+          suma: parseInt(suma, 10),
+          registrados: 1,
+        });
+        contador = crear;
+      }
+
+      return res.json({ success: true, registrado: contador.registrados });
+    } catch (err) {
+      console.error('Error en /ActualizarContadorProfesor:', err);
+      return res.status(500).json({ success: false, error: 'Error interno al actualizar contador' });
+    }
+  });
+
+  // Actualizar respuesta de un mensaje de chat existente
+  router.put("/ActualizarMensajeChat/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { respuesta_obtenida } = req.body;
+
+      // Validar que el usuario esté autenticado
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({
+          success: false,
+          error: "Usuario no autenticado",
+        });
+      }
+
+      // Validar que la respuesta no sea vacía si se proporciona
+      if (respuesta_obtenida !== null && respuesta_obtenida !== undefined && respuesta_obtenida.trim() === "") {
+        return res.status(400).json({
+          success: false,
+          error: "La respuesta no puede estar vacía",
+        });
+      }
+
+      // Buscar el mensaje
+      const mensaje = await bd.Mensaje_Chat.findByPk(id);
+
+      if (!mensaje) {
+        return res.status(404).json({
+          success: false,
+          error: "Mensaje no encontrado",
+        });
+      }
+
+      // Validar que el usuario sea el propietario del mensaje o admin
+      if (mensaje.id_usuario !== req.user.id && req.user.tipo_usuario !== 'administrador') {
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permiso para actualizar este mensaje",
+        });
+      }
+
+      // Actualizar la respuesta
+      await mensaje.update({
+        respuesta_obtenida: respuesta_obtenida || null,
+      });
+
+      return res.json({
+        success: true,
+        mensaje: mensaje,
+        message: "Respuesta guardada correctamente",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: "Error al actualizar el mensaje",
+      });
+    }
+  });
+
+  // Validar si es tiempo de evaluar profesores
+  router.get("/ValidarFechaEvaluacion", async (req, res) => {
+    try {
+      const fechas = await bd.FechasRelevantes.findOne();
+      
+      if (!fechas || !fechas.evalu_profe) {
+        return res.json({ 
+          valido: false, 
+          mensaje: "No hay fechas de evaluación configuradas" 
+        });
+      }
+
+      const fechaEvaluacion = new Date(fechas.evalu_profe);
+      const hoy = new Date();
+      
+      // normalizar fechas para comparar solo dia/mes/año
+      const fechaEvalNorm = new Date(fechaEvaluacion.getFullYear(), fechaEvaluacion.getMonth(), fechaEvaluacion.getDate());
+      const hoyNorm = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+      
+      if (hoyNorm.getTime() === fechaEvalNorm.getTime()) {
+        return res.json({ 
+          valido: true, 
+          mensaje: "Es momento de evaluar a tus profesores" 
+        });
+      } else {
+        return res.json({ 
+          valido: false, 
+          mensaje: "Aún no es tiempo de evaluar a tus profesores",
+          fechaEvaluacion: fechaEvaluacion.toLocaleDateString('es-MX')
+        });
+      }
+    } catch (err) {
+      console.error('Error en /ValidarFechaEvaluacion:', err);
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Error al validar fecha de evaluación' 
+      });
+    }
+  });
+
   return router;
 };
 function seTraslapan(d1, d2) {

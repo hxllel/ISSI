@@ -34,6 +34,7 @@ export function Alumno() {
   const handleHorarios = () => { navigate(`/alumno/horarios/${id}`);};
   const handleChat = () => {navigate(`/alumno/Chat`, { state: { alumnoId: id } });};
   const handleMatRe = () =>{navigate(`/alumno/MateriasReprobadas`)};
+  const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
 
   const handleDescargarComprobante = () => {
     try {
@@ -158,6 +159,7 @@ export function Alumno() {
           <button className="menu-item" onClick = {() => navigate("/alumno/Kardex")}>Kardex</button>
           <button className="menu-item" onClick={handleChat}>Asistente de Chat</button>
           <button className="menu-item" onClick = {handleMatRe}> Materias Reprobadas</button>
+          <button className="menu-item" onClick={handleEvaluacion}>Evaluación de Profesores</button>
           <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
         </nav>
         <button className="logout">Cerrar sesión</button>

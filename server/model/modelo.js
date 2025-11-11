@@ -1,3 +1,6 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
+
 const { DataTypes } = require("sequelize");
 const { Sequelize } = require("sequelize");
 const bcrypt = require("bcryptjs");
@@ -479,6 +482,33 @@ Materia_Reprobada.hasMany(ETS, {
   sourceKey: "id",
 });
 
+const Avisos = sequelize.define(
+  "Avisos",
+  {
+    id: { type: DataTypes.STRING(15), primaryKey: true },
+    titulo: { type: DataTypes.TEXT, allowNull: false },
+    descripcion: { type: DataTypes.TEXT, allowNull: false },
+    fecha_vencimiento: { type: DataTypes.DATE, allowNull: false },
+  },
+  { tableName: "avisos", timestamps: false }
+);
+
+const FechasRelevantes = sequelize.define(
+  "FechasRelevantes",
+  {
+    inicio_semestre: { type: DataTypes.DATE, allowNull: false },
+    fin_semestre: { type: DataTypes.DATE, allowNull: false },
+    registro_primer_parcial: { type: DataTypes.DATE, allowNull: false },
+    registro_segundo_parcial: { type: DataTypes.DATE, allowNull: false },
+    registro_tercer_parcial: { type: DataTypes.DATE, allowNull: false },
+    registro_final: { type: DataTypes.DATE, allowNull: false },
+    evalu_profe: { type: DataTypes.DATE, allowNull: false },
+    subir_doc_ets: { type: DataTypes.DATE, allowNull: false },
+    cal_ets: { type: DataTypes.DATE, allowNull: false },
+  },
+  { tableName: "fechas_relevantes", timestamps: false }
+);
+
 async function SincronizarModelo() {
   try {
     await DatosPersonales.sync();
@@ -501,6 +531,8 @@ async function SincronizarModelo() {
     await Materia_Reprobada.sync();
     await ETS_grupo.sync();
     await ETS.sync();
+    await Avisos.sync();
+    await FechasRelevantes.sync();
     console.log("Los modelos fueron sincronizados correctamente");
   } catch (err) {
     console.error("Error al sincronizar", err);
@@ -537,4 +569,6 @@ module.exports = {
   Materia_Reprobada,
   ETS_grupo,
   ETS,
+  Avisos,
+  FechasRelevantes,
 };
