@@ -36,6 +36,12 @@ DROP TABLE IF EXISTS mensaje_chat;
 
 DROP TABLE IF EXISTS contador;
 
+DROP TABLE IF EXISTS materia_reprobada;
+
+DROP TABLE IF EXISTS ets;
+
+DROP TABLE IF EXISTS ets_grupo;
+
 CREATE TABLE datos_personales (
     id VARCHAR(15) NOT NULL,
     contrasena TEXT NOT NULL,
@@ -239,6 +245,43 @@ CREATE TABLE contador (
     suma INTEGER NOT NULL,
     registrados INTEGER NOT NULL,
     CONSTRAINT FK_CON_DP FOREIGN KEY (id_profesor) REFERENCES datos_personales (id)
+);
+
+create table materia_reprobada (
+    id VARCHAR(15) NOT NULL,
+    id_estudiante VARCHAR(15) NOT NULL,
+    id_ua VARCHAR(15) NOT NULL,
+    periodos_restantes integer not null,
+    recurse integer not null,
+    estado_actual TEXT NOT NULL,
+    CONSTRAINT PK_MR PRIMARY KEY (id),
+    CONSTRAINT FK_MR_ES FOREIGN KEY (id_estudiante) REFERENCES estudiante (id),
+    CONSTRAINT FK_MR_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id)
+);
+
+create table ets_grupo (
+    id VARCHAR(15) NOT NULL,
+    id_ua VARCHAR(15) NOT NULL,
+    id_aplicante VARCHAR(15) NOT NULL,
+    turno TEXT NOT NULL,
+    hora_inicio TEXT NOT NULL,
+    hora_final TEXT NOT NULL,
+    fecha DATE NOT NULL,
+    CONSTRAINT PK_ETS_G PRIMARY KEY (id),
+    CONSTRAINT FK_ETSG_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id),
+    CONSTRAINT FK_ETSG_DP FOREIGN KEY (id_aplicante) REFERENCES datos_personales (id)
+);
+
+create table ets (
+    id VARCHAR(15) NOT NULL,
+    id_mr VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    comprobante LONGBLOB,
+    validado INTEGER NOT NULL,
+    calificado FLOAT NOT NULL,
+    CONSTRAINT PK_ETS PRIMARY KEY (id),
+    CONSTRAINT FK_ETS_MR FOREIGN KEY (id_mr) REFERENCES materia_reprobada (id),
+    CONSTRAINT FK_ETS_AP FOREIGN KEY (id_grupo) REFERENCES ets_grupo (id)
 );
 
 INSERT INTO
@@ -635,6 +678,139 @@ INSERT INTO
 values ('abc', '2023631211'),
     ('def', '2023631212'),
     ('ghi', '2023631213');
+
+INSERT INTO
+    materia_reprobada (
+        id,
+        id_estudiante,
+        id_ua,
+        periodos_restantes,
+        recurse,
+        estado_actual
+    )
+VALUES (
+        "MR001",
+        "EST001",
+        "UA003",
+        2,
+        0,
+        "Reprobada"
+    ),
+    (
+        "MR004",
+        "EST001",
+        "UA003",
+        1,
+        0,
+        "Reprobada"
+    ),
+    (
+        "MR002",
+        "EST002",
+        "UA001",
+        1,
+        1,
+        "Recurse"
+    ),
+    (
+        "MR003",
+        "EST003",
+        "UA002",
+        2,
+        0,
+        "Reprobada"
+    );
+
+INSERT INTO
+    ets_grupo (
+        id,
+        id_ua,
+        id_aplicante,
+        turno,
+        hora_inicio,
+        hora_final,
+        fecha
+    )
+VALUES (
+        "ETSG001",
+        "UA003",
+        "HIJKLMNO",
+        "Matutino",
+        "9:00",
+        "11:00",
+        "2025-06-28"
+    ),
+    (
+        "ETSG002",
+        "UA003",
+        "HIJKLMNO",
+        "Vespertino",
+        "15:00",
+        "17:00",
+        "2025-06-28"
+    ),
+    (
+        "ETSG003",
+        "UA001",
+        "HIJKLMNO",
+        "Matutino",
+        "10:00",
+        "12:00",
+        "2025-06-29"
+    ),
+    (
+        "ETSG004",
+        "UA001",
+        "HIJKLMNO",
+        "Vespertino",
+        "14:00",
+        "16:00",
+        "2025-06-29"
+    ),
+    (
+        "ETSG005",
+        "UA002",
+        "HIJKLMNO",
+        "Matutino",
+        "8:00",
+        "10:00",
+        "2025-06-30"
+    ),
+    (
+        "ETSG006",
+        "UA002",
+        "HIJKLMNO",
+        "Vespertino",
+        "13:00",
+        "15:00",
+        "2025-06-30"
+    );
+
+INSERT INTO
+    ets (
+        id,
+        id_mr,
+        id_grupo,
+        comprobante,
+        validado,
+        calificado
+    )
+VALUES (
+        "ETS001",
+        "MR004",
+        "ETSG001",
+        NULL,
+        0,
+        0
+    ),
+    (
+        "ETS002",
+        "MR004",
+        "ETSG001",
+        "N",
+        1,
+        5
+    );
 
 -- ==========================================
 -- Poblar materias de Ingenieria en Inteligencia Artificial (ESCOM)

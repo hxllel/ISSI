@@ -17,11 +17,14 @@ module.exports = (passport) => {
         success: true,
         alumnoId: id,
         path: `/alumno/chat/${id}`,
-        message: "Navegue en el cliente al path indicado para mostrar la vista de chat",
+        message:
+          "Navegue en el cliente al path indicado para mostrar la vista de chat",
       });
     } catch (err) {
       console.error("Error en /Alumno/Chat/:id ->", err);
-      return res.status(500).json({ success: false, error: "Error al obtener datos para el chat" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Error al obtener datos para el chat" });
     }
   });
 
@@ -78,12 +81,12 @@ module.exports = (passport) => {
               hora_ini: d.hora_ini,
               hora_fin: d.hora_fin,
             })) || [
-                {
-                  dia: "Sin día",
-                  hora_ini: "",
-                  hora_fin: "",
-                },
-              ],
+              {
+                dia: "Sin día",
+                hora_ini: "",
+                hora_fin: "",
+              },
+            ],
           };
 
           materias.push(base);
@@ -138,7 +141,7 @@ module.exports = (passport) => {
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["nombre", "credito", "semestre", "carrera"],
+            attributes: ["id", "nombre", "credito", "semestre", "carrera"],
             where: { carrera: carr.carrera },
           },
           {
@@ -284,8 +287,9 @@ module.exports = (passport) => {
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.nombre || g.Unidad_Aprendizaje.Nombre)) ||
             "",
-          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${datosProf.ape_materno || ""
-            }`.trim(),
+          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${
+            datosProf.ape_materno || ""
+          }`.trim(),
           calificacion_profesor: datosProf.calificacion || null,
           cupo: g.cupo,
           dias,
@@ -558,6 +562,35 @@ module.exports = (passport) => {
         );
 
         for (const g of ids) {
+          const ua = await bd.Unidad_Aprendizaje.findOne({
+            include: [
+              {
+                model: bd.Grupo,
+                where: { id: g },
+              },
+            ],
+          });
+
+          const recu = await bd.Materia_Reprobada.findOne({
+            include: [
+              {
+                model: bd.Estudiante,
+                where: { id_usuario: id },
+              },
+              {
+                model: bd.Unidad_Aprendizaje,
+                where: { id: ua.id },
+              },
+            ],
+          });
+
+          await bd.Materia_Reprobada.update(
+            {
+              recurse: 0,
+              estado_actual: "Recurse",
+            },
+            { where: { id: recu.id } }
+          );
           const id2 = uuidv4().replace(/-/g, "").substring(0, 15);
           const crear_mat_inscrita = await bd.Mat_Inscritos.create({
             id: id2,
@@ -863,7 +896,11 @@ module.exports = (passport) => {
       const { id } = req.params;
 
       // Opcional: validar que el usuario autenticado sea el mismo que solicita
-      if (req.user && req.user.id !== id && req.user.tipo_usuario !== 'administrador') {
+      if (
+        req.user &&
+        req.user.id !== id &&
+        req.user.tipo_usuario !== "administrador"
+      ) {
         return res.status(403).json({
           success: false,
           error: "No tienes permiso para acceder a estos mensajes",
@@ -879,10 +916,212 @@ module.exports = (passport) => {
       return res.json({ success: true, messages: mensajes });
     } catch (err) {
       console.error("Error al obtener MensajesChat/:id ->", err);
-      return res.status(500).json({ success: false, error: "Error al obtener mensajes" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Error al obtener mensajes" });
     }
   });
 
+  router.get("/ObtenerMateriasReprobadas", async (req, res) => {
+    const id = req.user.id;
+
+    try {
+      const mat_re = await bd.Materia_Reprobada.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+          },
+          {
+            model: bd.Unidad_Aprendizaje,
+            attributes: ["nombre", "credito", "semestre"],
+          },
+        ],
+      });
+
+      const ids_mr = mat_re.map((m) => m.id);
+
+      const compro = await bd.ETS.findAll({
+        where: {
+          id_mr: ids_mr,
+        },
+      });
+
+      return res.json({
+        materias: mat_re,
+        compro: compro,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "Error interno del servidor" });
+    }
+  });
+
+  router.get("/ObtenerGruposEts/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const grupos = await bd.ETS_grupo.findAll({
+        include: [
+          {
+            model: bd.Unidad_Aprendizaje,
+            where: { nombre: id },
+          },
+          {
+            model: bd.DatosPersonales,
+          },
+        ],
+      });
+
+      return res.json({ horarios: grupos });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.post("/RegistrarETS", async (req, res) => {
+    const { id_mr, id_grupo } = req.body;
+    const us = req.user.id;
+
+    try {
+      // Obtener grupo nuevo
+      const grupoNuevo = await bd.ETS_grupo.findOne({
+        where: { id: id_grupo },
+      });
+
+      if (!grupoNuevo) {
+        return res.json({ success: false, message: "Grupo no encontrado" });
+      }
+
+      // ETS existentes del alumno
+      const etsExistentes = await bd.ETS.findAll({
+        include: [
+          {
+            model: bd.Materia_Reprobada,
+            include: [
+              {
+                model: bd.Estudiante,
+                where: { id_usuario: us },
+              },
+            ],
+          },
+          {
+            model: bd.ETS_grupo,
+          },
+        ],
+      });
+
+      const nuevoHorario = {
+        dia: grupoNuevo.fecha,
+        hora_ini: grupoNuevo.hora_inicio,
+        hora_fin: grupoNuevo.hora_final,
+      };
+
+      for (const ets of etsExistentes) {
+        const horarioExistente = {
+          dia: ets.ETS_Grupo.fecha,
+          hora_ini: ets.ETS_Grupo.hora_inicio,
+          hora_fin: ets.ETS_Grupo.hora_final,
+        };
+
+        if (seTraslapan(nuevoHorario, horarioExistente)) {
+          return res.json({
+            success: false,
+            message:
+              "el horario del grupo seleccionado se traslapa con un ETS ya registrado.",
+          });
+        }
+      }
+
+      await bd.ETS.create({
+        id: uuidv4().replace(/-/g, "").substring(0, 15),
+        id_mr: id_mr,
+        id_grupo: id_grupo,
+        comprobante: null,
+        validado: 0,
+        calificado: 0,
+      });
+
+      await bd.Materia_Reprobada.update(
+        { estado_actual: "ETS" },
+        { where: { id: id_mr } }
+      );
+
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+      return res.json({ success: false, message: "Error en el servidor" });
+    }
+  });
+
+  router.post("/SubirComprobante", async (req, res) => {
+    const { documento, id_mr, id_grupo } = req.body;
+
+    try {
+      const comprobante = await bd.ETS.update(
+        {
+          comprobante: documento ? Buffer.from(documento, "base64") : null,
+        },
+        { where: { id_mr: id_mr, comprobante: null, id_grupo: id_grupo } }
+      );
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.get("/NoReinscripcion", async (req, res) => {
+    const us = req.user.id;
+
+    try {
+      const noReins = await bd.Materia_Reprobada.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: us },
+          },
+        ],
+        where: { recurse: 0 },
+      });
+
+      let ids = noReins.map((item) => item.id_ua);
+
+      ids = [...new Set(ids)];
+      return res.json({ grupos: ids });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "Error en el servidor" });
+    }
+  });
+
+  router.get("/ObtenerHistorialETS/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const histo = await bd.ETS.findAll({
+        where: { id_mr: id, calificado: { [Op.ne]: 0 } },
+        include: [
+          {
+            model: bd.ETS_grupo,
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+              },
+              {
+                model: bd.DatosPersonales,
+              },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      return res.json({ historial: histo });
+    } catch (err) {
+      console.log(err);
+    }
+  });
   return router;
 };
 function seTraslapan(d1, d2) {

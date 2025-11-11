@@ -9,6 +9,7 @@ export function Administrador() {
   const handleClickAlu = () => navigate("gestionarAlumnos");
   const handleClickProf = () => navigate("gestionarProfesores");
   const handleClickCursos = () => navigate("gestionarCursos");
+  const handleClickETS = () => navigate("ETS");
 
   return (
     <div className="admin-container">
@@ -26,6 +27,7 @@ export function Administrador() {
           <button onClick={handleClickProf} className="menu-item">Profesores</button>
           <button onClick={handleClickCursos} className="menu-item">Cursos</button>
           <button className="menu-item">Informes</button>
+          <button onClick={handleClickETS} className="menu-item">ETS</button>
         </nav>
         <button className="logout">Cerrar sesión</button>
       </aside>
