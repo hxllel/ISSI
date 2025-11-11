@@ -1,0 +1,147 @@
+/* ==============================
+   ESTILOS GENERALES DE LA PÁGINA
+================================= */
+.prof-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #004e92, #000428);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 25px;
+}
+
+.prof-page-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.prof-page-escom-logo {
+  height: 60px;
+  width: auto;
+}
+
+/* ==============================
+   TARJETA PRINCIPAL
+================================= */
+.prof-card.pase-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  margin: 0 auto;
+  max-width: 900px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.prof-card.pase-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* ==============================
+   TABLA
+================================= */
+.prof-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.prof-table th {
+  background: #7e0404;
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+}
+
+.prof-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.prof-table tr:hover td {
+  background: #f4f8ff;
+}
+
+.pase-empty {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+  padding: 25px 0;
+}
+
+/* ==============================
+   SELECT DE ASISTENCIA
+================================= */
+.pase-select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pase-select:focus {
+  outline: none;
+  border-color: #7e0404;
+  box-shadow: 0 0 6px rgba(0, 78, 146, 0.3);
+}
+
+/* ==============================
+   BOTONES
+================================= */
+.prof-actions {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.prof-btn-primary {
+  background: linear-gradient(90deg, #004e92, #000428);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.prof-btn-primary:hover {
+  background: #7e0404;
+  transform: translateY(-2px);
+}
+
+/* ==============================
+   RESPONSIVE
+================================= */
+@media (max-width: 768px) {
+  .prof-page-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .prof-page-escom-logo {
+    margin-top: 12px;
+  }
+
+  .prof-card.pase-card {
+    padding: 20px;
+  }
+
+  .prof-table th, .prof-table td {
+    padding: 10px;
+  }
+}
