@@ -895,7 +895,7 @@ module.exports = (passport) => {
     try {
       const { id } = req.params;
 
-      if (req.user.id !== id && req.user.tipo_usuario !== 'administrador') {
+      if (req.user.id !== id && req.user.tipo_usuario !== "administrador") {
         return res.status(403).json({
           success: false,
           error: "No tienes permiso para acceder a estos mensajes",
@@ -916,7 +916,6 @@ module.exports = (passport) => {
         order: [["fecha", "ASC"]],
         raw: true,
       });
-
 
       return res.json({ success: true, messages: mensajes });
     } catch (err) {
@@ -1127,9 +1126,6 @@ module.exports = (passport) => {
       console.log(err);
     }
   });
-      return res.status(500).json({ success: false, error: "Error al obtener mensajes" });
-    }
-  });
 
   // Guardar mensaje de chat en la base de datos
   router.post("/GuardarMensajeChat", async (req, res) => {
@@ -1198,12 +1194,16 @@ module.exports = (passport) => {
     try {
       // Requerir usuario autenticado
       if (!req.user || !req.user.id) {
-        return res.status(401).json({ success: false, error: 'Usuario no autenticado' });
+        return res
+          .status(401)
+          .json({ success: false, error: "Usuario no autenticado" });
       }
       const { profesor, alumnoId, suma } = req.body;
 
       if (!profesor || suma === undefined || suma === null) {
-        return res.status(400).json({ success: false, error: "Faltan datos (profesor o suma)" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Faltan datos (profesor o suma)" });
       }
 
       // Intentar localizar al profesor por nombre completo
@@ -1213,15 +1213,15 @@ module.exports = (passport) => {
       let prof = await bd.DatosPersonales.findOne({
         where: bd.sequelize.where(
           bd.sequelize.fn(
-            'concat',
-            bd.sequelize.col('nombre'),
-            ' ',
-            bd.sequelize.col('ape_paterno'),
-            ' ',
-            bd.sequelize.col('ape_materno')
+            "concat",
+            bd.sequelize.col("nombre"),
+            " ",
+            bd.sequelize.col("ape_paterno"),
+            " ",
+            bd.sequelize.col("ape_materno")
           ),
           nombreCompleto
-        )
+        ),
       });
 
       // Si no se encontró con la concatenación exacta, intentar búsqueda LIKE
@@ -1229,20 +1229,22 @@ module.exports = (passport) => {
         prof = await bd.DatosPersonales.findOne({
           where: bd.sequelize.where(
             bd.sequelize.fn(
-              'concat',
-              bd.sequelize.col('nombre'),
-              ' ',
-              bd.sequelize.col('ape_paterno'),
-              ' ',
-              bd.sequelize.col('ape_materno')
+              "concat",
+              bd.sequelize.col("nombre"),
+              " ",
+              bd.sequelize.col("ape_paterno"),
+              " ",
+              bd.sequelize.col("ape_materno")
             ),
             { [Op.like]: `%${nombreCompleto}%` }
-          )
+          ),
         });
       }
 
       if (!prof) {
-        return res.status(404).json({ success: false, error: 'Profesor no encontrado' });
+        return res
+          .status(404)
+          .json({ success: false, error: "Profesor no encontrado" });
       }
 
       const idProf = prof.id;
@@ -1271,8 +1273,13 @@ module.exports = (passport) => {
 
       return res.json({ success: true, registrado: contador.registrados });
     } catch (err) {
-      console.error('Error en /ActualizarContadorProfesor:', err);
-      return res.status(500).json({ success: false, error: 'Error interno al actualizar contador' });
+      console.error("Error en /ActualizarContadorProfesor:", err);
+      return res
+        .status(500)
+        .json({
+          success: false,
+          error: "Error interno al actualizar contador",
+        });
     }
   });
 
@@ -1291,7 +1298,11 @@ module.exports = (passport) => {
       }
 
       // Validar que la respuesta no sea vacía si se proporciona
-      if (respuesta_obtenida !== null && respuesta_obtenida !== undefined && respuesta_obtenida.trim() === "") {
+      if (
+        respuesta_obtenida !== null &&
+        respuesta_obtenida !== undefined &&
+        respuesta_obtenida.trim() === ""
+      ) {
         return res.status(400).json({
           success: false,
           error: "La respuesta no puede estar vacía",
@@ -1309,7 +1320,10 @@ module.exports = (passport) => {
       }
 
       // Validar que el usuario sea el propietario del mensaje o admin
-      if (mensaje.id_usuario !== req.user.id && req.user.tipo_usuario !== 'administrador') {
+      if (
+        mensaje.id_usuario !== req.user.id &&
+        req.user.tipo_usuario !== "administrador"
+      ) {
         return res.status(403).json({
           success: false,
           error: "No tienes permiso para actualizar este mensaje",
@@ -1338,38 +1352,46 @@ module.exports = (passport) => {
   router.get("/ValidarFechaEvaluacion", async (req, res) => {
     try {
       const fechas = await bd.FechasRelevantes.findOne();
-      
+
       if (!fechas || !fechas.evalu_profe) {
-        return res.json({ 
-          valido: false, 
-          mensaje: "No hay fechas de evaluación configuradas" 
+        return res.json({
+          valido: false,
+          mensaje: "No hay fechas de evaluación configuradas",
         });
       }
 
       const fechaEvaluacion = new Date(fechas.evalu_profe);
       const hoy = new Date();
-      
+
       // normalizar fechas para comparar solo dia/mes/año
-      const fechaEvalNorm = new Date(fechaEvaluacion.getFullYear(), fechaEvaluacion.getMonth(), fechaEvaluacion.getDate());
-      const hoyNorm = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-      
+      const fechaEvalNorm = new Date(
+        fechaEvaluacion.getFullYear(),
+        fechaEvaluacion.getMonth(),
+        fechaEvaluacion.getDate()
+      );
+      const hoyNorm = new Date(
+        hoy.getFullYear(),
+        hoy.getMonth(),
+        hoy.getDate()
+      );
+
       if (hoyNorm.getTime() === fechaEvalNorm.getTime()) {
-        return res.json({ 
-          valido: true, 
-          mensaje: "Es momento de evaluar a tus profesores" 
+        return res.json({
+          valido: true,
+          mensaje: "Es momento de evaluar a tus profesores",
         });
       } else {
-        return res.json({ 
-          valido: false, 
+        return res.json({
+          valido: false,
           mensaje: "Aún no es tiempo de evaluar a tus profesores",
-          fechaEvaluacion: fechaEvaluacion.toLocaleDateString('es-MX')
+          fechaEvaluacion: fechaEvaluacion.toLocaleDateString("es-MX"),
         });
       }
     } catch (err) {
-      console.error('Error en /ValidarFechaEvaluacion:', err);
-      return res.status(500).json({ 
-        success: false, 
-        error: 'Error al validar fecha de evaluación' 
+      console.error("Error en /ValidarFechaEvaluacion:", err);
+      return res.status(500).json({
+        success: false,
+        error: "Error al validar fecha de evaluación",
       });
     }
   });
