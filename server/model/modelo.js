@@ -382,6 +382,33 @@ Contador.belongsTo(DatosPersonales, {
   targetKey: "id",
 });
 
+const Avisos = sequelize.define(
+  "Avisos",
+  {
+    id: { type: DataTypes.STRING(15), primaryKey: true },
+    titulo: { type: DataTypes.TEXT, allowNull: false },
+    descripcion: { type: DataTypes.TEXT, allowNull: false },
+    fecha_vencimiento: { type: DataTypes.DATE, allowNull: false },
+  },
+  { tableName: "avisos", timestamps: false }
+);
+
+const FechasRelevantes = sequelize.define(
+  "FechasRelevantes",
+  {
+    inicio_semestre: { type: DataTypes.DATE, allowNull: false },
+    fin_semestre: { type: DataTypes.DATE, allowNull: false },
+    registro_primer_parcial: { type: DataTypes.DATE, allowNull: false },
+    registro_segundo_parcial: { type: DataTypes.DATE, allowNull: false },
+    registro_tercer_parcial: { type: DataTypes.DATE, allowNull: false },
+    registro_final: { type: DataTypes.DATE, allowNull: false },
+    evalu_profe: { type: DataTypes.DATE, allowNull: false },
+    subir_doc_ets: { type: DataTypes.DATE, allowNull: false },
+    cal_ets: { type: DataTypes.DATE, allowNull: false },
+  },
+  { tableName: "fechas_relevantes", timestamps: false }
+);
+
 async function SincronizarModelo() {
   try {
     await DatosPersonales.sync();
@@ -401,6 +428,8 @@ async function SincronizarModelo() {
     await Mensaje_Chat.sync();
     await Lista.sync();
     await Contador.sync();
+    await Avisos.sync();
+    await FechasRelevantes.sync();
     console.log("Los modelos fueron sincronizados correctamente");
   } catch (err) {
     console.error("Error al sincronizar", err);
@@ -434,4 +463,6 @@ module.exports = {
   Lista,
   Mensaje_Chat,
   Contador,
+  Avisos,
+  FechasRelevantes,
 };

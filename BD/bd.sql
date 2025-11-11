@@ -36,6 +36,10 @@ DROP TABLE IF EXISTS mensaje_chat;
 
 DROP TABLE IF EXISTS contador;
 
+DROP TABLE IF EXISTS avisos;
+
+DROP TABLE IF EXISTS fechas_relevantes;
+
 CREATE TABLE datos_personales (
     id VARCHAR(15) NOT NULL,
     contrasena TEXT NOT NULL,
@@ -239,6 +243,26 @@ CREATE TABLE contador (
     suma INTEGER NOT NULL,
     registrados INTEGER NOT NULL,
     CONSTRAINT FK_CON_DP FOREIGN KEY (id_profesor) REFERENCES datos_personales (id)
+);
+
+CREATE TABLE avisos (
+    id VARCHAR(15) NOT NULL,
+    titulo TEXT NOT NULL,
+    descripcion TEXT NOT NULL,
+    fecha_vencimiento DATETIME NOT NULL,
+    CONSTRAINT PK_AVI PRIMARY KEY (id)
+);
+
+CREATE TABLE fechas_relevantes (
+    inicio_semestre DATETIME NOT NULL,
+    fin_semestre DATETIME NOT NULL,
+    registro_primer_parcial DATETIME NOT NULL,
+    registro_segundo_parcial DATETIME NOT NULL,
+    registro_tercer_parcial DATETIME NOT NULL,
+    registro_final DATETIME NOT NULL,
+    evalu_profe DATETIME NOT NULL,
+    subir_doc_ets DATETIME NOT NULL,
+    cal_ets DATETIME NOT NULL
 );
 
 INSERT INTO
@@ -6086,6 +6110,26 @@ VALUES (
         '¡De nada! Estoy aquí para ayudarte. Si tienes más preguntas sobre tu situación académica, no dudes en consultarme.'
     );
 
--- FIN MENSAJES DE PRUEBA
+INSERT INTO fechas_relevantes (
+    inicio_semestre,
+    fin_semestre,
+    registro_primer_parcial,
+    registro_segundo_parcial,
+    registro_tercer_parcial,
+    registro_final,
+    evalu_profe,
+    subir_doc_ets,
+    cal_ets
+) VALUES (
+    '2025-08-01 00:00:00',
+    '2025-12-20 00:00:00',
+    '2025-09-15 00:00:00',
+    '2025-10-15 00:00:00',
+    '2025-11-15 00:00:00',
+    '2025-12-10 00:00:00',
+    '2025-11-12 00:00:00',  -- fecha de evaluacion de profesores
+    '2025-12-01 00:00:00',
+    '2025-12-15 00:00:00'
+);
 
 select * from datos_personales;

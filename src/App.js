@@ -22,6 +22,7 @@ import Horarios from "./components/alumno/Horarios";
 import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
 import { PaseLista } from "./components/profesor/PaseLista";
 import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
+import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -50,6 +51,7 @@ function App() {
           <Route path="/alumno/:id" element={<Alumno />} />
           <Route path="/alumno/Chat" element={<ChatbotAsistente />} />
           <Route path="/alumno/horarios/:id" element={<Horarios />} />
+          <Route path="/alumno/evaluacion/:id" element={<EvaluacionProfesores />} />
 
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/profesor/:id" element={<Profesor />} />
