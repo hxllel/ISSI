@@ -9,10 +9,6 @@ const FILAS_POR_PAGINA = 10; // <- puedes cambiar cuántos grupos por página
 export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const params = useParams();
   const [datos, setDatos] = useState([]);
-  const [registrar, setRegistrar] = useState(false);
-  const [periodo, setPeriodo] = useState("");
-    const navigate = useNavigate();
-    const API = 'http://localhost:4000';
   const [paginaActual, setPaginaActual] = useState(1);
   const navigate = useNavigate();
 
@@ -22,17 +18,6 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
     navigate(`/profesor/PaseLista/${id}`);
   };
 
-   
-  useEffect(() => {
-    fetch(`${API}/TiempoCalificaciones`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      if(data.tiempo){
-        setRegistrar(true);
-        setPeriodo(data.periodo);
-      }
-    }).catch((err) => console.error("Error al obtener el tiempo de calificaciones:", err));
-  }, []);
   useEffect(() => {
     fetch(`http://localhost:4000/ObtenerCursos/Prof/:${profesorId}`, {
       credentials: "include",
@@ -184,68 +169,45 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   };
 
   return (
-    <section>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2>Horarios de Clase</h2>
+    <ProfesorLayout profesorId={profesorId}>
+      {/* Encabezado global con título + ESCOM */}
+      <div className="prof-page-header">
+        <h1 className="prof-page-title">Horarios de clase</h1>
+        <div className="prof-page-header-right">
+          {onClose && (
+            <button
+              type="button"
+              className="clases-close"
+              onClick={onClose}
+            >
+              Cerrar
+            </button>
+          )}
+          <img
+            src="/escom.png"
+            alt="ESCOM"
+            className="prof-page-escom-logo"
+          />
+        </div>
+      </div>
 
-
-        {onClose ? <button onClick={onClose}>Cerrar</button> : null}
-  </div>
-
-
-      <table border="1" cellPadding={5}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Profesor</th>
-            <th>Unidad de Aprendizaje</th>
-            <th>Turno</th>
-            <th>Carrera</th>
-            <th>Lunes</th>
-            <th>Martes</th>
-            <th>Miércoles</th>
-            <th>Jueves</th>
-            <th>Viernes</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(Array.isArray(datos) ? datos.filter(d => !profesorId || String(d.id_prof) === String(profesorId)) : []).map((dato) => {
-
-            const distribsRaw = dato.Distribucion || [];
-            const distribs = Array.isArray(distribsRaw) ? distribsRaw : [distribsRaw];
-
-            const horasPorDia = (dia) => {
-              if (dia === 'Miercoles') {
-                const vals = distribs
-                  .filter(d => d && (d.dia === 'Miércoles' || d.dia === 'Miercoles'))
-                  .map(d => `${d.hora_ini} - ${d.hora_fin}`);
-                return vals.join(', ');
-              }
-              const vals = distribs
-                .filter(d => d && d.dia === dia)
-                .map(d => `${d.hora_ini} - ${d.hora_fin}`);
-              return vals.join(', ');
-            };
-
-            return (
-              <tr key={dato.id}>
-                <td>{dato.nombre}</td>
-                <td>{dato.DatosPersonale && `${dato.DatosPersonale.nombre || ''} ${dato.DatosPersonale.ape_paterno || ''} ${dato.DatosPersonale.ape_materno || ''}`}</td>
-                <td>{dato.Unidad_Aprendizaje && dato.Unidad_Aprendizaje.nombre}</td>
-                <td>{dato.turno}</td>
-                <td>{dato.Unidad_Aprendizaje && dato.Unidad_Aprendizaje.carrera}</td>
-                <td>{horasPorDia('Lunes') || ' '}</td>
-                <td>{horasPorDia('Martes') || ' '}</td>
-                <td>{horasPorDia('Miercoles') || ' '}</td>
-                <td>{horasPorDia('Jueves') || ' '}</td>
-                <td>{horasPorDia('Viernes') || ' '}</td>
-                <td>
-                  {registrar ? (<button>Registrar Calificaciones {periodo} parcial</button>) : null}
-                  <button style={{ marginLeft: 8 }} onClick={() => handleGenerarPDF(dato)}>Generar lista PDF</button>
-                  <button style={{ marginLeft: 8 }} onClick={() => handleExportExcel(dato)}>Exportar lista Excel</button>
-                  <button style={{ marginLeft: 8 }} onClick={() => handleClickLista(dato.id)}>Pasar Lista</button>
-                </td>
+      {/* Card blanca con la tabla de grupos */}
+      <section className="clases-card">
+        <div className="clases-table-wrapper">
+          <table className="clases-table">
+            <thead>
+              <tr>
+                <th>Identificación</th>
+                <th>Profesor</th>
+                <th>Unidad de Aprendizaje</th>
+                <th>Turno</th>
+                <th>Carrera</th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+                <th>Acciones</th>
               </tr>
             </thead>
 
