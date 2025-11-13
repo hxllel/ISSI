@@ -6,13 +6,14 @@ import { ProfesorLayout } from "./ProfesorLayout";
 export function Profesor() {
   const { id } = useParams();
   const [cursos, setCursos] = useState([]);
+  const API = "http://localhost:4000";
 
   // Cargar cursos del profesor (lógica de tu compañera, sin depender de /clases)
   useEffect(() => {
     (async () => {
       try {
         const r = await fetch(
-          `http://localhost:4000/ObtenerCursos/Prof/:${id}`,
+          `${API}/ObtenerCursos/Prof/:${id}`,
           { credentials: "include" }
         );
         const j = await r.json();
@@ -22,7 +23,7 @@ export function Profesor() {
           base.map(async (c) => {
             try {
               const rr = await fetch(
-                `http://localhost:4000/ObtenerDist/${c.id}`,
+                `${API}/ObtenerDist/${c.id}`,
                 { credentials: "include" }
               );
               const dd = await rr.json();

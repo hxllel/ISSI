@@ -11,7 +11,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const [datos, setDatos] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
   const navigate = useNavigate();
-
+  const API = "http://localhost:4000";
   const profesorId = propProfesorId || params.id;
 
   const handleClickLista = (id) => {
@@ -19,7 +19,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:4000/ObtenerCursos/Prof/:${profesorId}`, {
+    fetch(`${API}/ObtenerCursos/Prof/:${profesorId}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -30,7 +30,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
           cursos.map(async (c) => {
             try {
               const resDist = await fetch(
-                `http://localhost:4000/ObtenerDist/${c.id}`,
+                `${API}/ObtenerDist/${c.id}`,
                 { credentials: "include" }
               );
               const d = await resDist.json();
@@ -104,7 +104,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const handleGenerarPDF = async (curso) => {
     try {
       const res = await fetch(
-        `http://localhost:4000/Reportes/Clases/PDF/${curso.id}`,
+        `${API}/Reportes/Clases/PDF/${curso.id}`,
         {
           method: "GET",
           credentials: "include",
@@ -138,7 +138,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const handleExportExcel = async (curso) => {
     try {
       const res = await fetch(
-        `http://localhost:4000/Reportes/Clases/Excel/${curso.id}`,
+        `${API}/Reportes/Clases/Excel/${curso.id}`,
         {
           method: "GET",
           credentials: "include",
