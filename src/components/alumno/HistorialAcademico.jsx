@@ -6,9 +6,10 @@ export function HistorialAcademico() {
 
   const [historial, setHistorial] = useState([]);
   const [semestres, setSemestres] = useState([]);
+    const API = 'http://localhost:4000';
 
   useEffect(() => {
-    fetch("http://localhost:4000/ObtenerHistorial", { credentials: "include" })
+    fetch(`${API}/ObtenerHistorial`, { credentials: "include" })
       .then((res) => {
         if (res.status === 401) {
           alert("Sesión expirada. Por favor inicia sesión nuevamente.");

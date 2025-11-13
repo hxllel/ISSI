@@ -5,7 +5,7 @@ import ModalPDF from "./ModalPDF"
 
 export function ETS() {
     const navigate = useNavigate();
-
+    const API = 'http://localhost:4000';
     const [grupos, setGrupos] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [alumnos, setAlumnos] = useState([]);
@@ -14,14 +14,14 @@ export function ETS() {
     const [pdfActual, setPdfActual] = useState(null);       
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerGETS", { credentials: "include" })
+        fetch(`${API}/ObtenerGETS`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => setGrupos(data.grupos))
             .catch((err) => console.error("Error al obtener la información:", err));
     }, []);
 
     const handleClickAl = (id) => {
-        fetch(`http://localhost:4000/Comprobantes/${id}`, {
+        fetch(`${API}/Comprobantes/${id}`, {
             credentials: "include"
         })
             .then((res) => res.json())
@@ -40,7 +40,7 @@ export function ETS() {
     };
 
     const HandleValidar = () =>{
-        fetch(`http://localhost:4000/Validar/${idETS}`, {
+        fetch(`${API}/Validar/${idETS}`, {
             credentials: "include",
             method: "POST"
         })
@@ -56,7 +56,7 @@ export function ETS() {
 
     }
     const HandleDenegar = () =>{
-        fetch(`http://localhost:4000/Denegar/${idETS}`, {
+        fetch(`${API}/Denegar/${idETS}`, {
             credentials: "include",
             method: "POST"
         })

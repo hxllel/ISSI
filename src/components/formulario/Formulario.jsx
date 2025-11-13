@@ -6,6 +6,7 @@ export function Formulario({ setSuccess, setId2 }) {
     const [contrasena, setContrasena] = useState("");
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState(""); // Para mensajes de error del backend
+    const API = 'http://localhost:4000';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +21,7 @@ export function Formulario({ setSuccess, setId2 }) {
         setErrorMessage("");
 
         try {
-            const res = await fetch("http://localhost:4000/IniciarSesion", {
+            const res = await fetch(`${API}/IniciarSesion`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

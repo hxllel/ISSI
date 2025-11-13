@@ -16,12 +16,13 @@ export function MateriasReprobadas(){
     const [documento, setDocumento] = useState(null);
     const [id_mr, setIDMR] = useState("");
     const [id_grupo, setIDGRU] = useState("");
+    const API = 'http://localhost:4000';
 
     const navigate = useNavigate();
 
     useEffect(() =>{
 
-        fetch("http://localhost:4000/ObtenerMateriasReprobadas", {credentials: "include"})
+        fetch(`${API}/ObtenerMateriasReprobadas`, {credentials: "include"})
         .then((res) => res.json())
         .then((data) => {
                 setMaterias(data.materias)
@@ -33,7 +34,7 @@ export function MateriasReprobadas(){
 
 const handleClickIns = (id, nom) => {
     setIDMR(nom);
-    fetch(`http://localhost:4000/ObtenerGruposEts/${id}`, {
+    fetch(`${API}/ObtenerGruposEts/${id}`, {
         credentials: "include"
     })
     .then((res) => res.json())
@@ -45,7 +46,7 @@ const handleClickIns = (id, nom) => {
 };
 
 const handleI = (id_grupo) => {
-    fetch(`http://localhost:4000/RegistrarETS`, {
+    fetch(`${API}/RegistrarETS`, {
         credentials: "include",
         method : "POST",
         headers: {
@@ -78,7 +79,7 @@ const handleM = (id_grupo , id_mr) =>{
     setModalOpenCom(true);
 }
 const handleSC = () =>{
-    fetch(`http://localhost:4000/SubirComprobante`, {
+    fetch(`${API}/SubirComprobante`, {
         credentials : "include",
         method: "POST",
         headers: {
@@ -104,7 +105,7 @@ const handleSC = () =>{
 
 const handleHistor = (id) => {
 
-    fetch(`http://localhost:4000/ObtenerHistorialETS/${id}`, {
+    fetch(`${API}/ObtenerHistorialETS/${id}`, {
         credentials: "include"
     })
     .then((res) => res.json())

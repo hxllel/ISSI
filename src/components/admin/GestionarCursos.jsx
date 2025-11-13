@@ -8,13 +8,14 @@ export function GestionarCursos() {
   const [del, setDelete] = useState(false);
   const [mostrarModal, setmostrarModal] = useState(false);
   const navigate = useNavigate();
+    const API = 'http://localhost:4000';
 
   const handleClickCur = () => {
     navigate("registrarCurso");
   };
 
   useEffect(() => {
-    fetch("http://localhost:4000/ObtenerCursos", { credentials: "include" })
+    fetch(`${API}/ObtenerCursos`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setDatos(data.cursos))
       .catch((err) => console.error("Error al obtener los cursos:", err));
@@ -44,7 +45,7 @@ export function GestionarCursos() {
   useEffect(() => {
     if (!del) return;
 
-    fetch(`http://localhost:4000/EliminarCurso/${id_datos}`, {
+    fetch(`${API}/EliminarCurso/${id_datos}`, {
       method: "DELETE",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

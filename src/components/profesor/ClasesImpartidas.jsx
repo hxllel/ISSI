@@ -6,6 +6,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const params = useParams();
   const [datos, setDatos] = useState([]);
     const navigate = useNavigate();
+    const API = 'http://localhost:4000';
 
   const profesorId = propProfesorId || params.id;
 
@@ -15,7 +16,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         navigate(`/profesor/PaseLista/${id}`);
     }
   useEffect(() => {
-    fetch(`http://localhost:4000/ObtenerCursos/Prof/:${profesorId}`, { credentials: "include" })
+    fetch(`${API}/ObtenerCursos/Prof/:${profesorId}`, { credentials: "include" })
       .then((res) => res.json())
       .then(async (data) => {
         const cursos = Array.isArray(data && data.cursos) ? data.cursos : [];
@@ -23,7 +24,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         const cursosConDist = await Promise.all(
           cursos.map(async (c) => {
             try {
-              const resDist = await fetch(`http://localhost:4000/ObtenerDist/${c.id}`, { credentials: "include" });
+              const resDist = await fetch(`${API}/ObtenerDist/${c.id}`, { credentials: "include" });
               const d = await resDist.json();
               c.Distribucion = Array.isArray(d && d.Distri) ? d.Distri : [];
             } catch (e) {
@@ -52,7 +53,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
     // Obtener inscritos para el curso y generar la hoja de asistencia estilo plantilla
     (async () => {
       try {
-        const res = await fetch(`http://localhost:4000/ObtenerInscritos/${curso.id}`, { credentials: "include" });
+        const res = await fetch(`${API}/ObtenerInscritos/${curso.id}`, { credentials: "include" });
         const data = await res.json();
         const inscritos = Array.isArray(data && data.inscritos) ? data.inscritos : [];
 
@@ -157,7 +158,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
 
   const handleExportExcel = async (curso) => {
     try {
-      const res = await fetch(`http://localhost:4000/ObtenerInscritos/${curso.id}`, { credentials: "include" });
+      const res = await fetch(`${API}/ObtenerInscritos/${curso.id}`, { credentials: "include" });
       const data = await res.json();
       const inscritos = Array.isArray(data && data.inscritos) ? data.inscritos : [];
 

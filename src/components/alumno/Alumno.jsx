@@ -6,12 +6,13 @@ import "./Alumno.css";
 export function Alumno() {
   const navigate = useNavigate();
   const { id } = useParams();
+    const API = 'http://localhost:4000';
 
   const [alumno, setAlumno] = useState(null);
   const [horario, setHorario] = useState([]);
 
     useEffect(() => {
-  fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
+  fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
     .then((res) => res.json())
     .then((data) => {
       setAlumno(data.alumno || null);
@@ -20,7 +21,7 @@ export function Alumno() {
 }, [id]);
 
   useEffect(()=>{
-    fetch(`http://localhost:4000/ObtenerHorario/${id}`, {credentials : "include"})
+    fetch(`${API}/ObtenerHorario/${id}`, {credentials : "include"})
     .then((res) => res.json())
     .then((data) => {
       setHorario(data.horario);
@@ -79,7 +80,7 @@ export function Alumno() {
           @media print { @page { size: A4; margin: 16mm; } }
         </style>`;
 
-      const fotoUrl = alumno && alumno.id ? `http://localhost:4000/Alumno/Foto/${alumno.id}` : '';
+      const fotoUrl = alumno && alumno.id ? `${API}/Alumno/Foto/${alumno.id}` : '';
       
       const cabecera = `
         <h1>Comprobante de horario</h1>

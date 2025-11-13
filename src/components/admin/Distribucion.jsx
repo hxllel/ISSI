@@ -11,6 +11,7 @@ export function Distribucion() {
   const [hora_fin, setHora_fin] = useState("");
   const [del, setDelete] = useState(false);
   const [id_delete, setId_delete] = useState("");
+    const API = 'http://localhost:4000';
 
   const [modalOpen2, setModalOpen2] = useState(false);
   const [Distri, setDistri] = useState([]);
@@ -38,7 +39,7 @@ export function Distribucion() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:4000/ObtenerDist/${id}`, {
+    fetch(`${API}/ObtenerDist/${id}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -53,7 +54,7 @@ export function Distribucion() {
   const enviarFormulario = (e) => {
     e.preventDefault();
 
-    fetch(`http://localhost:4000/AgregarDist/${id}`, {
+    fetch(`${API}/AgregarDist/${id}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -84,7 +85,7 @@ export function Distribucion() {
   useEffect(() => {
     if (!del) return;
 
-    fetch(`http://localhost:4000/EliminarDist/${id_delete}`, {
+    fetch(`${API}/EliminarDist/${id_delete}`, {
       method: "DELETE",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

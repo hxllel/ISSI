@@ -6,9 +6,10 @@ export function PaseLista() {
   const [asistencias, setAsistencias] = useState({}); // 🔹 { id_alumno: "Si" o "No" }
   const { id } = useParams();
     const navigate = useNavigate();
+    const API = 'http://localhost:4000';
 
   useEffect(() => {
-    fetch(`http://localhost:4000/AlumnosInscritos/${id}`, { credentials: "include" })
+    fetch(`${API}/AlumnosInscritos/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) =>{
         if(data.success){
@@ -39,7 +40,7 @@ export function PaseLista() {
       asistencia,
     }));
 
-    fetch(`http://localhost:4000/GuardarAsistencias/${id}`, {
+    fetch(`${API}/GuardarAsistencias/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

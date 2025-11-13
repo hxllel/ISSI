@@ -5,6 +5,7 @@ import "./EditarDatosPersonales.css";
 export function EditarDatos() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const API = 'http://localhost:4000';
 
     const [alumno, setAlumno] = useState({
         nombre: "",
@@ -29,14 +30,14 @@ export function EditarDatos() {
     const [carreras, setCarreras] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
+        fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
             .then(res => res.json())
             .then(data => { if (data.alumno) setAlumno(data.alumno); })
             .catch(err => console.error("Error al obtener el alumno:", err));
     }, [id]);
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerCarreras")
+        fetch(`${API}/ObtenerCarreras`)
             .then(res => res.json())
             .then(data => setCarreras(data.carreras || []))
             .catch(err => console.error("Error al obtener las carreras:", err));
@@ -49,7 +50,7 @@ export function EditarDatos() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch(`http://localhost:4000/EditarAlumno/${id}`, {
+        fetch(`${API}/EditarAlumno/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(alumno),

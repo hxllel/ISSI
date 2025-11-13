@@ -28,9 +28,10 @@ export function RegistrarAlumnos() {
     const [carreras, setCarreras] = useState([]);
     const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
     const [estado, setEstado] = useState("Activo");
+    const API = 'http://localhost:4000';
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerCarreras", { credentials: "include" })
+        fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => {
                 setCarreras(data.carreras || []);
@@ -54,7 +55,7 @@ export function RegistrarAlumnos() {
             return;
         }
 
-        const res = await fetch("http://localhost:4000/RegistrarAlumno", {
+        const res = await fetch(`${API}/RegistrarAlumno`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },

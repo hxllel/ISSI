@@ -9,6 +9,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   const params = useParams();
   const [datos, setDatos] = useState([]);
   const [borr, setBorr] = useState([]);
+    const API = 'http://localhost:4000';
 
   const alumnoId = propAlumnoId || params.id;
 
@@ -21,7 +22,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   const navigate = useNavigate();
   const { id } = useParams();
   useEffect(() => {
-    fetch("http://localhost:4000/ObtenerGrupo", { credentials: "include", })
+    fetch(`${API}/ObtenerGrupo`, { credentials: "include", })
       .then((res) => res.json())
       .then((data) => {
         const cursos = Array.isArray(data && data.cursos) ? data.cursos : [];
@@ -35,7 +36,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:4000/ConsultarBorrador", { credentials: "include", })
+    fetch(`${API}/ConsultarBorrador`, { credentials: "include", })
       .then((res) => res.json())
       .then((data) => {
         const borr = Array.isArray(data && data.horario) ? data.horario : [];
@@ -62,7 +63,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
 
   useEffect(() => {
     if (add) {
-      fetch(`http://localhost:4000/AgregarBorrador/${idgru}`, { method: "POST", credentials: "include" })
+      fetch(`${API}/AgregarBorrador/${idgru}`, { method: "POST", credentials: "include" })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
@@ -78,7 +79,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
 
   useEffect(() => {
     if (del) {
-      fetch(`http://localhost:4000/EliminarBorrador/${idgru}`, { method: "POST", credentials: "include" })
+      fetch(`${API}/EliminarBorrador/${idgru}`, { method: "POST", credentials: "include" })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
