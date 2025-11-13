@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import "./ClasesImpartidas.css";
+import "./Profesor.css";
+import { ProfesorLayout } from "./ProfesorLayout";
 
+const FILAS_POR_PAGINA = 10; // <- puedes cambiar cuántos grupos por página
 
 export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const params = useParams();
@@ -9,15 +13,16 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const [periodo, setPeriodo] = useState("");
     const navigate = useNavigate();
     const API = 'http://localhost:4000';
+  const [paginaActual, setPaginaActual] = useState(1);
+  const navigate = useNavigate();
 
   const profesorId = propProfesorId || params.id;
 
-  // removed states related to borrador/modal since not used
+  const handleClickLista = (id) => {
+    navigate(`/profesor/PaseLista/${id}`);
+  };
 
-    const handleClickLista = (id) =>{
-        navigate(`/profesor/PaseLista/${id}`);
-    }
-
+   
   useEffect(() => {
     fetch(`${API}/TiempoCalificaciones`, { credentials: "include" })
     .then((res) => res.json())
@@ -29,7 +34,9 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
     }).catch((err) => console.error("Error al obtener el tiempo de calificaciones:", err));
   }, []);
   useEffect(() => {
-    fetch(`${API}/ObtenerCursos/Prof/:${profesorId}`, { credentials: "include" })
+    fetch(`http://localhost:4000/ObtenerCursos/Prof/:${profesorId}`, {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then(async (data) => {
         const cursos = Array.isArray(data && data.cursos) ? data.cursos : [];
@@ -37,11 +44,18 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         const cursosConDist = await Promise.all(
           cursos.map(async (c) => {
             try {
-              const resDist = await fetch(`${API}/ObtenerDist/${c.id}`, { credentials: "include" });
+              const resDist = await fetch(
+                `http://localhost:4000/ObtenerDist/${c.id}`,
+                { credentials: "include" }
+              );
               const d = await resDist.json();
               c.Distribucion = Array.isArray(d && d.Distri) ? d.Distri : [];
             } catch (e) {
-              console.error("Error al obtener la distribucion para curso", c.id, e);
+              console.error(
+                "Error al obtener la distribucion para curso",
+                c.id,
+                e
+              );
               c.Distribucion = [];
             }
             return c;
@@ -55,176 +69,119 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         console.error("Error al obtener los cursos:", err);
         setDatos([]);
       });
-  }, []);
+  }, [profesorId]);
 
-  // borrador/modal fetch removed (not used)
+  // Asegura que si cambia el número de cursos, la página actual siga siendo válida
+  useEffect(() => {
+    const datosParaProf = Array.isArray(datos)
+      ? datos.filter(
+          (d) => !profesorId || String(d.id_prof) === String(profesorId)
+        )
+      : [];
 
+    const paginas = Math.max(
+      1,
+      Math.ceil(datosParaProf.length / FILAS_POR_PAGINA)
+    );
 
-  // handlers for borrador removed
+    if (paginaActual > paginas) {
+      setPaginaActual(paginas);
+    }
+  }, [datos, profesorId, paginaActual]);
 
-  const handleGenerarPDF = (curso) => {
-    // Obtener inscritos para el curso y generar la hoja de asistencia estilo plantilla
-    (async () => {
-      try {
-        const res = await fetch(`${API}/ObtenerInscritos/${curso.id}`, { credentials: "include" });
-        const data = await res.json();
-        const inscritos = Array.isArray(data && data.inscritos) ? data.inscritos : [];
+  // =============================
+  //  LÓGICA DE PAGINACIÓN
+  // =============================
+  const datosFiltrados = Array.isArray(datos)
+    ? datos.filter(
+        (d) => !profesorId || String(d.id_prof) === String(profesorId)
+      )
+    : [];
 
-        const profesorNombre = curso.DatosPersonale ? `${curso.DatosPersonale.nombre || ''} ${curso.DatosPersonale.ape_paterno || ''} ${curso.DatosPersonale.ape_materno || ''}` : '';
+  const totalPaginas = Math.max(
+    1,
+    Math.ceil(datosFiltrados.length / FILAS_POR_PAGINA)
+  );
 
-        // Construir filas de alumnos (hasta 30 filas en la plantilla)
-        const filas = [];
-        for (let i = 0; i < 30; i++) {
-          const ins = inscritos[i];
-          const nombreEst = ins && ins.Horario && ins.Horario.DatosPersonale ? `${ins.Horario.DatosPersonale.nombre || ''} ${ins.Horario.DatosPersonale.ape_paterno || ''} ${ins.Horario.DatosPersonale.ape_materno || ''}` : '';
-          filas.push({ no: i + 1, nombre: nombreEst });
+  const indiceInicio = (paginaActual - 1) * FILAS_POR_PAGINA;
+  const indiceFin = indiceInicio + FILAS_POR_PAGINA;
+  const datosPaginados = datosFiltrados.slice(indiceInicio, indiceFin);
+
+  const irAPagina = (nuevaPagina) => {
+    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+      setPaginaActual(nuevaPagina);
+    }
+  };
+
+  // =============================
+  //  PDF
+  // =============================
+  const handleGenerarPDF = async (curso) => {
+    try {
+      const res = await fetch(
+        `http://localhost:4000/Reportes/Clases/PDF/${curso.id}`,
+        {
+          method: "GET",
+          credentials: "include",
         }
+      );
 
-        // Generar celdas para días 1..31
-        const dayHeaders = Array.from({ length: 31 }, (_, i) => i + 1);
-
-        const html = `
-          <html>
-            <head>
-              <meta charset="utf-8" />
-              <title>Lista de asistencia - ${curso.nombre}</title>
-              <style>
-                body { font-family: Arial, sans-serif; }
-                .header { display:flex; align-items:center; margin-bottom:6px; }
-                .title { background: #ffd54f; padding: 10px 16px; font-weight:700; color:#000; }
-                .meta { flex:1; text-align:center; }
-                .meta small { display:block; font-size:12px; }
-                .right { width:260px; text-align:left; }
-                table { border-collapse: collapse; width: 100%; font-size:12px; }
-                table th, table td { border: 1px solid #333; padding:4px; }
-                th.day { background:#00b050; color:#fff; }
-                th.name { background:#2f75b5; color:#fff; }
-                .no-col { width:36px; text-align:center; }
-                .name-col { width:260px; text-align:left; padding-left:6px; }
-                .percent-col { width:46px; text-align:center; }
-                .footer { margin-top:8px; }
-              </style>
-            </head>
-            <body>
-              <div class="header">
-                <div class="title">LISTA DE ASISTENCIA</div>
-                <div class="meta">
-                  <div><strong>NOMBRE DE LA ESCUELA:</strong></div>
-                  <div><small>__________________________________________</small></div>
-                  <div style="margin-top:4px"><strong>NOMBRE DEL MAESTRO(A):</strong> ${profesorNombre}</div>
-                </div>
-                <div class="right">
-                  <div>MES: <strong>${new Date().toLocaleString('default', { month: 'long' }).toUpperCase()}</strong></div>
-                  <div>GRADO: <strong>${curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.semestre || '' : ''}</strong></div>
-                  <div>GRUPO: <strong>${curso.nombre || ''}</strong></div>
-                </div>
-              </div>
-
-              <table>
-                <thead>
-                  <tr>
-                    <th class="no-col">NO.</th>
-                    <th class="name-col">NOMBRE Y APELLIDO</th>
-                    ${dayHeaders.map(d => `<th class="day">${d}</th>`).join('')}
-                    <th class="percent-col">%</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${filas.map(f => `
-                    <tr>
-                      <td style="text-align:center">${f.no}</td>
-                      <td>${f.nombre}</td>
-                      ${dayHeaders.map(() => `<td>&nbsp;</td>`).join('')}
-                      <td style="text-align:center">&nbsp;</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-
-              <div class="footer">
-                <table style="width:100%"><tr><td style="background:#f28b00;color:#fff;padding:6px;font-weight:700;">ASISTENCIAS DIARIAS</td>
-                <td style="padding:6px">${dayHeaders.map(() => '0').join(' ')}</td></tr></table>
-              </div>
-
-              <p style="font-size:11px;color:#666;margin-top:8px;">Generado: ${new Date().toLocaleString()}</p>
-            </body>
-          </html>
-        `;
-
-        const printWindow = window.open('', '_blank', 'width=1000,height=800');
-        if (!printWindow) {
-          alert('No se pudo abrir la ventana de impresión. Por favor permite ventanas emergentes.');
-          return;
-        }
-        printWindow.document.open();
-        printWindow.document.write(html);
-        printWindow.document.close();
-        printWindow.focus();
-        setTimeout(() => printWindow.print(), 400);
-
-      } catch (err) {
-        console.error('Error al generar PDF con inscritos:', err);
-        alert('No se pudo generar la lista. Verifica que el servidor esté corriendo y el endpoint /ObtenerInscritos exista.');
+      if (!res.ok) {
+        throw new Error("No se pudo generar el PDF");
       }
-    })();
-  }
 
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = `clase_${curso.nombre || curso.id}.pdf`;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error al generar PDF:", error);
+      alert("No se pudo generar el PDF. Revisa la consola para más detalles.");
+    }
+  };
+
+  // =============================
+  //  EXCEL
+  // =============================
   const handleExportExcel = async (curso) => {
     try {
-      const res = await fetch(`${API}/ObtenerInscritos/${curso.id}`, { credentials: "include" });
-      const data = await res.json();
-      const inscritos = Array.isArray(data && data.inscritos) ? data.inscritos : [];
-
-      // Encabezados del CSV (ajustables según la plantilla de Excel)
-      const headers = [
-        'Grupo', 'Profesor', 'Unidad de Aprendizaje', 'Turno', 'Carrera', 'Cupo', 'Día', 'Hora inicio', 'Hora fin', 'StudentID', 'Nombre estudiante', 'Apellido paterno', 'Apellido materno', 'Calificación'
-      ];
-
-      // Construir filas: para cada inscrito añadimos una fila por cada distribucion del curso
-      const distribs = Array.isArray(curso.Distribucion) ? curso.Distribucion : [];
-
-      const rows = [];
-      if (inscritos.length === 0) {
-        // Crear fila vacía con info del curso y sin estudiantes
-        if (distribs.length === 0) {
-          rows.push([curso.nombre, (curso.DatosPersonale ? `${curso.DatosPersonale.nombre || ''} ${curso.DatosPersonale.ape_paterno || ''}` : ''), (curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.nombre : ''), curso.turno, (curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.carrera : ''), curso.cupo, '', '', '', '', '', '', '', '']);
-        } else {
-          distribs.forEach(d => rows.push([curso.nombre, (curso.DatosPersonale ? `${curso.DatosPersonale.nombre || ''} ${curso.DatosPersonale.ape_paterno || ''}` : ''), (curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.nombre : ''), curso.turno, (curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.carrera : ''), curso.cupo, d.dia, d.hora_ini, d.hora_fin, '', '', '', '', '']));
+      const res = await fetch(
+        `http://localhost:4000/Reportes/Clases/Excel/${curso.id}`,
+        {
+          method: "GET",
+          credentials: "include",
         }
-      } else {
-        inscritos.forEach(ins => {
-          const estudiante = ins.Horario && ins.Horario.DatosPersonale ? ins.Horario.DatosPersonale : null;
-          if (distribs.length === 0) {
-            rows.push([curso.nombre, (curso.DatosPersonale ? `${curso.DatosPersonale.nombre || ''} ${curso.DatosPersonale.ape_paterno || ''}` : ''), (curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.nombre : ''), curso.turno, (curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.carrera : ''), curso.cupo, '', '', '', estudiante ? estudiante.id : '', estudiante ? estudiante.nombre : '', estudiante ? estudiante.ape_paterno : '', estudiante ? estudiante.ape_materno : '', ins.calificacion || '']);
-          } else {
-            distribs.forEach(d => rows.push([curso.nombre, (curso.DatosPersonale ? `${curso.DatosPersonale.nombre || ''} ${curso.DatosPersonale.ape_paterno || ''}` : ''), (curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.nombre : ''), curso.turno, (curso.Unidad_Aprendizaje ? curso.Unidad_Aprendizaje.carrera : ''), curso.cupo, d.dia, d.hora_ini, d.hora_fin, estudiante ? estudiante.id : '', estudiante ? estudiante.nombre : '', estudiante ? estudiante.ape_paterno : '', estudiante ? estudiante.ape_materno : '', ins.calificacion || '']));
-          }
-        });
+      );
+
+      if (!res.ok) {
+        throw new Error("No se pudo generar el Excel");
       }
 
-      const csvContent = [headers.join(','), ...rows.map(r => r.map(cell => '"' + String(cell ?? '').replace(/"/g, '""') + '"').join(','))].join('\n');
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
 
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      const safeName = (curso.nombre || 'lista').replace(/[^a-z0-9_\-]/gi, '_');
-      a.download = `${safeName}_inscritos.csv`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      link.href = url;
+      link.download = `clase_${curso.nombre || curso.id}.xlsx`;
 
-    } catch (err) {
-      console.error('Error al exportar inscritos:', err);
-      alert('No se pudo exportar la lista. Verifica que el servidor esté corriendo y el endpoint /ObtenerInscritos exista.');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error al exportar Excel:", error);
+      alert(
+        "No se pudo generar el archivo de Excel. Revisa la consola para más detalles."
+      );
     }
-  }
-
-
-  
-
-
+  };
 
   return (
     <section>
@@ -290,12 +247,120 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
                   <button style={{ marginLeft: 8 }} onClick={() => handleClickLista(dato.id)}>Pasar Lista</button>
                 </td>
               </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    </section>
+            </thead>
 
+            <tbody>
+              {datosPaginados.length === 0 ? (
+                <tr>
+                  <td colSpan={11} style={{ textAlign: "center", padding: "1rem" }}>
+                    No hay grupos asignados para mostrar.
+                  </td>
+                </tr>
+              ) : (
+                datosPaginados.map((dato) => {
+                  const distribsRaw = dato.Distribucion || [];
+                  const distribs = Array.isArray(distribsRaw)
+                    ? distribsRaw
+                    : [distribsRaw];
 
+                  const horasPorDia = (dia) => {
+                    if (dia === "Miercoles") {
+                      const vals = distribs
+                        .filter(
+                          (d) =>
+                            d &&
+                            (d.dia === "Miércoles" || d.dia === "Miercoles")
+                        )
+                        .map((d) => `${d.hora_ini} - ${d.hora_fin}`);
+                      return vals.join(", ");
+                    }
+                    const vals = distribs
+                      .filter((d) => d && d.dia === dia)
+                      .map((d) => `${d.hora_ini} - ${d.hora_fin}`);
+                    return vals.join(", ");
+                  };
+
+                  return (
+                    <tr key={dato.id}>
+                      <td>{dato.nombre}</td>
+                      <td>
+                        {dato.DatosPersonale &&
+                          `${dato.DatosPersonale.nombre || ""} ${
+                            dato.DatosPersonale.ape_paterno || ""
+                          } ${dato.DatosPersonale.ape_materno || ""}`}
+                      </td>
+                      <td>
+                        {dato.Unidad_Aprendizaje &&
+                          dato.Unidad_Aprendizaje.nombre}
+                      </td>
+                      <td>{dato.turno}</td>
+                      <td>
+                        {dato.Unidad_Aprendizaje &&
+                          dato.Unidad_Aprendizaje.carrera}
+                      </td>
+                      <td>{horasPorDia("Lunes") || " "}</td>
+                      <td>{horasPorDia("Martes") || " "}</td>
+                      <td>{horasPorDia("Miercoles") || " "}</td>
+                      <td>{horasPorDia("Jueves") || " "}</td>
+                      <td>{horasPorDia("Viernes") || " "}</td>
+                      <td className="clases-actions">
+                        <button
+                          type="button"
+                          className="cl-btn cl-btn-outline"
+                          onClick={() => handleGenerarPDF(dato)}
+                        >
+                          PDF
+                        </button>
+                        <button
+                          type="button"
+                          className="cl-btn cl-btn-outline"
+                          onClick={() => handleExportExcel(dato)}
+                        >
+                          Generar Excel
+                        </button>
+                        <button
+                          type="button"
+                          className="cl-btn cl-btn-primary"
+                          onClick={() => handleClickLista(dato.id)}
+                        >
+                          Pasar lista
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Controles de paginación */}
+        {datosFiltrados.length > FILAS_POR_PAGINA && (
+          <div className="clases-pagination">
+            <button
+              type="button"
+              className="clases-page-btn"
+              onClick={() => irAPagina(paginaActual - 1)}
+              disabled={paginaActual === 1}
+            >
+              Anterior
+            </button>
+
+            <span className="clases-page-info">
+              Página {paginaActual} de {totalPaginas}
+            </span>
+
+            <button
+              type="button"
+              className="clases-page-btn"
+              onClick={() => irAPagina(paginaActual + 1)}
+              disabled={paginaActual === totalPaginas}
+            >
+              Siguiente
+            </button>
+          </div>
+        )}
+      </section>
+    </ProfesorLayout>
   );
 }
