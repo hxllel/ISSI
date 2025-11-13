@@ -108,5 +108,57 @@ module.exports = (passport) => {
     }
   });
 
+  router.get("/TiempoCalificaciones", async (req, res) => {
+    try {
+      const fechas = await bd.FechasRelevantes.findOne();
+      const hoy = new Date();
+      let f;
+      let fi;
+      let periodo = "";
+
+      if (fechas.registro_primer_parcial < hoy) {
+        periodo = "1";
+        f = new Date(fechas.registro_primer_parcial);
+        fi = new Date(fechas.fin_registro_primer_parcial);
+      } else if (fechas.registro_segundo_parcial < hoy) {
+        periodo = "2";
+        f = new Date(fechas.registro_segundo_parcial);
+        fi = new Date(fechas.fin_registro_segundo_parcial);
+      } else if (fechas.registro_tercer_parcial < hoy) {
+        periodo = "3";
+        f = new Date(fechas.registro_tercer_parcial);
+        fi = new Date(fechas.fin_registro_tercer_parcial);
+      }
+
+      if (!f || !fi) {
+        return res.json({ tiempo: false, periodo: null });
+      }
+
+      const fechaEvalI = new Date(f.getFullYear(), f.getMonth(), f.getDate());
+      const fechaEvalF = new Date(
+        fi.getFullYear(),
+        fi.getMonth(),
+        fi.getDate()
+      );
+      const hoyEval = new Date(
+        hoy.getFullYear(),
+        hoy.getMonth(),
+        hoy.getDate()
+      );
+
+      if (hoyEval >= fechaEvalI && hoyEval <= fechaEvalF) {
+        return res.json({ tiempo: true, periodo });
+      }
+
+      return res.json({ tiempo: false, periodo: null });
+    } catch (err) {
+      console.error("Error al obtener el tiempo de calificaciones:", err);
+      return res.status(500).json({
+        success: false,
+        msg: "Error interno al obtener el tiempo de calificaciones",
+      });
+    }
+  });
+
   return router;
 };

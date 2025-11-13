@@ -6289,6 +6289,8 @@ VALUES (
         '¡De nada! Estoy aquí para ayudarte. Si tienes más preguntas sobre tu situación académica, no dudes en consultarme.'
     );
 
+delete from fechas_relevantes;
+
 INSERT INTO
     fechas_relevantes (
         inicio_semestre,
@@ -6307,11 +6309,11 @@ INSERT INTO
 VALUES (
         '2025-08-01 00:00:00',
         '2025-12-20 00:00:00',
-        '2025-09-15 00:00:00',
-        '2025-10-15 00:00:00',
-        '2025-11-15 00:00:00',
-        '2025-12-10 00:00:00',
-        '2025-11-12 00:00:00', -- registro_tercer_parcial
+        '2025-11-09 00:00:00', -- registro_primer_parcial
+        '2025-11-11 00:00:00', -- fin_registro_primer_parcial
+        '2025-11-12 00:00:00', -- registro_segundo_parcial
+        '2025-11-15 00:00:00', -- fin_registro_segundo_parcial
+        '2025-12-12 00:00:00', -- registro_tercer_parcial
         '2025-12-01 00:00:00', -- fin_registro_tercer_parcial
         '2025-12-15 00:00:00', -- registro_final
         '2025-12-05 00:00:00', -- evalu_profe

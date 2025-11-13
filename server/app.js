@@ -55,5 +55,4 @@ app.use("/", rutaProfesor(passport));
 app.use("/api/carreras", carreraRoutes);
 app.use("/api/unidades", uaRoutes);
 app.use("/api/datos-medicos", datosMedicosRoutes);
-app.use("/api/datos-medicos", datosMedicosRoutes);
 app.listen(app.get("port"));

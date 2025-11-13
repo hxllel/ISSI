@@ -5,6 +5,8 @@ import { useParams, useNavigate } from "react-router-dom";
 export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const params = useParams();
   const [datos, setDatos] = useState([]);
+  const [registrar, setRegistrar] = useState(false);
+  const [periodo, setPeriodo] = useState("");
     const navigate = useNavigate();
     const API = 'http://localhost:4000';
 
@@ -15,6 +17,17 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
     const handleClickLista = (id) =>{
         navigate(`/profesor/PaseLista/${id}`);
     }
+
+  useEffect(() => {
+    fetch(`${API}/TiempoCalificaciones`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.tiempo){
+        setRegistrar(true);
+        setPeriodo(data.periodo);
+      }
+    }).catch((err) => console.error("Error al obtener el tiempo de calificaciones:", err));
+  }, []);
   useEffect(() => {
     fetch(`${API}/ObtenerCursos/Prof/:${profesorId}`, { credentials: "include" })
       .then((res) => res.json())
@@ -271,6 +284,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
                 <td>{horasPorDia('Jueves') || ' '}</td>
                 <td>{horasPorDia('Viernes') || ' '}</td>
                 <td>
+                  {registrar ? (<button>Registrar Calificaciones {periodo} parcial</button>) : null}
                   <button style={{ marginLeft: 8 }} onClick={() => handleGenerarPDF(dato)}>Generar lista PDF</button>
                   <button style={{ marginLeft: 8 }} onClick={() => handleExportExcel(dato)}>Exportar lista Excel</button>
                   <button style={{ marginLeft: 8 }} onClick={() => handleClickLista(dato.id)}>Pasar Lista</button>
