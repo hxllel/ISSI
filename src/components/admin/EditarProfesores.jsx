@@ -5,7 +5,7 @@ import "./EditarProfesores.css"; // 👈 Se aplica el estilo moderno
 export function EditarProfesores() {
     const { id } = useParams();
     const navigate = useNavigate();
-
+    const API = 'http://localhost:4000';
     const [profesor, setProfesor] = useState({
         nombre: "",
         ape_paterno: "",
@@ -30,7 +30,7 @@ export function EditarProfesores() {
     const [fotoBase64, setFotoBase64] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:4000/ObtenerProfesor/${id}`, {
+        fetch(`${API}/ObtenerProfesor/${id}`, {
             credentials: "include",
         })
             .then(res => res.json())
@@ -50,7 +50,7 @@ export function EditarProfesores() {
         const payload = { ...profesor };
         if (fotoBase64) payload.fotoBase64 = fotoBase64;
 
-        fetch(`http://localhost:4000/EditarProfesor/${id}`, {
+        fetch(`${API}/EditarProfesor/${id}`, {
             method: "PUT",
             credentials: "include",
             headers: { "Content-Type": "application/json" },

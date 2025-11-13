@@ -1,7 +1,7 @@
 // src/pages/DatosMedicos.jsx
 import { useState } from 'react';
 
-const API = 'http://localhost:4000';
+    const API = 'http://localhost:4000';
 
 export function DatosMedicos() {
   const [idUsuario, setIdUsuario] = useState('');

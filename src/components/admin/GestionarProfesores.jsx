@@ -16,6 +16,7 @@ export function GestionarProfesores() {
   const handleRegistrarProf = () => navigate("registrarProfesor");
   const handleClickEdit = (id) => navigate(`editarProfesor/${id}`);
   const handleClickDelete = () => setDelete(true);
+    const API = 'http://localhost:4000';
 
   const handleAbrirModal = (id) => {
     setmostrarModal(true);
@@ -25,7 +26,7 @@ export function GestionarProfesores() {
   const handleCerrarModal = () => setmostrarModal(false);
 
   useEffect(() => {
-    fetch("http://localhost:4000/ObtenerProfesores", { credentials: "include" })
+    fetch(`${API}/ObtenerProfesores`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setProfesores(data.profesores || []))
       .catch((err) => console.error("Error al obtener los profesores:", err));
@@ -33,7 +34,7 @@ export function GestionarProfesores() {
 
   useEffect(() => {
     if (del) {
-      fetch(`http://localhost:4000/EliminarProfesor/${id_profesor}`, {
+      fetch(`${API}/EliminarProfesor/${id_profesor}`, {
         credentials: "include",
         method: "DELETE",
         headers: { "Content-Type": "application/json" },

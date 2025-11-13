@@ -15,6 +15,7 @@ export function GestionarAlumnos() {
   const [idAlumno, setIdAlumno] = useState("");
   const [del, setDelete] = useState(false);
   const navigate = useNavigate();
+    const API = 'http://localhost:4000';
 
   const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
   const handleClickProf = () => navigate("../administrador/gestionarProfesores");
@@ -30,14 +31,14 @@ export function GestionarAlumnos() {
   const handleEliminar = () => setDelete(true);
 
   useEffect(() => {
-    fetch("http://localhost:4000/ObtenerAlumnos", { credentials: "include" })
+    fetch(`${API}/ObtenerAlumnos`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setDatos(data.alumnos || []))
       .catch(() => setDatos([]));
   }, []);
 
   useEffect(() => {
-        fetch("http://localhost:4000/ObtenerCarreras", { credentials: "include" })
+        fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => {
                 setCarreras(data.carreras || []);
@@ -47,7 +48,7 @@ export function GestionarAlumnos() {
 
   useEffect(() => {
     if (del) {
-      fetch(`http://localhost:4000/EliminarAlumno/${idAlumno}`, {
+      fetch(`${API}/EliminarAlumno/${idAlumno}`, {
         method: "DELETE",
         credentials: "include",
       })

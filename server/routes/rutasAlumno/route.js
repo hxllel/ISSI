@@ -1274,12 +1274,10 @@ module.exports = (passport) => {
       return res.json({ success: true, registrado: contador.registrados });
     } catch (err) {
       console.error("Error en /ActualizarContadorProfesor:", err);
-      return res
-        .status(500)
-        .json({
-          success: false,
-          error: "Error interno al actualizar contador",
-        });
+      return res.status(500).json({
+        success: false,
+        error: "Error interno al actualizar contador",
+      });
     }
   });
 
@@ -1351,7 +1349,7 @@ module.exports = (passport) => {
   // Validar si es tiempo de evaluar profesores
   router.get("/ValidarFechaEvaluacion", async (req, res) => {
     try {
-      const fechas = await bd.FechasRelevantes.findOne();
+      const fechas = await bd.FechasRelevantes.findAll();
 
       if (!fechas || !fechas.evalu_profe) {
         return res.json({

@@ -1,5 +1,5 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "..", "..", ".env") });
 
 const { DataTypes } = require("sequelize");
 const { Sequelize } = require("sequelize");
@@ -496,11 +496,18 @@ const Avisos = sequelize.define(
 const FechasRelevantes = sequelize.define(
   "FechasRelevantes",
   {
-    inicio_semestre: { type: DataTypes.DATE, allowNull: false },
+    inicio_semestre: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      primaryKey: true,
+    },
     fin_semestre: { type: DataTypes.DATE, allowNull: false },
     registro_primer_parcial: { type: DataTypes.DATE, allowNull: false },
+    fin_registro_primer_parcial: { type: DataTypes.DATE, allowNull: false },
     registro_segundo_parcial: { type: DataTypes.DATE, allowNull: false },
+    fin_registro_segundo_parcial: { type: DataTypes.DATE, allowNull: false },
     registro_tercer_parcial: { type: DataTypes.DATE, allowNull: false },
+    fin_registro_tercer_parcial: { type: DataTypes.DATE, allowNull: false },
     registro_final: { type: DataTypes.DATE, allowNull: false },
     evalu_profe: { type: DataTypes.DATE, allowNull: false },
     subir_doc_ets: { type: DataTypes.DATE, allowNull: false },

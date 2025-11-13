@@ -6,7 +6,8 @@ import "./EvaluacionProfesores.css";
 export function EvaluacionProfesores() {
   const navigate = useNavigate();
   const { id } = useParams();
-  
+      const API = 'http://localhost:4000';
+
   const [profesores, setProfesores] = useState([]);
   const [profesorSeleccionado, setProfesorSeleccionado] = useState("");
   const [respuestas, setRespuestas] = useState({});
@@ -135,7 +136,7 @@ export function EvaluacionProfesores() {
 
   // Validar fecha de evaluación
   useEffect(() => {
-    fetch(`http://localhost:4000/ValidarFechaEvaluacion`, { credentials: "include" })
+    fetch(`${API}/ValidarFechaEvaluacion`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         setFechaValida(data.valido || false);
@@ -150,7 +151,7 @@ export function EvaluacionProfesores() {
 
   // obtener lista de profesores del alumno
   useEffect(() => {
-    fetch(`http://localhost:4000/ObtenerHorario/${id}`, { credentials: "include" })
+    fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.horario && Array.isArray(data.horario)) {
@@ -190,7 +191,7 @@ export function EvaluacionProfesores() {
     //ACTUALIZAR CONTADOR EN BASE DE DATOS
     try {
       const resp = await axios.post(
-        "http://localhost:4000/ActualizarContadorProfesor",
+        `${API}/ActualizarContadorProfesor`,
         {
           profesor: profesorSeleccionado,
           alumnoId: id,

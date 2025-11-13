@@ -5,6 +5,7 @@ import "./EditarAlumnos.css"; // 👈 Se agrega el CSS
 export function EditarAlumnos() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const API = 'http://localhost:4000';
 
     const [alumno, setAlumno] = useState({
         nombre: "",
@@ -30,7 +31,7 @@ export function EditarAlumnos() {
     const [fotoBase64, setFotoBase64] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
+        fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
             .then(res => res.json())
             .then(data => {
                 if (data.alumno) setAlumno(data.alumno);
@@ -39,7 +40,7 @@ export function EditarAlumnos() {
     }, [id]);
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerCarreras")
+        fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
             .then(res => res.json())
             .then(data => setCarreras(data.carreras || []))
             .catch(err => console.error("Error al obtener las carreras:", err));
@@ -55,7 +56,7 @@ export function EditarAlumnos() {
         const payload = { ...alumno };
         if (fotoBase64) payload.fotoBase64 = fotoBase64;
 
-        fetch(`http://localhost:4000/EditarAlumno/${id}`, {
+        fetch(`${API}/EditarAlumno/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

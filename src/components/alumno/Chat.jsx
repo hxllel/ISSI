@@ -13,6 +13,8 @@ const AnimatedThinkingDots = () => {
 }
 
 export function ChatbotAsistente() {
+      const API = 'http://localhost:4000';
+
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
@@ -59,7 +61,7 @@ export function ChatbotAsistente() {
 
   useEffect(() => {
     if (!alumnoId) return;
-    fetch(`http://localhost:4000/MensajesChat/${alumnoId}`, { credentials: "include" })
+    fetch(`${API}/MensajesChat/${alumnoId}`, { credentials: "include" })
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -125,7 +127,7 @@ export function ChatbotAsistente() {
 
     try {
       // 1. Guardar la pregunta en BD
-      const saveResponse = await fetch("http://localhost:4000/GuardarMensajeChat", {
+      const saveResponse = await fetch(`${API}/GuardarMensajeChat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -172,7 +174,7 @@ export function ChatbotAsistente() {
           const timeoutId = setTimeout(() => controller.abort(), 150000)
 
           const startTime = performance.now()
-          const response = await fetch("http://localhost:8000/generate/", {
+          const response = await fetch(`http://localhost:8000/generate/`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -214,7 +216,7 @@ export function ChatbotAsistente() {
 
       // 3. Actualizar el mensaje con la respuesta en BD
       if (savedData.mensaje && savedData.mensaje.id) {
-        await fetch(`http://localhost:4000/ActualizarMensajeChat/${savedData.mensaje.id}`, {
+        await fetch(`${API}/ActualizarMensajeChat/${savedData.mensaje.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

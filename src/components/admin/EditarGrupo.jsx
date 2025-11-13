@@ -8,6 +8,8 @@ export function EditarGrupo() {
     const [id_profesor, setId_profesor] = useState("");
     const [UA, setUA] = useState([]);
     const [id_UA, setId_UA] = useState("");
+    const API = 'http://localhost:4000';
+
     const [grupo, setGrupo] = useState({
         id_profesor: "",
         id_UA: "",
@@ -16,14 +18,14 @@ export function EditarGrupo() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerProfesores", { credentials: "include" })
+        fetch(`${API}/ObtenerProfesores`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => setProfesores(data.profesores))
             .catch((err) => console.error("Error al obtener los profesores:", err));
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerUA")
+        fetch(`${API}:4000/ObtenerUA`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => setUA(data.UA))
             .catch((err) => console.error("Error al obtener las unidades de aprendizaje:", err));
@@ -35,7 +37,7 @@ export function EditarGrupo() {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:4000/ObtenerGrupo/${id}`)
+        fetch(`${API}/ObtenerGrupo/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.grupo) setGrupo(data.grupo);
@@ -45,7 +47,7 @@ export function EditarGrupo() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch(`http://localhost:4000/EditarGrupo/${id}`, {
+        fetch(`${API}/EditarGrupo/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(grupo),

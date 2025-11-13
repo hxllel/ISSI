@@ -19,10 +19,11 @@ export function Inscripcion() {
   const [d, setd] = useState(null);
   const [cursadas, setCursadas] = useState([]);
   const [NoReinscripcion, setNoRe] = useState([]);
+    const API = 'http://localhost:4000';
 
   // --- HISTORIAL DE CURSADAS ---
   useEffect(() => {
-    fetch("http://localhost:4000/ObtenerHistorial", { credentials: "include" })
+    fetch("${API}/ObtenerHistorial", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         const nombres = data.historial?.map((h) => h.unidad_aprendizaje) || [];
@@ -33,7 +34,7 @@ export function Inscripcion() {
 
   // --- BORRADOR ---
   useEffect(() => {
-    fetch("http://localhost:4000/ConsultarBorrador", { credentials: "include" })
+    fetch("${API}/ConsultarBorrador", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         const borr = Array.isArray(data && data.horario) ? data.horario : [];
@@ -46,7 +47,7 @@ export function Inscripcion() {
   }, []);
 
   useEffect(() =>{
-    fetch("http://localhost:4000/NoReinscripcion", {credentials : "include"})
+    fetch("${API}/NoReinscripcion", {credentials : "include"})
     .then((res) => res.json())
     .then((data) =>{
       setNoRe(data.grupos);
@@ -60,7 +61,7 @@ export function Inscripcion() {
 
   // --- GRUPOS DISPONIBLES ---
   useEffect(() => {
-    fetch(`http://localhost:4000/Grupos/${id}`, { credentials: "include" })
+    fetch(`${API}/Grupos/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.grupos) setGrupos(data.grupos);
@@ -77,7 +78,7 @@ export function Inscripcion() {
   // --- DISTRIBUCIÓN HORARIA ---
   useEffect(() => {
     if (modalOpen) {
-      fetch(`http://localhost:4000/ObtenerDist/${id_dis}`, { credentials: "include" })
+      fetch(`${API}/ObtenerDist/${id_dis}`, { credentials: "include" })
         .then((res) => res.json())
         .then((data) => {
           if (data.Distri) setDistri(data.Distri);
@@ -88,7 +89,7 @@ export function Inscripcion() {
 
   // --- TEMPORALES ---
   useEffect(() => {
-    fetch("http://localhost:4000/Con", { credentials: "include" })
+    fetch("${API}/Con", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -106,7 +107,7 @@ export function Inscripcion() {
   // --- ELIMINAR DE BORRADOR ---
   useEffect(() => {
     if (d) {
-      fetch(`http://localhost:4000/EliminarBorrador/${idgru}`, {
+      fetch(`${API}/EliminarBorrador/${idgru}`, {
         method: "POST",
         credentials: "include",
       })
@@ -126,7 +127,7 @@ export function Inscripcion() {
 
   // --- AGREGAR A HORARIO ---
   const handleClickAdd = (id) => {
-    fetch(`http://localhost:4000/Agregar/${id}`, {
+    fetch(`${API}/Agregar/${id}`, {
       credentials: "include",
       method: "POST",
     })
@@ -142,7 +143,7 @@ export function Inscripcion() {
 
   // --- ELIMINAR DE HORARIO ---
   const handleClickEl = (id) => {
-    fetch(`http://localhost:4000/Del/${id}`, {
+    fetch(`${API}/Del/${id}`, {
       credentials: "include",
       method: "POST",
     })
@@ -161,7 +162,7 @@ export function Inscripcion() {
 
   // --- IMPORTAR DEL BORRADOR ---
   const handleClickImport = () => {
-    fetch("http://localhost:4000/ImportarHorario", {
+    fetch(`${API}/ImportarHorario`, {
       credentials: "include",
       method: "POST",
     })
@@ -179,7 +180,7 @@ export function Inscripcion() {
   // --- ELIMINAR BORRADOR FINAL ---
   useEffect(() => {
     if (del) {
-      fetch(`http://localhost:4000/EliminarBorrador/${idgru}`, {
+      fetch(`${API}/EliminarBorrador/${idgru}`, {
         method: "POST",
         credentials: "include",
       })
@@ -201,7 +202,7 @@ export function Inscripcion() {
   // --- INSCRIPCIÓN FINAL ---
   const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch(`http://localhost:4000/Inscribirse`, {
+    fetch(`${API}/Inscribirse`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

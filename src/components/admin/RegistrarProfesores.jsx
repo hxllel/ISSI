@@ -25,6 +25,7 @@ export function RegistrarProfesores() {
     const [RFC, setRFC] = useState("")
     const [grado, setGrado] = useState("")
     const [error2, setError2] = useState(false)
+    const API = 'http://localhost:4000';
 
     const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
     const handleClickProf = () => navigate("../administrador/gestionarProfesores");
@@ -38,7 +39,7 @@ export function RegistrarProfesores() {
             return;
         }
 
-        const res = await fetch("http://localhost:4000/RegistrarProfesor", {
+        const res = await fetch(`${API}/RegistrarProfesor`, {
             method: "POST",
             credentials: "include",
             headers: {

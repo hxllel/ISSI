@@ -12,23 +12,24 @@ export function RegistrarCursos() {
     const [turno, setTurno] = useState("");
     const [nombre, setNombre] = useState("");
     const [carreragru, setCarreragru] = useState("");
+    const API = 'http://localhost:4000';
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerProfesores", { credentials: "include" })
+        fetch(`${API}/ObtenerProfesores`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => setProfesores(data.profesores))
             .catch((err) => console.error("Error al obtener los profesores:", err));
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerUA", { credentials: "include" })
+        fetch(`${API}/ObtenerUA`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => setUA(data.UA))
             .catch((err) => console.error("Error al obtener las UAs:", err));
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerCarreras", { credentials: "include" })
+        fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => setCarreras(data.carreras))
             .catch((err) => console.error("Error al obtener las carreras:", err));
@@ -42,7 +43,7 @@ export function RegistrarCursos() {
         }
 
         try {
-            const res = await fetch("http://localhost:4000/RegistrarCurso", {
+            const res = await fetch(`${API}/RegistrarCurso`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
