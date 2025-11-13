@@ -1349,7 +1349,7 @@ module.exports = (passport) => {
   // Validar si es tiempo de evaluar profesores
   router.get("/ValidarFechaEvaluacion", async (req, res) => {
     try {
-      const fechas = await bd.FechasRelevantes.findAll();
+      const fechas = await bd.FechasRelevantes.findOne();
 
       if (!fechas || !fechas.evalu_profe) {
         return res.json({

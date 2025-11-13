@@ -6,6 +6,7 @@ export function Registrar_Calificaciones() {
     const API = '${API}';
     useEffect(() => {
 
+        fetch(`${API}/ObtenerGrupos`, { credentials: "include" })
     }, []);
     
     return (
