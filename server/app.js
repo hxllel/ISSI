@@ -13,6 +13,7 @@ var flash = require("connect-flash");
 const rutaAdministrador = require("./routes/rutasAdministrador/route.js");
 const rutaAlumno = require("./routes/rutasAlumno/route.js");
 const rutaProfesor = require("./routes/rutasProfesor/ruta.js");
+const rutaEmails = require("./routes/rutaEmails.js");
 
 // importa las rutas API
 const carreraRoutes = require("./routes/carreraRoutes");
@@ -50,6 +51,7 @@ app.use("/", rutaMain(passport));
 app.use("/", rutaAdministrador(passport));
 app.use("/", rutaAlumno(passport));
 app.use("/", rutaProfesor(passport));
+app.use("/", rutaEmails(passport));
 
 // monta las rutas API
 app.use("/api/carreras", carreraRoutes);
