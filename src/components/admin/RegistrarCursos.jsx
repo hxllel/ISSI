@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./RegistrarCursos.css"; // 👈 Se agrega el CSS del segundo
+import { AdminSidebar } from "./AdminSidebar";
 
 export function RegistrarCursos() {
     const navigate = useNavigate();
@@ -64,57 +65,63 @@ export function RegistrarCursos() {
     };
 
     return (
-        <section className="rc-wrap">
-            <form className="formulario rc-card" onSubmit={handleSubmit}>
-                <label>Número del grupo:</label>
-                <input
-                    type="number"
-                    name="nombre"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                />
+        <div className="admin-container">
+            <AdminSidebar activeRoute="cursos" />
 
-                <label>Profesor:</label>
-                <select value={id_profesor} onChange={(e) => setId_profesor(e.target.value)}>
-                    <option value="">Seleccione un profesor</option>
-                    {profesores.map((profesor) => (
-                        <option key={profesor.id} value={profesor.id}>
-                            {profesor.nombre} {profesor.ape_paterno} {profesor.ape_materno}
-                        </option>
-                    ))}
-                </select>
+            <main className="main-content">
+                <section className="rc-wrap">
+                    <form className="formulario rc-card" onSubmit={handleSubmit}>
+                        <label>Número del grupo:</label>
+                        <input
+                            type="number"
+                            name="nombre"
+                            value={nombre}
+                            onChange={(e) => setNombre(e.target.value)}
+                        />
 
-                <label>Carrera para el grupo:</label>
-                <select value={carreragru} onChange={(e) => setCarreragru(e.target.value)}>
-                    <option value="">Seleccione una carrera</option>
-                    {carrera.map((c) => (
-                        <option key={c.nombre} value={c.nombre}>
-                            {c.nombre}
-                        </option>
-                    ))}
-                </select>
+                        <label>Profesor:</label>
+                        <select value={id_profesor} onChange={(e) => setId_profesor(e.target.value)}>
+                            <option value="">Seleccione un profesor</option>
+                            {profesores.map((profesor) => (
+                                <option key={profesor.id} value={profesor.id}>
+                                    {profesor.nombre} {profesor.ape_paterno} {profesor.ape_materno}
+                                </option>
+                            ))}
+                        </select>
 
-                <label>Unidad de Aprendizaje:</label>
-                <select value={id_UA} onChange={(e) => setId_UA(e.target.value)}>
-                    <option value="">Seleccione una unidad de aprendizaje</option>
-                    {UA.filter((ua) => ua.carrera === carreragru).map((ua) => (
-                        <option key={ua.id} value={ua.id}>
-                            {ua.nombre}
-                        </option>
-                    ))}
-                </select>
+                        <label>Carrera para el grupo:</label>
+                        <select value={carreragru} onChange={(e) => setCarreragru(e.target.value)}>
+                            <option value="">Seleccione una carrera</option>
+                            {carrera.map((c) => (
+                                <option key={c.nombre} value={c.nombre}>
+                                    {c.nombre}
+                                </option>
+                            ))}
+                        </select>
 
-                <label>Turno:</label>
-                <select value={turno} onChange={(e) => setTurno(e.target.value)}>
-                    <option value="">Seleccione un turno</option>
-                    <option value="Matutino">Matutino</option>
-                    <option value="Vespertino">Vespertino</option>
-                </select>
+                        <label>Unidad de Aprendizaje:</label>
+                        <select value={id_UA} onChange={(e) => setId_UA(e.target.value)}>
+                            <option value="">Seleccione una unidad de aprendizaje</option>
+                            {UA.filter((ua) => ua.carrera === carreragru).map((ua) => (
+                                <option key={ua.id} value={ua.id}>
+                                    {ua.nombre}
+                                </option>
+                            ))}
+                        </select>
 
-                <button className="rc-btn primary" type="submit">
-                    Registrar Curso
-                </button>
-            </form>
-        </section>
+                        <label>Turno:</label>
+                        <select value={turno} onChange={(e) => setTurno(e.target.value)}>
+                            <option value="">Seleccione un turno</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                        </select>
+
+                        <button className="rc-btn primary" type="submit">
+                            Registrar Curso
+                        </button>
+                    </form>
+                </section>
+            </main>
+        </div>
     );
 }

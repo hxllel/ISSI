@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarProfesores.css";
+import { AdminSidebar } from "./AdminSidebar";
 
 export function GestionarProfesores() {
   const navigate = useNavigate();
@@ -8,15 +9,11 @@ export function GestionarProfesores() {
   const [id_profesor, setId_profesor] = useState("");
   const [del, setDelete] = useState(false);
   const [mostrarModal, setmostrarModal] = useState(false);
+  const API = 'http://localhost:4000';
 
-  const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
-    const handleClickProf = () => navigate("../administrador/gestionarProfesores");
-    const handleClickCursos = () => navigate("../administrador/gestionarCursos");
-    const handleClickadmin = () => navigate("/administrador");
   const handleRegistrarProf = () => navigate("registrarProfesor");
   const handleClickEdit = (id) => navigate(`editarProfesor/${id}`);
   const handleClickDelete = () => setDelete(true);
-    const API = 'http://localhost:4000';
 
   const handleAbrirModal = (id) => {
     setmostrarModal(true);
@@ -55,30 +52,14 @@ export function GestionarProfesores() {
   }, [del]);
 
   return (
-    <div className="layout">
-      {/* PANEL LATERAL */}
-      <aside className="sidebar">
-        <div className="logo">
-            <img src="/ipn.png" alt="Logo" className="logo-img" />
-            <span>Gestión Escolar</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate("/administrador")} className="menu-item">Panel de Control</button>
-          <button onClick={handleClickAlu} className="menu-item">Estudiantes</button>
-          <button onClick={handleClickProf} className="menu-item active">Profesores</button>
-          <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-          <button className="menu-item">Informes</button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+    <div className="admin-container">
+      <AdminSidebar activeRoute="profesores" />
 
-      {/* CONTENIDO PRINCIPAL */}
-      <main className="contenido">
+      <main className="main-content">
         <header className="encabezado">
           <h1>Profesores</h1>
           <div className="acciones">
             <button className="btn azul" onClick={handleRegistrarProf}>+ Registrar nuevo profesor</button>
-            
           </div>
         </header>
 

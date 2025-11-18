@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Administrador.css";
+import { AdminSidebar } from "./AdminSidebar";
 import { FaUserGraduate, FaChalkboardTeacher, FaBookOpen, FaTrashAlt, FaFileAlt, FaBullhorn } from "react-icons/fa";
 
 export function Administrador() {
@@ -14,26 +15,8 @@ export function Administrador() {
 
   return (
     <div className="admin-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-    <img src="ipn.png" alt="Logo" className="logo-img" />
-    <span>Gestión Escolar</span>
-  </div>
-        <nav className="menu">
-          <button onClick={() => navigate("/administrador")} className="menu-item active">
-            Panel de Control
-          </button>
-          <button onClick={handleClickAlu} className="menu-item">Estudiantes</button>
-          <button onClick={handleClickProf} className="menu-item">Profesores</button>
-          <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-          <button className="menu-item">Informes</button>
-          <button onClick={handleClickETS} className="menu-item">ETS</button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+      <AdminSidebar activeRoute="panel" />
 
-      {/* Main content */}
       <main className="main-content">
         <header>
           <h1>¡Hola, Administrador!</h1>

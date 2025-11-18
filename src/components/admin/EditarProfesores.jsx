@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarProfesores.css"; // 👈 Se aplica el estilo moderno
+import { AdminSidebar } from "./AdminSidebar";
 
 export function EditarProfesores() {
     const { id } = useParams();
@@ -80,77 +81,83 @@ export function EditarProfesores() {
     };
 
     return (
-        <section className="ep-wrap">
-            <h1 className="ep-title">Editar Profesor</h1>
+        <div className="admin-container">
+            <AdminSidebar activeRoute="profesores" />
 
-            <form className="formulario ep-card" onSubmit={handleSubmit}>
-                <label>Nombre:</label>
-                <input type="text" name="nombre" value={profesor.nombre} onChange={handleChange} />
+            <main className="main-content">
+                <section className="ep-wrap">
+                    <h1 className="ep-title">Editar Profesor</h1>
 
-                <label>Apellido Paterno:</label>
-                <input type="text" name="ape_paterno" value={profesor.ape_paterno} onChange={handleChange} />
+                    <form className="formulario ep-card" onSubmit={handleSubmit}>
+                        <label>Nombre:</label>
+                        <input type="text" name="nombre" value={profesor.nombre} onChange={handleChange} />
 
-                <label>Apellido Materno:</label>
-                <input type="text" name="ape_materno" value={profesor.ape_materno} onChange={handleChange} />
+                        <label>Apellido Paterno:</label>
+                        <input type="text" name="ape_paterno" value={profesor.ape_paterno} onChange={handleChange} />
 
-                <label>Fecha de Nacimiento:</label>
-                <input type="date" name="fecha_nacimiento" value={profesor.fecha_nacimiento} onChange={handleChange} />
+                        <label>Apellido Materno:</label>
+                        <input type="text" name="ape_materno" value={profesor.ape_materno} onChange={handleChange} />
 
-                <label>Tipo de Sangre:</label>
-                <input type="text" name="tipo_sangre" value={profesor.tipo_sangre} onChange={handleChange} />
+                        <label>Fecha de Nacimiento:</label>
+                        <input type="date" name="fecha_nacimiento" value={profesor.fecha_nacimiento} onChange={handleChange} />
 
-                <label>CURP:</label>
-                <input type="text" name="CURP" value={profesor.CURP} onChange={handleChange} />
+                        <label>Tipo de Sangre:</label>
+                        <input type="text" name="tipo_sangre" value={profesor.tipo_sangre} onChange={handleChange} />
 
-                <label>Nacionalidad:</label>
-                <input type="text" name="nacionalidad" value={profesor.nacionalidad} onChange={handleChange} />
+                        <label>CURP:</label>
+                        <input type="text" name="CURP" value={profesor.CURP} onChange={handleChange} />
 
-                <label>Calle:</label>
-                <input type="text" name="calle" value={profesor.calle} onChange={handleChange} />
+                        <label>Nacionalidad:</label>
+                        <input type="text" name="nacionalidad" value={profesor.nacionalidad} onChange={handleChange} />
 
-                <label>Número Exterior:</label>
-                <input type="text" name="num_exterior" value={profesor.num_exterior} onChange={handleChange} />
+                        <label>Calle:</label>
+                        <input type="text" name="calle" value={profesor.calle} onChange={handleChange} />
 
-                <label>Número Interior:</label>
-                <input type="text" name="num_interior" value={profesor.num_interior} onChange={handleChange} />
+                        <label>Número Exterior:</label>
+                        <input type="text" name="num_exterior" value={profesor.num_exterior} onChange={handleChange} />
 
-                <label>Código Postal:</label>
-                <input type="text" name="codigo_postal" value={profesor.codigo_postal} onChange={handleChange} />
+                        <label>Número Interior:</label>
+                        <input type="text" name="num_interior" value={profesor.num_interior} onChange={handleChange} />
 
-                <label>Colonia:</label>
-                <input type="text" name="colonia" value={profesor.colonia} onChange={handleChange} />
+                        <label>Código Postal:</label>
+                        <input type="text" name="codigo_postal" value={profesor.codigo_postal} onChange={handleChange} />
 
-                <label>Delegación:</label>
-                <input type="text" name="delegacion" value={profesor.delegacion} onChange={handleChange} />
+                        <label>Colonia:</label>
+                        <input type="text" name="colonia" value={profesor.colonia} onChange={handleChange} />
 
-                <label>Ciudad:</label>
-                <input type="text" name="ciudad" value={profesor.ciudad} onChange={handleChange} />
+                        <label>Delegación:</label>
+                        <input type="text" name="delegacion" value={profesor.delegacion} onChange={handleChange} />
 
-                <label>Teléfono:</label>
-                <input type="text" name="telefono" value={profesor.telefono} onChange={handleChange} />
+                        <label>Ciudad:</label>
+                        <input type="text" name="ciudad" value={profesor.ciudad} onChange={handleChange} />
 
-                <label>Correo Electrónico:</label>
-                <input type="email" name="email" value={profesor.email} onChange={handleChange} />
+                        <label>Teléfono:</label>
+                        <input type="text" name="telefono" value={profesor.telefono} onChange={handleChange} />
 
-                <label>RFC:</label>
-                <input type="text" name="RFC" value={profesor.RFC} onChange={handleChange} />
+                        <label>Correo Electrónico:</label>
+                        <input type="email" name="email" value={profesor.email} onChange={handleChange} />
 
-                <label>Grado:</label>
-                <input type="text" name="grado" value={profesor.grado} onChange={handleChange} />
+                        <label>RFC:</label>
+                        <input type="text" name="RFC" value={profesor.RFC} onChange={handleChange} />
 
-                <label>Foto (opcional):</label>
-                <input type="file" accept="image/*" onChange={handleFotoChange} />
+                        <label>Grado:</label>
+                        <input type="text" name="grado" value={profesor.grado} onChange={handleChange} />
 
-                {fotoBase64 && (
-                    <div className="ep-photo-preview">
-                        <img src={fotoBase64} alt="Previsualización" />
-                    </div>
-                )}
+                        <label>Foto (opcional):</label>
+                        <input type="file" accept="image/*" onChange={handleFotoChange} />
 
-                <button className="ep-btn primary" type="submit">
-                    Guardar Cambios
-                </button>
-            </form>
-        </section>
+                        {fotoBase64 && (
+                            <div className="ep-photo-preview">
+                                <img src={fotoBase64} alt="Previsualización" />
+                            </div>
+                        )}
+
+                        <button className="ep-btn primary" type="submit">
+                            Guardar Cambios
+                        </button>
+                    </form>
+                </section>
+            </main>
+        </div>
     );
 }

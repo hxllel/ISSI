@@ -1,0 +1,162 @@
+:root {
+  /* Paleta principal */
+  --guinda: #7d0024;
+  --guinda-dark: #60001c;
+  --guinda-light: #a01838;
+  --white: #ffffff;
+  --black: #222222;
+  --gray-dark: #1f2937;
+  --gray-medium: #6b7280;
+  --gray-light: #f3f4f6;
+  --gray-border: #e5e7eb;
+
+  /* Tipografía */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Espaciado */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+  /* Transiciones */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-base: 0.2s ease-in-out;
+  --transition-slow: 0.3s ease-in-out;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--black);
+  background-color: var(--white);
+  line-height: 1.6;
+}
+
+/* Tipografía global */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-bold);
+  color: var(--black);
+  line-height: 1.2;
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+h5 { font-size: var(--font-size-lg); }
+h6 { font-size: var(--font-size-base); }
+
+p {
+  color: var(--gray-medium);
+  margin: 0.5rem 0;
+}
+
+/* Botones globales */
+button {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 10px 16px;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Inputs globales */
+input, select, textarea {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--guinda);
+  box-shadow: 0 0 0 3px rgba(125, 0, 36, 0.1);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--gray-medium);
+}
+
+/* Links */
+a {
+  color: var(--guinda);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+a:hover {
+  color: var(--guinda-dark);
+}
+
+/* Tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+table th {
+  background-color: var(--gray-light);
+  color: var(--black);
+  font-weight: var(--font-weight-bold);
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 2px solid var(--gray-border);
+}
+
+table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--gray-border);
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+table tbody tr:hover {
+  background-color: var(--gray-light);
+}

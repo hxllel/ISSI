@@ -7,9 +7,12 @@ export function ProfesorLayout({ children, profesorId: propProfesorId }) {
   const params = useParams();
   const location = useLocation();
 
-  // Id del profesor: viene por prop o por la URL /profesor/:id
+  // Id del profesor: viene por prop o por la URL
+  // Si estamos en /profesor/PaseLista/:idGrupo, no hay profesorId en params
   const profesorId = propProfesorId ?? params.id;
 
+  // Si no tenemos profesorId, intentar extraerlo de la ubicación anterior
+  // o del localStorage si lo guardamos
   const base = profesorId ? `/profesor/${profesorId}` : "/profesor";
 
   const inicioUrl = base;
@@ -40,8 +43,7 @@ export function ProfesorLayout({ children, profesorId: propProfesorId }) {
         <div className="profesor-logo">
           <img src={ipnLogo} alt="IPN" className="profesor-logo-img" />
           <div className="profesor-logo-text">
-            <span>Gestión</span>
-            <span>Escolar</span>
+            <span>SAES-R</span>
           </div>
         </div>
 

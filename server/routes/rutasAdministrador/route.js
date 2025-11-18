@@ -436,7 +436,7 @@ module.exports = (passport) => {
         try {
           const base64Data =
             typeof req.body.fotoBase64 === "string" &&
-            req.body.fotoBase64.includes(",")
+              req.body.fotoBase64.includes(",")
               ? req.body.fotoBase64.split(",")[1]
               : req.body.fotoBase64;
           fields.foto = Buffer.from(base64Data, "base64");
@@ -603,6 +603,7 @@ module.exports = (passport) => {
       console.error("Error al obtener los cursos: ", error);
     }
   });
+  /*
   router.get("/ObtenerCursos/Prof/:id", async (req, res) => {
     const us = req.user.id;
     try {
@@ -627,6 +628,7 @@ module.exports = (passport) => {
       console.error("Error al obtener los cursos: ", error);
     }
   });
+  */
 
   router.get("/ObtenerUA", async (req, res) => {
     try {

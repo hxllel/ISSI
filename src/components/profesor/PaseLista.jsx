@@ -11,11 +11,17 @@ export function PaseLista() {
   const [profesorId, setProfesorId] = useState(null);
   const API = "http://localhost:4000";
 
-  const { id } = useParams(); // id del grupo
+  const { idGrupo } = useParams(); // Cambiado de 'id' a 'idGrupo' para claridad
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${API}/AlumnosInscritos/${id}`, {
+    // Intentar obtener el profesorId del sessionStorage
+    const savedProfesorId = sessionStorage.getItem('currentProfesorId');
+    if (savedProfesorId) {
+      setProfesorId(savedProfesorId);
+    }
+
+    fetch(`${API}/AlumnosInscritos/${idGrupo}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -24,16 +30,19 @@ export function PaseLista() {
           setAlumnos(data.alumnos);
           if (data.profe) {
             setProfesorId(data.profe);
+            sessionStorage.setItem('currentProfesorId', data.profe);
           }
         } else {
           alert("Ya no puede pasar lista del día de hoy");
           if (data.profe) {
             navigate(`/profesor/${data.profe}`);
+          } else if (savedProfesorId) {
+            navigate(`/profesor/${savedProfesorId}`);
           }
         }
       })
       .catch((err) => console.error("Error al obtener los alumnos", err));
-  }, [id, navigate]);
+  }, [idGrupo, navigate]);
 
   const handleSelectChange = (idAlumno, valor) => {
     setAsistencias((prev) => ({
@@ -52,17 +61,20 @@ export function PaseLista() {
       })
     );
 
-    fetch(`${API}/GuardarAsistencias/${id}`, {
+    fetch(`${API}/GuardarAsistencias/${idGrupo}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ grupo: id, asistencias: dataEnviar }),
+      body: JSON.stringify({ grupo: idGrupo, asistencias: dataEnviar }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           alert(data.msg);
-          navigate(`/profesor/${data.profe}`);
+          const profId = data.profe || profesorId || sessionStorage.getItem('currentProfesorId');
+          if (profId) {
+            navigate(`/profesor/${profId}`);
+          }
         }
       })
       .catch((err) => console.error("Error al enviar asistencias:", err));

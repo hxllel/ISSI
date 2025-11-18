@@ -1,11 +1,11 @@
 :root {
   --prof-guinda: #7d0024;
   --prof-guinda-dark: #60001c;
-  --prof-text: #222222;
+  --prof-text: #7d0024;
   --prof-muted: #6b7280;
   --prof-bg: #f9f9fb;
   --prof-border: #e5e7eb;
-  --prof-rosa-activo: #fde7ef;
+  --prof-rosa-activo: rgba(125, 0, 36, 0.1);
 }
 
 /* =======================================
@@ -18,18 +18,21 @@
   background-color: var(--prof-bg);
 }
 
-/* Sidebar solo para profesor (no usamos .sidebar genérico) */
+/* Sidebar con estilo similar a AlumnoSidebar */
 .profesor-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 240px;
+  width: 250px;
+  background-color: #ffffff;
+  color: #222222;
+  padding: 20px;
   height: 100vh;
-  background: #ffffff;
-  padding: 20px 20px 16px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+  border-right: 1px solid var(--prof-border);
   z-index: 20;
   box-sizing: border-box;
 }
@@ -37,54 +40,55 @@
 .profesor-logo {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 1.6rem;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--prof-border);
 }
 
 .profesor-logo-img {
-  width: 64px;
-  height: 64px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 }
 
 .profesor-logo-text {
-  display: flex;
-  flex-direction: column;
+  font-size: 18px;
   font-weight: 700;
-  font-size: 1.1rem;
-  color: #333333;
+  letter-spacing: 0.5px;
+  color: #222222;
 }
 
-/* Línea separadora bajo el logo */
+/* Línea separadora bajo el logo (ya no necesaria con border-bottom) */
 .profesor-sidebar-separator {
-  height: 1px;
-  background-color: #f2f2f2;
-  margin-bottom: 1rem;
+  display: none;
 }
 
 /* Menú lateral */
 .profesor-menu {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  flex: 1;
+  gap: 4px;
+  margin-bottom: 15px;
 }
 
 .profesor-menu-item {
   display: block;
   text-decoration: none;
-  font-size: 0.9rem;
-  color: #444444;
-  padding: 0.55rem 0.9rem;
-  border-radius: 8px;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    font-weight 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--prof-muted);
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  line-height: 1.4;
 }
 
 .profesor-menu-item:hover {
-  background-color: #f5f0f5;
+  background-color: #f3f4f6;
+  color: #222222;
+  padding-left: 16px;
 }
 
 .profesor-menu-item.active {
@@ -95,23 +99,31 @@
 
 /* Botón "Cerrar sesión" */
 .profesor-logout {
-  margin-top: auto;
+  padding: 10px 12px;
+  background-color: var(--prof-guinda);
   border: none;
-  background: none;
-  color: var(--prof-guinda);
+  color: #ffffff;
   cursor: pointer;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 0.9rem;
-  padding-top: 1rem;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  font-family: "Poppins", sans-serif;
+  margin-top: 0;
+}
+
+.profesor-logout:hover {
+  background-color: var(--prof-guinda-dark);
+  transform: translateY(-2px);
 }
 
 /* Contenido principal */
 .profesor-main {
-  margin-left: 240px;
+  margin-left: 250px;
   padding: 2rem 3rem;
   min-height: 100vh;
   box-sizing: border-box;
-  width: calc(100% - 240px);
+  width: calc(100% - 250px);
   overflow-y: auto;
 }
 
@@ -140,7 +152,7 @@
   font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: 0.03em;
-  color: var(--prof-text);
+  color: #222;
 }
 
 .prof-page-header-right {
@@ -175,13 +187,13 @@
 }
 
 .kpi-title {
-  color: #444;
+  color: #222;
   font-weight: 600;
   margin: 0 0 6px;
 }
 
 .kpi-value {
-  color: var(--prof-guinda);
+  color: #7d0024;
   font-size: 2.2rem;
   font-weight: 800;
 }
@@ -193,6 +205,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid #eee;
   padding: 1.2rem 1.3rem;
+  margin-bottom: 1.2rem;
 }
 
 .section-card h3 {
@@ -222,7 +235,7 @@
 .table th {
   background: #fafafa;
   font-weight: 600;
-  color: #474747;
+  color: #222;
 }
 
 /* Chips / estados */
@@ -230,7 +243,7 @@
   display: inline-block;
   padding: 4px 10px;
   border-radius: 999px;
-  background: var(--prof-guinda);
+  background: #7d0024;
   color: #fff;
   font-weight: 600;
   font-size: 0.8rem;
@@ -260,46 +273,20 @@
 }
 
 @media (max-width: 768px) {
-  .profesor-layout {
-    flex-direction: column;
-  }
-
   .profesor-sidebar {
-    position: static;
-    width: 100%;
-    height: auto;
-    box-shadow: none;
-    border-bottom: 1px solid #f0f0f0;
-    flex-direction: row;
-    align-items: center;
-    padding: 12px 16px;
-  }
-
-  .profesor-logo {
-    margin-bottom: 0;
-  }
-
-  .profesor-sidebar-separator {
-    display: none;
-  }
-
-  .profesor-menu {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-left: auto;
-  }
-
-  .profesor-logout {
-    margin-top: 0;
-    padding-top: 0;
-    margin-left: 1rem;
+    width: 200px;
+    padding: 12px;
   }
 
   .profesor-main {
-    margin-left: 0;
-    width: 100%;
+    margin-left: 200px;
+    width: calc(100% - 200px);
     padding: 1.5rem;
+  }
+
+  .profesor-menu-item {
+    padding: 6px 10px;
+    font-size: 13px;
   }
 
   .prof-page-escom-logo {
@@ -307,17 +294,69 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+  .profesor-layout {
+    flex-direction: column;
+  }
+
+  .profesor-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    padding: 8px;
+    gap: 6px;
+    border-right: none;
+    border-bottom: 1px solid var(--prof-border);
+  }
+
+  .profesor-logo {
+    gap: 8px;
+    margin-bottom: 0;
+    border-bottom: none;
+    border-right: 1px solid var(--prof-border);
+    padding-right: 8px;
+    padding-bottom: 0;
+  }
+
   .profesor-logo-img {
-    width: 50px;
-    height: 50px;
+    width: 32px;
+    height: 32px;
   }
 
   .profesor-logo-text {
-    font-size: 0.95rem;
+    font-size: 16px;
+  }
+
+  .profesor-menu {
+    flex-direction: row;
+    gap: 3px;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+  }
+
+  .profesor-menu-item {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .profesor-menu-item:hover {
+    padding-left: 8px;
+  }
+
+  .profesor-logout {
+    margin-left: auto;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .profesor-logout:hover {
+    transform: none;
   }
 
   .profesor-main {
+    margin-left: 0;
+    width: 100%;
     padding: 1.2rem;
   }
 

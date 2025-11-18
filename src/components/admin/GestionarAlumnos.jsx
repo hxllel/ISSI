@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarAlumnos.css";
+import { AdminSidebar } from "./AdminSidebar";
 
-
-    
 export function GestionarAlumnos() {
-
-    
-        
   const [carreras, setCarreras] = useState([]);
   const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
   const [datos, setDatos] = useState([]);
@@ -15,14 +11,10 @@ export function GestionarAlumnos() {
   const [idAlumno, setIdAlumno] = useState("");
   const [del, setDelete] = useState(false);
   const navigate = useNavigate();
-    const API = 'http://localhost:4000';
+  const API = 'http://localhost:4000';
 
-  const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
-  const handleClickProf = () => navigate("../administrador/gestionarProfesores");
-  const handleClickCursos = () => navigate("../administrador/gestionarCursos");
   const handleRegistrar = () => navigate("registrarAlumno");
-  const handleClickEdit = (id) => { navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
-    };
+  const handleClickEdit = (id) => { navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`); };
   const handleAbrirModal = (id) => {
     setMostrarModal(true);
     setIdAlumno(id);
@@ -38,13 +30,11 @@ export function GestionarAlumnos() {
   }, []);
 
   useEffect(() => {
-        fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
-            .then((res) => res.json())
-            .then((data) => {
-                setCarreras(data.carreras || []);
-            })
-            .catch((err) => console.error("Error al obtener las carreras:", err));
-    }, []);
+    fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => { setCarreras(data.carreras || []); })
+      .catch((err) => console.error("Error al obtener las carreras:", err));
+  }, []);
 
   useEffect(() => {
     if (del) {
@@ -67,30 +57,14 @@ export function GestionarAlumnos() {
   }, [del]);
 
   return (
-    <div className="layout">
-      {/* PANEL LATERAL */}
-      <aside className="sidebar">
-        <div className="logo">
-            <img src="/ipn.png" alt="Logo" className="logo-img" />
-            <span>Gestión Escolar</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate("/administrador")} className="menu-item">Panel de Control</button>
-          <button onClick={handleClickAlu} className="menu-item active">Estudiantes</button>
-          <button onClick={handleClickProf} className="menu-item">Profesores</button>
-          <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-          <button className="menu-item">Informes</button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+    <div className="admin-container">
+      <AdminSidebar activeRoute="estudiantes" />
 
-      {/* CONTENIDO PRINCIPAL */}
-      <main className="contenido">
+      <main className="main-content">
         <header className="encabezado">
           <h1>Estudiantes</h1>
           <div className="acciones">
             <button className="btn azul" onClick={handleRegistrar}>+ Registrar nuevo estudiantes</button>
-            
           </div>
         </header>
 
@@ -99,10 +73,10 @@ export function GestionarAlumnos() {
           <label>
             Carrera:
             <select value={carreraSeleccionada} onChange={(e) => setCarreraSeleccionada(e.target.value)}>
-                            <option value="">Seleccione una carrera</option>
-                            {carreras.map((c) => (
-                                <option key={c.id || c.nombre} value={c.nombre}>{c.nombre}</option>
-                            ))}</select>
+              <option value="">Seleccione una carrera</option>
+              {carreras.map((c) => (
+                <option key={c.id || c.nombre} value={c.nombre}>{c.nombre}</option>
+              ))}</select>
           </label>
           <label>
             Semestre:

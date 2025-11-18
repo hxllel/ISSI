@@ -25,11 +25,12 @@ import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
 import { MateriasReprobadas } from "./components/alumno/MateriasReprobadas";
 import { ETS } from "./components/admin/ETS";
 import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
-import { Carreras } from "./pages/Carreras";
-import { Unidades } from "./pages/Unidades";
-import { DatosMedicos } from "./pages/DatosMedicos";
+import { Carreras } from "./components/admin/Carreras";
+import { Unidades } from "./components/admin/Unidades";
+import { DatosMedicos } from "./components/admin/DatosMedicos";
 import { PublicarNoticia } from "./components/admin/PublicarNoticia";
 import RecuperarContra from "./components/formulario/RecuperarContra";
+import { Registrar_Calificaciones } from "./components/profesor/Registrar_Calificaciones";
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -56,78 +57,43 @@ function App() {
             }
           />
           <Route path="/recuperar-contrasena" element={<RecuperarContra />} />
-          <Route path="/alumno/:id" element={<Alumno />} />
-          <Route path="/alumno/Chat" element={<ChatbotAsistente />} />
-          <Route path="/alumno/horarios/:id" element={<Horarios />} />
-          <Route
-            path="/alumno/evaluacion/:id"
-            element={<EvaluacionProfesores />}
-          />
 
+          {/* === RUTAS DE ALUMNO === */}
+          <Route path="/alumno/:id" element={<Alumno />} />
+          <Route path="/alumno/Chat/:id" element={<ChatbotAsistente />} />
+          <Route path="/alumno/horarios/:id" element={<Horarios />} />
+          <Route path="/alumno/evaluacion/:id" element={<EvaluacionProfesores />} />
+          <Route path="/alumno/inscripcion/:id" element={<Inscripcion />} />
+          <Route path="/alumno/editarDatos/:id" element={<EditarDatos />} />
+          <Route path="/alumno/Kardex/:id" element={<HistorialAcademico />} />
+          <Route path="/alumno/MateriasReprobadas/:id" element={<MateriasReprobadas />} />
+
+          {/* === RUTAS DE ADMINISTRADOR === */}
           <Route path="/administrador" element={<Administrador />} />
+          <Route path="/administrador/gestionarAlumnos" element={<GestionarAlumnos />} />
+          <Route path="/administrador/gestionarAlumnos/registrarAlumno" element={<RegistrarAlumnos />} />
+          <Route path="/administrador/gestionarAlumnos/editarAlumnos/:id" element={<EditarAlumnos />} />
+          <Route path="/administrador/gestionarProfesores" element={<GestionarProfesores />} />
+          <Route path="/administrador/gestionarProfesores/registrarProfesor" element={<RegistrarProfesores />} />
+          <Route path="/administrador/gestionarProfesores/editarProfesor/:id" element={<EditarProfesores />} />
+          <Route path="/administrador/gestionarCursos" element={<GestionarCursos />} />
+          <Route path="/administrador/gestionarCursos/registrarCurso" element={<RegistrarCursos />} />
+          <Route path="/administrador/gestionarCursos/editarCurso/:id" element={<EditarGrupo />} />
+          <Route path="/administrador/gestionarCursos/distribucionHorarios/:id" element={<Distribucion />} />
+          <Route path="/administrador/carreras" element={<Carreras />} />
+          <Route path="/administrador/unidades" element={<Unidades />} />
+          <Route path="/administrador/datosMedicos" element={<DatosMedicos />} />
+          <Route path="/administrador/ETS" element={<ETS />} />
+          <Route path="/administrador/publicarNoticia" element={<PublicarNoticia />} />
+
+          {/* === RUTAS DE PROFESOR === */}
           <Route path="/profesor/:id" element={<Profesor />} />
           <Route path="/profesor/:id/clases" element={<ClasesImpartidas />} />
-          <Route
-            path="administrador/gestionarCursos"
-            element={<GestionarCursos />}
-          />
-          <Route
-            path="administrador/gestionarCursos/registrarCurso"
-            element={<RegistrarCursos />}
-          />
-
-          <Route path="administrador/carreras" element={<Carreras />} />
-          <Route path="administrador/unidades" element={<Unidades />} />
-
-          <Route
-            path="administrador/gestionarProfesores/registrarProfesor"
-            element={<RegistrarProfesores />}
-          />
-          <Route
-            path="administrador/gestionarProfesores"
-            element={<GestionarProfesores />}
-          />
-          <Route
-            path="administrador/gestionarAlumnos"
-            element={<GestionarAlumnos />}
-          />
-          <Route
-            path="administrador/gestionarAlumnos/registrarAlumno"
-            element={<RegistrarAlumnos />}
-          />
-          <Route
-            path="/admin/gestionarAlumnos/editarAlumnos/:id"
-            element={<EditarAlumnos />}
-          />
-          <Route
-            path="administrador/gestionarProfesores/editarProfesor/:id"
-            element={<EditarProfesores />}
-          />
-          <Route
-            path="administrador/gestionarCursos/editarCurso/:id"
-            element={<EditarGrupo />}
-          />
-          <Route
-            path="administrador/gestionarCursos/distribucionHorarios/:id"
-            element={<Distribucion />}
-          />
-          <Route path="administrador/datosMedicos" element={<DatosMedicos />} />
-
-          <Route path="alumno/inscripcion/:id" element={<Inscripcion />} />
-          <Route path="alumno/editarDatos/:id" element={<EditarDatos />} />
-          <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
-
-          <Route path="/alumno/Kardex" element={<HistorialAcademico />} />
-
-          <Route
-            path="/alumno/MateriasReprobadas"
-            element={<MateriasReprobadas />}
-          />
-          <Route path="/administrador/ETS" element={<ETS />} />
-          <Route
-            path="/administrador/publicarNoticia"
-            element={<PublicarNoticia />}
-          />
+          <Route path="/profesor/:id/horario" element={<div>Horario Profesor (pendiente)</div>} />
+          <Route path="/profesor/:id/chat" element={<div>Chat Profesor (pendiente)</div>} />
+          <Route path="/profesor/:id/info" element={<div>Info Personal (pendiente)</div>} />
+          <Route path="/profesor/:id/calificaciones" element={<Registrar_Calificaciones />} />
+          <Route path="/profesor/PaseLista/:idGrupo" element={<PaseLista />} />
         </Routes>
       </BrowserRouter>
     </div>

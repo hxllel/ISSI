@@ -14,33 +14,36 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const API = "http://localhost:4000";
   const profesorId = propProfesorId || params.id;
 
-  const handleClickLista = (id) => {
-    navigate(`/profesor/PaseLista/${id}`);
+  const handleClickLista = (idGrupo) => {
+    if (profesorId) {
+      sessionStorage.setItem('currentProfesorId', profesorId);
+    }
+    navigate(`/profesor/PaseLista/${idGrupo}`);
   };
 
   useEffect(() => {
-    fetch(`${API}/ObtenerCursos/Prof/:${profesorId}`, {
+    if (!profesorId) return;
+
+    // Corregir la URL del fetch - remover los dos puntos antes del id
+    fetch(`${API}/ObtenerCursos/Prof/${profesorId}`, {
       credentials: "include",
     })
       .then((res) => res.json())
       .then(async (data) => {
+        console.log("Respuesta de ObtenerCursos:", data);
         const cursos = Array.isArray(data && data.cursos) ? data.cursos : [];
+        console.log("Cursos extraídos:", cursos);
 
         const cursosConDist = await Promise.all(
           cursos.map(async (c) => {
             try {
-              const resDist = await fetch(
-                `${API}/ObtenerDist/${c.id}`,
-                { credentials: "include" }
-              );
+              const resDist = await fetch(`${API}/ObtenerDist/${c.id}`, {
+                credentials: "include",
+              });
               const d = await resDist.json();
-              c.Distribucion = Array.isArray(d && d.Distri) ? d.Distri : [];
+              c.Distribucion = Array.isArray(d?.Distri) ? d.Distri : [];
             } catch (e) {
-              console.error(
-                "Error al obtener la distribucion para curso",
-                c.id,
-                e
-              );
+              console.error("Error al obtener la distribucion para curso", c.id, e);
               c.Distribucion = [];
             }
             return c;
@@ -48,21 +51,17 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         );
 
         setDatos(cursosConDist);
-        console.log("ObtenerCursos response count =", cursosConDist.length);
+        console.log("Cursos con distribución:", cursosConDist);
       })
       .catch((err) => {
         console.error("Error al obtener los cursos:", err);
         setDatos([]);
       });
-  }, [profesorId]);
+  }, [profesorId, API]);
 
   // Asegura que si cambia el número de cursos, la página actual siga siendo válida
   useEffect(() => {
-    const datosParaProf = Array.isArray(datos)
-      ? datos.filter(
-          (d) => !profesorId || String(d.id_prof) === String(profesorId)
-        )
-      : [];
+    const datosParaProf = Array.isArray(datos) ? datos : [];
 
     const paginas = Math.max(
       1,
@@ -72,16 +71,12 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
     if (paginaActual > paginas) {
       setPaginaActual(paginas);
     }
-  }, [datos, profesorId, paginaActual]);
+  }, [datos, paginaActual]);
 
   // =============================
   //  LÓGICA DE PAGINACIÓN
   // =============================
-  const datosFiltrados = Array.isArray(datos)
-    ? datos.filter(
-        (d) => !profesorId || String(d.id_prof) === String(profesorId)
-      )
-    : [];
+  const datosFiltrados = Array.isArray(datos) ? datos : [];
 
   const totalPaginas = Math.max(
     1,
@@ -103,13 +98,10 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   // =============================
   const handleGenerarPDF = async (curso) => {
     try {
-      const res = await fetch(
-        `${API}/Reportes/Clases/PDF/${curso.id}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
+      const res = await fetch(`${API}/Reportes/Clases/PDF/${curso.id}`, {
+        method: "GET",
+        credentials: "include",
+      });
 
       if (!res.ok) {
         throw new Error("No se pudo generar el PDF");
@@ -118,10 +110,8 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-
       link.href = url;
       link.download = `clase_${curso.nombre || curso.id}.pdf`;
-
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -132,18 +122,12 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
     }
   };
 
-  // =============================
-  //  EXCEL
-  // =============================
   const handleExportExcel = async (curso) => {
     try {
-      const res = await fetch(
-        `${API}/Reportes/Clases/Excel/${curso.id}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
+      const res = await fetch(`${API}/Reportes/Clases/Excel/${curso.id}`, {
+        method: "GET",
+        credentials: "include",
+      });
 
       if (!res.ok) {
         throw new Error("No se pudo generar el Excel");
@@ -152,19 +136,15 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-
       link.href = url;
       link.download = `clase_${curso.nombre || curso.id}.xlsx`;
-
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error al exportar Excel:", error);
-      alert(
-        "No se pudo generar el archivo de Excel. Revisa la consola para más detalles."
-      );
+      alert("No se pudo generar el archivo de Excel. Revisa la consola para más detalles.");
     }
   };
 

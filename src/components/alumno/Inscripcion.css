@@ -7,7 +7,7 @@
 
 .titulo {
   font-size: 1.8rem;
-  color: #600028;
+  color: #222;
   font-weight: bold;
   margin-bottom: 0.3rem;
 }
@@ -27,7 +27,7 @@
 
 .tabla-contenedor h2 {
   margin-bottom: 1rem;
-  color: #333;
+  color: #222;
 }
 
 .tabla-cursos {
@@ -87,13 +87,18 @@
 }
 
 .btn-inscribir {
-  background-color: #7a003c;
+  background-color: #7d0024;
   color: #fff;
   border: none;
   padding: 0.6rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 1rem;
+  transition: 0.2s ease;
+}
+
+.btn-inscribir:hover:not(:disabled) {
+  background-color: #60001c;
 }
 
 .btn-inscribir:disabled {

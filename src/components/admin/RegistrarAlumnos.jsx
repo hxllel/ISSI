@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrarAlumnos.css";
+import { AdminSidebar } from "./AdminSidebar";
 
 export function RegistrarAlumnos() {
     const navigate = useNavigate();
@@ -84,25 +85,8 @@ export function RegistrarAlumnos() {
 
     return (
         <div className="admin-container">
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="logo">
-                    <img src="/ipn.png" alt="Logo" className="logo-img" />
-                    <span>Gestión Escolar</span>
-                </div>
-                <nav className="menu">
-                    <button onClick={() => navigate("/administrador")} className="menu-item">
-                        Panel de Control
-                    </button>
-                    <button onClick={() => navigate("/estudiantes")} className="menu-item active">Estudiantes</button>
-                    <button onClick={handleClickProf} className="menu-item">Profesores</button>
-                    <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-                    <button className="menu-item">Informes</button>
-                </nav>
-                <button className="logout">Cerrar sesión</button>
-            </aside>
+            <AdminSidebar activeRoute="estudiantes" />
 
-            
             <main className="main-content">
                 <section className="gestion-alumnos">
                     

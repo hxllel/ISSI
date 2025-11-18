@@ -43,7 +43,7 @@
 .logo span {
   font-size: 1.6rem;
   font-weight: bold;
-  color: #333;
+  color: #7d0024;
 }
 
 .menu {
@@ -58,7 +58,7 @@
   border: none;
   text-align: left;
   font-size: 1rem;
-  color: #333;
+  color: #7d0024;
   cursor: pointer;
   padding: 0.6rem 1rem;
   border-radius: 8px;
@@ -155,15 +155,17 @@
 .horario-table th {
   background-color: #fafafa;
   font-weight: 600;
+  color: #222;
 }
 
 .horario {
   display: inline-block;
-  background-color: #eef0f7;
+  background-color: #f3d9df;
   padding: 4px 10px;
   border-radius: 6px;
   font-weight: 500;
   font-size: 0.9rem;
+  color: #7d0024;
 }
 
 /* =======================================

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarGrupo.css";
+import { AdminSidebar } from "./AdminSidebar";
 
 export function EditarGrupo() {
     const { id } = useParams();
@@ -65,65 +66,71 @@ export function EditarGrupo() {
     };
 
     return (
-        <section className="eg-wrap eg-editar-grupo">
-            <h1 className="eg-title">Editar Grupo</h1>
+        <div className="admin-container">
+            <AdminSidebar activeRoute="cursos" />
 
-            <form className="formulario eg-card" onSubmit={handleSubmit}>
-                <label className="eg-label">Nombre del grupo:</label>
-                <input
-                    className="eg-input"
-                    type="text"
-                    name="nombre"
-                    value={grupo.nombre || ""}
-                    onChange={handleChange}
-                />
+            <main className="main-content">
+                <section className="eg-wrap eg-editar-grupo">
+                    <h1 className="eg-title">Editar Grupo</h1>
 
-                <label className="eg-label">Profesor:</label>
-                <select
-                    className="eg-select"
-                    value={grupo.id_prof}
-                    onChange={handleChange}
-                    name="id_profesor"
-                >
-                    <option value="">Seleccione un profesor</option>
-                    {profesores.map((profesor) => (
-                        <option key={profesor.id} value={profesor.id}>
-                            {profesor.nombre} {profesor.ape_paterno} {profesor.ape_materno}
-                        </option>
-                    ))}
-                </select>
+                    <form className="formulario eg-card" onSubmit={handleSubmit}>
+                        <label className="eg-label">Nombre del grupo:</label>
+                        <input
+                            className="eg-input"
+                            type="text"
+                            name="nombre"
+                            value={grupo.nombre || ""}
+                            onChange={handleChange}
+                        />
 
-                <label className="eg-label">Unidad de Aprendizaje:</label>
-                <select
-                    className="eg-select"
-                    value={grupo.id_ua}
-                    onChange={handleChange}
-                    name="id_UA"
-                >
-                    <option value="">Seleccione una unidad de aprendizaje</option>
-                    {UA.map((ua) => (
-                        <option key={ua.id} value={ua.id}>
-                            {ua.nombre}
-                        </option>
-                    ))}
-                </select>
+                        <label className="eg-label">Profesor:</label>
+                        <select
+                            className="eg-select"
+                            value={grupo.id_prof}
+                            onChange={handleChange}
+                            name="id_profesor"
+                        >
+                            <option value="">Seleccione un profesor</option>
+                            {profesores.map((profesor) => (
+                                <option key={profesor.id} value={profesor.id}>
+                                    {profesor.nombre} {profesor.ape_paterno} {profesor.ape_materno}
+                                </option>
+                            ))}
+                        </select>
 
-                <label className="eg-label">Turno:</label>
-                <select
-                    className="eg-select"
-                    value={grupo.turno}
-                    onChange={handleChange}
-                    name="turno"
-                >
-                    <option value="">Seleccione un turno</option>
-                    <option value="Matutino">Matutino</option>
-                    <option value="Vespertino">Vespertino</option>
-                </select>
+                        <label className="eg-label">Unidad de Aprendizaje:</label>
+                        <select
+                            className="eg-select"
+                            value={grupo.id_ua}
+                            onChange={handleChange}
+                            name="id_UA"
+                        >
+                            <option value="">Seleccione una unidad de aprendizaje</option>
+                            {UA.map((ua) => (
+                                <option key={ua.id} value={ua.id}>
+                                    {ua.nombre}
+                                </option>
+                            ))}
+                        </select>
 
-                <button className="eg-btn primary eg-submit" type="submit">
-                    Actualizar Curso
-                </button>
-            </form>
-        </section>
+                        <label className="eg-label">Turno:</label>
+                        <select
+                            className="eg-select"
+                            value={grupo.turno}
+                            onChange={handleChange}
+                            name="turno"
+                        >
+                            <option value="">Seleccione un turno</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                        </select>
+
+                        <button className="eg-btn primary eg-submit" type="submit">
+                            Actualizar Curso
+                        </button>
+                    </form>
+                </section>
+            </main>
+        </div>
     );
 }

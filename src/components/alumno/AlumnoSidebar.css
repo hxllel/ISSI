@@ -1,0 +1,134 @@
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  color: #222222;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+  border-right: 1px solid #e5e7eb;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.logo span {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #222222;
+}
+
+.menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 15px;
+}
+
+.menu-item {
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+}
+
+.menu-item:hover {
+  background-color: #f3f4f6;
+  color: #222222;
+  padding-left: 16px;
+}
+
+.menu-item.active {
+  background-color: rgba(125, 0, 36, 0.1);
+  color: #7d0024;
+  font-weight: 600;
+}
+
+.logout {
+  padding: 10px 12px;
+  background-color: #7d0024;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.logout:hover {
+  background-color: #60001c;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    padding: 12px;
+  }
+
+  .menu-item {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    padding: 8px;
+    gap: 6px;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .logo {
+    gap: 8px;
+    margin-bottom: 0;
+    border-bottom: none;
+    border-right: 1px solid #e5e7eb;
+    padding-right: 8px;
+    padding-bottom: 0;
+  }
+
+  .menu {
+    flex-direction: row;
+    gap: 3px;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+  }
+
+  .menu-item {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}

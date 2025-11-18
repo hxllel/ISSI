@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FiPlus, FiEye, FiDownload } from "react-icons/fi";
 import Modal from "../Modal";
 import  "./Horarios.css";
+import { AlumnoSidebar } from "./AlumnoSidebar";
 
 
 export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
@@ -103,24 +104,10 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
 
   return (
     <section>
+      <AlumnoSidebar alumnoId={id} activeRoute="horarios" />
 
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>Gestión Escolar</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item">Inicio</button>
-          <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
-          <button className="menu-item active" onClick={handleHorarios}>Horarios</button>
-          <button className="menu-item">Kardex</button>
-          <button className="menu-item">Asistente de Chat</button>
-          <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
-        </nav>
-        <button className="logout" onClick={handleLogout}>Cerrar sesión</button>
-      </aside>
-    <main className="main-content">
-      <section className="gestion-alumnos">
+      <main className="main-content">
+        <section className="gestion-alumnos">
                     <div className="header-section">
                         <h1>Horarios de Clase</h1>
                     </div>

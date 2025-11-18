@@ -1,7 +1,7 @@
 .header-section h1 {
     display: flex;
   justify-content: center; 
-   font-family: 'Montserrat', sans-serif;
+   font-family: 'Poppins', sans-serif;
   font-size: 1.5rem; /* tamaño de la letra */
   color: #ffffff; /* color del texto */
   text-align: center; /* centrar el texto */
@@ -15,7 +15,7 @@
 }
 
 .header-section {
-  background-color: #5f1717;
+  background-color: #7d0024;
   padding: 10px;
   border-radius: 10px;
 }
@@ -50,15 +50,17 @@
 .horario-table1 th {
   background-color: #fafafa;
   font-weight: 600;
+  color: #222;
 }
 
 .horario {
   display: inline-block;
-  background-color: #eef0f7;
+  background-color: #f3d9df;
   padding: 4px 10px;
   border-radius: 6px;
   font-weight: 500;
   font-size: 0.9rem;
+  color: #7d0024;
 }
 
 .download-button {

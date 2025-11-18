@@ -1,0 +1,229 @@
+:root {
+  --cl-guinda: #7d0024;
+  --cl-guinda-dark: #60001c;
+  --cl-white: #ffffff;
+  --cl-black: #222222;
+  --cl-border: #e5e7eb;
+  --cl-muted: #666666;
+  --cl-bg-light: #f5f5f5;
+}
+
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--cl-bg-light);
+}
+
+.admin-container .main-content {
+  flex: 1;
+  margin-left: 250px;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.admin-container section {
+  background: var(--cl-white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.admin-container h1 {
+  margin: 0 0 1.5rem 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--cl-black);
+  border-bottom: 2px solid var(--cl-guinda);
+  padding-bottom: 0.5rem;
+}
+
+.admin-container button {
+  padding: 10px 20px;
+  background-color: var(--cl-guinda);
+  color: var(--cl-white);
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.admin-container button:hover {
+  background-color: var(--cl-guinda-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(125, 0, 36, 0.3);
+}
+
+/* === TABLA === */
+.admin-container table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+  margin-top: 1.5rem;
+}
+
+.admin-container table thead tr {
+  background-color: #fafafa;
+}
+
+.admin-container table th,
+.admin-container table td {
+  padding: 12px 15px;
+  border: 1px solid var(--cl-border);
+  border-bottom: 1px solid #eee;
+}
+
+.admin-container table th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--cl-black);
+  background-color: #fafafa;
+}
+
+.admin-container table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.admin-container table tbody tr:hover {
+  background-color: #f4f4ff;
+}
+
+.admin-container table button {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* === MODAL === */
+.pdfModal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 2000;
+}
+
+.pdfModal-box {
+  background: var(--cl-white);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.pdfModal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background-color: #e5e7eb;
+  color: var(--cl-black);
+  font-size: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdfModal-close:hover {
+  background-color: #d1d5db;
+  transform: scale(1.1);
+}
+
+.pdfModal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pdfModal-content h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--cl-black);
+}
+
+.pdfModal-content embed {
+  border: 1px solid var(--cl-border);
+  border-radius: 8px;
+}
+
+.pdfModal-content p {
+  margin: 0;
+  color: var(--cl-muted);
+  font-size: 0.95rem;
+}
+
+/* Botones dentro del modal */
+.pdfModal-content .admin-container button,
+.pdfModal-content button {
+  align-self: flex-start;
+  margin-top: 1rem;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .admin-container .main-content {
+    margin-left: 200px;
+    padding: 1.5rem 1rem;
+  }
+
+  .admin-container section {
+    padding: 1.6rem 1.4rem;
+  }
+
+  .admin-container h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-container {
+    flex-direction: column;
+  }
+
+  .admin-container .main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .admin-container section {
+    padding: 1.4rem 1rem;
+  }
+
+  .admin-container table {
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .admin-container table th,
+  .admin-container table td {
+    padding: 8px 10px;
+  }
+
+  .pdfModal-box {
+    padding: 1.5rem;
+    max-height: 80vh;
+  }
+
+  .pdfModal-close {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+  }
+}

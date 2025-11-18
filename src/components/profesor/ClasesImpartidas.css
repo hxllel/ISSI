@@ -2,8 +2,8 @@
   --cl-guinda: #7d0024;
   --cl-guinda-dark: #60001c;
   --cl-border: #e5e7eb;
-  --cl-text: #222222;
-  --cl-muted: #6b7280;
+  --cl-text: #222;
+  --cl-muted: #666666;
 }
 
 /* ============================
@@ -13,10 +13,8 @@
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  margin-top: 2rem;
-  padding: 2rem;
-  width: 100%;
-  box-sizing: border-box;
+  border: 1px solid var(--prof-border);
+  padding: 1.5rem;
 }
 
 /* Encabezado dentro de la card */
@@ -36,29 +34,25 @@
 
 /* Botón opcional de cerrar (cuando se usa como modal) */
 .clases-close {
-  padding: 0.45rem 1.3rem;
-  border-radius: 999px;
-  border: 1px solid var(--cl-border);
-  background: #ffffff;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  background: transparent;
+  border: 1.5px solid var(--prof-guinda);
+  color: var(--prof-guinda);
+  border-radius: 6px;
   cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.08s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
 
 .clases-close:hover {
-  background-color: #f5edf7;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
-  transform: translateY(-1px);
+  background-color: var(--prof-rosa-activo);
 }
 
 /* Wrapper de tabla (para scroll horizontal en pantallas chicas) */
 .clases-table-wrapper {
-  width: 100%;
   overflow-x: auto;
+  margin-bottom: 1.5rem;
 }
 
 /* ============================
@@ -67,8 +61,8 @@
 .clases-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
-  font-size: 0.95rem;
+  min-width: 1200px;
+  font-size: 0.9rem;
 }
 
 /* Encabezado */
@@ -78,14 +72,19 @@
 
 .clases-table th,
 .clases-table td {
-  padding: 10px 15px;
-  border-bottom: 1px solid #eee;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--prof-border);
+  vertical-align: middle;
 }
 
 .clases-table th {
+  background-color: #fafafa;
   font-weight: 600;
+  color: #222;
   font-size: 0.85rem;
-  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 /* Alternar color de filas para mejor lectura */
@@ -95,7 +94,7 @@
 
 /* Hover suave en fila */
 .clases-table tbody tr:hover {
-  background-color: #f4f4ff;
+  background-color: #f9f9fb;
 }
 
 /* Columnas un poquito más anchas donde hace falta */
@@ -111,6 +110,9 @@
 
 /* Celda de acciones (última columna) */
 .clases-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
   white-space: nowrap;
   text-align: right;
 }
@@ -122,19 +124,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.55rem 1.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   font-size: 0.85rem;
-  border-radius: 8px;           
-  border: none;
-  background-color: var(--cl-guinda);
-  color: #ffffff;
+  font-weight: 600;
   cursor: pointer;
-  margin-left: 6px;
-  font-weight: 500;
-  transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.05s ease;
+  transition: all 0.2s ease;
+  border: none;
+  white-space: nowrap;
 }
 
 .cl-btn:first-child {
@@ -156,11 +153,24 @@
 /* Ya no hacemos diferencia visual entre outline / primary,
    pero dejamos las clases por si el JSX las sigue usando */
 .cl-btn-outline {
-  /* sin cambios extra, hereda de .cl-btn */
+  background: transparent;
+  border: 1.5px solid var(--prof-guinda);
+  color: var(--prof-guinda);
+}
+
+.cl-btn-outline:hover {
+  background-color: var(--prof-rosa-activo);
 }
 
 .cl-btn-primary {
-  font-weight: 300;
+  background-color: var(--prof-guinda);
+  color: #ffffff;
+  border: 1.5px solid var(--prof-guinda);
+}
+
+.cl-btn-primary:hover {
+  background-color: var(--prof-guinda-dark);
+  border-color: var(--prof-guinda-dark);
 }
 
 /* ============================
@@ -207,46 +217,37 @@
    ============================ */
 .clases-pagination {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--prof-border);
 }
 
 .clases-page-info {
   font-size: 0.9rem;
-  color: var(--cl-muted);
+  color: var(--prof-muted);
+  font-weight: 500;
 }
 
 .clases-page-btn {
-  padding: 0.4rem 1.1rem;
-  border-radius: 999px;
-  border: 1px solid var(--cl-border);
-  background: #ffffff;
-  font-size: 0.85rem;
+  padding: 0.5rem 1.2rem;
+  background-color: var(--prof-guinda);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
-  transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.05s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
 
 .clases-page-btn:hover:not(:disabled) {
-  background-color: #f5edf7;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
-  transform: translateY(-1px);
+  background-color: var(--prof-guinda-dark);
 }
 
 .clases-page-btn:disabled {
-  opacity: 0.55;
-  cursor: default;
-  box-shadow: none;
-}
-
-@media (max-width: 640px) {
-  .clases-pagination {
-    justify-content: center;
-  }
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }

@@ -1,0 +1,167 @@
+/* =======================================
+   Registrar Calificaciones
+======================================= */
+
+.calif-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--prof-border);
+  padding: 1.8rem;
+}
+
+.calif-selector {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--prof-border);
+}
+
+.calif-label {
+  display: block;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.calif-select {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid var(--prof-border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #333;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+.calif-select:hover {
+  border-color: var(--prof-guinda);
+}
+
+.calif-select:focus {
+  outline: none;
+  border-color: var(--prof-guinda);
+  box-shadow: 0 0 0 3px rgba(125, 0, 36, 0.1);
+}
+
+.calif-form {
+  margin-top: 1.5rem;
+}
+
+.calif-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.calif-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.calif-table th,
+.calif-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--prof-border);
+  vertical-align: middle;
+}
+
+.calif-table th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #222;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.calif-table tbody tr:hover {
+  background-color: #f9f9fb;
+}
+
+.calif-boleta {
+  font-weight: 600;
+  color: var(--prof-guinda);
+}
+
+.calif-input {
+  width: 120px;
+  padding: 0.6rem 1rem;
+  border: 1.5px solid var(--prof-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+.calif-input:hover {
+  border-color: var(--prof-guinda);
+}
+
+.calif-input:focus {
+  outline: none;
+  border-color: var(--prof-guinda);
+  box-shadow: 0 0 0 3px rgba(125, 0, 36, 0.1);
+}
+
+.calif-empty {
+  text-align: center;
+  color: var(--prof-muted);
+  padding: 2rem !important;
+  font-size: 0.95rem;
+}
+
+.prof-btn-secondary {
+  padding: 0.7rem 2rem;
+  background-color: transparent;
+  color: var(--prof-guinda);
+  border: 1.5px solid var(--prof-guinda);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+.prof-btn-secondary:hover {
+  background-color: var(--prof-rosa-activo);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .calif-card {
+    padding: 1.2rem;
+  }
+
+  .calif-select {
+    max-width: 100%;
+  }
+
+  .calif-table th,
+  .calif-table td {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  .calif-input {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+
+  .prof-actions {
+    flex-direction: column-reverse;
+  }
+
+  .prof-btn-primary,
+  .prof-btn-secondary {
+    width: 100%;
+  }
+}

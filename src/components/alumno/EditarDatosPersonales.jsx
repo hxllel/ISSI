@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./EditarDatosPersonales.css";
+import { AlumnoSidebar } from "./AlumnoSidebar";
 
 export function EditarDatos() {
     const { id } = useParams();
@@ -67,35 +67,10 @@ export function EditarDatos() {
             .catch(err => console.error("Error al editar el alumno:", err));
     };
 
-    const handleInicio = () => { navigate(`/alumno/${id}`) }
-    const handleIns = () => {navigate(`/alumno/inscripcion/${id}`);};
-    const handleHorarios = () => {navigate(`/alumno/horarios/${id}`);};
-    const handleKardex = () => { navigate("/alumno/Kardex") }
-    const handleChat = () => { navigate(`/alumno/Chat`, { state: { alumnoId: id } }) }
-    const handleEditPer = () => {navigate(`/alumno/editarDatos/${id}`);};
-
     return (
-        <div className="admin-container">
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="logo">
-                    <img src="/ipn.png" alt="Logo" className="logo-img" />
-                    <span>SAES-R</span>
-                </div>
-                <nav className="menu">
-          <button onClick={handleInicio} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
-          <button className="menu-item" onClick={handleHorarios}>Horarios</button>
-          <button className="menu-item" onClick={handleKardex}>Kardex</button>
-          <button className="menu-item" onClick={handleChat}>Asistente de Chat</button>
-          <button className="menu-item active" onClick={handleEditPer}>Información Personal</button>
-        </nav>
-                <button className="logout">Cerrar sesión</button>
-            </aside>
+        <div>
+            <AlumnoSidebar alumnoId={id} activeRoute="editar-datos" />
 
-            {/* Contenido principal */}
             <main className="main-content">
                 <section className="gestion-alumnos">
                     <div className="header-section">

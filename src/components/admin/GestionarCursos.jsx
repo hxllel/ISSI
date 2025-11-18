@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarCursos.css";
+import { AdminSidebar } from "./AdminSidebar";
 
 export function GestionarCursos() {
   const [datos, setDatos] = useState([]);
@@ -66,98 +67,104 @@ export function GestionarCursos() {
   }, [del, id_datos]);
 
   return (
-    <section className="gc-wrap">
-      <header className="gc-header">
-        <div>
-          <h1 className="gc-title">Gestionar Cursos</h1>
-          <p className="gc-sub">
-            Consulta, edita y administra los grupos del programa académico.
-          </p>
-        </div>
-        <button className="gc-btn primary" onClick={handleClickCur}>
-          Registrar Grupo
-        </button>
-      </header>
+    <div className="admin-container">
+      <AdminSidebar activeRoute="cursos" />
 
-      <div className="gc-card">
-        <div className="gc-table-wrapper">
-          <table className="gc-table" border="1" cellPadding={5}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Profesor</th>
-                <th>Unidad de Aprendizaje</th>
-                <th>Turno</th>
-                <th>Carrera</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {datos.map((dato) => (
-                <tr key={dato.id}>
-                  <td>{dato.nombre}</td>
-                  <td>
-                    {dato.DatosPersonale.nombre}{" "}
-                    {dato.DatosPersonale.ape_paterno}{" "}
-                    {dato.DatosPersonale.ape_materno}
-                  </td>
-                  <td>{dato.Unidad_Aprendizaje.nombre}</td>
-                  <td>{dato.turno}</td>
-                  <td>{dato.Unidad_Aprendizaje.carrera}</td>
-                  <td className="gc-actions-cell">
-                    <button
-                      className="gc-btn table-btn edit"
-                      onClick={() => handleEdit(dato.id)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="gc-btn table-btn delete"
-                      onClick={() => handleAbrirModal(dato.id)}
-                    >
-                      Eliminar
-                    </button>
-                    <button
-                      className="gc-btn table-btn schedule"
-                      onClick={() => handleClickDis(dato.id)}
-                    >
-                      Gestionar distribución
-                    </button>
-                  </td>
-                </tr>
-              ))}
+      <main className="main-content">
+        <section className="gc-wrap">
+          <header className="gc-header">
+            <div>
+              <h1 className="gc-title">Gestionar Cursos</h1>
+              <p className="gc-sub">
+                Consulta, edita y administra los grupos del programa académico.
+              </p>
+            </div>
+            <button className="gc-btn primary" onClick={handleClickCur}>
+              Registrar Grupo
+            </button>
+          </header>
 
-              {datos.length === 0 && (
-                <tr>
-                  <td className="gc-empty" colSpan={6}>
-                    No hay grupos registrados todavía.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+          <div className="gc-card">
+            <div className="gc-table-wrapper">
+              <table className="gc-table" border="1" cellPadding={5}>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Profesor</th>
+                    <th>Unidad de Aprendizaje</th>
+                    <th>Turno</th>
+                    <th>Carrera</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {datos.map((dato) => (
+                    <tr key={dato.id}>
+                      <td>{dato.nombre}</td>
+                      <td>
+                        {dato.DatosPersonale.nombre}{" "}
+                        {dato.DatosPersonale.ape_paterno}{" "}
+                        {dato.DatosPersonale.ape_materno}
+                      </td>
+                      <td>{dato.Unidad_Aprendizaje.nombre}</td>
+                      <td>{dato.turno}</td>
+                      <td>{dato.Unidad_Aprendizaje.carrera}</td>
+                      <td className="gc-actions-cell">
+                        <button
+                          className="gc-btn table-btn edit"
+                          onClick={() => handleEdit(dato.id)}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="gc-btn table-btn delete"
+                          onClick={() => handleAbrirModal(dato.id)}
+                        >
+                          Eliminar
+                        </button>
+                        <button
+                          className="gc-btn table-btn schedule"
+                          onClick={() => handleClickDis(dato.id)}
+                        >
+                          Gestionar distribución
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
 
-      {mostrarModal && (
-        <div className="gc-modal-backdrop">
-          <div className="gc-modal">
-            <h3 className="gc-modal-title">¿Estás seguro?</h3>
-            <p className="gc-modal-text">
-              Esta acción no se puede deshacer. El grupo será eliminado
-              permanentemente.
-            </p>
-            <div className="gc-modal-actions">
-              <button className="gc-btn danger" onClick={handleClickDelete}>
-                Confirmar
-              </button>
-              <button className="gc-btn ghost" onClick={handleCerrarModal}>
-                Cancelar
-              </button>
+                  {datos.length === 0 && (
+                    <tr>
+                      <td className="gc-empty" colSpan={6}>
+                        No hay grupos registrados todavía.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
-      )}
-    </section>
+
+          {mostrarModal && (
+            <div className="gc-modal-backdrop">
+              <div className="gc-modal">
+                <h3 className="gc-modal-title">¿Estás seguro?</h3>
+                <p className="gc-modal-text">
+                  Esta acción no se puede deshacer. El grupo será eliminado
+                  permanentemente.
+                </p>
+                <div className="gc-modal-actions">
+                  <button className="gc-btn danger" onClick={handleClickDelete}>
+                    Confirmar
+                  </button>
+                  <button className="gc-btn ghost" onClick={handleCerrarModal}>
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
   );
 }

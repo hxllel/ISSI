@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Modal from "../Modal.jsx";
+import { AlumnoSidebar } from "./AlumnoSidebar";
 import "./Inscripcion.css";
 
 export function Inscripcion() {
@@ -226,34 +227,8 @@ export function Inscripcion() {
 
   return (
     <section>
-      {/* === SIDEBAR === */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item active" onClick={handleIns}>
-            Inscribir Materias
-          </button>
-          <button className="menu-item" onClick={handleHorarios}>
-            Horarios
-          </button>
-          <button className="menu-item">Kardex</button>
-          <button className="menu-item">Asistente de Chat</button>
-          <button className="menu-item" onClick={handleEditPer}>
-            Información Personal
-          </button>
-        </nav>
-        <button className="logout" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
-      </aside>
+      <AlumnoSidebar alumnoId={id} activeRoute="inscripcion" />
 
-      {/* === CONTENIDO PRINCIPAL === */}
       <main className="main-content">
         <section className="gestion-alumnos">
           <div className="header-section">

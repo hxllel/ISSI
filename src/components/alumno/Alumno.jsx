@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Alumno.css";
+import { AlumnoSidebar } from "./AlumnoSidebar";
 import { VerAvisos } from "../shared/VerAvisos";
 
 export function Alumno() {
@@ -34,7 +35,7 @@ export function Alumno() {
   const handleIns = () => {navigate(`/alumno/inscripcion/${id}`);};
   const handleEditPer = () => {navigate(`/alumno/editarDatos/${id}`);};
   const handleHorarios = () => { navigate(`/alumno/horarios/${id}`);};
-  const handleChat = () => {navigate(`/alumno/Chat`, { state: { alumnoId: id } });};
+  const handleChat = () => {navigate(`/alumno/Chat/${id}`);};
   const handleMatRe = () =>{navigate(`/alumno/MateriasReprobadas`)};
   const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
 
@@ -146,26 +147,7 @@ export function Alumno() {
 
   return (
     <div className="alumno-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item active">
-            Inicio
-          </button>
-          <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
-          <button className="menu-item" onClick={handleHorarios}>Horarios</button>
-          <button className="menu-item" onClick = {() => navigate("/alumno/Kardex")}>Kardex</button>
-          <button className="menu-item" onClick={handleChat}>Asistente de Chat</button>
-          <button className="menu-item" onClick = {handleMatRe}> Materias Reprobadas</button>
-          <button className="menu-item" onClick={handleEvaluacion}>Evaluación de Profesores</button>
-          <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+      <AlumnoSidebar alumnoId={id} activeRoute="inicio" />
 
       <main className="main-content">
         <header className="alumno-header">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarAlumnos.css"; // 👈 Se agrega el CSS
+import { AdminSidebar } from "./AdminSidebar";
 
 export function EditarAlumnos() {
     const { id } = useParams();
@@ -85,81 +86,87 @@ export function EditarAlumnos() {
     };
 
     return (
-        <section className="ea-wrap">
-            <h1 className="ea-title">Editar Alumno</h1>
+        <div className="admin-container">
+            <AdminSidebar activeRoute="estudiantes" />
 
-            <form className="formulario ea-card" onSubmit={handleSubmit}>
-                <label>Nombre:</label>
-                <input type="text" name="nombre" value={alumno.nombre} onChange={handleChange} />
+            <main className="main-content">
+                <section className="ea-wrap">
+                    <h1 className="ea-title">Editar Alumno</h1>
 
-                <label>Apellido Paterno:</label>
-                <input type="text" name="ape_paterno" value={alumno.ape_paterno} onChange={handleChange} />
+                    <form className="formulario ea-card" onSubmit={handleSubmit}>
+                        <label>Nombre:</label>
+                        <input type="text" name="nombre" value={alumno.nombre} onChange={handleChange} />
 
-                <label>Apellido Materno:</label>
-                <input type="text" name="ape_materno" value={alumno.ape_materno} onChange={handleChange} />
+                        <label>Apellido Paterno:</label>
+                        <input type="text" name="ape_paterno" value={alumno.ape_paterno} onChange={handleChange} />
 
-                <label>Fecha de Nacimiento:</label>
-                <input type="date" name="fecha_nacimiento" value={alumno.fecha_nacimiento} onChange={handleChange} />
+                        <label>Apellido Materno:</label>
+                        <input type="text" name="ape_materno" value={alumno.ape_materno} onChange={handleChange} />
 
-                <label>Tipo de Sangre:</label>
-                <input type="text" name="tipo_sangre" value={alumno.tipo_sangre} onChange={handleChange} />
+                        <label>Fecha de Nacimiento:</label>
+                        <input type="date" name="fecha_nacimiento" value={alumno.fecha_nacimiento} onChange={handleChange} />
 
-                <label>CURP:</label>
-                <input type="text" name="CURP" value={alumno.CURP} onChange={handleChange} />
+                        <label>Tipo de Sangre:</label>
+                        <input type="text" name="tipo_sangre" value={alumno.tipo_sangre} onChange={handleChange} />
 
-                <label>Nacionalidad:</label>
-                <input type="text" name="nacionalidad" value={alumno.nacionalidad} onChange={handleChange} />
+                        <label>CURP:</label>
+                        <input type="text" name="CURP" value={alumno.CURP} onChange={handleChange} />
 
-                <label>Calle:</label>
-                <input type="text" name="calle" value={alumno.calle} onChange={handleChange} />
+                        <label>Nacionalidad:</label>
+                        <input type="text" name="nacionalidad" value={alumno.nacionalidad} onChange={handleChange} />
 
-                <label>Número Exterior:</label>
-                <input type="text" name="num_exterior" value={alumno.num_exterior} onChange={handleChange} />
+                        <label>Calle:</label>
+                        <input type="text" name="calle" value={alumno.calle} onChange={handleChange} />
 
-                <label>Número Interior:</label>
-                <input type="text" name="num_interior" value={alumno.num_interior} onChange={handleChange} />
+                        <label>Número Exterior:</label>
+                        <input type="text" name="num_exterior" value={alumno.num_exterior} onChange={handleChange} />
 
-                <label>Código Postal:</label>
-                <input type="text" name="codigo_postal" value={alumno.codigo_postal} onChange={handleChange} />
+                        <label>Número Interior:</label>
+                        <input type="text" name="num_interior" value={alumno.num_interior} onChange={handleChange} />
 
-                <label>Colonia:</label>
-                <input type="text" name="colonia" value={alumno.colonia} onChange={handleChange} />
+                        <label>Código Postal:</label>
+                        <input type="text" name="codigo_postal" value={alumno.codigo_postal} onChange={handleChange} />
 
-                <label>Delegación:</label>
-                <input type="text" name="delegacion" value={alumno.delegacion} onChange={handleChange} />
+                        <label>Colonia:</label>
+                        <input type="text" name="colonia" value={alumno.colonia} onChange={handleChange} />
 
-                <label>Ciudad:</label>
-                <input type="text" name="ciudad" value={alumno.ciudad} onChange={handleChange} />
+                        <label>Delegación:</label>
+                        <input type="text" name="delegacion" value={alumno.delegacion} onChange={handleChange} />
 
-                <label>Teléfono:</label>
-                <input type="text" name="telefono" value={alumno.telefono} onChange={handleChange} />
+                        <label>Ciudad:</label>
+                        <input type="text" name="ciudad" value={alumno.ciudad} onChange={handleChange} />
 
-                <label>Correo Electrónico:</label>
-                <input type="email" name="email" value={alumno.email} onChange={handleChange} />
+                        <label>Teléfono:</label>
+                        <input type="text" name="telefono" value={alumno.telefono} onChange={handleChange} />
 
-                <label>Carrera:</label>
-                <select name="carrera" value={alumno.carrera || ""} onChange={handleChange}>
-                    <option value="">Seleccione una carrera</option>
-                    {carreras.map((c) => (
-                        <option key={c.nombre} value={c.nombre}>
-                            {c.nombre}
-                        </option>
-                    ))}
-                </select>
+                        <label>Correo Electrónico:</label>
+                        <input type="email" name="email" value={alumno.email} onChange={handleChange} />
 
-                <label>Foto (opcional):</label>
-                <input type="file" accept="image/*" onChange={handleFotoChange} />
+                        <label>Carrera:</label>
+                        <select name="carrera" value={alumno.carrera || ""} onChange={handleChange}>
+                            <option value="">Seleccione una carrera</option>
+                            {carreras.map((c) => (
+                                <option key={c.nombre} value={c.nombre}>
+                                    {c.nombre}
+                                </option>
+                            ))}
+                        </select>
 
-                {fotoBase64 && (
-                    <div className="ea-photo-preview">
-                        <img src={fotoBase64} alt="Previsualización" />
-                    </div>
-                )}
+                        <label>Foto (opcional):</label>
+                        <input type="file" accept="image/*" onChange={handleFotoChange} />
 
-                <button className="ea-btn primary" type="submit">
-                    Guardar cambios
-                </button>
-            </form>
-        </section>
+                        {fotoBase64 && (
+                            <div className="ea-photo-preview">
+                                <img src={fotoBase64} alt="Previsualización" />
+                            </div>
+                        )}
+
+                        <button className="ea-btn primary" type="submit">
+                            Guardar cambios
+                        </button>
+                    </form>
+                </section>
+            </main>
+        </div>
     );
 }

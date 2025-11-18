@@ -49,9 +49,9 @@ app.use(passport.session());
 
 // Rutas existentes con passport
 app.use("/", rutaMain(passport));
+app.use("/", rutaProfesor(passport));
 app.use("/", rutaAdministrador(passport));
 app.use("/", rutaAlumno(passport));
-app.use("/", rutaProfesor(passport));
 app.use("/", rutaEmails(passport));
 
 // monta las rutas API

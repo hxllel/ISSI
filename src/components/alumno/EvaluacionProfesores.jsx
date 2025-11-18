@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./EvaluacionProfesores.css";
+import { AlumnoSidebar } from "./AlumnoSidebar";
 
 export function EvaluacionProfesores() {
   const navigate = useNavigate();
@@ -221,39 +222,8 @@ export function EvaluacionProfesores() {
 
   return (
     <div className="evaluacion-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item" onClick={() => navigate(`/alumno/inscripcion/${id}`)}>
-            Inscribir Materias
-          </button>
-          <button className="menu-item" onClick={() => navigate(`/alumno/horarios/${id}`)}>
-            Horarios
-          </button>
-          <button className="menu-item" onClick={() => navigate("/alumno/Kardex")}>
-            Kardex
-          </button>
-          <button className="menu-item" onClick={() => navigate(`/alumno/Chat`, { state: { alumnoId: id } })}>
-            Asistente de Chat
-          </button>
-          <button className="menu-item active" onClick={() => navigate(`/alumno/evaluacion/${id}`)}>
-            Evaluación de Profesores
-          </button>
-          <button className="menu-item" onClick={() => navigate(`/alumno/editarDatos/${id}`)}>
-            Información Personal
-          </button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+      <AlumnoSidebar alumnoId={id} activeRoute="evaluacion" />
 
-      {/* Contenido principal */}
       <main className="main-content">
         <header className="evaluacion-header">
           <h2>Evaluación de Profesores</h2>

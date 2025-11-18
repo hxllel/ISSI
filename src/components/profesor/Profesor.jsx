@@ -9,24 +9,26 @@ export function Profesor() {
   const [cursos, setCursos] = useState([]);
   const API = "http://localhost:4000";
 
-  // Cargar cursos del profesor (lógica de tu compañera, sin depender de /clases)
   useEffect(() => {
+    if (!id) return;
+
     (async () => {
       try {
-        const r = await fetch(
-          `${API}/ObtenerCursos/Prof/:${id}`,
-          { credentials: "include" }
-        );
+        // Corregir la URL del fetch - remover los dos puntos antes del id
+        const r = await fetch(`${API}/ObtenerCursos/Prof/${id}`, {
+          credentials: "include",
+        });
         const j = await r.json();
+        console.log("Respuesta de ObtenerCursos:", j);
         const base = Array.isArray(j?.cursos) ? j.cursos : [];
+        console.log("Cursos base:", base);
 
         const conDist = await Promise.all(
           base.map(async (c) => {
             try {
-              const rr = await fetch(
-                `${API}/ObtenerDist/${c.id}`,
-                { credentials: "include" }
-              );
+              const rr = await fetch(`${API}/ObtenerDist/${c.id}`, {
+                credentials: "include",
+              });
               const dd = await rr.json();
               c.Distribucion = Array.isArray(dd?.Distri) ? dd.Distri : [];
             } catch {
@@ -37,11 +39,13 @@ export function Profesor() {
         );
 
         setCursos(conDist);
-      } catch {
+        console.log("Cursos finales:", conDist);
+      } catch (err) {
+        console.error("Error al obtener cursos:", err);
         setCursos([]);
       }
     })();
-  }, [id]);
+  }, [id, API]);
 
   const totalGrupos = cursos.length;
 

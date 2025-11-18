@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useLocation, useParams, useNavigate } from "react-router-dom"
 import "./Chat.css"
+import { AlumnoSidebar } from "./AlumnoSidebar"
 
 const AnimatedThinkingDots = () => {
   return (
@@ -13,12 +14,14 @@ const AnimatedThinkingDots = () => {
 }
 
 export function ChatbotAsistente() {
-      const API = 'http://localhost:4000';
+  const API = 'http://localhost:4000';
 
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
-  const alumnoId = (location && location.state && location.state.alumnoId) || params.id || null
+  
+  // Obtener alumnoId desde params de URL (prioridad) o desde location.state
+  const alumnoId = params.id || (location && location.state && location.state.alumnoId) || null
 
   const [messages, setMessages] = useState([])
   const [inputMessage, setInputMessage] = useState("")
@@ -296,48 +299,10 @@ export function ChatbotAsistente() {
     }
   }, [])
 
-  // Handlers de navegación
-  const handleInicio = () => { navigate(`/alumno/${alumnoId}`) }
-  const handleIns = () => { navigate(`/alumno/inscripcion/${alumnoId}`) }
-  const handleHorarios = () => { navigate(`/alumno/horarios/${alumnoId}`) }
-  const handleKardex = () => { navigate("/alumno/Kardex") }
-  const handleEditPer = () => { navigate(`/alumno/editarDatos/${alumnoId}`) }
-  const handleLogout = () => { navigate("/") }
-
   return (
     <div className="chatbot-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={handleInicio} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item" onClick={handleIns}>
-            Inscribir Materias
-          </button>
-          <button className="menu-item" onClick={handleHorarios}>
-            Horarios
-          </button>
-          <button className="menu-item" onClick={handleKardex}>
-            Kardex
-          </button>
-          <button className="menu-item active" onClick={() => navigate(`/alumno/Chat`, { state: { alumnoId } })}>
-            Asistente de Chat
-          </button>
-          <button className="menu-item" onClick={handleEditPer}>
-            Información Personal
-          </button>
-        </nav>
-        <button className="logout" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
-      </aside>
+      <AlumnoSidebar alumnoId={alumnoId} activeRoute="chat" />
 
-      {/* Main Content */}
       <main className="main-content">
         <header className="chat-header">
           <h1>Asistente de Chat de IA</h1>

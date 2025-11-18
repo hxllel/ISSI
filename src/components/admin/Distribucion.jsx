@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "../Modal";
+import { AdminSidebar } from "./AdminSidebar";
 import "./Distribucion.css";
 
 export function Distribucion() {
@@ -11,7 +12,7 @@ export function Distribucion() {
   const [hora_fin, setHora_fin] = useState("");
   const [del, setDelete] = useState(false);
   const [id_delete, setId_delete] = useState("");
-    const API = 'http://localhost:4000';
+  const API = "http://localhost:4000";
 
   const [modalOpen2, setModalOpen2] = useState(false);
   const [Distri, setDistri] = useState([]);
@@ -106,107 +107,113 @@ export function Distribucion() {
   }, [del, id_delete]);
 
   return (
-    <section className="dist-wrap">
-      <h1 className="dist-title">Distribución del grupo</h1>
+    <div className="admin-container">
+      <AdminSidebar activeRoute="cursos" />
 
-      <button className="btn dist-add-btn" onClick={() => setModalOpen(true)}>
-        Agregar un día
-      </button>
+      <main className="main-content">
+        <section className="dist-wrap">
+          <h1 className="dist-title">Distribución del grupo</h1>
 
-      {mensaje && <p className="mensaje dist-message">{mensaje}</p>}
-
-      <table className="dist-table" border="1" cellPadding={5}>
-        <thead>
-          <tr>
-            <th>Día</th>
-            <th>Hora que inicia la clase</th>
-            <th>Hora que finaliza la clase</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Distri.length > 0 ? (
-            Distri.map((dato) => (
-              <tr key={dato.id}>
-                <td>{dato.dia}</td>
-                <td>{dato.hora_ini}</td>
-                <td>{dato.hora_fin}</td>
-                <td>
-                  <button
-                    className="btn dist-btn-delete"
-                    onClick={() => handleClickAbrir(dato.id)}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td className="dist-empty" colSpan="4">
-                No hay datos disponibles
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <h2 className="titulo dist-modal-title">Registrar nuevo día</h2>
-        <form onSubmit={enviarFormulario} className="formulario dist-form">
-          <label>Día:</label>
-          <select
-            onChange={(e) => setDia(e.target.value)}
-            value={dia}
-            required
-          >
-            <option value="">-- Selecciona un día --</option>
-            <option value="Lunes">Lunes</option>
-            <option value="Martes">Martes</option>
-            <option value="Miércoles">Miércoles</option>
-            <option value="Jueves">Jueves</option>
-            <option value="Viernes">Viernes</option>
-          </select>
-
-          <label>Hora que inicia la clase:</label>
-          <input
-            type="time"
-            min="07:00"
-            max="22:00"
-            value={hora_ini}
-            onChange={handleHoraInicio}
-            required
-          />
-
-          <label>Hora que finaliza la clase:</label>
-          <input
-            type="time"
-            min="07:00"
-            max="22:00"
-            value={hora_fin}
-            onChange={handleHoraFin}
-            required
-          />
-
-          <button type="submit" className="btn-enviar">
-            Enviar
+          <button className="btn dist-add-btn" onClick={() => setModalOpen(true)}>
+            Agregar un día
           </button>
-        </form>
-      </Modal>
 
-      <Modal open={modalOpen2} onClose={() => setModalOpen2(false)}>
-        <h2 className="titulo dist-modal-title">Eliminar día</h2>
-        <p className="dist-modal-text">
-          ¿Estás seguro de que deseas eliminar este día?
-        </p>
-        <button
-          type="button"
-          className="btn-enviar dist-btn-danger"
-          onClick={handleClickDelete}
-        >
-          Eliminar
-        </button>
-      </Modal>
-    </section>
+          {mensaje && <p className="mensaje dist-message">{mensaje}</p>}
+
+          <table className="dist-table" border="1" cellPadding={5}>
+            <thead>
+              <tr>
+                <th>Día</th>
+                <th>Hora que inicia la clase</th>
+                <th>Hora que finaliza la clase</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Distri.length > 0 ? (
+                Distri.map((dato) => (
+                  <tr key={dato.id}>
+                    <td>{dato.dia}</td>
+                    <td>{dato.hora_ini}</td>
+                    <td>{dato.hora_fin}</td>
+                    <td>
+                      <button
+                        className="btn dist-btn-delete"
+                        onClick={() => handleClickAbrir(dato.id)}
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td className="dist-empty" colSpan="4">
+                    No hay datos disponibles
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+
+          <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+            <h2 className="titulo dist-modal-title">Registrar nuevo día</h2>
+            <form onSubmit={enviarFormulario} className="formulario dist-form">
+              <label>Día:</label>
+              <select
+                onChange={(e) => setDia(e.target.value)}
+                value={dia}
+                required
+              >
+                <option value="">-- Selecciona un día --</option>
+                <option value="Lunes">Lunes</option>
+                <option value="Martes">Martes</option>
+                <option value="Miércoles">Miércoles</option>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+              </select>
+
+              <label>Hora que inicia la clase:</label>
+              <input
+                type="time"
+                min="07:00"
+                max="22:00"
+                value={hora_ini}
+                onChange={handleHoraInicio}
+                required
+              />
+
+              <label>Hora que finaliza la clase:</label>
+              <input
+                type="time"
+                min="07:00"
+                max="22:00"
+                value={hora_fin}
+                onChange={handleHoraFin}
+                required
+              />
+
+              <button type="submit" className="btn-enviar">
+                Enviar
+              </button>
+            </form>
+          </Modal>
+
+          <Modal open={modalOpen2} onClose={() => setModalOpen2(false)}>
+            <h2 className="titulo dist-modal-title">Eliminar día</h2>
+            <p className="dist-modal-text">
+              ¿Estás seguro de que deseas eliminar este día?
+            </p>
+            <button
+              type="button"
+              className="btn-enviar dist-btn-danger"
+              onClick={handleClickDelete}
+            >
+              Eliminar
+            </button>
+          </Modal>
+        </section>
+      </main>
+    </div>
   );
 }
