@@ -4,6 +4,7 @@ require("dotenv").config({ path: path.join(__dirname, "..", "..", ".env") });
 const { DataTypes } = require("sequelize");
 const { Sequelize } = require("sequelize");
 const bcrypt = require("bcryptjs");
+const e = require("express");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -146,6 +147,8 @@ const Grupo = sequelize.define(
     id_prof: { type: DataTypes.STRING(15), allowNull: false },
     turno: { type: DataTypes.TEXT, allowNull: false },
     cupo: { type: DataTypes.INTEGER, allowNull: false },
+    reg_final: { type: DataTypes.INTEGER, allowNull: true, defaultValue: 0 },
+    reg_extra: { type: DataTypes.INTEGER, allowNull: true, defaultValue: 0 },
   },
   { tableName: "grupo", timestamps: false }
 );
@@ -223,7 +226,11 @@ const Mat_Inscritos = sequelize.define(
     id: { type: DataTypes.STRING(15), primaryKey: true },
     id_horario: { type: DataTypes.STRING(15), allowNull: false },
     id_grupo: { type: DataTypes.STRING(15), allowNull: false },
-    calificacion: { type: DataTypes.FLOAT, allowNull: false },
+    calificacion_primer: { type: DataTypes.FLOAT, allowNull: true },
+    calificacion_segundo: { type: DataTypes.FLOAT, allowNull: true },
+    calificacion_tercer: { type: DataTypes.FLOAT, allowNull: true },
+    calificacion_final: { type: DataTypes.FLOAT, allowNull: true },
+    extra: { type: DataTypes.INTEGER, allowNull: true },
   },
   { tableName: "mat_inscritos", timestamps: false }
 );
@@ -237,6 +244,11 @@ Mat_Inscritos.belongsTo(Horario, {
   targetKey: "id",
 });
 Mat_Inscritos.belongsTo(Grupo, {
+  foreignKey: "id_grupo",
+  targetKey: "id",
+});
+
+Grupo.hasMany(Mat_Inscritos, {
   foreignKey: "id_grupo",
   targetKey: "id",
 });
@@ -508,10 +520,15 @@ const FechasRelevantes = sequelize.define(
     fin_registro_segundo_parcial: { type: DataTypes.DATE, allowNull: false },
     registro_tercer_parcial: { type: DataTypes.DATE, allowNull: false },
     fin_registro_tercer_parcial: { type: DataTypes.DATE, allowNull: false },
-    registro_final: { type: DataTypes.DATE, allowNull: false },
+    registro_extra: { type: DataTypes.DATE, allowNull: false },
+    fin_registro_extra: { type: DataTypes.DATE, allowNull: false },
     evalu_profe: { type: DataTypes.DATE, allowNull: false },
     subir_doc_ets: { type: DataTypes.DATE, allowNull: false },
+    fin_subir_doc_ets: { type: DataTypes.DATE, allowNull: false },
+    eval_ets: { type: DataTypes.DATE, allowNull: false },
+    fin_evalu_ets: { type: DataTypes.DATE, allowNull: false },
     cal_ets: { type: DataTypes.DATE, allowNull: false },
+    periodo: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "fechas_relevantes", timestamps: false }
 );

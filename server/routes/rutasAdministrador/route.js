@@ -4,6 +4,7 @@ const bd = require("../../model/modelo");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
+const { raw } = require("mysql2");
 module.exports = (passport) => {
   const router = express.Router();
 
@@ -618,6 +619,11 @@ module.exports = (passport) => {
           },
         ],
         where: { id_prof: us },
+        raw: true,
+        nest: true,
+      });
+      const profe = await bd.Grupo.findOne({
+        where: { id: "1BM1_UA006" },
         raw: true,
         nest: true,
       });

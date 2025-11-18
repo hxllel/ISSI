@@ -1,5 +1,5 @@
 // PaseLista.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./PaseLista.css";
 import "./Profesor.css";
@@ -14,26 +14,27 @@ export function PaseLista() {
   const { id } = useParams(); // id del grupo
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch(`${API}/AlumnosInscritos/${id}`, {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setAlumnos(data.alumnos);
-          if (data.profe) {
-            setProfesorId(data.profe);
-          }
-        } else {
-          alert("Ya no puede pasar lista del día de hoy");
-          if (data.profe) {
-            navigate(`/profesor/${data.profe}`);
-          }
-        }
-      })
-      .catch((err) => console.error("Error al obtener los alumnos", err));
-  }, [id, navigate]);
+ const ejecutadoRef = useRef(false);
+
+useEffect(() => {
+  if (ejecutadoRef.current) return; 
+  ejecutadoRef.current = true;
+
+  fetch(`${API}/AlumnosInscritosPL/${id}`, {
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        setAlumnos(data.alumnos);
+        setProfesorId(data.profe);
+      } else {
+        alert("Ya no puede pasar lista del día de hoy");
+        navigate(`/profesor/${data.profe}`);
+      }
+    });
+}, [id, navigate]);
+
 
   const handleSelectChange = (idAlumno, valor) => {
     setAsistencias((prev) => ({

@@ -162,6 +162,7 @@ export function Alumno() {
           <button className="menu-item" onClick = {handleMatRe}> Materias Reprobadas</button>
           <button className="menu-item" onClick={handleEvaluacion}>Evaluación de Profesores</button>
           <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
+          <button className="menu-item" onClick = {() => navigate("/alumno/ConsultarCalificaciones")}>Consultar Calificaciones</button>
         </nav>
         <button className="logout">Cerrar sesión</button>
       </aside>
