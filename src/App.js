@@ -28,6 +28,7 @@ import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
 import { DatosMedicos } from "./pages/DatosMedicos";
+import { PublicarNoticia } from "./components/admin/PublicarNoticia";
 import RecuperarContra from "./components/formulario/RecuperarContra";
 
 function App() {
@@ -123,6 +124,10 @@ function App() {
             element={<MateriasReprobadas />}
           />
           <Route path="/administrador/ETS" element={<ETS />} />
+          <Route
+            path="/administrador/publicarNoticia"
+            element={<PublicarNoticia />}
+          />
         </Routes>
       </BrowserRouter>
     </div>
