@@ -140,7 +140,7 @@ export default function DatosMedicos() {
 
   const eliminarEnf = async (enf) => {
     if (!dm) return;
-    if (!confirm('¿Eliminar enfermedad?')) return;
+    if (!window.confirm("¿Seguro que quieres eliminar esta enfermedad?")) return;
     try {
       const res = await fetch(`${API}/api/datos-medicos/${encodeURIComponent(dm.id)}/enfermedades/${encodeURIComponent(enf.id)}`, {
         method: 'DELETE',
