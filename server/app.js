@@ -18,6 +18,7 @@ const rutaProfesor = require("./routes/rutasProfesor/ruta.js");
 const carreraRoutes = require("./routes/carreraRoutes");
 const uaRoutes = require("./routes/uaRoutes");
 const datosMedicosRoutes = require("./routes/datosMedicosRoutes");
+const avisosRoutes = require("./routes/avisosRoutes");
 
 const app = express();
 app.set("port", 4000);
@@ -55,4 +56,5 @@ app.use("/", rutaProfesor(passport));
 app.use("/api/carreras", carreraRoutes);
 app.use("/api/unidades", uaRoutes);
 app.use("/api/datos-medicos", datosMedicosRoutes);
+app.use("/api/avisos", avisosRoutes);
 app.listen(app.get("port"));

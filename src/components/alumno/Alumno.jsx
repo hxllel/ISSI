@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Alumno.css";
+import { VerAvisos } from "../shared/VerAvisos";
 
 export function Alumno() {
   const navigate = useNavigate();
@@ -229,6 +230,11 @@ export function Alumno() {
               Solicitar comprobante de horario
             </button>
           </div>
+        </section>
+
+        {/* Sección de avisos */}
+        <section className="avisos-section">
+          <VerAvisos objetivo="alumno" />
         </section>
       </main>
     </div>

@@ -10,6 +10,7 @@ export function Administrador() {
   const handleClickProf = () => navigate("gestionarProfesores");
   const handleClickCursos = () => navigate("gestionarCursos");
   const handleClickETS = () => navigate("ETS");
+  const handleClickPublicarNoticia = () => navigate("publicarNoticia");
 
   return (
     <div className="admin-container">
@@ -80,7 +81,7 @@ export function Administrador() {
               <FaBullhorn className="icon" />
               <h3>Publicar Noticia</h3>
               <p>Sube una noticia dirigida a la comunidad politécnica.</p>
-              <button>Registrar</button>
+              <button onClick={handleClickPublicarNoticia}>Registrar</button>
             </div>
           </div>
         </section>

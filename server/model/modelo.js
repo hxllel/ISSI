@@ -488,6 +488,8 @@ const Avisos = sequelize.define(
     id: { type: DataTypes.STRING(15), primaryKey: true },
     titulo: { type: DataTypes.TEXT, allowNull: false },
     descripcion: { type: DataTypes.TEXT, allowNull: false },
+    imagen: { type: DataTypes.BLOB("long"), allowNull: true },
+    objetivo: { type: DataTypes.TEXT, allowNull: false },
     fecha_vencimiento: { type: DataTypes.DATE, allowNull: false },
   },
   { tableName: "avisos", timestamps: false }

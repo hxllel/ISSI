@@ -292,6 +292,8 @@ CREATE TABLE avisos (
     id VARCHAR(15) NOT NULL,
     titulo TEXT NOT NULL,
     descripcion TEXT NOT NULL,
+    imagen LONGBLOB,
+    objetivo TEXT NOT NULL,
     fecha_vencimiento DATETIME NOT NULL,
     CONSTRAINT PK_AVI PRIMARY KEY (id)
 );
