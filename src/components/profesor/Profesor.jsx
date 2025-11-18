@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Profesor.css";
 import { ProfesorLayout } from "./ProfesorLayout";
+import { VerAvisos } from "../shared/VerAvisos";
 
 export function Profesor() {
   const { id } = useParams();
@@ -93,6 +94,11 @@ export function Profesor() {
           <p className="kpi-title">Clases programadas para hoy</p>
           <div className="kpi-value">{clasesHoy}</div>
         </div>
+      </section>
+
+      {/* Sección de avisos */}
+      <section className="section-card">
+        <VerAvisos objetivo="profesor" />
       </section>
 
       {/* Tabla de grupos recientes */}

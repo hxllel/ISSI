@@ -30,6 +30,8 @@ import { Unidades } from "./pages/Unidades";
 import { DatosMedicos } from "./pages/DatosMedicos";
 import { RegistrarCalificaciones } from "./components/profesor/RegistrarCalificaciones";
 import { ConsultarCalificaciones } from "./components/alumno/ConsultarCalificaciones";
+import { PublicarNoticia } from "./components/admin/PublicarNoticia";
+import RecuperarContra from "./components/formulario/RecuperarContra";
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -55,6 +57,7 @@ function App() {
               )
             }
           />
+          <Route path="/recuperar-contrasena" element={<RecuperarContra />} />
           <Route path="/alumno/:id" element={<Alumno />} />
           <Route path="/alumno/Chat" element={<ChatbotAsistente />} />
           <Route path="/alumno/horarios/:id" element={<Horarios />} />
@@ -131,6 +134,9 @@ function App() {
           <Route
             path="/alumno/ConsultarCalificaciones"
             element={<ConsultarCalificaciones />}
+          <Route
+            path="/administrador/publicarNoticia"
+            element={<PublicarNoticia />}
           />
         </Routes>
       </BrowserRouter>
