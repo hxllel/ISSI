@@ -21,38 +21,56 @@ export function Inscripcion() {
   const [NoReinscripcion, setNoRe] = useState([]);
     const API = 'http://localhost:4000';
 
+    const safe = (value, fallback) => {
+           return value !== null && value !== undefined ? value : fallback;
+    };
+
+    const safeArray = (value) => {
+      return Array.isArray(value) ? value : [];
+    };
+
+
   // --- HISTORIAL DE CURSADAS ---
-  useEffect(() => {
-    fetch("${API}/ObtenerHistorial", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        const nombres = data.historial?.map((h) => h.unidad_aprendizaje) || [];
-        setCursadas(nombres);
-      })
-      .catch((err) => console.error("Error", err));
-  }, []);
+ useEffect(() => {
+  fetch(`${API}/ObtenerHistorial`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      const nombres = safeArray(data?.historial).map((h) => h.unidad_aprendizaje);
+      setCursadas(nombres);
+    })
+    .catch((err) => {
+      console.error("Error", err);
+      setCursadas([]);
+    });
+}, []);
+
 
   // --- BORRADOR ---
   useEffect(() => {
-    fetch("${API}/ConsultarBorrador", { credentials: "include" })
+    fetch(`${API}/ConsultarBorrador`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         const borr = Array.isArray(data && data.horario) ? data.horario : [];
         setBorr(borr);
       })
       .catch((err) => {
-        console.error("Error al obtener el horario:", err);
+        console.error(`Error al obtener el horario:`, err);
         setBorr([]);
       });
   }, []);
 
-  useEffect(() =>{
-    fetch("${API}/NoReinscripcion", {credentials : "include"})
+  useEffect(() => {
+  fetch(`${API}/NoReinscripcion`, { credentials: "include" })
     .then((res) => res.json())
-    .then((data) =>{
-      setNoRe(data.grupos);
-    }).catch((err) =>{console.log("Error")});
-  }, []);
+    .then((data) => {
+      setNoRe(safeArray(data?.grupos));
+    })
+    .catch((err) => {
+      console.log("Error NoReinscripcion:", err);
+      setNoRe([]);
+    });
+}, []);
+
 
   const handleClickDel = (id) => {
     setdel(true);
@@ -61,14 +79,19 @@ export function Inscripcion() {
 
   // --- GRUPOS DISPONIBLES ---
   useEffect(() => {
-    fetch(`${API}/Grupos/${id}`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.grupos) setGrupos(data.grupos);
-        if (data.creditos) setCreditos(data.creditos);
-      })
-      .catch((err) => console.error("Error al obtener los grupos:", err));
-  }, [id]);
+  fetch(`${API}/Grupos/${id}`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      setGrupos(safeArray(data?.grupos));
+      setCreditos(safe(data?.creditos, 0));
+    })
+    .catch((err) => {
+      console.error("Error al obtener los grupos:", err);
+      setGrupos([]);
+      setCreditos(0);
+    });
+}, [id]);
+
 
   const handleClickAbrir = (id) => {
     setModalOpen(true);
@@ -77,27 +100,33 @@ export function Inscripcion() {
 
   // --- DISTRIBUCIÓN HORARIA ---
   useEffect(() => {
-    if (modalOpen) {
-      fetch(`${API}/ObtenerDist/${id_dis}`, { credentials: "include" })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.Distri) setDistri(data.Distri);
-        })
-        .catch((err) => console.error("Error la distribucion de horas del grupo:", err));
-    }
-  }, [modalOpen, id_dis]);
+  if (!modalOpen || !id_dis) return;
+
+  fetch(`${API}/ObtenerDist/${id_dis}`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      setDistri(safeArray(data?.Distri));
+    })
+    .catch((err) => {
+      console.error("Error en distribucion:", err);
+      setDistri([]);
+    });
+}, [modalOpen, id_dis]);
+
 
   // --- TEMPORALES ---
   useEffect(() => {
-    fetch("${API}/Con", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setGruposagg(data.tempGrupo);
-          setCreditos(data.creditos);
-        }
-      });
-  });
+  fetch(`${API}/Con`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data?.success) {
+        setGruposagg(safeArray(data?.tempGrupo));
+        setCreditos(safe(data?.creditos, 0));
+      }
+    })
+    .catch(() => {});
+});  // ← CORREGIDO
+
 
   const handleClickD = (id) => {
     setd(true);
@@ -106,40 +135,41 @@ export function Inscripcion() {
 
   // --- ELIMINAR DE BORRADOR ---
   useEffect(() => {
-    if (d) {
-      fetch(`${API}/EliminarBorrador/${idgru}`, {
-        method: "POST",
-        credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          alert(
-            data.success
-              ? "Se ha eliminado la materia de tu borrador de horario"
-              : "No se ha podido eliminar la materia al borrador de horario"
-          );
-            window.location.reload();
-        })
-        .catch((err) => console.error("Error al eliminar borrador:", err))
-        .finally(() => setd(false));
-    }
-  }, [d, idgru]);
+  if (!d || !idgru) return;
+
+  fetch(`${API}/EliminarBorrador/${idgru}`, {
+    method: "POST",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      alert(
+        data?.success
+          ? "Se ha eliminado la materia del borrador"
+          : "No se pudo eliminar"
+      );
+    })
+    .catch((err) => console.error("Error:", err))
+    .finally(() => setd(false));
+}, [d, idgru]);
+
 
   // --- AGREGAR A HORARIO ---
   const handleClickAdd = (id) => {
-    fetch(`${API}/Agregar/${id}`, {
-      credentials: "include",
-      method: "POST",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) alert("Se ha agregado la materia a tu horario");
-        else alert(`No se ha podido agregar: ${data.err || ""}`);
-                    window.location.reload();
+  if (!id) return;
 
-      })
-      .catch((err) => console.error("Error: ", err));
-  };
+  fetch(`${API}/Agregar/${id}`, {
+    credentials: "include",
+    method: "POST",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data?.success) alert("Se ha agregado la materia");
+      else alert(`No se pudo agregar: ${safe(data?.err, "")}`);
+    })
+    .catch((err) => console.error("Error:", err));
+};
+
 
   // --- ELIMINAR DE HORARIO ---
   const handleClickEl = (id) => {
@@ -154,7 +184,7 @@ export function Inscripcion() {
             ? "Se ha eliminado la materia a tu horario"
             : "No se ha podido eliminar a tu horario"
         );
-                    window.location.reload();
+                    
 
       })
       .catch((err) => console.error("Error: ", err));
@@ -162,42 +192,40 @@ export function Inscripcion() {
 
   // --- IMPORTAR DEL BORRADOR ---
   const handleClickImport = () => {
-    fetch(`${API}/ImportarHorario`, {
-      credentials: "include",
-      method: "POST",
+  fetch(`${API}/ImportarHorario`, {
+    credentials: "include",
+    method: "POST",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data?.fatal) alert(`NO SE AGREGÓ NADA: ${data.msg}`);
+      else if (data?.success) alert("Se importó correctamente");
+      else alert(`Importado parcial: ${safe(data?.msg, "")}`);
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.fatal) alert(`NO SE HA AGREGADO NINGUNA MATERIA, ${data.msg}`);
-        else if (data.success) alert("Se han agregado todas las materias a su horario");
-        else alert(`Se han agregado algunas materias: ${data.msg}`);
-                    window.location.reload();
+    .catch((err) => console.error("Error:", err));
+};
 
-      })
-      .catch((err) => console.error("Error ", err));
-  };
 
   // --- ELIMINAR BORRADOR FINAL ---
   useEffect(() => {
-    if (del) {
-      fetch(`${API}/EliminarBorrador/${idgru}`, {
-        method: "POST",
-        credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          alert(
-            data.success
-              ? "Se ha eliminado la materia de tu borrador de horario"
-              : "No se ha podido eliminar la materia al borrador de horario"
-          );
-                              window.location.reload();
+  if (!del || !idgru) return;
 
-        })
-        .catch((err) => console.error("Error al eliminar borrador:", err))
-        .finally(() => setdel(false));
-    }
-  }, [del, idgru]);
+  fetch(`${API}/EliminarBorrador/${idgru}`, {
+    method: "POST",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      alert(
+        data?.success
+          ? "Se ha eliminado la materia del borrador"
+          : "No se ha podido eliminar"
+      );
+    })
+    .catch((err) => console.error("Error:", err))
+    .finally(() => setdel(false));
+}, [del, idgru]);
+
 
   // --- INSCRIPCIÓN FINAL ---
   const handleSubmit = async (e) => {

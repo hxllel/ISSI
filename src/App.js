@@ -28,6 +28,8 @@ import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
 import { DatosMedicos } from "./pages/DatosMedicos";
+import { RegistrarCalificaciones } from "./components/profesor/RegistrarCalificaciones";
+import { ConsultarCalificaciones } from "./components/alumno/ConsultarCalificaciones";
 import { PublicarNoticia } from "./components/admin/PublicarNoticia";
 import RecuperarContra from "./components/formulario/RecuperarContra";
 
@@ -124,6 +126,14 @@ function App() {
             element={<MateriasReprobadas />}
           />
           <Route path="/administrador/ETS" element={<ETS />} />
+
+          <Route
+            path="/profesor/RegistrarCalificaciones/:id/:periodo"
+            element={<RegistrarCalificaciones />}
+          />
+          <Route
+            path="/alumno/ConsultarCalificaciones"
+            element={<ConsultarCalificaciones />}
           <Route
             path="/administrador/publicarNoticia"
             element={<PublicarNoticia />}

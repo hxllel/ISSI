@@ -10,6 +10,8 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const params = useParams();
   const [datos, setDatos] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
+  const [periodo, setPeriodo] = useState("");
+  const [tiempo, setTiempo] = useState(false);
   const navigate = useNavigate();
   const API = "http://localhost:4000";
   const profesorId = propProfesorId || params.id;
@@ -17,6 +19,30 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const handleClickLista = (id) => {
     navigate(`/profesor/PaseLista/${id}`);
   };
+
+  const handleClickRegistrar = (id) =>{
+    navigate(`/profesor/RegistrarCalificaciones/${id}/${periodo}`);
+  }
+
+  useEffect(() => {
+    fetch(`${API}/TiempoCalificaciones`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        if(data.tiempo){
+          setTiempo(true);
+          setPeriodo(data.periodo);
+        } else {
+          setTiempo(false);
+          setPeriodo("");
+        }
+      })
+      .catch((err) => {
+        console.error("Error al obtener el tiempo de calificaciones:", err);
+        setTiempo(false);
+        setPeriodo("");
+      });
+
+  }, []);
 
   useEffect(() => {
     fetch(`${API}/ObtenerCursos/Prof/:${profesorId}`, {
@@ -287,6 +313,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
                         >
                           Pasar lista
                         </button>
+                          {(tiempo && dato.reg_final === null )||( tiempo && Number(dato.reg_final) === 0) ||  (tiempo && periodo === "extra" && dato.reg_extra === null) ||  (tiempo && periodo === "extra" && Number(dato.reg_extra) === 0 ) ? ( <button type = "button" className="cl-btn cl-btn-primary" onClick={() => handleClickRegistrar(dato.id)}>Registrar calificaciones del periodo {periodo}</button>) : ( <></> )}
                       </td>
                     </tr>
                   );

@@ -27,7 +27,49 @@ module.exports = (passport) => {
         .json({ success: false, error: "Error al obtener datos para el chat" });
     }
   });
+  router.get("/ConsultarCalificaciones", async (req, res) => {
+    const us = req.user.id;
+    try {
+      const h = await bd.Horario.findOne({
+        where: { id_alumno: us },
+      });
+      const cal = await bd.Mat_Inscritos.findAll({
+        where: { id_horario: h.id },
+        include: [
+          {
+            model: bd.Grupo,
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+              },
+              { model: bd.DatosPersonales },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
 
+      return res.json({
+        success: true,
+        calificaciones: cal.map((c) => ({
+          id_grupo: c.Grupo.nombre,
+          nombre_ua: c.Grupo.Unidad_Aprendizaje.nombre,
+          profesor: `${c.Grupo.DatosPersonale.nombre} ${c.Grupo.DatosPersonale.ape_paterno} ${c.Grupo.DatosPersonale.ape_materno}`,
+          calificacion_primer: c.calificacion_primer,
+          calificacion_segundo: c.calificacion_segundo,
+          calificacion_tercer: c.calificacion_tercer,
+          calificacion_final: c.calificacion_final,
+          extra: c.extra,
+        })),
+      });
+    } catch (err) {
+      return res.json({
+        success: false,
+        error: "Error al obtener las calificaciones",
+      });
+    }
+  });
   router.get("/ObtenerHorario/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -190,8 +232,6 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
-
-      console.log("ObtenerGrupo: cursos obtenidos =", cursos.length);
 
       // Si no hay cursos, devolver array vacío
       if (!Array.isArray(cursos) || cursos.length === 0) {
@@ -584,19 +624,24 @@ module.exports = (passport) => {
             ],
           });
 
-          await bd.Materia_Reprobada.update(
-            {
-              recurse: 0,
-              estado_actual: "Recurse",
-            },
-            { where: { id: recu.id } }
-          );
+          // Si NO existe, no hacer el update
+          if (!recu) {
+          } else {
+            // Si existe, actualizar
+            await bd.Materia_Reprobada.update(
+              {
+                recurse: 0,
+                estado_actual: "Recurse",
+              },
+              { where: { id: recu.id } }
+            );
+          }
+
           const id2 = uuidv4().replace(/-/g, "").substring(0, 15);
           const crear_mat_inscrita = await bd.Mat_Inscritos.create({
             id: id2,
             id_horario: idh.id,
             id_grupo: g,
-            calificacion: 0,
           });
           const cup_act = await bd.Grupo.findOne({
             where: { id: g },
