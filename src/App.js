@@ -29,6 +29,7 @@ import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
 import { DatosMedicos } from "./pages/DatosMedicos";
 import { PublicarNoticia } from "./components/admin/PublicarNoticia";
+import RecuperarContra from "./components/formulario/RecuperarContra";
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -54,6 +55,7 @@ function App() {
               )
             }
           />
+          <Route path="/recuperar-contrasena" element={<RecuperarContra />} />
           <Route path="/alumno/:id" element={<Alumno />} />
           <Route path="/alumno/Chat" element={<ChatbotAsistente />} />
           <Route path="/alumno/horarios/:id" element={<Horarios />} />

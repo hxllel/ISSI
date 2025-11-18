@@ -1,5 +1,6 @@
 import "./Formulario.css";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export function Formulario({ setSuccess, setId2 }) {
     const [id, setId] = useState(""); // Cambiado de 'usuario' a 'id'
@@ -91,6 +92,10 @@ export function Formulario({ setSuccess, setId2 }) {
                     <button type="submit" className="btn">
                         Entrar
                     </button>
+
+                    <div className="recover-link">
+                        <Link to="/recuperar-contrasena">¿Olvidaste tu contraseña?</Link>
+                    </div>
                 </form>
             </main>
 
