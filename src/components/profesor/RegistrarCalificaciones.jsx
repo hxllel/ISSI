@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./PaseLista.css";
 import "./Profesor.css";
 import { ProfesorLayout } from "./ProfesorLayout";
+import { ProfeSideBar } from "./ProfeSidebar";
 
 export function RegistrarCalificaciones() {
   const API = "http://localhost:4000";

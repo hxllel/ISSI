@@ -1403,22 +1403,29 @@ module.exports = (passport) => {
         });
       }
 
+      // IMPORTANTE: convertir a fecha local correctamente
       const fechaEvaluacion = new Date(fechas.evalu_profe);
-      const hoy = new Date();
 
-      // normalizar fechas para comparar solo dia/mes/año
-      const fechaEvalNorm = new Date(
+      // Tomar solo día/mes/año usando LOCAL
+      const fechaEvalLocal = new Date(
         fechaEvaluacion.getFullYear(),
         fechaEvaluacion.getMonth(),
         fechaEvaluacion.getDate()
       );
-      const hoyNorm = new Date(
+
+      const hoy = new Date();
+      const hoyLocal = new Date(
         hoy.getFullYear(),
         hoy.getMonth(),
         hoy.getDate()
       );
 
-      if (hoyNorm.getTime() === fechaEvalNorm.getTime()) {
+      console.log("Fecha evaluación LOCAL:", fechaEvalLocal);
+      console.log("Fecha hoy LOCAL:", hoyLocal);
+
+      const mismoDia = hoyLocal.getTime() === fechaEvalLocal.getTime();
+      console.log(mismoDia);
+      if (mismoDia) {
         return res.json({
           valido: true,
           mensaje: "Es momento de evaluar a tus profesores",
@@ -1427,7 +1434,7 @@ module.exports = (passport) => {
         return res.json({
           valido: false,
           mensaje: "Aún no es tiempo de evaluar a tus profesores",
-          fechaEvaluacion: fechaEvaluacion.toLocaleDateString("es-MX"),
+          fechaEvaluacion: fechaEvalLocal.toLocaleDateString("es-MX"),
         });
       }
     } catch (err) {

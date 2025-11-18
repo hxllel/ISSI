@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./EditarAlumnos.css"; // 👈 Se agrega el CSS
+import "./EditarAlumnos.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function EditarAlumnos() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const API = 'http://localhost:4000';
 
     const [alumno, setAlumno] = useState({
         nombre: "",
@@ -31,7 +32,7 @@ export function EditarAlumnos() {
     const [fotoBase64, setFotoBase64] = useState(null);
 
     useEffect(() => {
-        fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
+        fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
             .then(res => res.json())
             .then(data => {
                 if (data.alumno) setAlumno(data.alumno);
@@ -40,7 +41,7 @@ export function EditarAlumnos() {
     }, [id]);
 
     useEffect(() => {
-        fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
+        fetch("http://localhost:4000/ObtenerCarreras")
             .then(res => res.json())
             .then(data => setCarreras(data.carreras || []))
             .catch(err => console.error("Error al obtener las carreras:", err));
@@ -56,7 +57,7 @@ export function EditarAlumnos() {
         const payload = { ...alumno };
         if (fotoBase64) payload.fotoBase64 = fotoBase64;
 
-        fetch(`${API}/EditarAlumno/${id}`, {
+        fetch(`http://localhost:4000/EditarAlumno/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

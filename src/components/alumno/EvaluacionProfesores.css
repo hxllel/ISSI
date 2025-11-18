@@ -1,19 +1,34 @@
-.evaluacion-container {
-  display: flex;
-  height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* EvaluacionProfesores.css */
+/* Paleta tipo SAES-R */
+:root {
+  --eval-guinda: #7d0024;
+  --eval-guinda-dark: #60001c;
+  --eval-border: #e5e7eb;
+  --eval-text: #222222;
+  --eval-bg: #f3f4f6;
 }
 
-/* Sidebar */
+/* Layout general */
+.evaluacion-container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--eval-bg);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ================= SIDEBAR ================= */
+
 .sidebar {
-  width: 250px;
-  background-color: #2c3e50;
-  color: white;
+  width: 240px;
+  background-color: #ffffff;          /* Fondo blanco */
+  color: #4b5563;                     /* Texto gris oscuro */
   display: flex;
   flex-direction: column;
   padding: 20px;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
+  border-right: 1px solid #e5e7eb;    /* Línea divisoria ligera */
+  box-sizing: border-box;
 }
 
 .logo {
@@ -21,8 +36,9 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 30px;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #7d0024;                     /* Guinda para el texto */
 }
 
 .logo-img {
@@ -34,376 +50,456 @@
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
   flex-grow: 1;
 }
 
 .menu-item {
   background-color: transparent;
   border: none;
-  color: white;
-  padding: 12px 15px;
+  color: #4b5563;
+  padding: 8px 10px;
   text-align: left;
   cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  font-size: 14px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    transform 0.05s ease;
+  font-size: 0.9rem;
 }
 
 .menu-item:hover {
-  background-color: #34495e;
-  transform: translateX(5px);
+  background-color: #f3f4f6;
+  transform: translateX(1px);
 }
 
+/* Ítem activo: rosita + guinda */
 .menu-item.active {
-  background-color: #667eea;
-  font-weight: bold;
+  background-color: #ffe4ec;
+  color: #7d0024;
+  font-weight: 600;
 }
 
 .logout {
-  background-color: #e74c3c;
+  background-color: transparent;
   border: none;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
+  color: #dc2626;
+  padding: 10px 0;
+  border-radius: 999px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.15s ease;
+  margin-top: 1.5rem;
 }
 
 .logout:hover {
-  background-color: #c0392b;
+  color: #b91c1c;
 }
 
-/* Contenido principal */
+/* =============== CONTENIDO PRINCIPAL =============== */
+
 .main-content {
   flex: 1;
-  padding: 30px;
+  padding: 2rem 2.5rem;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
+/* Tarjeta de encabezado */
 .evaluacion-header {
-  background-color: white;
-  padding: 25px;
+  background: #ffffff;
   border-radius: 12px;
-  margin-bottom: 25px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.8rem 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--eval-border);
 }
 
 .evaluacion-header h2 {
-  margin: 0 0 10px 0;
-  color: #2c3e50;
-  font-size: 28px;
+  margin: 0 0 0.4rem;
+  color: var(--eval-text);
+  font-size: 1.7rem;
+  font-weight: 800;
 }
 
 .evaluacion-header p {
   margin: 0;
-  color: #7f8c8d;
-  font-size: 16px;
+  color: #6b7280;
+  font-size: 0.95rem;
 }
 
 /* Formulario de evaluación */
 .formulario-evaluacion {
-  background-color: white;
-  padding: 30px;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.8rem 2rem 2.2rem;
+  border: 1px solid var(--eval-border);
 }
 
-/* Mensaje cuando no es fecha válida */
+/* ========== MENSAJE CUANDO NO ES FECHA VÁLIDA ========== */
+
 .mensaje-no-disponible {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
+  min-height: 350px;
 }
 
 .mensaje-card {
-  background-color: white;
-  padding: 40px;
+  background-color: #ffffff;
+  padding: 2rem 2.3rem;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   text-align: center;
-  max-width: 600px;
+  max-width: 540px;
+  border: 1px solid var(--eval-border);
 }
 
 .mensaje-card h3 {
-  color: #e74c3c;
-  font-size: 24px;
-  margin-bottom: 20px;
+  color: var(--eval-guinda);
+  font-size: 1.25rem;
+  margin-bottom: 0.8rem;
 }
 
 .mensaje-card p {
-  color: #7f8c8d;
-  font-size: 16px;
+  color: #4b5563;
+  font-size: 0.95rem;
   line-height: 1.6;
 }
 
+/* =============== SELECTOR DE PROFESOR =============== */
+
 .selector-profesor {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #ecf0f1;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--eval-border);
 }
 
 .selector-profesor label {
   display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-  color: #2c3e50;
-  font-size: 16px;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--eval-text);
+  font-size: 0.98rem;
 }
 
 .select-profesor {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #bdc3c7;
-  border-radius: 8px;
-  font-size: 15px;
-  background-color: white;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--eval-border);
+  font-size: 0.95rem;
+  background-color: #ffffff;
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.2s ease, box-shadow 0.15s ease;
+  outline: none;
 }
 
 .select-profesor:focus {
-  outline: none;
-  border-color: #667eea;
+  border-color: var(--eval-guinda);
+  box-shadow: 0 0 0 3px rgba(125, 0, 36, 0.15);
 }
 
-/* Preguntas */
+/* =================== PREGUNTAS =================== */
+
 .form-preguntas {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .pregunta-card {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  border-left: 4px solid #667eea;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fafafa;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--eval-border);
+  border-left: 4px solid var(--eval-guinda);
+  transition: box-shadow 0.15s ease, transform 0.05s ease,
+    background-color 0.15s ease;
 }
 
 .pregunta-card:hover {
-  transform: translateX(5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
 }
 
 .pregunta-texto {
-  margin: 0 0 15px 0;
-  color: #2c3e50;
-  font-size: 17px;
+  margin: 0 0 0.8rem;
+  color: var(--eval-text);
+  font-size: 0.98rem;
   font-weight: 600;
 }
 
 .opciones-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.45rem;
 }
 
 .opcion-label {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 15px;
-  background-color: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  gap: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    box-shadow 0.1s ease;
 }
 
 .opcion-label:hover {
-  border-color: #667eea;
-  background-color: #f0f4ff;
+  border-color: var(--eval-guinda);
+  background-color: #fef2f5;
+  box-shadow: 0 1px 4px rgba(125, 0, 36, 0.12);
 }
 
 .opcion-label input[type="radio"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #667eea;
+  accent-color: var(--eval-guinda);
 }
 
 .opcion-label input[type="radio"]:checked + .opcion-texto {
-  font-weight: bold;
-  color: #667eea;
+  font-weight: 600;
+  color: var(--eval-guinda);
 }
 
 .opcion-texto {
-  font-size: 15px;
-  color: #2c3e50;
+  font-size: 0.9rem;
+  color: #374151;
 }
 
-/* Botones */
+/* =================== BOTONES FORM =================== */
+
 .botones-container {
-  display: flex;
-  gap: 15px;
-  margin-top: 30px;
-  justify-content: center;
+  margin-top: 2rem;
+  margin: 0 auto;
 }
 
+.seccion-botones {
+ display: block;
+}
+
+/* Base para TODOS los botones de acción */
 .btn-enviar,
-.btn-cancelar {
-  padding: 14px 35px;
+.btn-cancelar,
+.btn-nueva,
+.btn-volver {
+  display: inline-block;
+  width: 230px;
+  height: 46px;
+  line-height: 46px;
+  padding: 0;
+  margin: 0 2rem;
+
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.15s ease;
+  /* 👆 quitamos transform de la transición */
 }
 
+/* Enviar */
 .btn-enviar {
-  background-color: #667eea;
-  color: white;
+  background: linear(135deg, #7d0024);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(125, 0, 36, 0.35);
 }
 
 .btn-enviar:hover {
-  background-color: #5568d3;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+  background: linear(135deg, #60001c);
 }
 
+/* Cancelar */
 .btn-cancelar {
-  background-color: #95a5a6;
-  color: white;
+  background-color: #6b7280;
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(75, 85, 99, 0.35);
 }
 
 .btn-cancelar:hover {
-  background-color: #7f8c8d;
-  transform: translateY(-2px);
+  background-color: #4b5563;
 }
 
-/* Resultado de evaluación */
+/* Resultado */
+.btn-nueva {
+  background: linear-gradient(135deg, #7d0024, #b1003a);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(125, 0, 36, 0.35);
+}
+
+.btn-nueva:hover {
+  background: linear-gradient(135deg, #60001c, #980032);
+}
+
+.btn-volver {
+  background-color: #6b7280;
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(75, 85, 99, 0.35);
+}
+
+.btn-volver:hover {
+  background-color: #4b5563;
+}
+
+/* =================== RESULTADO =================== */
+
 .resultado-evaluacion {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 500px;
+  min-height: 420px;
 }
 
 .resultado-card {
-  background-color: white;
-  padding: 40px;
+  background-color: #ffffff;
+  padding: 2rem 2.3rem;
   border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   text-align: center;
-  max-width: 600px;
+  max-width: 580px;
   width: 100%;
+  border: 1px solid var(--eval-border);
 }
 
 .resultado-card h2 {
-  color: #27ae60;
-  margin-bottom: 25px;
-  font-size: 32px;
+  color: var(--eval-text);
+  margin-bottom: 1.2rem;
+  font-size: 1.6rem;
+  font-weight: 800;
 }
 
 .resultado-info {
-  margin-bottom: 30px;
+  margin-bottom: 1.5rem;
 }
 
 .resultado-info p {
-  margin: 10px 0;
-  font-size: 16px;
-  color: #2c3e50;
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+  color: #374151;
 }
 
+/* Caja de puntuación */
 .puntuacion-box {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 25px;
-  border-radius: 10px;
-  margin: 20px 0;
-  color: white;
+  background: linear-gradient(
+    135deg,
+    var(--eval-guinda) 0%,
+    var(--eval-guinda-dark) 100%
+  );
+  padding: 1.2rem 1rem;
+  border-radius: 12px;
+  margin: 1rem 0 1.2rem;
+  color: #ffffff;
 }
 
 .puntuacion-label {
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
 }
 
 .puntuacion-valor {
-  font-size: 48px;
-  font-weight: bold;
-  margin: 10px 0;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0.2rem 0 0.4rem;
 }
 
 .calificacion {
-  font-size: 24px;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 0.3rem;
 }
 
 .calificacion.excelente {
-  background-color: #27ae60;
+  background-color: #16a34a;
+  color: #ffffff;
 }
 
 .calificacion.muy-bueno {
-  background-color: #2ecc71;
+  background-color: #22c55e;
+  color: #ffffff;
 }
 
 .calificacion.bueno {
-  background-color: #3498db;
+  background-color: #3b82f6;
+  color: #ffffff;
 }
 
 .calificacion.regular {
-  background-color: #f39c12;
+  background-color: #f59e0b;
+  color: #111827;
 }
 
 .calificacion.deficiente {
-  background-color: #e74c3c;
+  background-color: #dc2626;
+  color: #ffffff;
 }
 
 .mensaje-agradecimiento {
   font-style: italic;
-  color: #7f8c8d;
-  margin-top: 20px;
-  line-height: 1.6;
+  color: #6b7280;
+  margin-top: 0.8rem;
+  line-height: 1.5;
 }
 
+/* Botones en el resultado */
 .botones-resultado {
   display: flex;
-  gap: 15px;
+  gap: 0.9rem;
   justify-content: center;
+  margin-top: 0.4rem;
 }
 
-.btn-nueva,
-.btn-volver {
-  padding: 14px 30px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
+/* Estilos específicos para btn-nueva / btn-volver */
 .btn-nueva {
-  background-color: #667eea;
-  color: white;
+  background-color: var(--eval-guinda);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(125, 0, 36, 0.35);
 }
 
 .btn-nueva:hover {
-  background-color: #5568d3;
-  transform: translateY(-2px);
+  background-color: var(--eval-guinda-dark);
+  transform: translateY(-1px);
 }
 
 .btn-volver {
-  background-color: #95a5a6;
-  color: white;
+  background-color: #6b7280;
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(75, 85, 99, 0.35);
 }
 
 .btn-volver:hover {
-  background-color: #7f8c8d;
-  transform: translateY(-2px);
+  background-color: #4b5563;
+  transform: translateY(-1px);
 }
 
-/* Responsive */
+/* =================== RESPONSIVE =================== */
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 1.6rem 1.4rem;
+  }
+
+  .evaluacion-header,
+  .formulario-evaluacion {
+    padding: 1.5rem 1.4rem 1.8rem;
+  }
+}
+
 @media (max-width: 768px) {
   .evaluacion-container {
     flex-direction: column;
@@ -411,15 +507,20 @@
 
   .sidebar {
     width: 100%;
-    padding: 15px;
+    padding: 1rem 1.3rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
 
   .main-content {
-    padding: 20px;
-  }
-
-  .pregunta-texto {
-    font-size: 15px;
+    padding: 1.4rem 1.2rem 1.8rem;
   }
 
   .botones-container,
@@ -432,5 +533,6 @@
   .btn-nueva,
   .btn-volver {
     width: 100%;
+    max-width: 260px;
   }
 }

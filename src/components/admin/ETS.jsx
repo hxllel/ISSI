@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Modal";
 import ModalPDF from "./ModalPDF"
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function ETS() {
     const navigate = useNavigate();

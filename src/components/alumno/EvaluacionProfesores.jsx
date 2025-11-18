@@ -2,22 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./EvaluacionProfesores.css";
+import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 
 export function EvaluacionProfesores() {
   const navigate = useNavigate();
   const { id } = useParams();
-      const API = 'http://localhost:4000';
+  const API = 'http://localhost:4000';
 
   const [profesores, setProfesores] = useState([]);
   const [profesorSeleccionado, setProfesorSeleccionado] = useState("");
   const [respuestas, setRespuestas] = useState({});
-  const [mostrarResultado, setMostrarResultado] = useState(false);
+  const [mostrarResultado, setMostrarResultado] = useState(null);
   const [puntuacionTotal, setPuntuacionTotal] = useState(0);
   const [registroCount, setRegistroCount] = useState(null);
-  const [fechaValida, setFechaValida] = useState(false);
+  const [fechaValida, setFechaValida] = useState(null);
   const [mensajeFecha, setMensajeFecha] = useState("Cargando...");
 
-  // Preguntas de evaluacion
+  // ---- PREGUNTAS ----
   const preguntas = [
     {
       id: 1,
@@ -131,49 +132,46 @@ export function EvaluacionProfesores() {
     }
   ];
 
-  // suma total maxima de las 10 preguntas: 50
-  // suma total minima de las 10 preguntas: 10
-
-  // Validar fecha de evaluación
+  // ---- VALIDAR FECHA ----
   useEffect(() => {
-    fetch(`${API}/ValidarFechaEvaluacion`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        setFechaValida(data.valido || false);
-        setMensajeFecha(data.mensaje || "Error al validar fecha");
-      })
-      .catch((err) => {
-        console.error("Error al validar fecha:", err);
-        setFechaValida(false);
-        setMensajeFecha("Error al validar la fecha de evaluación");
-      });
-  }, []);
+  fetch(`${API}/ValidarFechaEvaluacion`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("VALIDAR FECHA RESPUESTA:", data);  // ⬅️ AGREGA ESTO
 
-  // obtener lista de profesores del alumno
+      setFechaValida(data.valido || false);
+      setMensajeFecha(data.mensaje || "Error al validar fecha");
+    })
+    .catch((err) => {
+      console.error("Error al validar fecha:", err);
+      setFechaValida(false);
+      setMensajeFecha("Error al validar la fecha de evaluación");
+    });
+}, []);
+
+
+  // ---- OBTENER PROFESORES ----
   useEffect(() => {
     fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.horario && Array.isArray(data.horario)) {
-          // Extraer profesores únicos
-          const profUnicos = [...new Set(data.horario.map(h => h.profesor))];
+          const profUnicos = [...new Set(data.horario.map((h) => h.profesor))];
           setProfesores(profUnicos);
         }
       })
       .catch((err) => console.error("Error al obtener profesores:", err));
   }, [id]);
 
+  // ---- RESPUESTA ----
   const handleRespuesta = (preguntaId, peso) => {
-    setRespuestas({
-      ...respuestas,
-      [preguntaId]: peso
-    });
+    setRespuestas({ ...respuestas, [preguntaId]: peso });
   };
 
+  // ---- SUBMIT ----
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // validar que todas las preguntas esten respondidas
     if (Object.keys(respuestas).length !== preguntas.length) {
       alert("Por favor responde todas las preguntas antes de enviar la evaluación.");
       return;
@@ -184,11 +182,9 @@ export function EvaluacionProfesores() {
       return;
     }
 
-    // Calcular puntuaciion total (suma de pesos)
-    const total = Object.values(respuestas).reduce((acc, peso) => acc + peso, 0);
+    const total = Object.values(respuestas).reduce((acc, p) => acc + p, 0);
     setPuntuacionTotal(total);
 
-    //ACTUALIZAR CONTADOR EN BASE DE DATOS
     try {
       const resp = await axios.post(
         `${API}/ActualizarContadorProfesor`,
@@ -200,9 +196,9 @@ export function EvaluacionProfesores() {
         { withCredentials: true }
       );
 
-      // Esperamos que el backend responda con algo como { ok: true, registrado: <n> }
-      const registrado = resp && resp.data && (resp.data.registrado ?? resp.data.registro ?? resp.data.count ?? null);
-      if (registrado !== null) setRegistroCount(registrado);
+      const registrado = resp?.data?.registrado ?? resp?.data?.registro ?? resp?.data?.count ?? null;
+
+      if (registroCount !== null) setRegistroCount(registrado);
 
       setMostrarResultado(true);
     } catch (err) {
@@ -211,53 +207,26 @@ export function EvaluacionProfesores() {
     }
   };
 
+  // ---- RESET ----
   const resetEvaluacion = () => {
     setProfesorSeleccionado("");
     setRespuestas({});
     setMostrarResultado(false);
     setPuntuacionTotal(0);
   };
-  
 
+  // ---- RENDER ----
   return (
-    <div className="evaluacion-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item" onClick={() => navigate(`/alumno/inscripcion/${id}`)}>
-            Inscribir Materias
-          </button>
-          <button className="menu-item" onClick={() => navigate(`/alumno/horarios/${id}`)}>
-            Horarios
-          </button>
-          <button className="menu-item" onClick={() => navigate("/alumno/Kardex")}>
-            Kardex
-          </button>
-          <button className="menu-item" onClick={() => navigate(`/alumno/Chat`, { state: { alumnoId: id } })}>
-            Asistente de Chat
-          </button>
-          <button className="menu-item active" onClick={() => navigate(`/alumno/evaluacion/${id}`)}>
-            Evaluación de Profesores
-          </button>
-          <button className="menu-item" onClick={() => navigate(`/alumno/editarDatos/${id}`)}>
-            Información Personal
-          </button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+    <div className="alumno-container">
+      <SidebarAlumno />
 
-      {/* Contenido principal */}
       <main className="main-content">
-        <header className="evaluacion-header">
-          <h2>Evaluación de Profesores</h2>
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <h1>Evaluación de Profesores</h1>
+          </div>
           <p>Comparte tu opinión sobre el desempeño de tus profesores</p>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
 
         {!fechaValida ? (
@@ -293,16 +262,16 @@ export function EvaluacionProfesores() {
                     {pregunta.id}. {pregunta.pregunta}
                   </h3>
                   <div className="opciones-container">
-                    {pregunta.opciones.map((opcion, index) => (
-                      <label key={index} className="opcion-label">
+                    {pregunta.opciones.map((opc, i) => (
+                      <label key={i} className="opcion-label">
                         <input
                           type="radio"
                           name={`pregunta-${pregunta.id}`}
-                          value={opcion.peso}
-                          onChange={() => handleRespuesta(pregunta.id, opcion.peso)}
-                          checked={respuestas[pregunta.id] === opcion.peso}
+                          value={opc.peso}
+                          onChange={() => handleRespuesta(pregunta.id, opc.peso)}
+                          checked={respuestas[pregunta.id] === opc.peso}
                         />
-                        <span className="opcion-texto">{opcion.texto}</span>
+                        <span className="opcion-texto">{opc.texto}</span>
                       </label>
                     ))}
                   </div>
@@ -329,6 +298,7 @@ export function EvaluacionProfesores() {
               <h2>¡Evaluación Completada!</h2>
               <div className="resultado-info">
                 <p><strong>Profesor evaluado:</strong> {profesorSeleccionado}</p>
+
                 <div className="puntuacion-box">
                   <p className="puntuacion-label">Puntuación Total enviada:</p>
                   <p className="puntuacion-valor">{puntuacionTotal} / {preguntas.length * 5}</p>
@@ -336,15 +306,21 @@ export function EvaluacionProfesores() {
                     <p className="registro-count">Veces evaluado: {registroCount}</p>
                   )}
                 </div>
+
                 <p className="mensaje-agradecimiento">
                   Gracias por tu participación. Tu opinión es valiosa para mejorar la calidad educativa.
                 </p>
               </div>
+
               <div className="botones-resultado">
                 <button className="btn-nueva" onClick={resetEvaluacion}>
                   Evaluar otro profesor
                 </button>
-                <button className="btn-volver" onClick={() => navigate(`/alumno/${id}`)}>
+
+                <button
+                  className="btn-volver"
+                  onClick={() => navigate(`/alumno/${id}`)}
+                >
                   Volver al inicio
                 </button>
               </div>

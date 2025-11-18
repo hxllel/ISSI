@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
+import "./HistorialAcademico.css";
 
 export function HistorialAcademico() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [historial, setHistorial] = useState([]);
   const [semestres, setSemestres] = useState([]);
-    const API = 'http://localhost:4000';
 
   useEffect(() => {
-    fetch(`${API}/ObtenerHistorial`, { credentials: "include" })
+    fetch("http://localhost:4000/ObtenerHistorial", { credentials: "include" })
       .then((res) => {
         if (res.status === 401) {
           alert("Sesión expirada. Por favor inicia sesión nuevamente.");
@@ -19,7 +21,7 @@ export function HistorialAcademico() {
         return res.json();
       })
       .then((data) => {
-        if (!data) return; // Si fue 401, data será null
+        if (!data) return;
         setHistorial(data.historial || []);
         setSemestres(data.semestres || []);
       })
@@ -30,50 +32,62 @@ export function HistorialAcademico() {
       });
   }, [navigate]);
 
-  // Renderiza una tabla por semestre
   const renderSeccion = (semestre) => {
     const materias = historial.filter((h) => h.semestre === semestre);
 
     return (
-      <section key={semestre} className="p-4 bg-white shadow rounded-2xl mb-6">
-        <h2 className="text-xl font-semibold mb-3">
-          Semestre {semestre}
-        </h2>
-        <table className="w-full border text-sm text-center" border="1" cellPadding={5}>
-          <thead className="bg-gray-100">
+      <div key={semestre} className="historial-semestre">
+        <h3>Semestre {semestre}</h3>
+        <table className="horario-table" border="1" cellPadding={5}>
+          <thead>
             <tr>
-              <th className="border px-2 py-1">Unidad de Aprendizaje</th>
-              <th className="border px-2 py-1">Calificación Final</th>
-              <th className="border px-2 py-1">Periodo</th>
-              <th className="border px-2 py-1">Fecha</th>
-              <th className="border px-2 py-1">Método Aprobado</th>
+              <th>Unidad de Aprendizaje</th>
+              <th>Calificación Final</th>
+              <th>Periodo</th>
+              <th>Fecha</th>
+              <th>Método Aprobado</th>
             </tr>
           </thead>
           <tbody>
             {materias.map((m) => (
               <tr key={m.id}>
-                <td className="border px-2 py-1">{m.unidad_aprendizaje}</td>
-                <td className="border px-2 py-1">{m.calificacion_final}</td>
-                <td className="border px-2 py-1">{m.periodo}</td>
-                <td className="border px-2 py-1">{m.fecha}</td>
-                <td className="border px-2 py-1">{m.metodo_aprobado}</td>
+                <td>{m.unidad_aprendizaje}</td>
+                <td>{m.calificacion_final}</td>
+                <td>{m.periodo}</td>
+                <td>{m.fecha}</td>
+                <td>{m.metodo_aprobado}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      </section>
+      </div>
     );
   };
 
   return (
-    <section className="p-6">
-      <h1 className="text-2xl font-bold mb-4 text-center">Historial Académico</h1>
+    <div className="alumno-container">
+      
+      <SidebarAlumno />
 
-      {semestres.length > 0 ? (
-        semestres.map((s) => renderSeccion(s))
-      ) : (
-        <p className="text-center text-gray-500">No hay registros disponibles.</p>
-      )}
-    </section>
+      <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <h1>KARDEX</h1>
+          </div>
+
+          <img src="/escom.png" alt="ESCOM" className="escom-logo" />
+        </header>
+
+        <section className="horario-section">
+          <h2>Historial Académico</h2>
+
+          {semestres.length > 0 ? (
+            semestres.map((s) => renderSeccion(s))
+          ) : (
+            <p className="historial-empty">No hay registros disponibles.</p>
+          )}
+        </section>
+      </main>
+    </div>
   );
 }

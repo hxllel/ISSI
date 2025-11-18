@@ -1,7 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Administrador.css";
-import { FaUserGraduate, FaChalkboardTeacher, FaBookOpen, FaTrashAlt, FaFileAlt, FaBullhorn } from "react-icons/fa";
+import {
+  FaUserGraduate,
+  FaChalkboardTeacher,
+  FaBookOpen,
+  FaTrashAlt,
+  FaFileAlt,
+  FaBullhorn,
+} from "react-icons/fa";
+import { AdminSidebar } from "../admin/AdminSidebar.jsx";
+
 
 export function Administrador() {
   const navigate = useNavigate();
@@ -11,36 +20,22 @@ export function Administrador() {
   const handleClickCursos = () => navigate("gestionarCursos");
   const handleClickETS = () => navigate("ETS");
   const handleClickPublicarNoticia = () => navigate("publicarNoticia");
+  const handleLogout = () => navigate("/");
 
   return (
     <div className="admin-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-    <img src="ipn.png" alt="Logo" className="logo-img" />
-    <span>Gestión Escolar</span>
-  </div>
-        <nav className="menu">
-          <button onClick={() => navigate("/administrador")} className="menu-item active">
-            Panel de Control
-          </button>
-          <button onClick={handleClickAlu} className="menu-item">Estudiantes</button>
-          <button onClick={handleClickProf} className="menu-item">Profesores</button>
-          <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-          <button className="menu-item">Informes</button>
-          <button onClick={handleClickETS} className="menu-item">ETS</button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
-
-      {/* Main content */}
+      <AdminSidebar />
+      {/* Main content con DISEÑO DEL SEGUNDO */}
       <main className="main-content">
-        <header>
-          <h1>¡Hola, Administrador!</h1>
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <h1>¡Bienvenido, Administrador!</h1>
+          </div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
 
+        {/* Acciones rápidas (diseño del segundo, contenido del primero) */}
         <section className="acciones-rapidas">
-          <h2>Acciones Rápidas</h2>
           <div className="acciones-grid">
             <div className="card highlighted">
               <FaUserGraduate className="icon" />
@@ -63,6 +58,7 @@ export function Administrador() {
               <button onClick={handleClickCursos}>Añadir</button>
             </div>
 
+            {/* Esta tarjeta viene del primer código */}
             <div className="card">
               <FaTrashAlt className="icon" />
               <h3>Eliminar Cursos</h3>
@@ -77,6 +73,7 @@ export function Administrador() {
               <button>Ver Informes</button>
             </div>
 
+            {/* También del primer código */}
             <div className="card">
               <FaBullhorn className="icon" />
               <h3>Publicar Noticia</h3>
@@ -86,6 +83,7 @@ export function Administrador() {
           </div>
         </section>
 
+        {/* Estadísticas con diseño del segundo */}
         <section className="estadisticas">
           <h2>Estadísticas Generales</h2>
           <div className="stats-grid">
@@ -93,14 +91,17 @@ export function Administrador() {
               <p>Total de Estudiantes</p>
               <h3>1,250</h3>
             </div>
+
             <div className="stat-card">
               <p>Total de Profesores</p>
               <h3>85</h3>
             </div>
+
             <div className="stat-card">
               <p>Cursos Activos</p>
               <h3>32</h3>
             </div>
+
             <div className="stat-card">
               <p>Próximos Eventos</p>
               <h3>5</h3>

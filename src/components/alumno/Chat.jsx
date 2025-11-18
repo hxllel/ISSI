@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useLocation, useParams, useNavigate } from "react-router-dom"
 import "./Chat.css"
+import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 
 const AnimatedThinkingDots = () => {
   return (
@@ -306,36 +307,7 @@ export function ChatbotAsistente() {
 
   return (
     <div className="chatbot-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={handleInicio} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item" onClick={handleIns}>
-            Inscribir Materias
-          </button>
-          <button className="menu-item" onClick={handleHorarios}>
-            Horarios
-          </button>
-          <button className="menu-item" onClick={handleKardex}>
-            Kardex
-          </button>
-          <button className="menu-item active" onClick={() => navigate(`/alumno/Chat`, { state: { alumnoId } })}>
-            Asistente de Chat
-          </button>
-          <button className="menu-item" onClick={handleEditPer}>
-            Información Personal
-          </button>
-        </nav>
-        <button className="logout" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
-      </aside>
+      <SidebarAlumno />
 
       {/* Main Content */}
       <main className="main-content">

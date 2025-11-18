@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarCursos.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function GestionarCursos() {
   const [datos, setDatos] = useState([]);
@@ -8,14 +10,13 @@ export function GestionarCursos() {
   const [del, setDelete] = useState(false);
   const [mostrarModal, setmostrarModal] = useState(false);
   const navigate = useNavigate();
-    const API = 'http://localhost:4000';
 
   const handleClickCur = () => {
     navigate("registrarCurso");
   };
 
   useEffect(() => {
-    fetch(`${API}/ObtenerCursos`, { credentials: "include" })
+    fetch("http://localhost:4000/ObtenerCursos", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setDatos(data.cursos))
       .catch((err) => console.error("Error al obtener los cursos:", err));
@@ -28,6 +29,13 @@ export function GestionarCursos() {
   const handleClickDis = (id) => {
     navigate(`distribucionHorarios/${id}`);
   };
+
+  const handleRegis = (id) => {
+    navigate(`administrador/gestionarCursos/registrarCurso`);
+  };
+
+ 
+  
 
   const handleClickDelete = () => {
     setDelete(true);
@@ -42,10 +50,19 @@ export function GestionarCursos() {
     setmostrarModal(false);
   };
 
+const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
+  const handleClickProf = () => navigate("../administrador/gestionarProfesores");
+  const handleClickCursos = () => navigate("../administrador/gestionarCursos");
+  const handleClickadmin = () => navigate("/administrador");
+  const handleRegistrarProf = () => navigate("registrarProfesor");
+  const handleClickEdit = (id) => navigate(`editarProfesor/${id}`);
+  
+  const handleLogout = () => {navigate(`/`);};
+
   useEffect(() => {
     if (!del) return;
 
-    fetch(`${API}/EliminarCurso/${id_datos}`, {
+    fetch(`http://localhost:4000/EliminarCurso/${id_datos}`, {
       method: "DELETE",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -66,22 +83,25 @@ export function GestionarCursos() {
   }, [del, id_datos]);
 
   return (
-    <section className="gc-wrap">
-      <header className="gc-header">
-        <div>
+    <div className="admin-container">
+    
+      <AdminSidebar />
+      <main className="main-content">
+      <header className="chat-header">
+        <div className="encabezado-section">
           <h1 className="gc-title">Gestionar Cursos</h1>
-          <p className="gc-sub">
-            Consulta, edita y administra los grupos del programa académico.
-          </p>
-        </div>
-        <button className="gc-btn primary" onClick={handleClickCur}>
+          </div>
+          
+        
+        <button className="btn azul" onClick={handleClickCur}>
           Registrar Grupo
         </button>
+        <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
       </header>
 
       <div className="gc-card">
         <div className="gc-table-wrapper">
-          <table className="gc-table" border="1" cellPadding={5}>
+          <table className="table">
             <thead>
               <tr>
                 <th>ID</th>
@@ -106,19 +126,19 @@ export function GestionarCursos() {
                   <td>{dato.Unidad_Aprendizaje.carrera}</td>
                   <td className="gc-actions-cell">
                     <button
-                      className="gc-btn table-btn edit"
+                      className="btn azul"
                       onClick={() => handleEdit(dato.id)}
                     >
                       Editar
                     </button>
                     <button
-                      className="gc-btn table-btn delete"
+                      className="btn azul"
                       onClick={() => handleAbrirModal(dato.id)}
                     >
                       Eliminar
                     </button>
                     <button
-                      className="gc-btn table-btn schedule"
+                      className="btn blanco"
                       onClick={() => handleClickDis(dato.id)}
                     >
                       Gestionar distribución
@@ -148,16 +168,18 @@ export function GestionarCursos() {
               permanentemente.
             </p>
             <div className="gc-modal-actions">
-              <button className="gc-btn danger" onClick={handleClickDelete}>
+              <button className="btn azul" onClick={handleClickDelete}>
                 Confirmar
               </button>
-              <button className="gc-btn ghost" onClick={handleCerrarModal}>
+              <button className="btn blanco" onClick={handleCerrarModal}>
                 Cancelar
               </button>
             </div>
           </div>
+          
         </div>
       )}
-    </section>
+      </main>
+    </div>
   );
 }

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrarAlumnos.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function RegistrarAlumnos() {
     const navigate = useNavigate();
@@ -28,10 +30,9 @@ export function RegistrarAlumnos() {
     const [carreras, setCarreras] = useState([]);
     const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
     const [estado, setEstado] = useState("Activo");
-    const API = 'http://localhost:4000';
 
     useEffect(() => {
-        fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
+        fetch("http://localhost:4000/ObtenerCarreras", { credentials: "include" })
             .then((res) => res.json())
             .then((data) => {
                 setCarreras(data.carreras || []);
@@ -42,6 +43,7 @@ export function RegistrarAlumnos() {
     const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
     const handleClickProf = () => navigate("../administrador/gestionarProfesores");
     const handleClickCursos = () => navigate("../administrador/gestionarCursos");
+    const handleLogout = () => {navigate(`/`);};
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -55,7 +57,7 @@ export function RegistrarAlumnos() {
             return;
         }
 
-        const res = await fetch(`${API}/RegistrarAlumno`, {
+        const res = await fetch("http://localhost:4000/RegistrarAlumno", {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
@@ -84,26 +86,10 @@ export function RegistrarAlumnos() {
 
     return (
         <div className="admin-container">
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="logo">
-                    <img src="/ipn.png" alt="Logo" className="logo-img" />
-                    <span>Gestión Escolar</span>
-                </div>
-                <nav className="menu">
-                    <button onClick={() => navigate("/administrador")} className="menu-item">
-                        Panel de Control
-                    </button>
-                    <button onClick={() => navigate("/estudiantes")} className="menu-item active">Estudiantes</button>
-                    <button onClick={handleClickProf} className="menu-item">Profesores</button>
-                    <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-                    <button className="menu-item">Informes</button>
-                </nav>
-                <button className="logout">Cerrar sesión</button>
-            </aside>
-
+            <AdminSidebar />
             
             <main className="main-content">
+                
                 <section className="gestion-alumnos">
                     
                     <div className="header-section">
@@ -117,11 +103,7 @@ export function RegistrarAlumnos() {
                         </div>
                     </div>
 
-                    <nav className="alumnos-nav">
-                        <button className="nav-btn active">Registrar Alumno</button>
-                        <button className="nav-btn">Editar Alumno</button>
-                        <button className="nav-btn">Eliminar Alumno</button>
-                    </nav>
+                    
 
                     {/* Formulario principal */}
                     <div className="form-container">

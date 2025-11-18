@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarGrupo.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function EditarGrupo() {
     const { id } = useParams();
@@ -8,8 +10,6 @@ export function EditarGrupo() {
     const [id_profesor, setId_profesor] = useState("");
     const [UA, setUA] = useState([]);
     const [id_UA, setId_UA] = useState("");
-    const API = 'http://localhost:4000';
-
     const [grupo, setGrupo] = useState({
         id_profesor: "",
         id_UA: "",
@@ -18,14 +18,14 @@ export function EditarGrupo() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${API}/ObtenerProfesores`, { credentials: "include" })
+        fetch("http://localhost:4000/ObtenerProfesores", { credentials: "include" })
             .then((res) => res.json())
             .then((data) => setProfesores(data.profesores))
             .catch((err) => console.error("Error al obtener los profesores:", err));
     }, []);
 
     useEffect(() => {
-        fetch(`${API}:4000/ObtenerUA`, { credentials: "include" })
+        fetch("http://localhost:4000/ObtenerUA")
             .then((res) => res.json())
             .then((data) => setUA(data.UA))
             .catch((err) => console.error("Error al obtener las unidades de aprendizaje:", err));
@@ -37,7 +37,7 @@ export function EditarGrupo() {
     };
 
     useEffect(() => {
-        fetch(`${API}/ObtenerGrupo/${id}`)
+        fetch(`http://localhost:4000/ObtenerGrupo/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.grupo) setGrupo(data.grupo);
@@ -47,7 +47,7 @@ export function EditarGrupo() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch(`${API}/EditarGrupo/${id}`, {
+        fetch(`http://localhost:4000/EditarGrupo/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(grupo),
@@ -63,10 +63,26 @@ export function EditarGrupo() {
             })
             .catch((err) => console.error("Error al editar el grupo:", err));
     };
+    
+     const handleClickAlu = () => navigate("gestionarAlumnos");
+  const handleClickProf = () => navigate("gestionarProfesores");
+  const handleClickCursos = () => navigate("gestionarCursos");
+const handleLogout = () => {navigate(`/`);};
+
 
     return (
-        <section className="eg-wrap eg-editar-grupo">
-            <h1 className="eg-title">Editar Grupo</h1>
+        <div className="admin-container">
+           <AdminSidebar />
+      <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+          <h1>Editar Grupo</h1>
+          </div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
+        <section className="gc-wrap">
+            
+            
 
             <form className="formulario eg-card" onSubmit={handleSubmit}>
                 <label className="eg-label">Nombre del grupo:</label>
@@ -120,10 +136,12 @@ export function EditarGrupo() {
                     <option value="Vespertino">Vespertino</option>
                 </select>
 
-                <button className="eg-btn primary eg-submit" type="submit">
+                <button className="btn azul" type="submit">
                     Actualizar Curso
                 </button>
             </form>
         </section>
+        </main>
+        </div>
     );
 }

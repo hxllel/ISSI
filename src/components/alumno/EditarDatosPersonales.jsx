@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarDatosPersonales.css";
+import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 
 export function EditarDatos() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const API = 'http://localhost:4000';
 
     const [alumno, setAlumno] = useState({
         nombre: "",
@@ -30,14 +30,14 @@ export function EditarDatos() {
     const [carreras, setCarreras] = useState([]);
 
     useEffect(() => {
-        fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
+        fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
             .then(res => res.json())
             .then(data => { if (data.alumno) setAlumno(data.alumno); })
             .catch(err => console.error("Error al obtener el alumno:", err));
     }, [id]);
 
     useEffect(() => {
-        fetch(`${API}/ObtenerCarreras`)
+        fetch("http://localhost:4000/ObtenerCarreras")
             .then(res => res.json())
             .then(data => setCarreras(data.carreras || []))
             .catch(err => console.error("Error al obtener las carreras:", err));
@@ -50,7 +50,7 @@ export function EditarDatos() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch(`${API}/EditarAlumno/${id}`, {
+        fetch(`http://localhost:4000/EditarAlumno/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(alumno),
@@ -73,27 +73,12 @@ export function EditarDatos() {
     const handleKardex = () => { navigate("/alumno/Kardex") }
     const handleChat = () => { navigate(`/alumno/Chat`, { state: { alumnoId: id } }) }
     const handleEditPer = () => {navigate(`/alumno/editarDatos/${id}`);};
+    const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
+    const handleETS = () => {navigate(`/alumno/MateriasReprobadas/${id}`);};
 
     return (
         <div className="admin-container">
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="logo">
-                    <img src="/ipn.png" alt="Logo" className="logo-img" />
-                    <span>SAES-R</span>
-                </div>
-                <nav className="menu">
-          <button onClick={handleInicio} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
-          <button className="menu-item" onClick={handleHorarios}>Horarios</button>
-          <button className="menu-item" onClick={handleKardex}>Kardex</button>
-          <button className="menu-item" onClick={handleChat}>Asistente de Chat</button>
-          <button className="menu-item active" onClick={handleEditPer}>Información Personal</button>
-        </nav>
-                <button className="logout">Cerrar sesión</button>
-            </aside>
+            <SidebarAlumno />
 
             {/* Contenido principal */}
             <main className="main-content">
@@ -211,8 +196,8 @@ export function EditarDatos() {
                             </div>
 
                             <div className="form-actions">
-                                <button type="button" className="btn-secondary" onClick={() => navigate(-1)}>Cancelar</button>
-                                <button type="submit" className="submit-btn">Editar Alumno</button>
+                                <button type="button" className="btn blanco" onClick={() => navigate(-1)}>Cancelar</button>
+                                <button type="submit" className="btn azul">Editar Alumno</button>
                             </div>
                         </form>
                     </div>

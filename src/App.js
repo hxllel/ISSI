@@ -1,14 +1,36 @@
 import "./App.css";
 import { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+// FORMULARIO
 import { Formulario } from "./components/formulario/Formulario";
+import RecuperarContra from "./components/formulario/RecuperarContra";
+
+// ALUMNO
 import { Alumno } from "./components/alumno/Alumno";
 import { ChatbotAsistente } from "./components/alumno/Chat";
-import { Administrador } from "./components/admin/Administrador";
+import Horarios from "./components/alumno/Horarios";
+import { Inscripcion } from "./components/alumno/Inscripcion";
+import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
+import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
+import { MateriasReprobadas } from "./components/alumno/MateriasReprobadas";
+import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
+import { DatosPersonales } from "./components/alumno/DatosPersonales";
+import { ConsultarCalificaciones } from "./components/alumno/ConsultarCalificaciones";
+
+// PROFESOR
 import { Profesor } from "./components/profesor/Profesor";
+import { ChatbotProfesor } from "./components/profesor/Chat";
 import { ClasesImpartidas } from "./components/profesor/ClasesImpartidas";
+import { PaseLista } from "./components/profesor/PaseLista";
+import { RegistrarCalificaciones } from "./components/profesor/RegistrarCalificaciones";
+import { InformacionPersonal } from "./components/profesor/InformacionPersonal";
+import { EditarDatosPersonales } from "./components/profesor/EditarDatosPersonales";
+
+// ADMIN
+import { Administrador } from "./components/admin/Administrador";
 import { RegistrarAlumnos } from "./components/admin/RegistrarAlumnos";
 import { RegistrarProfesores } from "./components/admin/RegistrarProfesores";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { RegistrarCursos } from "./components/admin/RegistrarCursos";
 import { GestionarAlumnos } from "./components/admin/GestionarAlumnos";
 import { GestionarProfesores } from "./components/admin/GestionarProfesores";
@@ -17,21 +39,13 @@ import { EditarAlumnos } from "./components/admin/EditarAlumnos";
 import { EditarProfesores } from "./components/admin/EditarProfesores";
 import { EditarGrupo } from "./components/admin/EditarGrupo";
 import { Distribucion } from "./components/admin/Distribucion";
-import { Inscripcion } from "./components/alumno/Inscripcion";
-import Horarios from "./components/alumno/Horarios";
-import { EditarDatos } from "./components/alumno/EditarDatosPersonales";
-import { PaseLista } from "./components/profesor/PaseLista";
-import { HistorialAcademico } from "./components/alumno/HistorialAcademico";
-import { MateriasReprobadas } from "./components/alumno/MateriasReprobadas";
 import { ETS } from "./components/admin/ETS";
-import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
+import { PublicarNoticia } from "./components/admin/PublicarNoticia";
+
+// PAGINAS INDIVIDUALES
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
 import { DatosMedicos } from "./pages/DatosMedicos";
-import { RegistrarCalificaciones } from "./components/profesor/RegistrarCalificaciones";
-import { ConsultarCalificaciones } from "./components/alumno/ConsultarCalificaciones";
-import { PublicarNoticia } from "./components/admin/PublicarNoticia";
-import RecuperarContra from "./components/formulario/RecuperarContra";
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -41,6 +55,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
+          {/* LOGIN */}
           <Route
             path="/"
             element={
@@ -58,6 +73,8 @@ function App() {
             }
           />
           <Route path="/recuperar-contrasena" element={<RecuperarContra />} />
+
+          {/* ALUMNO */}
           <Route path="/alumno/:id" element={<Alumno />} />
           <Route path="/alumno/Chat" element={<ChatbotAsistente />} />
           <Route path="/alumno/horarios/:id" element={<Horarios />} />
@@ -65,78 +82,99 @@ function App() {
             path="/alumno/evaluacion/:id"
             element={<EvaluacionProfesores />}
           />
-
-          <Route path="/administrador" element={<Administrador />} />
-          <Route path="/profesor/:id" element={<Profesor />} />
-          <Route path="/profesor/:id/clases" element={<ClasesImpartidas />} />
-          <Route
-            path="administrador/gestionarCursos"
-            element={<GestionarCursos />}
-          />
-          <Route
-            path="administrador/gestionarCursos/registrarCurso"
-            element={<RegistrarCursos />}
-          />
-
-          <Route path="administrador/carreras" element={<Carreras />} />
-          <Route path="administrador/unidades" element={<Unidades />} />
-
-          <Route
-            path="administrador/gestionarProfesores/registrarProfesor"
-            element={<RegistrarProfesores />}
-          />
-          <Route
-            path="administrador/gestionarProfesores"
-            element={<GestionarProfesores />}
-          />
-          <Route
-            path="administrador/gestionarAlumnos"
-            element={<GestionarAlumnos />}
-          />
-          <Route
-            path="administrador/gestionarAlumnos/registrarAlumno"
-            element={<RegistrarAlumnos />}
-          />
-          <Route
-            path="/admin/gestionarAlumnos/editarAlumnos/:id"
-            element={<EditarAlumnos />}
-          />
-          <Route
-            path="administrador/gestionarProfesores/editarProfesor/:id"
-            element={<EditarProfesores />}
-          />
-          <Route
-            path="administrador/gestionarCursos/editarCurso/:id"
-            element={<EditarGrupo />}
-          />
-          <Route
-            path="administrador/gestionarCursos/distribucionHorarios/:id"
-            element={<Distribucion />}
-          />
-          <Route path="administrador/datosMedicos" element={<DatosMedicos />} />
-
-          <Route path="alumno/inscripcion/:id" element={<Inscripcion />} />
-          <Route path="alumno/editarDatos/:id" element={<EditarDatos />} />
-          <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
-
+          <Route path="/alumno/inscripcion/:id" element={<Inscripcion />} />
+          <Route path="/alumno/editarDatos/:id" element={<EditarDatos />} />
           <Route path="/alumno/Kardex" element={<HistorialAcademico />} />
-
           <Route
             path="/alumno/MateriasReprobadas"
             element={<MateriasReprobadas />}
           />
-          <Route path="/administrador/ETS" element={<ETS />} />
+          <Route
+            path="/alumno/datosPersonales/:id"
+            element={<DatosPersonales />}
+          />
+          <Route
+            path="/alumno/ConsultarCalificaciones"
+            element={<ConsultarCalificaciones />}
+          />
 
+          {/* PROFESOR */}
+          <Route path="/profesor/:id" element={<Profesor />} />
+          <Route path="/profesor/Chat" element={<ChatbotProfesor />} />
+          <Route path="/profesor/:id/clases" element={<ClasesImpartidas />} />
+          <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
           <Route
             path="/profesor/RegistrarCalificaciones/:id/:periodo"
             element={<RegistrarCalificaciones />}
           />
           <Route
-            path="/alumno/ConsultarCalificaciones"
-            element={<ConsultarCalificaciones />}
+            path="/profesor/datosPersonalesProf/:id"
+            element={<DatosPersonales />}
+          />
+          <Route
+            path="/profesor/informacionPersonal/:id"
+            element={<InformacionPersonal />}
+          />
+          <Route
+            path="/profesor/editarDatosPersonales/:id"
+            element={<EditarDatosPersonales />}
+          />
+          {/* ADMINISTRADOR */}
+          <Route path="/administrador" element={<Administrador />} />
+          <Route path="/administrador/ETS" element={<ETS />} />
           <Route
             path="/administrador/publicarNoticia"
             element={<PublicarNoticia />}
+          />
+
+          {/* ADMINISTRADOR - CRUD */}
+          <Route
+            path="/administrador/gestionarAlumnos"
+            element={<GestionarAlumnos />}
+          />
+          <Route
+            path="/administrador/gestionarAlumnos/registrarAlumno"
+            element={<RegistrarAlumnos />}
+          />
+          <Route
+            path="/administrador/gestionarAlumnos/editarAlumnos/:id"
+            element={<EditarAlumnos />}
+          />
+          <Route
+            path="/administrador/gestionarProfesores"
+            element={<GestionarProfesores />}
+          />
+          <Route
+            path="/administrador/gestionarProfesores/registrarProfesor"
+            element={<RegistrarProfesores />}
+          />
+          <Route
+            path="/administrador/gestionarProfesores/editarProfesor/:id"
+            element={<EditarProfesores />}
+          />
+          <Route
+            path="/administrador/gestionarCursos"
+            element={<GestionarCursos />}
+          />
+          <Route
+            path="/administrador/gestionarCursos/registrarCurso"
+            element={<RegistrarCursos />}
+          />
+          <Route
+            path="/administrador/gestionarCursos/editarCurso/:id"
+            element={<EditarGrupo />}
+          />
+          <Route
+            path="/administrador/gestionarCursos/distribucionHorarios/:id"
+            element={<Distribucion />}
+          />
+
+          {/* ADMIN PÁGINAS */}
+          <Route path="/administrador/carreras" element={<Carreras />} />
+          <Route path="/administrador/unidades" element={<Unidades />} />
+          <Route
+            path="/administrador/datosMedicos"
+            element={<DatosMedicos />}
           />
         </Routes>
       </BrowserRouter>

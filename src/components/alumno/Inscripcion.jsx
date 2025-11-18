@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Modal from "../Modal.jsx";
 import "./Inscripcion.css";
+import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 
 export function Inscripcion() {
   const { id } = useParams();
@@ -19,217 +20,180 @@ export function Inscripcion() {
   const [d, setd] = useState(null);
   const [cursadas, setCursadas] = useState([]);
   const [NoReinscripcion, setNoRe] = useState([]);
-    const API = 'http://localhost:4000';
 
-    const safe = (value, fallback) => {
-           return value !== null && value !== undefined ? value : fallback;
-    };
+  const API = "http://localhost:4000";
 
-    const safeArray = (value) => {
-      return Array.isArray(value) ? value : [];
-    };
+  const safe = (value, fallback) =>
+    value !== null && value !== undefined ? value : fallback;
 
+  const safeArray = (value) => (Array.isArray(value) ? value : []);
 
-  // --- HISTORIAL DE CURSADAS ---
- useEffect(() => {
-  fetch(`${API}/ObtenerHistorial`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      const nombres = safeArray(data?.historial).map((h) => h.unidad_aprendizaje);
-      setCursadas(nombres);
-    })
-    .catch((err) => {
-      console.error("Error", err);
-      setCursadas([]);
-    });
-}, []);
+  // HISTORIAL CURSADAS
+  useEffect(() => {
+    fetch(`${API}/ObtenerHistorial`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        const nombres = safeArray(data?.historial).map(
+          (h) => h.unidad_aprendizaje
+        );
+        setCursadas(nombres);
+      })
+      .catch(() => setCursadas([]));
+  }, []);
 
-
-  // --- BORRADOR ---
+  // BORRADOR
   useEffect(() => {
     fetch(`${API}/ConsultarBorrador`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        const borr = Array.isArray(data && data.horario) ? data.horario : [];
+        const borr = Array.isArray(data?.horario) ? data.horario : [];
         setBorr(borr);
       })
-      .catch((err) => {
-        console.error(`Error al obtener el horario:`, err);
-        setBorr([]);
-      });
+      .catch(() => setBorr([]));
   }, []);
 
+  // NO REINSCRIPCIÓN
   useEffect(() => {
-  fetch(`${API}/NoReinscripcion`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      setNoRe(safeArray(data?.grupos));
-    })
-    .catch((err) => {
-      console.log("Error NoReinscripcion:", err);
-      setNoRe([]);
-    });
-}, []);
+    fetch(`${API}/NoReinscripcion`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => setNoRe(safeArray(data?.grupos)))
+      .catch(() => setNoRe([]));
+  }, []);
 
-
-  const handleClickDel = (id) => {
-    setdel(true);
-    setIdgru(id);
-  };
-
-  // --- GRUPOS DISPONIBLES ---
+  // GRUPOS DISPONIBLES
   useEffect(() => {
-  fetch(`${API}/Grupos/${id}`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      setGrupos(safeArray(data?.grupos));
-      setCreditos(safe(data?.creditos, 0));
-    })
-    .catch((err) => {
-      console.error("Error al obtener los grupos:", err);
-      setGrupos([]);
-      setCreditos(0);
-    });
-}, [id]);
-
+    fetch(`${API}/Grupos/${id}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        setGrupos(safeArray(data?.grupos));
+        setCreditos(safe(data?.creditos, 0));
+      })
+      .catch(() => {
+        setGrupos([]);
+        setCreditos(0);
+      });
+  }, [id]);
 
   const handleClickAbrir = (id) => {
     setModalOpen(true);
     setId_dis(id);
   };
 
-  // --- DISTRIBUCIÓN HORARIA ---
+  // DISTRIBUCIÓN HORARIA
   useEffect(() => {
-  if (!modalOpen || !id_dis) return;
+    if (!modalOpen || !id_dis) return;
 
-  fetch(`${API}/ObtenerDist/${id_dis}`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      setDistri(safeArray(data?.Distri));
-    })
-    .catch((err) => {
-      console.error("Error en distribucion:", err);
-      setDistri([]);
-    });
-}, [modalOpen, id_dis]);
+    fetch(`${API}/ObtenerDist/${id_dis}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => setDistri(safeArray(data?.Distri)))
+      .catch(() => setDistri([]));
+  }, [modalOpen, id_dis]);
 
-
-  // --- TEMPORALES ---
+  // TEMPORALES
   useEffect(() => {
-  fetch(`${API}/Con`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data?.success) {
-        setGruposagg(safeArray(data?.tempGrupo));
-        setCreditos(safe(data?.creditos, 0));
-      }
-    })
-    .catch(() => {});
-});  // ← CORREGIDO
-
+    fetch(`${API}/Con`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success) {
+          setGruposagg(safeArray(data?.tempGrupo));
+          setCreditos(safe(data?.creditos, 0));
+        }
+      })
+      .catch(() => {});
+  });
 
   const handleClickD = (id) => {
     setd(true);
     setIdgru(id);
   };
 
-  // --- ELIMINAR DE BORRADOR ---
+  // ELIMINAR DE BORRADOR
   useEffect(() => {
-  if (!d || !idgru) return;
+    if (!d || !idgru) return;
 
-  fetch(`${API}/EliminarBorrador/${idgru}`, {
-    method: "POST",
-    credentials: "include",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      alert(
-        data?.success
-          ? "Se ha eliminado la materia del borrador"
-          : "No se pudo eliminar"
-      );
+    fetch(`${API}/EliminarBorrador/${idgru}`, {
+      method: "POST",
+      credentials: "include",
     })
-    .catch((err) => console.error("Error:", err))
-    .finally(() => setd(false));
-}, [d, idgru]);
+      .then((res) => res.json())
+      .then((data) =>
+        alert(
+          data?.success
+            ? "Se ha eliminado la materia del borrador"
+            : "No se pudo eliminar"
+        )
+      )
+      .finally(() => setd(false));
+  }, [d, idgru]);
 
-
-  // --- AGREGAR A HORARIO ---
+  // AGREGAR A HORARIO
   const handleClickAdd = (id) => {
-  if (!id) return;
+    if (!id) return;
 
-  fetch(`${API}/Agregar/${id}`, {
-    credentials: "include",
-    method: "POST",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data?.success) alert("Se ha agregado la materia");
-      else alert(`No se pudo agregar: ${safe(data?.err, "")}`);
+    fetch(`${API}/Agregar/${id}`, {
+      credentials: "include",
+      method: "POST",
     })
-    .catch((err) => console.error("Error:", err));
-};
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success) alert("Se ha agregado la materia");
+        else alert(`No se pudo agregar: ${safe(data?.err, "")}`);
+      });
+  };
 
-
-  // --- ELIMINAR DE HORARIO ---
+  // ELIMINAR DEL HORARIO
   const handleClickEl = (id) => {
     fetch(`${API}/Del/${id}`, {
       credentials: "include",
       method: "POST",
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then((data) =>
         alert(
           data.success
             ? "Se ha eliminado la materia a tu horario"
-            : "No se ha podido eliminar a tu horario"
-        );
-                    
-
-      })
-      .catch((err) => console.error("Error: ", err));
+            : "No se ha podido eliminar"
+        )
+      );
   };
 
-  // --- IMPORTAR DEL BORRADOR ---
+  // IMPORTAR BORRADOR
   const handleClickImport = () => {
-  fetch(`${API}/ImportarHorario`, {
-    credentials: "include",
-    method: "POST",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data?.fatal) alert(`NO SE AGREGÓ NADA: ${data.msg}`);
-      else if (data?.success) alert("Se importó correctamente");
-      else alert(`Importado parcial: ${safe(data?.msg, "")}`);
+    fetch(`${API}/ImportarHorario`, {
+      credentials: "include",
+      method: "POST",
     })
-    .catch((err) => console.error("Error:", err));
-};
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.fatal) alert(`NO SE AGREGÓ NADA: ${data.msg}`);
+        else if (data?.success) alert("Se importó correctamente");
+        else alert(`Importado parcial: ${safe(data?.msg, "")}`);
+      });
+  };
 
-
-  // --- ELIMINAR BORRADOR FINAL ---
+  // ELIMINAR BORRADOR FINAL
   useEffect(() => {
-  if (!del || !idgru) return;
+    if (!del || !idgru) return;
 
-  fetch(`${API}/EliminarBorrador/${idgru}`, {
-    method: "POST",
-    credentials: "include",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      alert(
-        data?.success
-          ? "Se ha eliminado la materia del borrador"
-          : "No se ha podido eliminar"
-      );
+    fetch(`${API}/EliminarBorrador/${idgru}`, {
+      method: "POST",
+      credentials: "include",
     })
-    .catch((err) => console.error("Error:", err))
-    .finally(() => setdel(false));
-}, [del, idgru]);
+      .then((res) => res.json())
+      .then((data) =>
+        alert(
+          data?.success
+            ? "Se ha eliminado la materia del borrador"
+            : "No se ha podido eliminar"
+        )
+      )
+      .finally(() => setdel(false));
+  }, [del, idgru]);
 
-
-  // --- INSCRIPCIÓN FINAL ---
-  const handleSubmit = async (e) => {
+  // INSCRIPCIÓN FINAL
+  const handleSubmit = (e) => {
     e.preventDefault();
+
     fetch(`${API}/Inscribirse`, {
       method: "POST",
       credentials: "include",
@@ -240,46 +204,15 @@ export function Inscripcion() {
         if (data.success) {
           alert("Se ha inscrito satisfactoriamente");
           navigate(`/alumno/${id}`);
-            window.location.reload();
-
+          window.location.reload();
         } else alert("Ha ocurrido un error");
       });
   };
 
-  // --- NAVEGACIÓN ---
-  const handleIns = () => navigate(`/alumno/inscripcion/${id}`);
-  const handleEditPer = () => navigate(`/alumno/datosPersonales/${id}`);
-  const handleHorarios = () => navigate(`/alumno/horarios/${id}`);
-  const handleLogout = () => navigate(`/`);
-
   return (
     <section>
       {/* === SIDEBAR === */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item active" onClick={handleIns}>
-            Inscribir Materias
-          </button>
-          <button className="menu-item" onClick={handleHorarios}>
-            Horarios
-          </button>
-          <button className="menu-item">Kardex</button>
-          <button className="menu-item">Asistente de Chat</button>
-          <button className="menu-item" onClick={handleEditPer}>
-            Información Personal
-          </button>
-        </nav>
-        <button className="logout" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
-      </aside>
+      <SidebarAlumno />
 
       {/* === CONTENIDO PRINCIPAL === */}
       <main className="main-content">
@@ -297,7 +230,7 @@ export function Inscripcion() {
             </button>
           </div>
 
-          {/* === GRUPOS DISPONIBLES === */}
+          {/* GRUPOS DISPONIBLES */}
           <section className="horario-section">
             <h1>Grupos disponibles</h1>
             <table className="horario-table">
@@ -308,7 +241,7 @@ export function Inscripcion() {
                   <th>Créditos</th>
                   <th>Profesor</th>
                   <th>Disponibilidad</th>
-                  <th>Cupos</th>
+                  <th>Cupo</th>
                   <th>Acción</th>
                 </tr>
               </thead>
@@ -358,10 +291,11 @@ export function Inscripcion() {
             </table>
           </section>
 
-          {/* === GRUPOS SELECCIONADOS === */}
+          {/* GRUPOS SELECCIONADOS */}
           <section className="horario-section">
             <h1>Grupos seleccionados</h1>
             <h2>Créditos restantes: {creditos}</h2>
+
             <table className="horario-table">
               <thead>
                 <tr>
@@ -374,6 +308,7 @@ export function Inscripcion() {
                   <th>Acción</th>
                 </tr>
               </thead>
+
               <tbody>
                 {gruposagg.length > 0 ? (
                   grupos
@@ -415,7 +350,7 @@ export function Inscripcion() {
             </form>
           </section>
 
-          {/* === MODAL HORARIO === */}
+          {/* MODAL HORARIO */}
           <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
             <h2>Horario del Grupo</h2>
             <table>
@@ -446,7 +381,7 @@ export function Inscripcion() {
             </table>
           </Modal>
 
-          {/* === MODAL BORRADOR === */}
+          {/* MODAL BORRADOR */}
           <Modal open={modalOpen2} onClose={() => setModalOpen2(false)}>
             <h1>Borrador de horario</h1>
             <table border="1" cellPadding={5}>

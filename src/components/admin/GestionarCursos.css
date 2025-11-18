@@ -19,6 +19,7 @@
 
 /* Contenedor general */
 .gc-wrap {
+  display: flex;
   max-width: 1200px;
   margin: 32px auto 40px;
   padding: 0 20px 32px;
@@ -37,13 +38,7 @@
   border-bottom: 2px solid var(--guinda);
 }
 
-.gc-title {
-  margin: 0 0 4px;
-  font-size: 1.9rem;
-  font-weight: 800;
-  color: var(--guinda);
-  letter-spacing: 0.02em;
-}
+
 
 .gc-sub {
   margin: 0;
@@ -51,15 +46,8 @@
   color: var(--muted);
 }
 
-/* Card contenedora de la tabla */
-.gc-card {
-  margin-top: 18px;
-  background: #ffffff;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--borde);
-  box-shadow: var(--shadow-md);
-  padding: 18px 18px 20px;
-}
+
+
 
 /* Wrapper de tabla para scroll horizontal en pantallas pequeñas */
 .gc-table-wrapper {
@@ -269,3 +257,4 @@
     margin: 0 16px;
   }
 }
+
