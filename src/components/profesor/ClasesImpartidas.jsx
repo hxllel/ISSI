@@ -48,12 +48,33 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
 
   // Obtener cursos del profesor + horarios
   useEffect(() => {
-    fetch(`${API}/ObtenerCursos/Prof/:${profesorId}`, {
+    console.log("profesorId:", profesorId); // Debug: verificar el ID
+    
+    if (!profesorId) {
+      console.error("No hay profesorId disponible");
+      return;
+    }
+
+    fetch(`${API}/ObtenerCursos/Prof/${profesorId}`, {
       credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        console.log("Status de respuesta:", res.status); // Debug
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(async (data) => {
-        const cursos = Array.isArray(data?.cursos) ? data.cursos : [];
+        console.log("Respuesta de cursos:", data); // Debug
+        
+        if (!data || !data.cursos) {
+          console.error("Respuesta inválida del servidor:", data);
+          setDatos([]);
+          return;
+        }
+        
+        const cursos = Array.isArray(data.cursos) ? data.cursos : [];
 
         const cursosConDist = await Promise.all(
           cursos.map(async (c) => {
@@ -64,6 +85,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
               const d = await resDist.json();
               c.Distribucion = Array.isArray(d?.Distri) ? d.Distri : [];
             } catch (e) {
+              console.error("Error al obtener distribución:", e);
               c.Distribucion = [];
             }
             return c;
@@ -72,7 +94,11 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
 
         setDatos(cursosConDist);
       })
-      .catch(() => setDatos([]));
+      .catch((err) => {
+        console.error("Error al obtener cursos:", err);
+        alert(`Error al cargar los cursos: ${err.message}\nRevisa la consola para más detalles.`);
+        setDatos([]);
+      });
   }, [profesorId]);
 
   // Validar página actual
@@ -90,7 +116,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
 
   const irAPagina = (p) => p >= 1 && p <= totalPaginas && setPaginaActual(p);
 
-  // PDF
+  // PDF - Simplificado para abrir HTML en nueva ventana
   const handleGenerarPDF = async (curso) => {
     try {
       const res = await fetch(`${API}/Reportes/Clases/PDF/${curso.id}`, {
@@ -98,19 +124,31 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         credentials: "include",
       });
 
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `clase_${curso.nombre || curso.id}.pdf`;
-      link.click();
-      window.URL.revokeObjectURL(url);
-    } catch {
-      alert("No se pudo generar el PDF");
+      if (!res.ok) {
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      }
+
+      const html = await res.text();
+      const printWindow = window.open('', '_blank', 'width=1000,height=800');
+      
+      if (!printWindow) {
+        alert('No se pudo abrir la ventana de impresión. Por favor permite ventanas emergentes.');
+        return;
+      }
+      
+      printWindow.document.open();
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => printWindow.print(), 400);
+
+    } catch (error) {
+      console.error("Error al generar PDF:", error);
+      alert(`No se pudo generar el PDF: ${error.message}`);
     }
   };
 
-  // Excel
+  // Excel - Simplificado para descargar archivo XLSX
   const handleExportExcel = async (curso) => {
     try {
       const res = await fetch(`${API}/Reportes/Clases/Excel/${curso.id}`, {
@@ -118,15 +156,24 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         credentials: "include",
       });
 
+      if (!res.ok) {
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      }
+
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `clase_${curso.nombre || curso.id}.xlsx`;
+      const safeName = (curso.nombre || 'lista').replace(/[^a-z0-9_\-]/gi, '_');
+      link.download = `${safeName}_${new Date().toISOString().split('T')[0]}.xlsx`;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch {
-      alert("No se pudo generar el Excel");
+
+    } catch (error) {
+      console.error("Error al generar Excel:", error);
+      alert(`No se pudo generar el Excel: ${error.message}`);
     }
   };
 

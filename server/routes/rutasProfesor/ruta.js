@@ -228,7 +228,7 @@ module.exports = (passport) => {
             (Number(cali.calificacion_primer) +
               Number(cali.calificacion_segundo) +
               Number(cali.calificacion_tercer)) /
-              3
+            3
           );
 
           await bd.Mat_Inscritos.update(
@@ -613,6 +613,315 @@ module.exports = (passport) => {
         success: false,
         msg: "Error interno al obtener el tiempo de calificaciones",
       });
+    }
+  });
+
+  // ============================
+  //  OBTENER INSCRITOS EN UN GRUPO
+  // ============================
+  router.get("/ObtenerInscritos/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const inscritos = await bd.Mat_Inscritos.findAll({
+        where: { id_grupo: id },
+        include: [
+          {
+            model: bd.Horario,
+            required: true,
+            include: [
+              {
+                model: bd.DatosPersonales,
+                required: true,
+                where: { tipo_usuario: "alumno" },
+              },
+            ],
+          },
+        ],
+      });
+
+      return res.json({
+        success: true,
+        inscritos: inscritos,
+      });
+    } catch (err) {
+      console.error("Error al obtener inscritos:", err);
+      return res.status(500).json({
+        success: false,
+        msg: "Error interno al obtener inscritos",
+      });
+    }
+  });
+
+  // ============================
+  //  GENERAR PDF DE LISTA DE ASISTENCIA
+  // ============================
+  router.get("/Reportes/Clases/PDF/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Obtener información del grupo
+      const grupo = await bd.Grupo.findOne({
+        where: { id },
+        include: [
+          {
+            model: bd.Unidad_Aprendizaje,
+          },
+          {
+            model: bd.DatosPersonales,
+          },
+        ],
+      });
+
+      if (!grupo) {
+        return res.status(404).json({ success: false, msg: "Grupo no encontrado" });
+      }
+
+      // Obtener inscritos
+      const inscritos = await bd.Mat_Inscritos.findAll({
+        where: { id_grupo: id },
+        include: [
+          {
+            model: bd.Horario,
+            required: true,
+            include: [
+              {
+                model: bd.DatosPersonales,
+                required: true,
+                where: { tipo_usuario: "alumno" },
+              },
+            ],
+          },
+        ],
+      });
+
+      const profesorNombre = grupo.DatosPersonale
+        ? `${grupo.DatosPersonale.nombre || ''} ${grupo.DatosPersonale.ape_paterno || ''} ${grupo.DatosPersonale.ape_materno || ''}`
+        : '';
+
+      // Construir filas de alumnos (hasta 30 filas)
+      const filas = [];
+      for (let i = 0; i < 30; i++) {
+        const ins = inscritos[i];
+        const nombreEst = ins && ins.Horario && ins.Horario.DatosPersonale
+          ? `${ins.Horario.DatosPersonale.nombre || ''} ${ins.Horario.DatosPersonale.ape_paterno || ''} ${ins.Horario.DatosPersonale.ape_materno || ''}`
+          : '';
+        filas.push({ no: i + 1, nombre: nombreEst });
+      }
+
+      // Generar celdas para días 1..31
+      const dayHeaders = Array.from({ length: 31 }, (_, i) => i + 1);
+
+      const html = `
+        <html>
+          <head>
+            <meta charset="utf-8" />
+            <title>Lista de asistencia - ${grupo.nombre}</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; }
+              .header { display:flex; align-items:center; margin-bottom:10px; }
+              .title { background: #ffd54f; padding: 10px 16px; font-weight:700; color:#000; }
+              .meta { flex:1; text-align:center; }
+              .meta small { display:block; font-size:12px; }
+              .right { width:260px; text-align:left; }
+              table { border-collapse: collapse; width: 100%; font-size:11px; }
+              table th, table td { border: 1px solid #333; padding:4px; }
+              th.day { background:#00b050; color:#fff; }
+              th.name { background:#2f75b5; color:#fff; }
+              .no-col { width:36px; text-align:center; }
+              .name-col { width:260px; text-align:left; padding-left:6px; }
+              .percent-col { width:46px; text-align:center; }
+              .footer { margin-top:8px; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <div class="title">LISTA DE ASISTENCIA</div>
+              <div class="meta">
+                <div><strong>NOMBRE DE LA ESCUELA:</strong></div>
+                <div><small>__________________________________________</small></div>
+                <div style="margin-top:4px"><strong>NOMBRE DEL MAESTRO(A):</strong> ${profesorNombre}</div>
+              </div>
+              <div class="right">
+                <div>MES: <strong>${new Date().toLocaleString('default', { month: 'long' }).toUpperCase()}</strong></div>
+                <div>GRADO: <strong>${grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.semestre || '' : ''}</strong></div>
+                <div>GRUPO: <strong>${grupo.nombre || ''}</strong></div>
+              </div>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th class="no-col">NO.</th>
+                  <th class="name-col">NOMBRE Y APELLIDO</th>
+                  ${dayHeaders.map(d => `<th class="day">${d}</th>`).join('')}
+                  <th class="percent-col">%</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${filas.map(f => `
+                  <tr>
+                    <td style="text-align:center">${f.no}</td>
+                    <td>${f.nombre}</td>
+                    ${dayHeaders.map(() => `<td>&nbsp;</td>`).join('')}
+                    <td style="text-align:center">&nbsp;</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+
+            <div class="footer">
+              <table style="width:100%">
+                <tr>
+                  <td style="background:#f28b00;color:#fff;padding:6px;font-weight:700;">ASISTENCIAS DIARIAS</td>
+                  <td style="padding:6px">${dayHeaders.map(() => '0').join(' ')}</td>
+                </tr>
+              </table>
+            </div>
+
+            <p style="font-size:11px;color:#666;margin-top:8px;">Generado: ${new Date().toLocaleString()}</p>
+          </body>
+        </html>
+      `;
+
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.send(html);
+
+    } catch (err) {
+      console.error("Error al generar PDF:", err);
+      return res.status(500).json({ success: false, msg: "Error al generar PDF" });
+    }
+  });
+
+  // ============================
+  //  GENERAR EXCEL DE CLASE (XLSX)
+  // ============================
+  router.get("/Reportes/Clases/Excel/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const ExcelJS = require("exceljs");
+
+      // Obtener información del grupo
+      const grupo = await bd.Grupo.findOne({
+        where: { id },
+        include: [
+          {
+            model: bd.Unidad_Aprendizaje,
+          },
+          {
+            model: bd.DatosPersonales,
+          },
+        ],
+      });
+
+      if (!grupo) {
+        return res.status(404).json({ success: false, msg: "Grupo no encontrado" });
+      }
+
+      // Obtener inscritos
+      const inscritos = await bd.Mat_Inscritos.findAll({
+        where: { id_grupo: id },
+        include: [
+          {
+            model: bd.Horario,
+            required: true,
+            include: [
+              {
+                model: bd.DatosPersonales,
+                required: true,
+                where: { tipo_usuario: "alumno" },
+              },
+            ],
+          },
+        ],
+      });
+
+      // Obtener distribución de horarios
+      const distribucion = await bd.Distribucion.findAll({
+        where: { id_grupo: id },
+      });
+
+      // Crear libro de Excel
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Lista de Clase");
+
+      // Información del grupo (primeras filas)
+      worksheet.addRow(["INFORMACIÓN DEL GRUPO"]);
+      worksheet.addRow(["Grupo:", grupo.nombre]);
+      worksheet.addRow(["Unidad de Aprendizaje:", grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.nombre : ""]);
+      worksheet.addRow(["Profesor:", grupo.DatosPersonale ? `${grupo.DatosPersonale.nombre || ""} ${grupo.DatosPersonale.ape_paterno || ""} ${grupo.DatosPersonale.ape_materno || ""}` : ""]);
+      worksheet.addRow(["Turno:", grupo.turno]);
+      worksheet.addRow(["Carrera:", grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.carrera : ""]);
+      worksheet.addRow(["Cupo:", grupo.cupo]);
+      worksheet.addRow([]);
+
+      // Horarios del grupo
+      worksheet.addRow(["HORARIOS"]);
+      const horariosHeader = worksheet.addRow(["Día", "Hora Inicio", "Hora Fin"]);
+      horariosHeader.font = { bold: true };
+      horariosHeader.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FF4472C4" },
+      };
+      horariosHeader.font = { color: { argb: "FFFFFFFF" }, bold: true };
+
+      distribucion.forEach(d => {
+        worksheet.addRow([d.dia, d.hora_ini, d.hora_fin]);
+      });
+
+      worksheet.addRow([]);
+
+      // Lista de estudiantes
+      worksheet.addRow(["LISTA DE ESTUDIANTES"]);
+      const estudiantesHeader = worksheet.addRow([
+        "No.",
+        "ID Estudiante",
+        "Nombre Completo",
+        "Calificación Final"
+      ]);
+      estudiantesHeader.font = { bold: true };
+      estudiantesHeader.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FF70AD47" },
+      };
+      estudiantesHeader.font = { color: { argb: "FFFFFFFF" }, bold: true };
+
+      inscritos.forEach((ins, index) => {
+        const estudiante = ins.Horario && ins.Horario.DatosPersonale ? ins.Horario.DatosPersonale : null;
+        worksheet.addRow([
+          index + 1,
+          estudiante ? estudiante.id : "",
+          estudiante ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${estudiante.ape_materno || ""}` : "",
+          ins.calificacion_final || ""
+        ]);
+      });
+
+      // Ajustar ancho de columnas
+      worksheet.columns = [
+        { key: "A", width: 10 },
+        { key: "B", width: 20 },
+        { key: "C", width: 50 },
+        { key: "D", width: 20 },
+      ];
+
+      // Enviar archivo
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=clase_${grupo.nombre}_${new Date().toISOString().split('T')[0]}.xlsx`
+      );
+
+      await workbook.xlsx.write(res);
+      res.end();
+
+    } catch (err) {
+      console.error("Error al generar Excel:", err);
+      return res.status(500).json({ success: false, msg: "Error al generar Excel" });
     }
   });
 
