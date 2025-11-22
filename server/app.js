@@ -18,10 +18,8 @@ const rutaEmails = require("./routes/rutaEmails.js");
 // importa las rutas API
 const carreraRoutes = require("./routes/carreraRoutes");
 const uaRoutes = require("./routes/uaRoutes");
-const datosMedicosRoutes = require('./routes/datosMedicosRoutes');
-
-
 const datosMedicosRoutes = require("./routes/datosMedicosRoutes");
+
 const avisosRoutes = require("./routes/avisosRoutes");
 
 const app = express();
