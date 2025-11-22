@@ -117,7 +117,7 @@ module.exports = (passport) => {
       if (!datos) {
         // crear
         datos = await DatosMedicos.create({
-          id: genId("DM"),
+          id: genId("DM").slice(0, 15),
           id_usuario,
           peso: Number(peso),
           altura: Number(altura),
@@ -166,7 +166,7 @@ module.exports = (passport) => {
         }
 
         const enf = await Enfermedades.create({
-          id: genId("ENF"),
+          id: genId("ENF").slice(0, 15),
           id_dat_med: datos.id,
           descri: descripcion,
         });
