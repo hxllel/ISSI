@@ -18,6 +18,9 @@ const rutaEmails = require("./routes/rutaEmails.js");
 // importa las rutas API
 const carreraRoutes = require("./routes/carreraRoutes");
 const uaRoutes = require("./routes/uaRoutes");
+const datosMedicosRoutes = require('./routes/datosMedicosRoutes');
+
+
 const datosMedicosRoutes = require("./routes/datosMedicosRoutes");
 const avisosRoutes = require("./routes/avisosRoutes");
 
@@ -57,6 +60,7 @@ app.use("/", rutaEmails(passport));
 // monta las rutas API
 app.use("/api/carreras", carreraRoutes);
 app.use("/api/unidades", uaRoutes);
+
 app.use("/api/datos-medicos", datosMedicosRoutes);
 app.use("/api/avisos", avisosRoutes);
 app.listen(app.get("port"));

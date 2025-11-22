@@ -3,9 +3,21 @@ const bd = require("../../model/modelo");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { raw } = require("mysql2");
+const { DatosMedicos, Enfermedades } = require("../../model/modelo");
+
 
 module.exports = (passport) => {
   const router = express.Router();
+
+  function ensureLoggedIn(req, res, next) {
+  if (req.isAuthenticated && req.isAuthenticated()) return next();
+  return res.status(401).json({ error: "No autenticado" });
+}
+function genId(prefix = "DM") {
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `${prefix}_${Date.now()}_${rand}`;
+}
+
 
   // Nueva ruta: devuelve JSON para que el frontend realice la navegación al Chat
   // Se normaliza la ruta para usar la misma convención de capitalización que el resto
@@ -49,6 +61,174 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
+
+
+// GET: obtener datos médicos + enfermedades del alumno logueado
+router.get("/alumno/datosMedicos", ensureLoggedIn, async (req, res) => {
+  try {
+    const id_usuario = req.user.id;
+
+    const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+    let enfermedades = [];
+
+    if (datos) {
+      enfermedades = await Enfermedades.findAll({
+        where: { id_dat_med: datos.id },
+        order: [["id", "ASC"]],
+      });
+    }
+
+    res.json({ datos, enfermedades });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Error al obtener datos médicos" });
+  }
+});
+
+// POST: crear o actualizar datos médicos del alumno logueado (upsert)
+router.post("/alumno/datosMedicos", ensureLoggedIn, async (req, res) => {
+  try {
+    const id_usuario = req.user.id;
+    const { peso, altura, tipo_sangre, nss } = req.body;
+
+    if (peso == null || altura == null || !tipo_sangre || !nss) {
+      return res.status(400).json({ error: "Faltan campos requeridos" });
+    }
+
+    let datos = await DatosMedicos.findOne({ where: { id_usuario } });
+
+    if (!datos) {
+      // crear
+      datos = await DatosMedicos.create({
+        id: genId("DM"),
+        id_usuario,
+        peso: Number(peso),
+        altura: Number(altura),
+        tipo_sangre,
+        nss,
+      });
+    } else {
+      // actualizar
+      await DatosMedicos.update(
+        {
+          peso: Number(peso),
+          altura: Number(altura),
+          tipo_sangre,
+          nss,
+        },
+        { where: { id: datos.id } }
+      );
+      datos = await DatosMedicos.findByPk(datos.id);
+    }
+
+    res.json(datos);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Error al guardar datos médicos" });
+  }
+});
+
+// POST: crear enfermedad asociada al alumno logueado
+router.post(
+  "/alumno/datosMedicos/enfermedades",
+  ensureLoggedIn,
+  async (req, res) => {
+    try {
+      const id_usuario = req.user.id;
+      const { descripcion } = req.body;
+
+      if (!descripcion) {
+        return res.status(400).json({ error: "Falta la descripción" });
+      }
+
+      let datos = await DatosMedicos.findOne({ where: { id_usuario } });
+      if (!datos) {
+        return res
+          .status(400)
+          .json({ error: "Primero debes registrar tus datos médicos" });
+      }
+
+      const enf = await Enfermedades.create({
+        id: genId("ENF"),
+        id_dat_med: datos.id,
+        descri: descripcion,
+      });
+
+      res.status(201).json(enf);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Error al crear enfermedad" });
+    }
+  }
+);
+
+// PUT: editar enfermedad del alumno logueado
+router.put(
+  "/alumno/datosMedicos/enfermedades/:idEnf",
+  ensureLoggedIn,
+  async (req, res) => {
+    try {
+      const id_usuario = req.user.id;
+      const { idEnf } = req.params;
+      const { descripcion } = req.body;
+
+      if (!descripcion) {
+        return res.status(400).json({ error: "Falta la descripción" });
+      }
+
+      const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+      if (!datos) {
+        return res.status(404).json({ error: "Datos médicos no encontrados" });
+      }
+
+      const [rows] = await Enfermedades.update(
+        { descri: descripcion },
+        { where: { id: idEnf, id_dat_med: datos.id } }
+      );
+
+      if (!rows) {
+        return res.status(404).json({ error: "Enfermedad no encontrada" });
+      }
+
+      const enf = await Enfermedades.findByPk(idEnf);
+      res.json(enf);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Error al actualizar enfermedad" });
+    }
+  }
+);
+
+// DELETE: eliminar enfermedad del alumno logueado
+router.delete(
+  "/alumno/datosMedicos/enfermedades/:idEnf",
+  ensureLoggedIn,
+  async (req, res) => {
+    try {
+      const id_usuario = req.user.id;
+      const { idEnf } = req.params;
+
+      const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+      if (!datos) {
+        return res.status(404).json({ error: "Datos médicos no encontrados" });
+      }
+
+      const rows = await Enfermedades.destroy({
+        where: { id: idEnf, id_dat_med: datos.id },
+      });
+
+      if (!rows) {
+        return res.status(404).json({ error: "Enfermedad no encontrada" });
+      }
+
+      res.json({ ok: true });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Error al eliminar enfermedad" });
+    }
+  }
+);
+
 
       return res.json({
         success: true,
