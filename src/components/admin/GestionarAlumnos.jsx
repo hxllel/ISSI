@@ -1,27 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarAlumnos.css";
+import { AdminSidebar } from "./AdminSidebar";
 
 
-    
 export function GestionarAlumnos() {
-
-    
-        
   const [carreras, setCarreras] = useState([]);
   const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
   const [datos, setDatos] = useState([]);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [idAlumno, setIdAlumno] = useState("");
   const [del, setDelete] = useState(false);
-  const navigate = useNavigate();
 
+  const [busqueda, setBusqueda] = useState("");
+
+  const navigate = useNavigate();
+  const API = "http://localhost:4000";
+
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const alumnosPorPagina = 8;
+
+  // Navegación
   const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
   const handleClickProf = () => navigate("../administrador/gestionarProfesores");
   const handleClickCursos = () => navigate("../administrador/gestionarCursos");
   const handleRegistrar = () => navigate("registrarAlumno");
-  const handleClickEdit = (id) => { navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
-    };
+  const handleClickEdit = (id) =>
+    navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
+
+  // Modal
   const handleAbrirModal = (id) => {
     setMostrarModal(true);
     setIdAlumno(id);
@@ -29,25 +37,26 @@ export function GestionarAlumnos() {
   const handleCerrarModal = () => setMostrarModal(false);
   const handleEliminar = () => setDelete(true);
 
+  // Cargar alumnos
   useEffect(() => {
-    fetch("http://localhost:4000/ObtenerAlumnos", { credentials: "include" })
+    fetch(`${API}/ObtenerAlumnos`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setDatos(data.alumnos || []))
       .catch(() => setDatos([]));
   }, []);
 
+  // Cargar carreras
   useEffect(() => {
-        fetch("http://localhost:4000/ObtenerCarreras", { credentials: "include" })
-            .then((res) => res.json())
-            .then((data) => {
-                setCarreras(data.carreras || []);
-            })
-            .catch((err) => console.error("Error al obtener las carreras:", err));
-    }, []);
+    fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => setCarreras(data.carreras || []))
+      .catch((err) => console.error("Error al obtener las carreras:", err));
+  }, []);
 
+  // Eliminar alumno
   useEffect(() => {
     if (del) {
-      fetch(`http://localhost:4000/EliminarAlumno/${idAlumno}`, {
+      fetch(`${API}/EliminarAlumno/${idAlumno}`, {
         method: "DELETE",
         credentials: "include",
       })
@@ -61,67 +70,100 @@ export function GestionarAlumnos() {
           }
           setMostrarModal(false);
         });
+
       setDelete(false);
     }
   }, [del]);
 
+  // Filtrado y búsqueda
+  const alumnosFiltrados = datos.filter((a) => {
+    const nombreCompleto = `${a.nombre || ""} ${a.ape_paterno || ""} ${a.ape_materno || ""}`.toLowerCase();
+    const busq = busqueda.toLowerCase().trim();
+
+    const coincideCarrera = carreraSeleccionada
+      ? (a.carrera || "").toLowerCase() === carreraSeleccionada.toLowerCase()
+      : true;
+
+    const coincideBusqueda =
+      nombreCompleto.includes(busq) ||
+      (a.id?.toString() || "").includes(busq) ||
+      (a.email?.toLowerCase() || "").includes(busq);
+
+    return coincideCarrera && coincideBusqueda;
+  });
+
+  // Paginación
+  const totalPaginas = Math.max(1, Math.ceil(alumnosFiltrados.length / alumnosPorPagina));
+  const indiceInicio = (paginaActual - 1) * alumnosPorPagina;
+  const alumnosPagina = alumnosFiltrados.slice(indiceInicio, indiceInicio + alumnosPorPagina);
+
+  const siguientePagina = () => {
+    if (paginaActual < totalPaginas) setPaginaActual(paginaActual + 1);
+  };
+
+  const anteriorPagina = () => {
+    if (paginaActual > 1) setPaginaActual(paginaActual - 1);
+  };
+
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [busqueda, carreraSeleccionada]);
+
   return (
     <div className="layout">
-      {/* PANEL LATERAL */}
-      <aside className="sidebar">
-        <div className="logo">
-            <img src="/ipn.png" alt="Logo" className="logo-img" />
-            <span>Gestión Escolar</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate("/administrador")} className="menu-item">Panel de Control</button>
-          <button onClick={handleClickAlu} className="menu-item active">Estudiantes</button>
-          <button onClick={handleClickProf} className="menu-item">Profesores</button>
-          <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-          <button className="menu-item">Informes</button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+      <AdminSidebar />
 
       {/* CONTENIDO PRINCIPAL */}
       <main className="contenido">
-        <header className="encabezado">
-          <h1>Estudiantes</h1>
-          <div className="acciones">
-            <button className="btn azul" onClick={handleRegistrar}>+ Registrar nuevo estudiantes</button>
-            
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <h1>Gestión de Estudiantes</h1>
           </div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
 
         {/* FILTROS */}
         <div className="filtros">
           <label>
             Carrera:
-            <select value={carreraSeleccionada} onChange={(e) => setCarreraSeleccionada(e.target.value)}>
-                            <option value="">Seleccione una carrera</option>
-                            {carreras.map((c) => (
-                                <option key={c.id || c.nombre} value={c.nombre}>{c.nombre}</option>
-                            ))}</select>
+            <select
+              value={carreraSeleccionada}
+              onChange={(e) => setCarreraSeleccionada(e.target.value)}
+            >
+              <option value="">Seleccione una carrera</option>
+              {carreras.map((c) => (
+                <option key={c.id || c.nombre} value={c.nombre}>
+                  {c.nombre}
+                </option>
+              ))}
+            </select>
           </label>
-          <label>
-            Semestre:
-            <select><option>Seleccionar Semestre</option></select>
-          </label>
-          <label>
-            Grupo:
-            <select><option>Seleccionar Grupo</option></select>
-          </label>
-          <label>
-            Horario:
-            <select><option>Seleccionar Horario</option></select>
-          </label>
+
+          <button className="btn azul" onClick={handleRegistrar}>
+            + Registrar nuevo estudiante
+          </button>
         </div>
 
         {/* TABLA */}
         <div className="tabla-contenedor">
           <div className="tabla-header">
             <h2>Lista de Estudiantes</h2>
-            <input type="text" placeholder="Buscar estudiante..." />
+
+            <div className="busqueda">
+              <input
+                type="text"
+                placeholder="Buscar estudiante..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
+              <button className="btn-buscar" title="Buscar">
+                🔎
+              </button>
+            </div>
+
+            <button className="btn azul" onClick={handleRegistrar}>
+              + Registrar nuevo estudiante
+            </button>
           </div>
 
           <table className="tabla">
@@ -134,32 +176,53 @@ export function GestionarAlumnos() {
                 <th>Acciones</th>
               </tr>
             </thead>
+
             <tbody>
-              {datos.length > 0 ? (
-                datos.map((a) => (
+              {alumnosPagina.length > 0 ? (
+                alumnosPagina.map((a) => (
                   <tr key={a.id}>
                     <td>{a.id}</td>
-                    <td>{a.nombre} {a.ape_paterno} {a.ape_materno}</td>
+                    <td>
+                      {a.nombre} {a.ape_paterno} {a.ape_materno}
+                    </td>
                     <td>{a.carrera}</td>
                     <td>{a.email}</td>
                     <td>
-                      <button className="icono editar" onClick={() => handleClickEdit(a.id)}>✎</button>
-                      <button className="icono eliminar" onClick={() => handleAbrirModal(a.id)}>🗑</button>
+                      <button className="icono editar" onClick={() => handleClickEdit(a.id)}>
+                        ✎
+                      </button>
+                      <button className="icono eliminar" onClick={() => handleAbrirModal(a.id)}>
+                        🗑
+                      </button>
                     </td>
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="5">No hay alumnos disponibles</td></tr>
+                <tr>
+                  <td colSpan="5">No hay alumnos disponibles</td>
+                </tr>
               )}
             </tbody>
           </table>
 
           <div className="tabla-footer">
             <button className="btn-descargar">Descargar Listado</button>
+
             <div className="paginacion">
-              <button>Anterior</button>
-              <span className="pagina-activa">1</span>
-              <button>Siguiente</button>
+              <button onClick={anteriorPagina} disabled={paginaActual === 1}>
+                Anterior
+              </button>
+
+              <span className="pagina-activa">
+                {paginaActual} / {totalPaginas}
+              </span>
+
+              <button
+                onClick={siguientePagina}
+                disabled={paginaActual >= totalPaginas}
+              >
+                Siguiente
+              </button>
             </div>
           </div>
         </div>
@@ -171,8 +234,12 @@ export function GestionarAlumnos() {
               <h3>¿Estás seguro?</h3>
               <p>Esta acción no se puede deshacer.</p>
               <div className="modal-botones">
-                <button className="btn rojo" onClick={handleEliminar}>Confirmar</button>
-                <button className="btn gris" onClick={handleCerrarModal}>Cancelar</button>
+                <button className="btn rojo" onClick={handleEliminar}>
+                  Confirmar
+                </button>
+                <button className="btn gris" onClick={handleCerrarModal}>
+                  Cancelar
+                </button>
               </div>
             </div>
           </div>

@@ -1,9 +1,9 @@
 // src/pages/Unidades.jsx
 import { useEffect, useState } from 'react';
 
-const API = 'http://localhost:4000';
+    const API = 'http://localhost:4000';
 
-export default function Unidades() {
+export function Unidades() {
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editUA, setEditUA] = useState(null); // objeto UA (tiene id interno)

@@ -1,9 +1,9 @@
 // src/pages/Carreras.jsx
 import { useEffect, useState } from 'react';
 
-const API = 'http://localhost:4000';
+    const API = 'http://localhost:4000';
 
-export default function Carreras() {
+export function Carreras() {
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editNombre, setEditNombre] = useState(null); // PK

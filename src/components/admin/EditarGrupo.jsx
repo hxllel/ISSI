@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarGrupo.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function EditarGrupo() {
     const { id } = useParams();
@@ -61,10 +63,26 @@ export function EditarGrupo() {
             })
             .catch((err) => console.error("Error al editar el grupo:", err));
     };
+    
+     const handleClickAlu = () => navigate("gestionarAlumnos");
+  const handleClickProf = () => navigate("gestionarProfesores");
+  const handleClickCursos = () => navigate("gestionarCursos");
+const handleLogout = () => {navigate(`/`);};
+
 
     return (
-        <section className="eg-wrap eg-editar-grupo">
-            <h1 className="eg-title">Editar Grupo</h1>
+        <div className="admin-container">
+           <AdminSidebar />
+      <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+          <h1>Editar Grupo</h1>
+          </div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
+        <section className="gc-wrap">
+            
+            
 
             <form className="formulario eg-card" onSubmit={handleSubmit}>
                 <label className="eg-label">Nombre del grupo:</label>
@@ -118,10 +136,12 @@ export function EditarGrupo() {
                     <option value="Vespertino">Vespertino</option>
                 </select>
 
-                <button className="eg-btn primary eg-submit" type="submit">
+                <button className="btn azul" type="submit">
                     Actualizar Curso
                 </button>
             </form>
         </section>
+        </main>
+        </div>
     );
 }

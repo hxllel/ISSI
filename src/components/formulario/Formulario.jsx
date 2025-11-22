@@ -1,11 +1,13 @@
 import "./Formulario.css";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export function Formulario({ setSuccess, setId2 }) {
     const [id, setId] = useState(""); // Cambiado de 'usuario' a 'id'
     const [contrasena, setContrasena] = useState("");
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState(""); // Para mensajes de error del backend
+    const API = 'http://localhost:4000';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +22,7 @@ export function Formulario({ setSuccess, setId2 }) {
         setErrorMessage("");
 
         try {
-            const res = await fetch("http://localhost:4000/IniciarSesion", {
+            const res = await fetch(`${API}/IniciarSesion`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -90,6 +92,10 @@ export function Formulario({ setSuccess, setId2 }) {
                     <button type="submit" className="btn">
                         Entrar
                     </button>
+
+                    <div className="recover-link">
+                        <Link to="/recuperar-contrasena">¿Olvidaste tu contraseña?</Link>
+                    </div>
                 </form>
             </main>
 

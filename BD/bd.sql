@@ -32,203 +32,296 @@ DROP TABLE IF EXISTS ua_aprobada;
 
 DROP TABLE IF EXISTS borrador_horario;
 
-create table datos_personales (
-    id varchar(15) not null,
-    contrasena varchar(200) not null,
-    tipo_usuario varchar(15) not null,
-    nombre varchar(25) not null,
-    ape_paterno varchar(25) not null,
-    ape_materno varchar(25) not null,
-    fecha_nacimiento date not null,
-    RFC varchar(50),
-    tipo_sangre varchar(15) not null,
-    CURP varchar(50) not null,
-    nacionalidad varchar(50) not null,
-    calle varchar(50) not null,
-    num_exterior varchar(50) not null,
-    num_interior varchar(50) not null,
-    codigo_postal varchar(50) not null,
-    colonia varchar(50) not null,
-    delegacion varchar(50) not null,
-    telefono varchar(50) not null,
-    ciudad varchar(50) not null,
-    email varchar(50) not null,
+DROP TABLE IF EXISTS mensaje_chat;
+
+DROP TABLE IF EXISTS contador;
+
+DROP TABLE IF EXISTS materia_reprobada;
+
+DROP TABLE IF EXISTS ets;
+
+DROP TABLE IF EXISTS ets_grupo;
+
+DROP TABLE IF EXISTS avisos;
+
+DROP TABLE IF EXISTS fechas_relevantes;
+
+CREATE TABLE datos_personales (
+    id VARCHAR(15) NOT NULL,
+    contrasena TEXT NOT NULL,
+    tipo_usuario TEXT NOT NULL,
+    nombre TEXT NOT NULL,
+    ape_paterno TEXT NOT NULL,
+    ape_materno TEXT NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    RFC TEXT,
+    tipo_sangre TEXT NOT NULL,
+    CURP TEXT NOT NULL,
+    nacionalidad TEXT NOT NULL,
+    calle TEXT NOT NULL,
+    num_exterior TEXT NOT NULL,
+    num_interior TEXT NOT NULL,
+    codigo_postal TEXT NOT NULL,
+    colonia TEXT NOT NULL,
+    delegacion TEXT NOT NULL,
+    telefono TEXT NOT NULL,
+    ciudad TEXT NOT NULL,
+    email TEXT NOT NULL,
     foto BLOB,
-    grado varchar(50),
-    carrera varchar(40),
-    situacion varchar(50),
-    calificacion int,
+    grado TEXT,
+    carrera TEXT,
+    situacion TEXT,
+    calificacion FLOAT,
     CONSTRAINT PK_USUARIOS PRIMARY KEY (id)
 );
 
-create table datos_medicos (
-    id varchar(15) not null,
-    id_usuario varchar(15) not null,
-    peso float not null,
-    altura float not null,
-    tipo_sangre varchar(5) not null,
-    nss varchar(30) not null,
+CREATE TABLE datos_medicos (
+    id VARCHAR(15) NOT NULL,
+    id_usuario VARCHAR(15) NOT NULL,
+    peso FLOAT NOT NULL,
+    altura FLOAT NOT NULL,
+    tipo_sangre TEXT NOT NULL,
+    nss TEXT NOT NULL,
     CONSTRAINT PK_DM PRIMARY KEY (id),
     CONSTRAINT FK_DM_DP FOREIGN KEY (id_usuario) REFERENCES datos_personales (id)
 );
 
-create table enfermedades (
-    id varchar(15) not null,
-    id_dat_med varchar(15) not null,
-    descri varchar(500) not null,
+CREATE TABLE enfermedades (
+    id VARCHAR(15) NOT NULL,
+    id_dat_med VARCHAR(15) NOT NULL,
+    descri TEXT NOT NULL,
     CONSTRAINT PK_E PRIMARY KEY (id),
     CONSTRAINT FK_E_DM FOREIGN KEY (id_dat_med) REFERENCES datos_medicos (id)
 );
 
-create table estudiante (
-    id varchar(15) not null,
-    id_usuario varchar(15) not null,
-    promedio float not null,
-    creditos_disponibles float not null,
-    estado_academico varchar(50) not null,
-    constraint PK_ES PRIMARY KEY (id),
+CREATE TABLE estudiante (
+    id VARCHAR(15) NOT NULL,
+    id_usuario VARCHAR(15) NOT NULL,
+    promedio FLOAT NOT NULL,
+    creditos_disponibles FLOAT NOT NULL,
+    estado_academico TEXT NOT NULL,
+    CONSTRAINT PK_ES PRIMARY KEY (id),
     CONSTRAINT FK_ES_DP FOREIGN KEY (id_usuario) REFERENCES datos_personales (id)
 );
 
-create table carrera (
-    nombre varchar(40) not null,
-    creditos_iniciales int not null,
-    prefijo_grupo varchar(10) not null,
-    duracion_max int not null,
+CREATE TABLE carrera (
+    nombre VARCHAR(40) NOT NULL,
+    creditos_iniciales INT NOT NULL,
+    prefijo_grupo TEXT NOT NULL,
+    duracion_max INT NOT NULL,
     CONSTRAINT PK_CAR PRIMARY KEY (nombre)
 );
 
-create table unidad_de_aprendizaje (
-    id varchar(15) not null,
-    nombre varchar(100) not null,
-    credito float not null,
-    carrera varchar(50),
-    semestre int not null,
+CREATE TABLE unidad_de_aprendizaje (
+    id VARCHAR(15) NOT NULL,
+    nombre TEXT NOT NULL,
+    credito FLOAT NOT NULL,
+    carrera VARCHAR(40),
+    semestre INT NOT NULL,
     CONSTRAINT PK_UA PRIMARY KEY (id),
     CONSTRAINT FK_UA_CAR FOREIGN KEY (carrera) REFERENCES carrera (nombre)
 );
 
-create table grupo (
-    id varchar(15) not null,
-    nombre varchar(25) not null,
-    id_ua varchar(15) not null,
-    id_prof varchar(15) not null,
-    turno varchar(15) not null,
-    cupo int not null,
+CREATE TABLE grupo (
+    id VARCHAR(15) NOT NULL,
+    nombre TEXT NOT NULL,
+    id_ua VARCHAR(15) NOT NULL,
+    id_prof VARCHAR(15) NOT NULL,
+    turno TEXT NOT NULL,
+    cupo INT NOT NULL,
+    reg_final INT,
+    reg_extra INT,
     CONSTRAINT PK_GRU PRIMARY KEY (id),
     CONSTRAINT FK_GRU_DP FOREIGN KEY (id_prof) REFERENCES datos_personales (id),
     CONSTRAINT FK_GRU_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id)
 );
 
-create table distribucion (
-    id varchar(15) not null,
-    id_grupo varchar(15) not null,
-    hora_ini varchar(15) not null,
-    hora_fin varchar(15) not null,
-    dia varchar(15) not null,
+CREATE TABLE distribucion (
+    id VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    hora_ini TEXT NOT NULL,
+    hora_fin TEXT NOT NULL,
+    dia TEXT NOT NULL,
     CONSTRAINT PK_DIS PRIMARY KEY (id),
     CONSTRAINT FK_DIS_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
 );
 
-create table horario (
-    id varchar(15) not null,
-    id_alumno varchar(15) not null,
+CREATE TABLE horario (
+    id VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
     CONSTRAINT PK_HOR PRIMARY KEY (id),
     CONSTRAINT FK_HOR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-create table mat_inscritos (
-    id varchar(15) not null,
-    id_horario varchar(15) not null,
-    id_grupo varchar(15) not null,
-    calificacion float,
+CREATE TABLE mat_inscritos (
+    id VARCHAR(15) NOT NULL,
+    id_horario VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    calificacion_primer FLOAT,
+    calificacion_segundo FLOAT,
+    calificacion_tercer FLOAT,
+    calificacion_final FLOAT,
+    extra FLOAT,
     CONSTRAINT PK_MAT PRIMARY KEY (id),
     CONSTRAINT FK_MAT_HOR FOREIGN KEY (id_horario) REFERENCES horario (id),
     CONSTRAINT FK_MAT_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
 );
 
-create table inscripcion (
-    id varchar(15) not null,
-    id_alumno varchar(15) not null,
-    fecha_hora_in timestamp not null,
-    fecha_hora_cad timestamp not null,
+CREATE TABLE inscripcion (
+    id VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    fecha_hora_in TIMESTAMP NOT NULL,
+    fecha_hora_cad TIMESTAMP NOT NULL,
     CONSTRAINT PK_INS PRIMARY KEY (id),
     CONSTRAINT FK_INS_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-create table resena (
-    id varchar(15) not null,
-    id_profesor varchar(15) not null,
-    id_alumno varchar(15) not null,
-    calificacion float not null,
-    comentarios varchar(200),
-    fecha date not null,
+CREATE TABLE resena (
+    id VARCHAR(15) NOT NULL,
+    id_profesor VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    calificacion FLOAT NOT NULL,
+    comentarios TEXT,
+    fecha DATE NOT NULL,
     CONSTRAINT PK_RE PRIMARY KEY (id),
     CONSTRAINT FK_RE_PRO FOREIGN KEY (id_profesor) REFERENCES datos_personales (id),
     CONSTRAINT FK_RE_ALU FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-create table kardex (
-    id varchar(15) not null,
-    id_alumno varchar(15) not null,
-    promedio float not null,
-    situacion_academica varchar(25) not null,
-    semestres_restantes int not null,
+CREATE TABLE kardex (
+    id VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    promedio FLOAT NOT NULL,
+    situacion_academica TEXT NOT NULL,
+    semestres_restantes INT NOT NULL,
     CONSTRAINT PK_KAR PRIMARY KEY (id),
     CONSTRAINT FK_KAR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-create table ua_aprobada (
-    id varchar(15) not null,
-    id_kardex varchar(15) not null,
-    unidad_aprendizaje varchar(100) not null,
-    calificacion_final float not null,
-    semestre int not null,
-    periodo varchar(25) not null,
-    fecha date not null,
-    metodo_aprobado varchar(15) not null,
+CREATE TABLE ua_aprobada (
+    id VARCHAR(15) NOT NULL,
+    id_kardex VARCHAR(15) NOT NULL,
+    unidad_aprendizaje TEXT NOT NULL,
+    calificacion_final FLOAT NOT NULL,
+    semestre INT NOT NULL,
+    periodo TEXT NOT NULL,
+    fecha DATE NOT NULL,
+    metodo_aprobado TEXT NOT NULL,
     CONSTRAINT PK_UAA PRIMARY KEY (id),
     CONSTRAINT FK_UAA_KAR FOREIGN KEY (id_kardex) REFERENCES kardex (id)
 );
 
-create table borrador_horario (
-    id varchar(15) not null,
-    id_grupo varchar(15) not null,
-    id_alumno varchar(15) not null,
-    id_profesor varchar(15) not null,
-    calificacion varchar(25) not null,
-    materia varchar(25) not null,
-    horas_lun varchar(50),
-    horas_mar varchar(50),
-    horas_mie varchar(50),
-    horas_jue varchar(50),
-    horas_vie varchar(50),
-    creditos_necesarios float not null,
-    valido tinyint(1),
+CREATE TABLE borrador_horario (
+    id VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    id_profesor VARCHAR(15) NOT NULL,
+    calificacion TEXT NOT NULL,
+    materia TEXT NOT NULL,
+    horas_lun TEXT,
+    horas_mar TEXT,
+    horas_mie TEXT,
+    horas_jue TEXT,
+    horas_vie TEXT,
+    creditos_necesarios FLOAT NOT NULL,
+    valido TINYINT(1),
     CONSTRAINT PK_BOR PRIMARY KEY (id),
     CONSTRAINT FK_BOR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id),
     CONSTRAINT FK_BOR_PRO FOREIGN KEY (id_profesor) REFERENCES datos_personales (id),
     CONSTRAINT FK_BOR_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
 );
 
-create table lista (
-    id varchar(15) not null,
-    id_inscrito varchar(15) not null,
-    fecha date not null,
-    asistencia varchar(15) not null,
+CREATE TABLE lista (
+    id VARCHAR(15) NOT NULL,
+    id_inscrito VARCHAR(15) NOT NULL,
+    fecha DATE NOT NULL,
+    asistencia TEXT NOT NULL,
     CONSTRAINT PK_LIS PRIMARY KEY (id),
     CONSTRAINT FK_LIS_MAI FOREIGN KEY (id_inscrito) REFERENCES mat_inscritos (id)
 );
 
--- Nueva tabla para almacenar mensajes del chatbot
-create table mensaje_chat (
-    id varchar(15) not null,
-    id_usuario varchar(15) not null,
-    fecha datetime not null,
-    pregunta_realizada text not null,
-    respuesta_obtenida text,
+CREATE TABLE mensaje_chat (
+    id VARCHAR(15) NOT NULL,
+    id_usuario VARCHAR(15) NOT NULL,
+    fecha DATETIME NOT NULL,
+    pregunta_realizada TEXT NOT NULL,
+    respuesta_obtenida TEXT,
     CONSTRAINT PK_MEN PRIMARY KEY (id),
     CONSTRAINT FK_MEN_DP FOREIGN KEY (id_usuario) REFERENCES datos_personales (id)
+);
+
+CREATE TABLE contador (
+    id_profesor VARCHAR(15) NOT NULL,
+    suma INTEGER NOT NULL,
+    registrados INTEGER NOT NULL,
+    CONSTRAINT FK_CON_DP FOREIGN KEY (id_profesor) REFERENCES datos_personales (id)
+);
+
+create table materia_reprobada (
+    id VARCHAR(15) NOT NULL,
+    id_estudiante VARCHAR(15) NOT NULL,
+    id_ua VARCHAR(15) NOT NULL,
+    periodos_restantes integer not null,
+    recurse integer not null,
+    estado_actual TEXT NOT NULL,
+    CONSTRAINT PK_MR PRIMARY KEY (id),
+    CONSTRAINT FK_MR_ES FOREIGN KEY (id_estudiante) REFERENCES estudiante (id),
+    CONSTRAINT FK_MR_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id)
+);
+
+create table ets_grupo (
+    id VARCHAR(15) NOT NULL,
+    id_ua VARCHAR(15) NOT NULL,
+    id_aplicante VARCHAR(15) NOT NULL,
+    turno TEXT NOT NULL,
+    hora_inicio TEXT NOT NULL,
+    hora_final TEXT NOT NULL,
+    fecha DATE NOT NULL,
+    CONSTRAINT PK_ETS_G PRIMARY KEY (id),
+    CONSTRAINT FK_ETSG_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id),
+    CONSTRAINT FK_ETSG_DP FOREIGN KEY (id_aplicante) REFERENCES datos_personales (id)
+);
+
+create table ets (
+    id VARCHAR(15) NOT NULL,
+    id_mr VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    comprobante LONGBLOB,
+    validado INTEGER NOT NULL,
+    calificado FLOAT NOT NULL,
+    CONSTRAINT PK_ETS PRIMARY KEY (id),
+    CONSTRAINT FK_ETS_MR FOREIGN KEY (id_mr) REFERENCES materia_reprobada (id),
+    CONSTRAINT FK_ETS_AP FOREIGN KEY (id_grupo) REFERENCES ets_grupo (id)
+);
+
+CREATE TABLE avisos (
+    id VARCHAR(15) NOT NULL,
+    titulo TEXT NOT NULL,
+    descripcion TEXT NOT NULL,
+    imagen LONGBLOB,
+    objetivo TEXT NOT NULL,
+    fecha_vencimiento DATETIME NOT NULL,
+    CONSTRAINT PK_AVI PRIMARY KEY (id)
+);
+
+CREATE TABLE fechas_relevantes (
+    inicio_semestre DATETIME NOT NULL,
+    fin_semestre DATETIME NOT NULL,
+    registro_primer_parcial DATETIME NOT NULL,
+    fin_registro_primer_parcial DATETIME NOT NULL,
+    registro_segundo_parcial DATETIME NOT NULL,
+    fin_registro_segundo_parcial DATETIME NOT NULL,
+    registro_tercer_parcial DATETIME NOT NULL,
+    fin_registro_tercer_parcial DATETIME NOT NULL,
+    registro_extra DATETIME NOT NULL,
+    fin_registro_extra DATETIME NOT NULL,
+    evalu_profe DATETIME NOT NULL,
+    subir_doc_ets DATETIME NOT NULL,
+    fin_subir_doc_ets DATETIME NOT NULL,
+    eval_ets DATETIME NOT NULL,
+    fin_evalu_ets DATETIME NOT NULL,
+    cal_ets DATETIME NOT NULL,
+    periodo TEXT NOT NULL
 );
 
 INSERT INTO
@@ -423,7 +516,7 @@ VALUES (
         "1234",
         "1234@gmail.com",
         "activo",
-        "Ingenieria en Sistemas Computacionales"
+        "Ingenieria en Inteligencia Artificial"
     ),
     (
         "2023631212",
@@ -446,7 +539,7 @@ VALUES (
         "5512345678",
         "mariana.lopez@gmail.com",
         "activo",
-        "Ingenieria en Sistemas Computacionales"
+        "Ingenieria en Inteligencia Artificial"
     ),
     (
         "2023631213",
@@ -469,7 +562,7 @@ VALUES (
         "5523456789",
         "carlos.ramirez@gmail.com",
         "activo",
-        "Ingenieria en Sistemas Computacionales"
+        "Ingenieria en Inteligencia Artificial"
     );
 
 INSERT INTO
@@ -625,6 +718,139 @@ INSERT INTO
 values ('abc', '2023631211'),
     ('def', '2023631212'),
     ('ghi', '2023631213');
+
+INSERT INTO
+    materia_reprobada (
+        id,
+        id_estudiante,
+        id_ua,
+        periodos_restantes,
+        recurse,
+        estado_actual
+    )
+VALUES (
+        "MR001",
+        "EST001",
+        "UA003",
+        2,
+        0,
+        "Reprobada"
+    ),
+    (
+        "MR004",
+        "EST001",
+        "UA003",
+        1,
+        0,
+        "Reprobada"
+    ),
+    (
+        "MR002",
+        "EST002",
+        "UA001",
+        1,
+        1,
+        "Recurse"
+    ),
+    (
+        "MR003",
+        "EST003",
+        "UA002",
+        2,
+        0,
+        "Reprobada"
+    );
+
+INSERT INTO
+    ets_grupo (
+        id,
+        id_ua,
+        id_aplicante,
+        turno,
+        hora_inicio,
+        hora_final,
+        fecha
+    )
+VALUES (
+        "ETSG001",
+        "UA003",
+        "HIJKLMNO",
+        "Matutino",
+        "9:00",
+        "11:00",
+        "2025-06-28"
+    ),
+    (
+        "ETSG002",
+        "UA003",
+        "HIJKLMNO",
+        "Vespertino",
+        "15:00",
+        "17:00",
+        "2025-06-28"
+    ),
+    (
+        "ETSG003",
+        "UA001",
+        "HIJKLMNO",
+        "Matutino",
+        "10:00",
+        "12:00",
+        "2025-06-29"
+    ),
+    (
+        "ETSG004",
+        "UA001",
+        "HIJKLMNO",
+        "Vespertino",
+        "14:00",
+        "16:00",
+        "2025-06-29"
+    ),
+    (
+        "ETSG005",
+        "UA002",
+        "HIJKLMNO",
+        "Matutino",
+        "8:00",
+        "10:00",
+        "2025-06-30"
+    ),
+    (
+        "ETSG006",
+        "UA002",
+        "HIJKLMNO",
+        "Vespertino",
+        "13:00",
+        "15:00",
+        "2025-06-30"
+    );
+
+INSERT INTO
+    ets (
+        id,
+        id_mr,
+        id_grupo,
+        comprobante,
+        validado,
+        calificado
+    )
+VALUES (
+        "ETS001",
+        "MR004",
+        "ETSG001",
+        NULL,
+        0,
+        0
+    ),
+    (
+        "ETS002",
+        "MR004",
+        "ETSG001",
+        "N",
+        1,
+        5
+    );
 
 -- ==========================================
 -- Poblar materias de Ingenieria en Inteligencia Artificial (ESCOM)
@@ -3792,7 +4018,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0001',
@@ -3806,7 +4032,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0002',
@@ -3820,7 +4046,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0003',
@@ -3834,7 +4060,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0004',
@@ -3867,7 +4093,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0005',
@@ -3881,7 +4107,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0006',
@@ -3895,7 +4121,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0007',
@@ -3909,7 +4135,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0008',
@@ -3942,7 +4168,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0009',
@@ -3956,7 +4182,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0010',
@@ -3970,7 +4196,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0011',
@@ -3984,7 +4210,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0012',
@@ -4017,7 +4243,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0013',
@@ -4031,7 +4257,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0014',
@@ -4045,7 +4271,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0015',
@@ -4059,7 +4285,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0016',
@@ -4092,7 +4318,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0017',
@@ -4106,7 +4332,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0018',
@@ -4120,7 +4346,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0019',
@@ -4134,7 +4360,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0020',
@@ -4167,7 +4393,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0021',
@@ -4181,7 +4407,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0022',
@@ -4195,7 +4421,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0023',
@@ -4209,7 +4435,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0024',
@@ -4242,7 +4468,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0025',
@@ -4256,7 +4482,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0026',
@@ -4270,7 +4496,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0027',
@@ -4284,7 +4510,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0028',
@@ -4317,7 +4543,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0029',
@@ -4331,7 +4557,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0030',
@@ -4345,7 +4571,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0031',
@@ -4359,7 +4585,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0032',
@@ -4392,7 +4618,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0033',
@@ -4406,7 +4632,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0034',
@@ -4420,7 +4646,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0035',
@@ -4434,7 +4660,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0036',
@@ -4466,7 +4692,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0037',
@@ -4480,7 +4706,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0038',
@@ -4494,7 +4720,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0039',
@@ -4508,7 +4734,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0040',
@@ -4540,7 +4766,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0041',
@@ -4554,7 +4780,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0042',
@@ -4568,7 +4794,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0043',
@@ -4582,7 +4808,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0044',
@@ -4614,7 +4840,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0045',
@@ -4628,7 +4854,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0046',
@@ -4642,7 +4868,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0047',
@@ -4656,7 +4882,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0048',
@@ -4688,7 +4914,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0049',
@@ -4702,7 +4928,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0050',
@@ -4716,7 +4942,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0051',
@@ -4730,7 +4956,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0052',
@@ -4762,7 +4988,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0053',
@@ -4776,7 +5002,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0054',
@@ -4790,7 +5016,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0055',
@@ -4804,7 +5030,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0056',
@@ -4836,7 +5062,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0057',
@@ -4850,7 +5076,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0058',
@@ -4864,7 +5090,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0059',
@@ -4878,7 +5104,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0060',
@@ -4910,7 +5136,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0061',
@@ -4924,7 +5150,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0062',
@@ -4938,7 +5164,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0063',
@@ -4952,7 +5178,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0064',
@@ -4984,7 +5210,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0065',
@@ -4998,7 +5224,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0066',
@@ -5012,7 +5238,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0067',
@@ -5026,7 +5252,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0068',
@@ -5058,7 +5284,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0069',
@@ -5072,7 +5298,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0070',
@@ -5086,7 +5312,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0071',
@@ -5100,7 +5326,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0072',
@@ -5132,7 +5358,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0073',
@@ -5146,7 +5372,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0074',
@@ -5160,7 +5386,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0075',
@@ -5174,7 +5400,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0076',
@@ -5206,7 +5432,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0077',
@@ -5220,7 +5446,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0078',
@@ -5234,7 +5460,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0079',
@@ -5248,7 +5474,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0080',
@@ -5280,7 +5506,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0081',
@@ -5294,7 +5520,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0082',
@@ -5308,7 +5534,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0083',
@@ -5322,7 +5548,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0084',
@@ -5354,7 +5580,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0085',
@@ -5368,7 +5594,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0086',
@@ -5382,7 +5608,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0087',
@@ -5396,7 +5622,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0088',
@@ -5428,7 +5654,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0089',
@@ -5442,7 +5668,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0090',
@@ -5456,7 +5682,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0091',
@@ -5470,7 +5696,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0092',
@@ -5502,7 +5728,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0093',
@@ -5516,7 +5742,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0094',
@@ -5530,7 +5756,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0095',
@@ -5544,7 +5770,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0096',
@@ -5576,7 +5802,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0097',
@@ -5590,7 +5816,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0098',
@@ -5604,7 +5830,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0099',
@@ -5618,7 +5844,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0100',
@@ -5650,7 +5876,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0101',
@@ -5664,7 +5890,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0102',
@@ -5678,7 +5904,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0103',
@@ -5692,7 +5918,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0104',
@@ -5724,7 +5950,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0105',
@@ -5738,7 +5964,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0106',
@@ -5752,7 +5978,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0107',
@@ -5766,7 +5992,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0108',
@@ -5798,7 +6024,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0109',
@@ -5812,7 +6038,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0110',
@@ -5826,7 +6052,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0111',
@@ -5840,7 +6066,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0112',
@@ -5872,7 +6098,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0113',
@@ -5886,7 +6112,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0114',
@@ -5900,7 +6126,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0115',
@@ -5914,7 +6140,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0116',
@@ -5946,7 +6172,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0117',
@@ -5960,7 +6186,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0118',
@@ -5974,7 +6200,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0119',
@@ -5988,7 +6214,7 @@ INSERT INTO
         id,
         id_horario,
         id_grupo,
-        calificacion
+        calificacion_final
     )
 VALUES (
         'M0120',
@@ -6076,6 +6302,172 @@ VALUES (
         '¡De nada! Estoy aquí para ayudarte. Si tienes más preguntas sobre tu situación académica, no dudes en consultarme.'
     );
 
--- FIN MENSAJES DE PRUEBA
+delete from fechas_relevantes;
+
+INSERT INTO
+    fechas_relevantes (
+        inicio_semestre,
+        fin_semestre,
+        registro_primer_parcial,
+        fin_registro_primer_parcial,
+        registro_segundo_parcial,
+        fin_registro_segundo_parcial,
+        registro_tercer_parcial,
+        fin_registro_tercer_parcial,
+        registro_extra,
+        fin_registro_extra,
+        evalu_profe,
+        subir_doc_ets,
+        fin_subir_doc_ets,
+        eval_ets,
+        fin_evalu_ets,
+        cal_ets,
+        periodo
+    )
+VALUES (
+        '2025-02-03 00:00:00',
+        '2025-06-20 23:59:59',
+        '2025-11-09 00:00:00',
+        '2025-11-20 23:59:59',
+        '2025-04-01 00:00:00',
+        '2025-04-07 23:59:59',
+        '2025-05-01 00:00:00',
+        '2025-05-07 23:59:59',
+        '2025-06-10 00:00:00',
+        '2025-06-12 23:59:59',
+        '2025-06-01 00:00:00',
+        '2025-06-15 00:00:00',
+        '2025-06-18 23:59:59',
+        '2025-06-19 00:00:00',
+        '2025-06-20 23:59:59',
+        '2025-06-25 00:00:00',
+        '2025-1'
+    );
+
+delete from fechas_relevantes;
+
+INSERT INTO
+    fechas_relevantes (
+        inicio_semestre,
+        fin_semestre,
+        registro_primer_parcial,
+        fin_registro_primer_parcial,
+        registro_segundo_parcial,
+        fin_registro_segundo_parcial,
+        registro_tercer_parcial,
+        fin_registro_tercer_parcial,
+        registro_extra,
+        fin_registro_extra,
+        evalu_profe,
+        subir_doc_ets,
+        fin_subir_doc_ets,
+        eval_ets,
+        fin_evalu_ets,
+        cal_ets,
+        periodo
+    )
+VALUES (
+        '2025-02-03 00:00:00',
+        '2025-06-20 23:59:59',
+        '2025-03-01 00:00:00',
+        '2025-03-07 23:59:59',
+        '2025-11-09 00:00:00',
+        '2025-11-15 23:59:59',
+        '2025-05-01 00:00:00',
+        '2025-05-07 23:59:59',
+        '2025-06-10 00:00:00',
+        '2025-06-12 23:59:59',
+        '2025-06-01 00:00:00',
+        '2025-06-15 00:00:00',
+        '2025-06-18 23:59:59',
+        '2025-06-19 00:00:00',
+        '2025-06-20 23:59:59',
+        '2025-06-25 00:00:00',
+        '2025-1'
+    );
+
+delete from fechas_relevantes;
+
+INSERT INTO
+    fechas_relevantes (
+        inicio_semestre,
+        fin_semestre,
+        registro_primer_parcial,
+        fin_registro_primer_parcial,
+        registro_segundo_parcial,
+        fin_registro_segundo_parcial,
+        registro_tercer_parcial,
+        fin_registro_tercer_parcial,
+        registro_extra,
+        fin_registro_extra,
+        evalu_profe,
+        subir_doc_ets,
+        fin_subir_doc_ets,
+        eval_ets,
+        fin_evalu_ets,
+        cal_ets,
+        periodo
+    )
+VALUES (
+        '2025-02-03 00:00:00',
+        '2025-06-20 23:59:59',
+        '2025-03-01 00:00:00',
+        '2025-03-07 23:59:59',
+        '2025-04-01 00:00:00',
+        '2025-04-07 23:59:59',
+        '2025-11-09 00:00:00',
+        '2025-11-15 23:59:59',
+        '2025-06-10 00:00:00',
+        '2025-06-12 23:59:59',
+        '2025-06-01 00:00:00',
+        '2025-06-15 00:00:00',
+        '2025-06-18 23:59:59',
+        '2025-06-19 00:00:00',
+        '2025-06-20 23:59:59',
+        '2025-06-25 00:00:00',
+        '2025-1'
+    );
+
+delete from fechas_relevantes;
+
+INSERT INTO
+    fechas_relevantes (
+        inicio_semestre,
+        fin_semestre,
+        registro_primer_parcial,
+        fin_registro_primer_parcial,
+        registro_segundo_parcial,
+        fin_registro_segundo_parcial,
+        registro_tercer_parcial,
+        fin_registro_tercer_parcial,
+        registro_extra,
+        fin_registro_extra,
+        evalu_profe,
+        subir_doc_ets,
+        fin_subir_doc_ets,
+        eval_ets,
+        fin_evalu_ets,
+        cal_ets,
+        periodo
+    )
+VALUES (
+        '2025-02-03 00:00:00',
+        '2025-06-20 23:59:59',
+        '2025-03-01 00:00:00',
+        '2025-03-07 23:59:59',
+        '2025-04-01 00:00:00',
+        '2025-04-07 23:59:59',
+        '2025-05-01 00:00:00',
+        '2025-05-07 23:59:59',
+        '2025-11-09 00:00:00',
+        '2025-11-15 23:59:59',
+        '2025-11-25 00:00:00',
+        '2025-06-15 00:00:00',
+        '2025-06-18 23:59:59',
+        '2025-06-19 00:00:00',
+        '2025-06-20 23:59:59',
+        '2025-06-25 00:00:00',
+        '2025-1'
+    );
 
 select * from datos_personales;

@@ -29,13 +29,38 @@ function genId(prefix = "DM") {
         success: true,
         alumnoId: id,
         path: `/alumno/chat/${id}`,
-        message: "Navegue en el cliente al path indicado para mostrar la vista de chat",
+        message:
+          "Navegue en el cliente al path indicado para mostrar la vista de chat",
       });
     } catch (err) {
       console.error("Error en /Alumno/Chat/:id ->", err);
-      return res.status(500).json({ success: false, error: "Error al obtener datos para el chat" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Error al obtener datos para el chat" });
     }
   });
+  router.get("/ConsultarCalificaciones", async (req, res) => {
+    const us = req.user.id;
+    try {
+      const h = await bd.Horario.findOne({
+        where: { id_alumno: us },
+      });
+      const cal = await bd.Mat_Inscritos.findAll({
+        where: { id_horario: h.id },
+        include: [
+          {
+            model: bd.Grupo,
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+              },
+              { model: bd.DatosPersonales },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
 
 
 // GET: obtener datos médicos + enfermedades del alumno logueado
@@ -205,6 +230,26 @@ router.delete(
 );
 
 
+      return res.json({
+        success: true,
+        calificaciones: cal.map((c) => ({
+          id_grupo: c.Grupo.nombre,
+          nombre_ua: c.Grupo.Unidad_Aprendizaje.nombre,
+          profesor: `${c.Grupo.DatosPersonale.nombre} ${c.Grupo.DatosPersonale.ape_paterno} ${c.Grupo.DatosPersonale.ape_materno}`,
+          calificacion_primer: c.calificacion_primer,
+          calificacion_segundo: c.calificacion_segundo,
+          calificacion_tercer: c.calificacion_tercer,
+          calificacion_final: c.calificacion_final,
+          extra: c.extra,
+        })),
+      });
+    } catch (err) {
+      return res.json({
+        success: false,
+        error: "Error al obtener las calificaciones",
+      });
+    }
+  });
   router.get("/ObtenerHorario/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -258,12 +303,12 @@ router.delete(
               hora_ini: d.hora_ini,
               hora_fin: d.hora_fin,
             })) || [
-                {
-                  dia: "Sin día",
-                  hora_ini: "",
-                  hora_fin: "",
-                },
-              ],
+              {
+                dia: "Sin día",
+                hora_ini: "",
+                hora_fin: "",
+              },
+            ],
           };
 
           materias.push(base);
@@ -318,7 +363,7 @@ router.delete(
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["nombre", "credito", "semestre", "carrera"],
+            attributes: ["id", "nombre", "credito", "semestre", "carrera"],
             where: { carrera: carr.carrera },
           },
           {
@@ -367,8 +412,6 @@ router.delete(
         raw: true,
         nest: true,
       });
-
-      console.log("ObtenerGrupo: cursos obtenidos =", cursos.length);
 
       // Si no hay cursos, devolver array vacío
       if (!Array.isArray(cursos) || cursos.length === 0) {
@@ -464,8 +507,9 @@ router.delete(
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.nombre || g.Unidad_Aprendizaje.Nombre)) ||
             "",
-          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${datosProf.ape_materno || ""
-            }`.trim(),
+          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${
+            datosProf.ape_materno || ""
+          }`.trim(),
           calificacion_profesor: datosProf.calificacion || null,
           cupo: g.cupo,
           dias,
@@ -738,12 +782,46 @@ router.delete(
         );
 
         for (const g of ids) {
+          const ua = await bd.Unidad_Aprendizaje.findOne({
+            include: [
+              {
+                model: bd.Grupo,
+                where: { id: g },
+              },
+            ],
+          });
+
+          const recu = await bd.Materia_Reprobada.findOne({
+            include: [
+              {
+                model: bd.Estudiante,
+                where: { id_usuario: id },
+              },
+              {
+                model: bd.Unidad_Aprendizaje,
+                where: { id: ua.id },
+              },
+            ],
+          });
+
+          // Si NO existe, no hacer el update
+          if (!recu) {
+          } else {
+            // Si existe, actualizar
+            await bd.Materia_Reprobada.update(
+              {
+                recurse: 0,
+                estado_actual: "Recurse",
+              },
+              { where: { id: recu.id } }
+            );
+          }
+
           const id2 = uuidv4().replace(/-/g, "").substring(0, 15);
           const crear_mat_inscrita = await bd.Mat_Inscritos.create({
             id: id2,
             id_horario: idh.id,
             id_grupo: g,
-            calificacion: 0,
           });
           const cup_act = await bd.Grupo.findOne({
             where: { id: g },
@@ -1042,11 +1120,18 @@ router.delete(
     try {
       const { id } = req.params;
 
-      // Opcional: validar que el usuario autenticado sea el mismo que solicita
-      if (req.user && req.user.id !== id && req.user.tipo_usuario !== 'administrador') {
+      if (req.user.id !== id && req.user.tipo_usuario !== "administrador") {
         return res.status(403).json({
           success: false,
           error: "No tienes permiso para acceder a estos mensajes",
+        });
+      }
+
+      // Validar formato de ID
+      if (!id || id.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: "ID de usuario inválido",
         });
       }
 
@@ -1056,10 +1141,488 @@ router.delete(
         order: [["fecha", "ASC"]],
         raw: true,
       });
+
       return res.json({ success: true, messages: mensajes });
     } catch (err) {
       console.error("Error al obtener MensajesChat/:id ->", err);
-      return res.status(500).json({ success: false, error: "Error al obtener mensajes" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Error al obtener mensajes" });
+    }
+  });
+
+  router.get("/ObtenerMateriasReprobadas", async (req, res) => {
+    const id = req.user.id;
+
+    try {
+      const mat_re = await bd.Materia_Reprobada.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+          },
+          {
+            model: bd.Unidad_Aprendizaje,
+            attributes: ["nombre", "credito", "semestre"],
+          },
+        ],
+      });
+
+      const ids_mr = mat_re.map((m) => m.id);
+
+      const compro = await bd.ETS.findAll({
+        where: {
+          id_mr: ids_mr,
+        },
+      });
+
+      return res.json({
+        materias: mat_re,
+        compro: compro,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "Error interno del servidor" });
+    }
+  });
+
+  router.get("/ObtenerGruposEts/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const grupos = await bd.ETS_grupo.findAll({
+        include: [
+          {
+            model: bd.Unidad_Aprendizaje,
+            where: { nombre: id },
+          },
+          {
+            model: bd.DatosPersonales,
+          },
+        ],
+      });
+
+      return res.json({ horarios: grupos });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.post("/RegistrarETS", async (req, res) => {
+    const { id_mr, id_grupo } = req.body;
+    const us = req.user.id;
+
+    try {
+      // Obtener grupo nuevo
+      const grupoNuevo = await bd.ETS_grupo.findOne({
+        where: { id: id_grupo },
+      });
+
+      if (!grupoNuevo) {
+        return res.json({ success: false, message: "Grupo no encontrado" });
+      }
+
+      // ETS existentes del alumno
+      const etsExistentes = await bd.ETS.findAll({
+        include: [
+          {
+            model: bd.Materia_Reprobada,
+            include: [
+              {
+                model: bd.Estudiante,
+                where: { id_usuario: us },
+              },
+            ],
+          },
+          {
+            model: bd.ETS_grupo,
+          },
+        ],
+      });
+
+      const nuevoHorario = {
+        dia: grupoNuevo.fecha,
+        hora_ini: grupoNuevo.hora_inicio,
+        hora_fin: grupoNuevo.hora_final,
+      };
+
+      for (const ets of etsExistentes) {
+        const horarioExistente = {
+          dia: ets.ETS_Grupo.fecha,
+          hora_ini: ets.ETS_Grupo.hora_inicio,
+          hora_fin: ets.ETS_Grupo.hora_final,
+        };
+
+        if (seTraslapan(nuevoHorario, horarioExistente)) {
+          return res.json({
+            success: false,
+            message:
+              "el horario del grupo seleccionado se traslapa con un ETS ya registrado.",
+          });
+        }
+      }
+
+      await bd.ETS.create({
+        id: uuidv4().replace(/-/g, "").substring(0, 15),
+        id_mr: id_mr,
+        id_grupo: id_grupo,
+        comprobante: null,
+        validado: 0,
+        calificado: 0,
+      });
+
+      await bd.Materia_Reprobada.update(
+        { estado_actual: "ETS" },
+        { where: { id: id_mr } }
+      );
+
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+      return res.json({ success: false, message: "Error en el servidor" });
+    }
+  });
+
+  router.post("/SubirComprobante", async (req, res) => {
+    const { documento, id_mr, id_grupo } = req.body;
+
+    try {
+      const comprobante = await bd.ETS.update(
+        {
+          comprobante: documento ? Buffer.from(documento, "base64") : null,
+        },
+        { where: { id_mr: id_mr, comprobante: null, id_grupo: id_grupo } }
+      );
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.get("/NoReinscripcion", async (req, res) => {
+    const us = req.user.id;
+
+    try {
+      const noReins = await bd.Materia_Reprobada.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: us },
+          },
+        ],
+        where: { recurse: 0 },
+      });
+
+      let ids = noReins.map((item) => item.id_ua);
+
+      ids = [...new Set(ids)];
+      return res.json({ grupos: ids });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "Error en el servidor" });
+    }
+  });
+
+  router.get("/ObtenerHistorialETS/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const histo = await bd.ETS.findAll({
+        where: { id_mr: id, calificado: { [Op.ne]: 0 } },
+        include: [
+          {
+            model: bd.ETS_grupo,
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+              },
+              {
+                model: bd.DatosPersonales,
+              },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      return res.json({ historial: histo });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  // Guardar mensaje de chat en la base de datos
+  router.post("/GuardarMensajeChat", async (req, res) => {
+    try {
+      const { id_usuario, pregunta_realizada, respuesta_obtenida } = req.body;
+
+      // Validar que el usuario esté autenticado y sea el mismo que intenta guardar
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({
+          success: false,
+          error: "Usuario no autenticado",
+        });
+      }
+
+      if (req.user.id !== id_usuario) {
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permiso para guardar mensajes de otro usuario",
+        });
+      }
+
+      // Validar que al menos la pregunta esté presente
+      if (!pregunta_realizada || pregunta_realizada.trim() === "") {
+        return res.status(400).json({
+          success: false,
+          error: "La pregunta no puede estar vacía",
+        });
+      }
+
+      // Validar longitud de pregunta
+      if (pregunta_realizada.length > 5000) {
+        return res.status(400).json({
+          success: false,
+          error: "La pregunta es demasiado larga (máximo 5000 caracteres)",
+        });
+      }
+
+      // Generar ID único para el mensaje
+      const id = uuidv4().replace(/-/g, "").substring(0, 15);
+      const fecha = new Date();
+
+      // Crear el mensaje en BD
+      const mensaje = await bd.Mensaje_Chat.create({
+        id: id,
+        id_usuario: id_usuario,
+        fecha: fecha,
+        pregunta_realizada: pregunta_realizada,
+        respuesta_obtenida: respuesta_obtenida || null,
+      });
+
+      return res.json({
+        success: true,
+        mensaje: mensaje,
+        message: "Mensaje guardado correctamente",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: "Error al guardar el mensaje",
+      });
+    }
+  });
+
+  // Actualizar o crear registro en la tabla 'contador' para un profesor
+  router.post("/ActualizarContadorProfesor", async (req, res) => {
+    try {
+      // Requerir usuario autenticado
+      if (!req.user || !req.user.id) {
+        return res
+          .status(401)
+          .json({ success: false, error: "Usuario no autenticado" });
+      }
+      const { profesor, alumnoId, suma } = req.body;
+
+      if (!profesor || suma === undefined || suma === null) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Faltan datos (profesor o suma)" });
+      }
+
+      // Intentar localizar al profesor por nombre completo
+      const nombreCompleto = profesor.trim();
+
+      // Buscar por concatenación de nombre y apellidos
+      let prof = await bd.DatosPersonales.findOne({
+        where: bd.sequelize.where(
+          bd.sequelize.fn(
+            "concat",
+            bd.sequelize.col("nombre"),
+            " ",
+            bd.sequelize.col("ape_paterno"),
+            " ",
+            bd.sequelize.col("ape_materno")
+          ),
+          nombreCompleto
+        ),
+      });
+
+      // Si no se encontró con la concatenación exacta, intentar búsqueda LIKE
+      if (!prof) {
+        prof = await bd.DatosPersonales.findOne({
+          where: bd.sequelize.where(
+            bd.sequelize.fn(
+              "concat",
+              bd.sequelize.col("nombre"),
+              " ",
+              bd.sequelize.col("ape_paterno"),
+              " ",
+              bd.sequelize.col("ape_materno")
+            ),
+            { [Op.like]: `%${nombreCompleto}%` }
+          ),
+        });
+      }
+
+      if (!prof) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Profesor no encontrado" });
+      }
+
+      const idProf = prof.id;
+
+      // Buscar registro en Contador
+      let contador = await bd.Contador.findByPk(idProf);
+
+      if (contador) {
+        // Actualizar sumas y registrados
+        const nuevaSuma = parseInt(contador.suma || 0, 10) + parseInt(suma, 10);
+        const nuevosRegistrados = parseInt(contador.registrados || 0, 10) + 1;
+        await bd.Contador.update(
+          { suma: nuevaSuma, registrados: nuevosRegistrados },
+          { where: { id_profesor: idProf } }
+        );
+        contador = await bd.Contador.findByPk(idProf);
+      } else {
+        // Crear nuevo registro
+        const crear = await bd.Contador.create({
+          id_profesor: idProf,
+          suma: parseInt(suma, 10),
+          registrados: 1,
+        });
+        contador = crear;
+      }
+
+      return res.json({ success: true, registrado: contador.registrados });
+    } catch (err) {
+      console.error("Error en /ActualizarContadorProfesor:", err);
+      return res.status(500).json({
+        success: false,
+        error: "Error interno al actualizar contador",
+      });
+    }
+  });
+
+  // Actualizar respuesta de un mensaje de chat existente
+  router.put("/ActualizarMensajeChat/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { respuesta_obtenida } = req.body;
+
+      // Validar que el usuario esté autenticado
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({
+          success: false,
+          error: "Usuario no autenticado",
+        });
+      }
+
+      // Validar que la respuesta no sea vacía si se proporciona
+      if (
+        respuesta_obtenida !== null &&
+        respuesta_obtenida !== undefined &&
+        respuesta_obtenida.trim() === ""
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "La respuesta no puede estar vacía",
+        });
+      }
+
+      // Buscar el mensaje
+      const mensaje = await bd.Mensaje_Chat.findByPk(id);
+
+      if (!mensaje) {
+        return res.status(404).json({
+          success: false,
+          error: "Mensaje no encontrado",
+        });
+      }
+
+      // Validar que el usuario sea el propietario del mensaje o admin
+      if (
+        mensaje.id_usuario !== req.user.id &&
+        req.user.tipo_usuario !== "administrador"
+      ) {
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permiso para actualizar este mensaje",
+        });
+      }
+
+      // Actualizar la respuesta
+      await mensaje.update({
+        respuesta_obtenida: respuesta_obtenida || null,
+      });
+
+      return res.json({
+        success: true,
+        mensaje: mensaje,
+        message: "Respuesta guardada correctamente",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: "Error al actualizar el mensaje",
+      });
+    }
+  });
+
+  // Validar si es tiempo de evaluar profesores
+  router.get("/ValidarFechaEvaluacion", async (req, res) => {
+    try {
+      const fechas = await bd.FechasRelevantes.findOne();
+
+      if (!fechas || !fechas.evalu_profe) {
+        return res.json({
+          valido: false,
+          mensaje: "No hay fechas de evaluación configuradas",
+        });
+      }
+
+      // IMPORTANTE: convertir a fecha local correctamente
+      const fechaEvaluacion = new Date(fechas.evalu_profe);
+
+      // Tomar solo día/mes/año usando LOCAL
+      const fechaEvalLocal = new Date(
+        fechaEvaluacion.getFullYear(),
+        fechaEvaluacion.getMonth(),
+        fechaEvaluacion.getDate()
+      );
+
+      const hoy = new Date();
+      const hoyLocal = new Date(
+        hoy.getFullYear(),
+        hoy.getMonth(),
+        hoy.getDate()
+      );
+
+      console.log("Fecha evaluación LOCAL:", fechaEvalLocal);
+      console.log("Fecha hoy LOCAL:", hoyLocal);
+
+      const mismoDia = hoyLocal.getTime() === fechaEvalLocal.getTime();
+      console.log(mismoDia);
+      if (mismoDia) {
+        return res.json({
+          valido: true,
+          mensaje: "Es momento de evaluar a tus profesores",
+        });
+      } else {
+        return res.json({
+          valido: false,
+          mensaje: "Aún no es tiempo de evaluar a tus profesores",
+          fechaEvaluacion: fechaEvalLocal.toLocaleDateString("es-MX"),
+        });
+      }
+    } catch (err) {
+      console.error("Error en /ValidarFechaEvaluacion:", err);
+      return res.status(500).json({
+        success: false,
+        error: "Error al validar fecha de evaluación",
+      });
     }
   });
 

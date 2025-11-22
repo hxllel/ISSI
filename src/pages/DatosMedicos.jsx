@@ -1,9 +1,9 @@
 // src/pages/DatosMedicos.jsx
 import { useState } from 'react';
 
-const API = 'http://localhost:4000';
+    const API = 'http://localhost:4000';
 
-export default function DatosMedicos() {
+export function DatosMedicos() {
   const [idUsuario, setIdUsuario] = useState('');
   const [dm, setDm] = useState(null); // objeto datos medicos
   const [enfs, setEnfs] = useState([]);

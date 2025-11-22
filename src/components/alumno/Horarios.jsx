@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FiPlus, FiEye, FiDownload } from "react-icons/fi";
 import Modal from "../Modal";
 import  "./Horarios.css";
+import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 
 
 export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
@@ -98,31 +99,25 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
     const handleEditPer = () => {navigate(`/alumno/datosPersonales/${id}`);};
     const handleHorarios = () => {navigate(`/alumno/horarios/${id}`);};
     const handleLogout = () => {navigate(`/`);};
-
+    const handleKardex = () => {navigate(`/alumno/Kardex/${id}`);};
+    const handleChat = () => {navigate(`/alumno/Chat`, { state: { alumnoId: id } });};
+const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
+     const handleETS = () => {navigate(`/alumno/MateriasReprobadas/${id}`);};
 
   return (
+    <div className="alumno-container">
     <section>
-
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>Gestión Escolar</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item">Inicio</button>
-          <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
-          <button className="menu-item active" onClick={handleHorarios}>Horarios</button>
-          <button className="menu-item">Kardex</button>
-          <button className="menu-item">Asistente de Chat</button>
-          <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
-        </nav>
-        <button className="logout" onClick={handleLogout}>Cerrar sesión</button>
-      </aside>
+      <SidebarAlumno />
     <main className="main-content">
+      <header className="chat-header">
+          <div className="encabezado-section">
+          <h1>HORARIOS</h1>
+            
+          </div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
       <section className="gestion-alumnos">
-                    <div className="header-section">
-                        <h1>Horarios de Clase</h1>
-                    </div>
+                    
       
 
       
@@ -255,7 +250,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
       </section>
       </main>
     </section>
-
+    </div>
 
   );
 }
