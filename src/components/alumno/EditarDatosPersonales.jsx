@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarDatosPersonales.css";
+import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
+
 const API = "http://localhost:4000";
 
 export function EditarDatos() {
@@ -254,33 +256,7 @@ export function EditarDatos() {
   return (
     <div className="admin-container">
       {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={handleInicio} className="menu-item">
-            Inicio
-          </button>
-          <button className="menu-item" onClick={handleIns}>
-            Inscribir Materias{" "}
-          </button>
-          <button className="menu-item" onClick={handleHorarios}>
-            Horarios
-          </button>
-          <button className="menu-item" onClick={handleKardex}>
-            Kardex
-          </button>
-          <button className="menu-item" onClick={handleChat}>
-            Asistente de Chat
-          </button>
-          <button className="menu-item active" onClick={handleEditPer}>
-            Información Personal
-          </button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+      <SidebarAlumno />
 
       {/* Contenido principal */}
       <main className="main-content">
