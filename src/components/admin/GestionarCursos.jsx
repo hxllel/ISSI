@@ -107,6 +107,7 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
                 <th>ID</th>
                 <th>Profesor</th>
                 <th>Unidad de Aprendizaje</th>
+                <th>Tipo</th>
                 <th>Turno</th>
                 <th>Carrera</th>
                 <th>Acciones</th>
@@ -122,6 +123,7 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
                     {dato.DatosPersonale.ape_materno}
                   </td>
                   <td>{dato.Unidad_Aprendizaje.nombre}</td>
+                  <td>{dato.Unidad_Aprendizaje.tipo}</td>
                   <td>{dato.turno}</td>
                   <td>{dato.Unidad_Aprendizaje.carrera}</td>
                   <td className="gc-actions-cell">

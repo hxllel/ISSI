@@ -35,9 +35,9 @@ router.get('/:id', async (req, res) => {
 // POST: crear UA (sin id en body)
 router.post('/', async (req, res) => {
   try {
-    const { nombre, credito, carrera, semestre } = req.body;
+    const { nombre, credito, carrera, semestre, tipo } = req.body;
 
-    if (!nombre || credito == null || !carrera || semestre == null) {
+    if (!nombre || credito == null || !carrera || semestre == null || !tipo) {
       return res.status(400).json({ error: 'Faltan campos requeridos' });
     }
 
@@ -57,6 +57,7 @@ router.post('/', async (req, res) => {
       credito: Number(credito),
       carrera,
       semestre: Number(semestre),
+      tipo,
     });
 
     res.status(201).json(created);
@@ -71,7 +72,7 @@ router.put('/:id', async (req, res) => {
     const current = await Unidad_Aprendizaje.findByPk(req.params.id);
     if (!current) return res.status(404).json({ error: 'No encontrado' });
 
-    const { nombre, credito, carrera, semestre } = req.body;
+    const { nombre, credito, carrera, semestre, tipo } = req.body;
 
     if (nombre && nombre !== current.nombre) {
       const dup = await Unidad_Aprendizaje.findOne({ where: { nombre } });
@@ -88,6 +89,7 @@ router.put('/:id', async (req, res) => {
         ...(credito != null && { credito: Number(credito) }),
         ...(carrera != null && { carrera }),
         ...(semestre != null && { semestre: Number(semestre) }),
+        ...(tipo != null && { tipo }),
       },
       { where: { id: req.params.id } }
     );

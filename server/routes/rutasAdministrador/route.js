@@ -437,7 +437,7 @@ module.exports = (passport) => {
         try {
           const base64Data =
             typeof req.body.fotoBase64 === "string" &&
-            req.body.fotoBase64.includes(",")
+              req.body.fotoBase64.includes(",")
               ? req.body.fotoBase64.split(",")[1]
               : req.body.fotoBase64;
           fields.foto = Buffer.from(base64Data, "base64");
@@ -592,7 +592,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            atributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         raw: true,
@@ -615,7 +615,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            atributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         where: { id_prof: us },

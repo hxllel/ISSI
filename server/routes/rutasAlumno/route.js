@@ -303,12 +303,12 @@ module.exports = (passport) => {
               hora_ini: d.hora_ini,
               hora_fin: d.hora_fin,
             })) || [
-              {
-                dia: "Sin día",
-                hora_ini: "",
-                hora_fin: "",
-              },
-            ],
+                {
+                  dia: "Sin día",
+                  hora_ini: "",
+                  hora_fin: "",
+                },
+              ],
           };
 
           materias.push(base);
@@ -357,21 +357,31 @@ module.exports = (passport) => {
         where: { id: id },
       });
 
+      // Obtener materias ya aprobadas
+      const kardex = await bd.Kardex.findOne({ where: { id_alumno: us } });
+      let nombresAprobadas = [];
+      if (kardex) {
+        const aprobadas = await bd.UA_Aprobada.findAll({ where: { id_kardex: kardex.id } });
+        nombresAprobadas = aprobadas.map(a => a.unidad_aprendizaje);
+      }
+
       // Obtener los grupos con includes
       const grupos = await bd.Grupo.findAll({
         attributes: ["id", "nombre", "turno", "cupo"],
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["id", "nombre", "credito", "semestre", "carrera"],
-            where: { carrera: carr.carrera },
+            attributes: ["id", "nombre", "credito", "semestre", "carrera", "tipo"],
+            where: {
+              carrera: carr.carrera,
+              nombre: { [Op.notIn]: nombresAprobadas }
+            },
           },
           {
             model: bd.DatosPersonales,
             attributes: ["nombre", "ape_paterno", "ape_materno"],
           },
         ],
-        raw: true,
         nest: true,
       });
 
@@ -406,7 +416,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         raw: true,
@@ -447,7 +457,7 @@ module.exports = (passport) => {
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["id", "nombre"],
+            attributes: ["id", "nombre", "tipo"],
           },
           {
             model: bd.DatosPersonales,
@@ -499,6 +509,7 @@ module.exports = (passport) => {
         const datosProf = g.DatosPersonale || g.DatosPersonales || {};
         resultado.push({
           id_grupo: g.id,
+          tipo: g.tipo,
           id_ua:
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.id || g.Unidad_Aprendizaje.ID)) ||
@@ -507,9 +518,8 @@ module.exports = (passport) => {
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.nombre || g.Unidad_Aprendizaje.Nombre)) ||
             "",
-          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${
-            datosProf.ape_materno || ""
-          }`.trim(),
+          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${datosProf.ape_materno || ""
+            }`.trim(),
           calificacion_profesor: datosProf.calificacion || null,
           cupo: g.cupo,
           dias,
@@ -536,12 +546,64 @@ module.exports = (passport) => {
       include: [
         {
           model: bd.Unidad_Aprendizaje,
-          attributes: ["credito"],
+          attributes: ["credito", "tipo", "semestre"],
         },
       ],
       raw: true,
       nest: true,
     });
+
+    // --- VALIDACIÓN DE SEMESTRE ---
+    try {
+      const alumno = await bd.DatosPersonales.findOne({ where: { id: us } });
+      const carrera = alumno.carrera;
+
+      const kardex = await bd.Kardex.findOne({ where: { id_alumno: us } });
+      // Si no tiene kardex, asumimos semestre 1
+      let nombresAprobadas = [];
+      if (kardex) {
+        const aprobadas = await bd.UA_Aprobada.findAll({ where: { id_kardex: kardex.id } });
+        nombresAprobadas = aprobadas.map(a => a.unidad_aprendizaje);
+      }
+
+      const obligatorias = await bd.Unidad_Aprendizaje.findAll({
+        where: { carrera: carrera, tipo: 'OBLIGATORIA' },
+        order: [['semestre', 'ASC']]
+      });
+
+      let semestreActual = 1;
+      const maxSemestre = obligatorias.length > 0 ? Math.max(...obligatorias.map(o => o.semestre)) : 1;
+
+      for (let i = 1; i <= maxSemestre; i++) {
+        const obliSemestre = obligatorias.filter(o => o.semestre === i);
+        // Si no hay obligatorias en este semestre, pasamos al siguiente (aunque raro)
+        if (obliSemestre.length === 0) continue;
+
+        const todasAprobadas = obliSemestre.every(o => nombresAprobadas.includes(o.nombre));
+        if (!todasAprobadas) {
+          semestreActual = i;
+          break;
+        }
+        // Si llegamos al final y todas están aprobadas, el alumno "está" en el último semestre o egresado
+        if (i === maxSemestre) semestreActual = maxSemestre;
+      }
+
+      const targetSemestre = cuesta.Unidad_Aprendizaje.semestre;
+      const maxPermitido = semestreActual + 3;
+
+      if (targetSemestre > maxPermitido) {
+        return res.json({
+          success: false,
+          err: `No puedes inscribir materias de más de 3 semestres adelante. Tu semestre actual es ${semestreActual}, máximo permitido: ${maxPermitido} (Materia es de ${targetSemestre})`,
+          tempGrupo: req.session.tempGrupos || [],
+          creditos: req.session.creditos || 0,
+        });
+      }
+
+    } catch (error) {
+      console.error("Error validando semestre:", error);
+      return res.json({ success: false, err: "Error al validar requisitos de semestre" });
+    }
 
     if (!req.session.tempGrupos) {
       req.session.tempGrupos = [];

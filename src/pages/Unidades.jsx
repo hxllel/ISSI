@@ -7,7 +7,7 @@ export function Unidades() {
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editUA, setEditUA] = useState(null); // objeto UA (tiene id interno)
-  const [form, setForm] = useState({ nombre: '', credito: '', carrera: '', semestre: '' });
+  const [form, setForm] = useState({ nombre: '', credito: '', carrera: '', semestre: '', tipo: 'OBLIGATORIA' });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -27,7 +27,7 @@ export function Unidades() {
 
   const openCreate = () => {
     setEditUA(null);
-    setForm({ nombre: '', credito: '', carrera: '', semestre: '' });
+    setForm({ nombre: '', credito: '', carrera: '', semestre: '', tipo: 'OBLIGATORIA' });
     setModalOpen(true);
   };
 
@@ -37,7 +37,8 @@ export function Unidades() {
       nombre: ua.nombre ?? '',
       credito: ua.credito ?? '',
       carrera: ua.carrera ?? '',
-      semestre: ua.semestre ?? ''
+      semestre: ua.semestre ?? '',
+      tipo: ua.tipo ?? 'OBLIGATORIA'
     });
     setModalOpen(true);
   };
@@ -57,7 +58,8 @@ export function Unidades() {
         nombre: form.nombre,
         credito: Number(form.credito),
         carrera: form.carrera,
-        semestre: Number(form.semestre)
+        semestre: Number(form.semestre),
+        tipo: form.tipo
       };
 
       let res;
@@ -108,6 +110,7 @@ export function Unidades() {
               <th>Crédito</th>
               <th>Carrera</th>
               <th>Semestre</th>
+              <th>Tipo</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -118,6 +121,7 @@ export function Unidades() {
                 <td>{ua.credito}</td>
                 <td>{ua.carrera}</td>
                 <td>{ua.semestre}</td>
+                <td>{ua.tipo}</td>
                 <td>
                   <button onClick={() => openEdit(ua)}>Editar</button>
                   {/* Eliminado: botón Eliminar */}
@@ -171,6 +175,10 @@ export function Unidades() {
                 onChange={onChange}
                 required
               />
+              <select name="tipo" value={form.tipo} onChange={onChange} style={{ padding: 8 }}>
+                <option value="OBLIGATORIA">OBLIGATORIA</option>
+                <option value="OPTATIVA">OPTATIVA</option>
+              </select>
 
               <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
                 <button type="submit">{editUA ? 'Guardar cambios' : 'Crear'}</button>

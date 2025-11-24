@@ -20,6 +20,10 @@ export function Inscripcion() {
   const [d, setd] = useState(null);
   const [cursadas, setCursadas] = useState([]);
   const [NoReinscripcion, setNoRe] = useState([]);
+  const [filtroTurno, setFiltroTurno] = useState("");
+  const [filtroTipo, setFiltroTipo] = useState("");
+  const [filtroGrupo, setFiltroGrupo] = useState("");
+  const [filtroSemestre, setFiltroSemestre] = useState("");
 
   const API = "http://localhost:4000";
 
@@ -233,11 +237,55 @@ export function Inscripcion() {
           {/* GRUPOS DISPONIBLES */}
           <section className="horario-section">
             <h1>Grupos disponibles</h1>
+            
+            <div className="filtros-container" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+              <input
+                type="text"
+                placeholder="Buscar por grupo..."
+                value={filtroGrupo}
+                onChange={(e) => setFiltroGrupo(e.target.value)}
+                className="filtro-input"
+                style={{ padding: '0.5rem' }}
+              />
+              <select 
+                value={filtroTurno} 
+                onChange={(e) => setFiltroTurno(e.target.value)}
+                className="filtro-select"
+                style={{ padding: '0.5rem' }}
+              >
+                <option value="">Todos los turnos</option>
+                <option value="Matutino">Matutino</option>
+                <option value="Vespertino">Vespertino</option>
+              </select>
+              <select 
+                value={filtroTipo} 
+                onChange={(e) => setFiltroTipo(e.target.value)}
+                className="filtro-select"
+                style={{ padding: '0.5rem' }}
+              >
+                <option value="">Todos los tipos</option>
+                <option value="OBLIGATORIA">OBLIGATORIA</option>
+                <option value="OPTATIVA">OPTATIVA</option>
+              </select>
+              <select 
+                value={filtroSemestre} 
+                onChange={(e) => setFiltroSemestre(e.target.value)}
+                className="filtro-select"
+                style={{ padding: '0.5rem' }}
+              >
+                <option value="">Todos los semestres</option>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
+                  <option key={sem} value={sem}>{sem}° Semestre</option>
+                ))}
+              </select>
+            </div>
+
             <table className="horario-table">
               <thead>
                 <tr>
                   <th>Grupo</th>
                   <th>Unidad de Aprendizaje</th>
+                  <th>Tipo</th>
                   <th>Créditos</th>
                   <th>Profesor</th>
                   <th>Disponibilidad</th>
@@ -247,10 +295,19 @@ export function Inscripcion() {
               </thead>
               <tbody>
                 {grupos.length > 0 ? (
-                  grupos.map((grupo) => (
+                  grupos
+                    .filter((grupo) => {
+                      const matchTurno = !filtroTurno || grupo.turno === filtroTurno;
+                      const matchTipo = !filtroTipo || grupo.Unidad_Aprendizaje.tipo === filtroTipo;
+                      const matchGrupo = !filtroGrupo || grupo.nombre.toLowerCase().includes(filtroGrupo.toLowerCase());
+                      const matchSemestre = !filtroSemestre || grupo.nombre.charAt(0) === filtroSemestre;
+                      return matchTurno && matchTipo && matchGrupo && matchSemestre;
+                    })
+                    .map((grupo) => (
                     <tr key={grupo.id}>
                       <td>{grupo.nombre}</td>
                       <td>{grupo.Unidad_Aprendizaje.nombre}</td>
+                      <td>{grupo.Unidad_Aprendizaje.tipo}</td>
                       <td>{grupo.Unidad_Aprendizaje.credito}</td>
                       <td>
                         {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
@@ -301,6 +358,7 @@ export function Inscripcion() {
                 <tr>
                   <th>Grupo</th>
                   <th>Unidad de Aprendizaje</th>
+                  <th>Tipo</th>
                   <th>Créditos</th>
                   <th>Profesor</th>
                   <th>Disponibilidad</th>
@@ -317,6 +375,7 @@ export function Inscripcion() {
                       <tr key={grupo.id}>
                         <td>{grupo.nombre}</td>
                         <td>{grupo.Unidad_Aprendizaje.nombre}</td>
+                        <td>{grupo.Unidad_Aprendizaje.tipo}</td>
                         <td>{grupo.Unidad_Aprendizaje.credito}</td>
                         <td>
                           {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
