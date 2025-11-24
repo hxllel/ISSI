@@ -16,7 +16,7 @@ export function AdminSidebar() {
   const handleUnidades = () => navigate("/administrador/unidades");
   const handleDatosMedicos = () => navigate("/administrador/datosMedicos");
   const handleGenerarCitas = () => navigate("/administrador/GenerarCitas");
-  const handleLogout = () => navigate(`${API}`);
+  const handleLogout = () => navigate(`/}`);
 
   // Aquí agrego un objeto state común que quieras mandar
   const sharedState = { fromSidebar: true };
