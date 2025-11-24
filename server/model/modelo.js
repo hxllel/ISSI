@@ -108,6 +108,10 @@ Estudiante.belongsTo(DatosPersonales, {
   foreignKey: "id_usuario",
   targetKey: "id",
 });
+DatosPersonales.hasOne(Estudiante, {
+  foreignKey: "id_usuario",
+  targetKey: "id",
+});
 
 const Carrera = sequelize.define(
   "Carrera",
@@ -266,6 +270,10 @@ const Inscripcion = sequelize.define(
 );
 
 Inscripcion.belongsTo(DatosPersonales, {
+  foreignKey: "id_alumno",
+  targetKey: "id",
+});
+DatosPersonales.hasOne(Inscripcion, {
   foreignKey: "id_alumno",
   targetKey: "id",
 });
