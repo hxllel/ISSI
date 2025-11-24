@@ -22,6 +22,10 @@ export function Inscripcion() {
   const [d, setd] = useState(null);
   const [cursadas, setCursadas] = useState([]);
   const [NoReinscripcion, setNoRe] = useState([]);
+  const [filtroTurno, setFiltroTurno] = useState("");
+  const [filtroTipo, setFiltroTipo] = useState("");
+  const [filtroGrupo, setFiltroGrupo] = useState("");
+  const [filtroSemestre, setFiltroSemestre] = useState("");
 
   // filtros del código 1
   const [filtroTurno, setFiltroTurno] = useState("");

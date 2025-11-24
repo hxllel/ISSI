@@ -132,6 +132,7 @@ const Unidad_Aprendizaje = sequelize.define(
     credito: { type: DataTypes.FLOAT, allowNull: false },
     carrera: { type: DataTypes.STRING(50), allowNull: false },
     semestre: { type: DataTypes.INTEGER, allowNull: false },
+    tipo: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "unidad_de_aprendizaje", timestamps: false }
 );

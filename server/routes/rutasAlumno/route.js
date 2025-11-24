@@ -3,9 +3,19 @@ const bd = require("../../model/modelo");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { raw } = require("mysql2");
+const { DatosMedicos, Enfermedades } = require("../../model/modelo");
 
 module.exports = (passport) => {
   const router = express.Router();
+
+  function ensureLoggedIn(req, res, next) {
+    if (req.isAuthenticated && req.isAuthenticated()) return next();
+    return res.status(401).json({ error: "No autenticado" });
+  }
+  function genId(prefix = "DM") {
+    const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return `${prefix}_${Date.now()}_${rand}`;
+  }
 
   // Nueva ruta: devuelve JSON para que el frontend realice la navegación al Chat
   // Se normaliza la ruta para usar la misma convención de capitalización que el resto
@@ -49,7 +59,6 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
-
       return res.json({
         success: true,
         calificaciones: cal.map((c) => ({
@@ -70,6 +79,177 @@ module.exports = (passport) => {
       });
     }
   });
+
+  // GET: obtener datos médicos + enfermedades del alumno logueado
+  router.get("/alumno/datosMedicos", ensureLoggedIn, async (req, res) => {
+    try {
+      const id_usuario = req.user.id;
+
+      const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+      let enfermedades = [];
+
+      if (datos) {
+        enfermedades = await Enfermedades.findAll({
+          where: { id_dat_med: datos.id },
+          order: [["id", "ASC"]],
+        });
+      }
+
+      res.json({ datos, enfermedades });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Error al obtener datos médicos" });
+    }
+  });
+
+  // POST: crear o actualizar datos médicos del alumno logueado (upsert)
+  router.post("/alumno/datosMedicos", ensureLoggedIn, async (req, res) => {
+    try {
+      const id_usuario = req.user.id;
+      const { peso, altura, tipo_sangre, nss } = req.body;
+
+      if (peso == null || altura == null || !tipo_sangre || !nss) {
+        return res.status(400).json({ error: "Faltan campos requeridos" });
+      }
+
+      let datos = await DatosMedicos.findOne({ where: { id_usuario } });
+
+      if (!datos) {
+        // crear
+        datos = await DatosMedicos.create({
+          id: genId("DM").slice(0, 15),
+          id_usuario,
+          peso: Number(peso),
+          altura: Number(altura),
+          tipo_sangre,
+          nss,
+        });
+      } else {
+        // actualizar
+        await DatosMedicos.update(
+          {
+            peso: Number(peso),
+            altura: Number(altura),
+            tipo_sangre,
+            nss,
+          },
+          { where: { id: datos.id } }
+        );
+        datos = await DatosMedicos.findByPk(datos.id);
+      }
+
+      res.json(datos);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Error al guardar datos médicos" });
+    }
+  });
+
+  // POST: crear enfermedad asociada al alumno logueado
+  router.post(
+    "/alumno/datosMedicos/enfermedades",
+    ensureLoggedIn,
+    async (req, res) => {
+      try {
+        const id_usuario = req.user.id;
+        const { descripcion } = req.body;
+
+        if (!descripcion) {
+          return res.status(400).json({ error: "Falta la descripción" });
+        }
+
+        let datos = await DatosMedicos.findOne({ where: { id_usuario } });
+        if (!datos) {
+          return res
+            .status(400)
+            .json({ error: "Primero debes registrar tus datos médicos" });
+        }
+
+        const enf = await Enfermedades.create({
+          id: genId("ENF").slice(0, 15),
+          id_dat_med: datos.id,
+          descri: descripcion,
+        });
+
+        res.status(201).json(enf);
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error al crear enfermedad" });
+      }
+    }
+  );
+
+  // PUT: editar enfermedad del alumno logueado
+  router.put(
+    "/alumno/datosMedicos/enfermedades/:idEnf",
+    ensureLoggedIn,
+    async (req, res) => {
+      try {
+        const id_usuario = req.user.id;
+        const { idEnf } = req.params;
+        const { descripcion } = req.body;
+
+        if (!descripcion) {
+          return res.status(400).json({ error: "Falta la descripción" });
+        }
+
+        const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+        if (!datos) {
+          return res
+            .status(404)
+            .json({ error: "Datos médicos no encontrados" });
+        }
+
+        const [rows] = await Enfermedades.update(
+          { descri: descripcion },
+          { where: { id: idEnf, id_dat_med: datos.id } }
+        );
+
+        if (!rows) {
+          return res.status(404).json({ error: "Enfermedad no encontrada" });
+        }
+
+        const enf = await Enfermedades.findByPk(idEnf);
+        res.json(enf);
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error al actualizar enfermedad" });
+      }
+    }
+  );
+
+  // DELETE: eliminar enfermedad del alumno logueado
+  router.delete(
+    "/alumno/datosMedicos/enfermedades/:idEnf",
+    ensureLoggedIn,
+    async (req, res) => {
+      try {
+        const id_usuario = req.user.id;
+        const { idEnf } = req.params;
+
+        const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+        if (!datos) {
+          return res
+            .status(404)
+            .json({ error: "Datos médicos no encontrados" });
+        }
+
+        const rows = await Enfermedades.destroy({
+          where: { id: idEnf, id_dat_med: datos.id },
+        });
+
+        if (!rows) {
+          return res.status(404).json({ error: "Enfermedad no encontrada" });
+        }
+
+        res.json({ ok: true });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error al eliminar enfermedad" });
+      }
+    }
+  );
+
   router.get("/ObtenerHorario/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -123,12 +303,12 @@ module.exports = (passport) => {
               hora_ini: d.hora_ini,
               hora_fin: d.hora_fin,
             })) || [
-              {
-                dia: "Sin día",
-                hora_ini: "",
-                hora_fin: "",
-              },
-            ],
+                {
+                  dia: "Sin día",
+                  hora_ini: "",
+                  hora_fin: "",
+                },
+              ],
           };
 
           materias.push(base);
@@ -177,21 +357,31 @@ module.exports = (passport) => {
         where: { id: id },
       });
 
+      // Obtener materias ya aprobadas
+      const kardex = await bd.Kardex.findOne({ where: { id_alumno: us } });
+      let nombresAprobadas = [];
+      if (kardex) {
+        const aprobadas = await bd.UA_Aprobada.findAll({ where: { id_kardex: kardex.id } });
+        nombresAprobadas = aprobadas.map(a => a.unidad_aprendizaje);
+      }
+
       // Obtener los grupos con includes
       const grupos = await bd.Grupo.findAll({
         attributes: ["id", "nombre", "turno", "cupo"],
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["id", "nombre", "credito", "semestre", "carrera"],
-            where: { carrera: carr.carrera },
+            attributes: ["id", "nombre", "credito", "semestre", "carrera", "tipo"],
+            where: {
+              carrera: carr.carrera,
+              nombre: { [Op.notIn]: nombresAprobadas }
+            },
           },
           {
             model: bd.DatosPersonales,
             attributes: ["nombre", "ape_paterno", "ape_materno"],
           },
         ],
-        raw: true,
         nest: true,
       });
 
@@ -226,7 +416,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         raw: true,
@@ -267,7 +457,7 @@ module.exports = (passport) => {
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["id", "nombre"],
+            attributes: ["id", "nombre", "tipo"],
           },
           {
             model: bd.DatosPersonales,
@@ -319,6 +509,7 @@ module.exports = (passport) => {
         const datosProf = g.DatosPersonale || g.DatosPersonales || {};
         resultado.push({
           id_grupo: g.id,
+          tipo: g.tipo,
           id_ua:
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.id || g.Unidad_Aprendizaje.ID)) ||
@@ -327,9 +518,8 @@ module.exports = (passport) => {
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.nombre || g.Unidad_Aprendizaje.Nombre)) ||
             "",
-          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${
-            datosProf.ape_materno || ""
-          }`.trim(),
+          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${datosProf.ape_materno || ""
+            }`.trim(),
           calificacion_profesor: datosProf.calificacion || null,
           cupo: g.cupo,
           dias,
@@ -356,12 +546,64 @@ module.exports = (passport) => {
       include: [
         {
           model: bd.Unidad_Aprendizaje,
-          attributes: ["credito"],
+          attributes: ["credito", "tipo", "semestre"],
         },
       ],
       raw: true,
       nest: true,
     });
+
+    // --- VALIDACIÓN DE SEMESTRE ---
+    try {
+      const alumno = await bd.DatosPersonales.findOne({ where: { id: us } });
+      const carrera = alumno.carrera;
+
+      const kardex = await bd.Kardex.findOne({ where: { id_alumno: us } });
+      // Si no tiene kardex, asumimos semestre 1
+      let nombresAprobadas = [];
+      if (kardex) {
+        const aprobadas = await bd.UA_Aprobada.findAll({ where: { id_kardex: kardex.id } });
+        nombresAprobadas = aprobadas.map(a => a.unidad_aprendizaje);
+      }
+
+      const obligatorias = await bd.Unidad_Aprendizaje.findAll({
+        where: { carrera: carrera, tipo: 'OBLIGATORIA' },
+        order: [['semestre', 'ASC']]
+      });
+
+      let semestreActual = 1;
+      const maxSemestre = obligatorias.length > 0 ? Math.max(...obligatorias.map(o => o.semestre)) : 1;
+
+      for (let i = 1; i <= maxSemestre; i++) {
+        const obliSemestre = obligatorias.filter(o => o.semestre === i);
+        // Si no hay obligatorias en este semestre, pasamos al siguiente (aunque raro)
+        if (obliSemestre.length === 0) continue;
+
+        const todasAprobadas = obliSemestre.every(o => nombresAprobadas.includes(o.nombre));
+        if (!todasAprobadas) {
+          semestreActual = i;
+          break;
+        }
+        // Si llegamos al final y todas están aprobadas, el alumno "está" en el último semestre o egresado
+        if (i === maxSemestre) semestreActual = maxSemestre;
+      }
+
+      const targetSemestre = cuesta.Unidad_Aprendizaje.semestre;
+      const maxPermitido = semestreActual + 3;
+
+      if (targetSemestre > maxPermitido) {
+        return res.json({
+          success: false,
+          err: `No puedes inscribir materias de más de 3 semestres adelante. Tu semestre actual es ${semestreActual}, máximo permitido: ${maxPermitido} (Materia es de ${targetSemestre})`,
+          tempGrupo: req.session.tempGrupos || [],
+          creditos: req.session.creditos || 0,
+        });
+      }
+
+    } catch (error) {
+      console.error("Error validando semestre:", error);
+      return res.json({ success: false, err: "Error al validar requisitos de semestre" });
+    }
 
     if (!req.session.tempGrupos) {
       req.session.tempGrupos = [];
