@@ -655,6 +655,9 @@ module.exports = (passport) => {
           );
         }
 
+        await bd.Inscripcion.destroy({
+          where: { id_alumno: id },
+        });
         return res.json({ success: true });
       } catch (err) {
         console.log(err);
@@ -1403,29 +1406,22 @@ module.exports = (passport) => {
         });
       }
 
-      // IMPORTANTE: convertir a fecha local correctamente
       const fechaEvaluacion = new Date(fechas.evalu_profe);
+      const hoy = new Date();
 
-      // Tomar solo día/mes/año usando LOCAL
-      const fechaEvalLocal = new Date(
+      // normalizar fechas para comparar solo dia/mes/año
+      const fechaEvalNorm = new Date(
         fechaEvaluacion.getFullYear(),
         fechaEvaluacion.getMonth(),
         fechaEvaluacion.getDate()
       );
-
-      const hoy = new Date();
-      const hoyLocal = new Date(
+      const hoyNorm = new Date(
         hoy.getFullYear(),
         hoy.getMonth(),
         hoy.getDate()
       );
 
-      console.log("Fecha evaluación LOCAL:", fechaEvalLocal);
-      console.log("Fecha hoy LOCAL:", hoyLocal);
-
-      const mismoDia = hoyLocal.getTime() === fechaEvalLocal.getTime();
-      console.log(mismoDia);
-      if (mismoDia) {
+      if (hoyNorm.getTime() === fechaEvalNorm.getTime()) {
         return res.json({
           valido: true,
           mensaje: "Es momento de evaluar a tus profesores",
@@ -1434,7 +1430,7 @@ module.exports = (passport) => {
         return res.json({
           valido: false,
           mensaje: "Aún no es tiempo de evaluar a tus profesores",
-          fechaEvaluacion: fechaEvalLocal.toLocaleDateString("es-MX"),
+          fechaEvaluacion: fechaEvaluacion.toLocaleDateString("es-MX"),
         });
       }
     } catch (err) {
@@ -1446,8 +1442,82 @@ module.exports = (passport) => {
     }
   });
 
+  router.get("/TiempoReinscripcion", async (req, res) => {
+    const us = req.user.id;
+
+    const tiempo = await bd.Inscripcion.findOne({ where: { id_alumno: us } });
+    const alumno = await bd.DatosPersonales.findOne({ where: { id: us } });
+    const pro = await bd.Estudiante.findOne({ where: { id_usuario: us } });
+
+    if (!tiempo) {
+      return res
+        .status(404)
+        .json({
+          error: "No tiene cita generada.",
+          promedio: pro.promedio,
+          edo: pro.estado_academico,
+          nombre:
+            alumno.ape_paterno + " " + alumno.ape_materno + " " + alumno.nombre,
+          carrera: alumno.carrera,
+        });
+    }
+
+    // === FECHAS PARA COMPARACIÓN (estas sí en UTC-6) ===
+    const hoy = toCDMX(new Date());
+    const fechaInicio = toCDMX(new Date(tiempo.fecha_hora_in));
+    const fechaFin = toCDMX(new Date(tiempo.fecha_hora_cad));
+
+    const estaEnRango = hoy >= fechaInicio && hoy <= fechaFin;
+
+    // === STRINGS PARA MOSTRAR (SIN convertir a UTC-6) ===
+    const inicioStr = new Date(tiempo.fecha_hora_in).toLocaleString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const finStr = new Date(tiempo.fecha_hora_cad).toLocaleString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    return res.json({
+      tiempo: estaEnRango,
+      cita: true,
+      citas: `${inicioStr} - ${finStr}`,
+      promedio: pro.promedio,
+      edo: pro.estado_academico,
+      nombre:
+        alumno.ape_paterno + " " + alumno.ape_materno + " " + alumno.nombre,
+      carrera: alumno.carrera,
+    });
+  });
+
   return router;
 };
+
+function isNowInRange(now, start, end) {
+  return now >= start && now <= end;
+}
+
+function nowCDMX() {
+  const nowUTC = new Date();
+  // restamos 6 horas para convertir UTC → UTC-6 (CDMX)
+  nowUTC.setHours(nowUTC.getHours() - 6);
+  return nowUTC;
+}
+
+function toCDMX(date) {
+  // offset de CDMX en horas
+  const offset = -6; // UTC-6
+  return new Date(date.getTime() + offset * 60 * 60 * 1000);
+}
+
 function seTraslapan(d1, d2) {
   // Solo comparar si es el mismo día
   if (d1.dia !== d2.dia) return false;

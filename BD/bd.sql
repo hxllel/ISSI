@@ -3522,473 +3522,212 @@ INSERT INTO
 VALUES (
         'EST2023630001',
         '2023630001',
-        8.0,
-        25,
+        9.4,
+        28,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630002',
         '2023630002',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        7.2,
+        12,
+        'Irregular'
+    ),
+    (
         'EST2023630003',
         '2023630003',
-        8.0,
-        25,
+        8.6,
+        20,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630004',
         '2023630004',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        6.5,
+        5,
+        'Dictamen'
+    ),
+    (
         'EST2023630005',
         '2023630005',
-        8.0,
-        25,
+        9.1,
+        30,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630006',
         '2023630006',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        7.8,
+        18,
+        'Irregular'
+    ),
+    (
         'EST2023630007',
         '2023630007',
-        8.0,
-        25,
+        8.9,
+        26,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630008',
         '2023630008',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        6.9,
+        10,
+        'Dictamen'
+    ),
+    (
         'EST2023630009',
         '2023630009',
-        8.0,
-        25,
+        9.7,
+        32,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630010',
         '2023630010',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        7.4,
+        14,
+        'Irregular'
+    ),
+    (
         'EST2023630011',
         '2023630011',
-        8.0,
-        25,
+        8.2,
+        22,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630012',
         '2023630012',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        6.3,
+        6,
+        'Dictamen'
+    ),
+    (
         'EST2023630013',
         '2023630013',
-        8.0,
-        25,
+        9.9,
+        35,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630014',
         '2023630014',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        7.1,
+        15,
+        'Irregular'
+    ),
+    (
         'EST2023630015',
         '2023630015',
-        8.0,
-        25,
+        8.7,
+        24,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630016',
         '2023630016',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        6.8,
+        9,
+        'Dictamen'
+    ),
+    (
         'EST2023630017',
         '2023630017',
-        8.0,
-        25,
+        9.3,
+        29,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630018',
         '2023630018',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        7.7,
+        17,
+        'Irregular'
+    ),
+    (
         'EST2023630019',
         '2023630019',
-        8.0,
-        25,
+        8.4,
+        21,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630020',
         '2023630020',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        6.1,
+        4,
+        'Dictamen'
+    ),
+    (
         'EST2023630021',
         '2023630021',
-        8.0,
-        25,
+        9.6,
+        31,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630022',
         '2023630022',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        7.0,
+        13,
+        'Irregular'
+    ),
+    (
         'EST2023630023',
         '2023630023',
-        8.0,
-        25,
+        8.1,
+        19,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630024',
         '2023630024',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        6.7,
+        8,
+        'Dictamen'
+    ),
+    (
         'EST2023630025',
         '2023630025',
-        8.0,
-        25,
+        9.0,
+        27,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630026',
         '2023630026',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        7.9,
+        16,
+        'Irregular'
+    ),
+    (
         'EST2023630027',
         '2023630027',
-        8.0,
-        25,
+        8.8,
+        23,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630028',
         '2023630028',
-        8.0,
-        25,
-        'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+        6.4,
+        7,
+        'Dictamen'
+    ),
+    (
         'EST2023630029',
         '2023630029',
-        8.0,
-        25,
+        9.8,
+        33,
         'Regular'
-    );
-
-INSERT INTO
-    estudiante (
-        id,
-        id_usuario,
-        promedio,
-        creditos_disponibles,
-        estado_academico
-    )
-VALUES (
+    ),
+    (
         'EST2023630030',
         '2023630030',
-        8.0,
-        25,
-        'Regular'
+        7.5,
+        11,
+        'Irregular'
     );
 
 -- INSERT horarios, inscripciones y matriculas (mat_inscritos)
@@ -6377,7 +6116,7 @@ VALUES (
         '2025-05-07 23:59:59',
         '2025-06-10 00:00:00',
         '2025-06-12 23:59:59',
-        '2025-06-01 00:00:00',
+        '2025-11-22 00:00:00',
         '2025-06-15 00:00:00',
         '2025-06-18 23:59:59',
         '2025-06-19 00:00:00',
@@ -6471,3 +6210,16 @@ VALUES (
     );
 
 select * from datos_personales;
+
+SELECT
+    e.id AS id_estudiante,
+    e.id_usuario,
+    e.promedio,
+    e.creditos_disponibles,
+    e.estado_academico,
+    i.id AS id_inscripcion,
+    i.fecha_hora_in,
+    i.fecha_hora_cad
+FROM estudiante e
+    INNER JOIN inscripcion i ON e.id_usuario = i.id_alumno
+ORDER BY e.promedio DESC;
