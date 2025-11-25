@@ -6341,8 +6341,8 @@ VALUES (
         '2025-06-01 00:00:00',
         '2025-06-15 00:00:00',
         '2025-06-18 23:59:59',
-        '2025-06-19 00:00:00',
-        '2025-06-20 23:59:59',
+        '2025-11-20 00:00:00',
+        '2025-11-30 00:59:59',
         '2025-06-25 00:00:00',
         '2025-1'
     );
@@ -6354,6 +6354,24 @@ SELECT * FROM unidad_de_aprendizaje;
 SELECT * FROM datos_personales;
 
 delete from inscripcion;
+
+INSERT INTO
+    materia_reprobada (
+        id,
+        id_estudiante,
+        id_ua,
+        periodos_restantes,
+        recurse,
+        estado_actual
+    )
+VALUES (
+        '12345',
+        'EST2021630309',
+        'UA0001',
+        '2',
+        '1',
+        'Reprobada'
+    );
 
 SELECT
     e.id AS id_estudiante,
@@ -6370,7 +6388,7 @@ ORDER BY e.promedio DESC;
 
 UPDATE inscripcion
 set
-    fecha_hora_in = "2025-11-24 15:00:00",
-    fecha_hora_cad = "2025-11-24 16:00:00"
+    fecha_hora_in = "2025-11-24 18:00:00",
+    fecha_hora_cad = "2025-11-24 22:00:00"
 where
     id_alumno = "2021630310";

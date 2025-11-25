@@ -8,7 +8,7 @@ export function Inscripcion() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Estados compartidos / fusionados
+  // estados indispensables + resto
   const [grupos, setGrupos] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
@@ -256,23 +256,23 @@ export function Inscripcion() {
       <section>
         <SidebarAlumno />
         <main className="main-content">
-          <h1>No es tu tiempo de reinscripción</h1>
-          <div style={{ marginTop: "1rem" }}>
-            <p>
-              <strong>Nombre:</strong> {nombre || "—"}
-            </p>
-            <p>
-              <strong>Carrera:</strong> {carrera || "—"}
-            </p>
-            <p>
-              <strong>Promedio:</strong> {promedio || "—"}
-            </p>
-            <p>
-              <strong>Estado académico:</strong> {edo || "—"}
-            </p>
-            <p>
-              Si crees que hay un error, contacta con la coordinación.
-            </p>
+          <div className="inscripcion-container">
+            <h1 className="titulo">No es tu tiempo de reinscripción</h1>
+            <div style={{ marginTop: "1rem" }}>
+              <p>
+                <strong>Nombre:</strong> {nombre || "—"}
+              </p>
+              <p>
+                <strong>Carrera:</strong> {carrera || "—"}
+              </p>
+              <p>
+                <strong>Promedio:</strong> {promedio || "—"}
+              </p>
+              <p>
+                <strong>Estado académico:</strong> {edo || "—"}
+              </p>
+              <p>Si crees que hay un error, contacta con la coordinación.</p>
+            </div>
           </div>
         </main>
       </section>
@@ -285,41 +285,39 @@ export function Inscripcion() {
       <section>
         <SidebarAlumno />
         <main className="main-content">
-          <section className="gestion-alumnos">
-            <div className="header-section">
-              <h1>INSCRIPCIÓN DE MATERIAS</h1>
-            </div>
+          <div className="inscripcion-container">
+            <div className="tabla-contenedor">
+              <h1 className="titulo">INSCRIPCIÓN DE MATERIAS</h1>
 
-            <br />
-            <h2>Nombre : {nombre}</h2>
-            <br />
-            <h2>Carrera : {carrera}</h2>
-            <br />
-            <section className="horario-section">
-              <table className="horario-table">
-                <thead>
-                  <tr>
-                    <td>Creditos disponibles</td>
-                    <td>Periodos cursados</td>
-                    <td>Periodos disponibles para terminar la carrera</td>
-                    <td>Promedio</td>
-                    <td>Estado academico</td>
-                    <td>Cita de reinscripción</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{creditos}</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>{promedio}</td>
-                    <td>{edo}</td>
-                    <td>{citas ? citas : <h3>No hay cita de reinscripcion</h3>}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </section>
-          </section>
+              <h2 className="titulo" style={{ marginTop: "1rem" }}>Nombre : {nombre}</h2>
+              <h2 className="titulo">Carrera : {carrera}</h2>
+
+              <section className="tabla-contenedor" style={{ marginTop: "1rem" }}>
+                <table className="tabla-cursos">
+                  <thead>
+                    <tr>
+                      <td>Creditos disponibles</td>
+                      <td>Periodos cursados</td>
+                      <td>Periodos disponibles para terminar la carrera</td>
+                      <td>Promedio</td>
+                      <td>Estado academico</td>
+                      <td>Cita de reinscripción</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{creditos}</td>
+                      <td>2</td>
+                      <td>2</td>
+                      <td>{promedio}</td>
+                      <td>{edo}</td>
+                      <td>{citas ? citas : <h3>No hay cita de reinscripcion</h3>}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+            </div>
+          </div>
         </main>
       </section>
     );
@@ -327,43 +325,48 @@ export function Inscripcion() {
 
   // 3) Si es tiempo (tiempo === true) -> mostrar TODO el JSX de inscripción (código 1)
   return (
-    <div className="alumno-container">
-          <SidebarAlumno />
-    
-          {/* =============== CONTENIDO PRINCIPAL =============== */}
-          <main className="main-content">
-            <header className="chat-header">
-              <div className ="encabezado-section">
-                <h1>Inscripción de Materias</h1>
-                </div>
-                <p>Realiza la inscripción de tus materias.</p>
-              
-              <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
-    
-            </header>
+    <div className="inscripcion-container">
+      <SidebarAlumno />
 
-      
-        <section className="gestion-alumnos">
-          
-
-          <div className="button-gap">
-            <div>
-            <button type="button" className="btn azul" onClick={handleClickImport}>
-              Importar del borrador
-            </button>
-            </div><div>
-            <button type="button" className="btn blanco" onClick={() => setModalOpen2(true)}>
-              Visualizar borrador de horario
-            </button>
-            </div>
+      {/* =============== CONTENIDO PRINCIPAL =============== */}
+      <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <h1 className="titulo">Inscripción de Materias</h1>
           </div>
+          <p className="descripcion">Realiza la inscripción de tus materias.</p>
+
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
+
+        <section className="gestion-alumnos">
+          <div className="botones-superiores">
+
+  <button
+    type="button"
+    className="btn-accion"
+    onClick={handleClickImport}
+  >
+    Importar del borrador
+  </button>
+
+  <button
+    type="button"
+    className="btn-accion"
+    onClick={() => setModalOpen2(true)}
+  >
+    Visualizar borrador de horario
+  </button>
+
+</div>
+
 
           {/* GRUPOS DISPONIBLES */}
-          <section className="horario-section">
-            <h1>Grupos disponibles</h1>
+          <section className="tabla-contenedor">
+            <h1 className="titulo">Grupos disponibles</h1>
 
             <div
-              className="filtros-container"
+              className="button-gap"
               style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}
             >
               <input
@@ -371,13 +374,13 @@ export function Inscripcion() {
                 placeholder="Buscar por grupo..."
                 value={filtroGrupo}
                 onChange={(e) => setFiltroGrupo(e.target.value)}
-                className="filtro-input"
+                className="btn-ver"
                 style={{ padding: "0.5rem" }}
               />
               <select
                 value={filtroTurno}
                 onChange={(e) => setFiltroTurno(e.target.value)}
-                className="filtro-select"
+                className="btn-ver"
                 style={{ padding: "0.5rem" }}
               >
                 <option value="">Todos los turnos</option>
@@ -387,7 +390,7 @@ export function Inscripcion() {
               <select
                 value={filtroTipo}
                 onChange={(e) => setFiltroTipo(e.target.value)}
-                className="filtro-select"
+                className="btn-ver"
                 style={{ padding: "0.5rem" }}
               >
                 <option value="">Todos los tipos</option>
@@ -397,7 +400,7 @@ export function Inscripcion() {
               <select
                 value={filtroSemestre}
                 onChange={(e) => setFiltroSemestre(e.target.value)}
-                className="filtro-select"
+                className="btn-ver"
                 style={{ padding: "0.5rem" }}
               >
                 <option value="">Todos los semestres</option>
@@ -409,7 +412,7 @@ export function Inscripcion() {
               </select>
             </div>
 
-            <table className="horario-table">
+            <table className="tabla-cursos">
               <thead>
                 <tr>
                   <th>Grupo</th>
@@ -426,22 +429,15 @@ export function Inscripcion() {
                 {grupos.length > 0 ? (
                   grupos
                     .filter((grupo) => {
-                      const matchTurno =
-                        !filtroTurno || grupo.turno === filtroTurno;
+                      const matchTurno = !filtroTurno || grupo.turno === filtroTurno;
                       const matchTipo =
-                        !filtroTipo ||
-                        grupo.Unidad_Aprendizaje.tipo === filtroTipo;
+                        !filtroTipo || grupo.Unidad_Aprendizaje.tipo === filtroTipo;
                       const matchGrupo =
                         !filtroGrupo ||
-                        grupo.nombre
-                          .toLowerCase()
-                          .includes(filtroGrupo.toLowerCase());
+                        grupo.nombre.toLowerCase().includes(filtroGrupo.toLowerCase());
                       const matchSemestre =
-                        !filtroSemestre ||
-                        grupo.nombre.charAt(0) === filtroSemestre;
-                      return (
-                        matchTurno && matchTipo && matchGrupo && matchSemestre
-                      );
+                        !filtroSemestre || grupo.nombre.charAt(0) === filtroSemestre;
+                      return matchTurno && matchTipo && matchGrupo && matchSemestre;
                     })
                     .map((grupo) => (
                       <tr key={grupo.id}>
@@ -450,34 +446,36 @@ export function Inscripcion() {
                         <td>{grupo.Unidad_Aprendizaje.tipo}</td>
                         <td>{grupo.Unidad_Aprendizaje.credito}</td>
                         <td>
-                          {grupo.DatosPersonale.nombre}{" "}
-                          {grupo.DatosPersonale.ape_paterno}{" "}
+                          {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
                           {grupo.DatosPersonale.ape_materno}
                         </td>
-                        <td>{grupo.cupo > 0 ? "Disponible" : "Lleno"}</td>
+                        <td>
+                          <span
+                            className={`estado ${grupo.cupo > 0 ? "disponible" : "lleno"}`}
+                          >
+                            {grupo.cupo > 0 ? "Disponible" : "Lleno"}
+                          </span>
+                        </td>
                         <td>{grupo.cupo}</td>
                         <td>
                           <button
                             type="button"
-                            className="submit-btn"
+                            className="btn-inscribir"
                             onClick={() => handleClickAdd(grupo.id)}
                             disabled={
                               grupo.cupo <= 0 ||
                               gruposagg.includes(grupo.id) ||
-                              cursadas.includes(
-                                grupo.Unidad_Aprendizaje.nombre
-                              ) ||
-                              NoReinscripcion.includes(
-                                grupo.Unidad_Aprendizaje.id
-                              )
+                              cursadas.includes(grupo.Unidad_Aprendizaje.nombre) ||
+                              NoReinscripcion.includes(grupo.Unidad_Aprendizaje.id)
                             }
                           >
                             Seleccionar
                           </button>
                           <button
                             type="button"
-                            className="submit-btn"
+                            className="btn-ver"
                             onClick={() => handleClickAbrir(grupo.id)}
+                            style={{ marginLeft: "8px" }}
                           >
                             Mostrar Horario
                           </button>
@@ -486,7 +484,7 @@ export function Inscripcion() {
                     ))
                 ) : (
                   <tr>
-                    <td colSpan="7">No hay grupos disponibles</td>
+                    <td colSpan="8">No hay grupos disponibles</td>
                   </tr>
                 )}
               </tbody>
@@ -494,11 +492,11 @@ export function Inscripcion() {
           </section>
 
           {/* GRUPOS SELECCIONADOS */}
-          <section className="horario-section">
-            <h1>Grupos seleccionados</h1>
-            <h2>Créditos restantes: {creditos}</h2>
+          <section className="tabla-contenedor" style={{ marginTop: "1.5rem" }}>
+            <h1 className="titulo">Grupos seleccionados</h1>
+            <h2 className="descripcion">Créditos restantes: {creditos}</h2>
 
-            <table className="horario-table">
+            <table className="tabla-cursos">
               <thead>
                 <tr>
                   <th>Grupo</th>
@@ -523,16 +521,21 @@ export function Inscripcion() {
                         <td>{grupo.Unidad_Aprendizaje.tipo}</td>
                         <td>{grupo.Unidad_Aprendizaje.credito}</td>
                         <td>
-                          {grupo.DatosPersonale.nombre}{" "}
-                          {grupo.DatosPersonale.ape_paterno}{" "}
+                          {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
                           {grupo.DatosPersonale.ape_materno}
                         </td>
-                        <td>{grupo.cupo > 0 ? "Disponible" : "Lleno"}</td>
+                        <td>
+                          <span
+                            className={`estado ${grupo.cupo > 0 ? "disponible" : "lleno"}`}
+                          >
+                            {grupo.cupo > 0 ? "Disponible" : "Lleno"}
+                          </span>
+                        </td>
                         <td>{grupo.cupo}</td>
                         <td>
                           <button
                             type="button"
-                            className="btn azul"
+                            className="btn-ver"
                             onClick={() => handleClickEl(grupo.id)}
                           >
                             Eliminar
@@ -542,14 +545,14 @@ export function Inscripcion() {
                     ))
                 ) : (
                   <tr>
-                    <td colSpan="7">No hay grupos seleccionados</td>
+                    <td colSpan="8">No hay grupos seleccionados</td>
                   </tr>
                 )}
               </tbody>
             </table>
 
-            <form className="formulario" onSubmit={handleSubmit}>
-              <button type="submit" className="btn azul">
+            <form className="resumen" onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
+              <button type="submit" className="btn-inscribir">
                 Realizar inscripción
               </button>
             </form>
@@ -557,99 +560,101 @@ export function Inscripcion() {
 
           {/* MODAL HORARIO */}
           <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-            <h2>Horario del Grupo</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Lunes</th>
-                  <th>Martes</th>
-                  <th>Miércoles</th>
-                  <th>Jueves</th>
-                  <th>Viernes</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map(
-                    (dia) => (
-                      <td key={dia}>
-                        {distri
-                          .filter((dis) => dis.dia === dia)
-                          .map((dis, i) => (
-                            <div key={i}>
-                              {dis.hora_ini} - {dis.hora_fin}
-                            </div>
-                          ))}
-                      </td>
-                    )
-                  )}
-                </tr>
-              </tbody>
-            </table>
+            <div className="tabla-contenedor">
+              <h2 className="titulo">Horario del Grupo</h2>
+              <table className="tabla-horario">
+                <thead>
+                  <tr>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map(
+                      (dia) => (
+                        <td key={dia}>
+                          {distri
+                            .filter((dis) => dis.dia === dia)
+                            .map((dis, i) => (
+                              <div key={i}>
+                                {dis.hora_ini} - {dis.hora_fin}
+                              </div>
+                            ))}
+                        </td>
+                      )
+                    )}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </Modal>
 
           {/* MODAL BORRADOR */}
           <Modal open={modalOpen2} onClose={() => setModalOpen2(false)}>
-            <h1>Borrador de horario</h1>
-            <table border="1" cellPadding={5}>
-              <thead>
-                <tr>
-                  <th>Grupo</th>
-                  <th>Profesor</th>
-                  <th>Calificación</th>
-                  <th>Materia</th>
-                  <th>Cupo</th>
-                  <th>Créditos</th>
-                  <th>Lunes</th>
-                  <th>Martes</th>
-                  <th>Miércoles</th>
-                  <th>Jueves</th>
-                  <th>Viernes</th>
-                  <th>Válido</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {borr.length > 0 ? (
-                  borr.map((dato) => (
-                    <tr key={dato.id}>
-                      <td>{dato.Grupo.nombre}</td>
-                      <td>
-                        {dato.profesor.nombre} {dato.profesor.ape_paterno}{" "}
-                        {dato.profesor.ape_materno}
-                      </td>
-                      <td>{dato.calificacion}</td>
-                      <td>{dato.materia}</td>
-                      <td>{dato.Grupo.cupo}</td>
-                      <td>{dato.Grupo.Unidad_Aprendizaje.credito}</td>
-                      <td>{dato.horas_lun || " "}</td>
-                      <td>{dato.horas_mar || " "}</td>
-                      <td>{dato.horas_mie || " "}</td>
-                      <td>{dato.horas_jue || " "}</td>
-                      <td>{dato.horas_vie || " "}</td>
-                      <td>{dato.valido === 1 ? "Es válido" : "No válido"}</td>
-                      <td>
-                        <button
-                          className="btn azul"
-                          onClick={() => handleClickD(dato.id_grupo)}
-                        >
-                          Retirar del borrador
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
+            <div className="tabla-contenedor">
+              <h1 className="titulo">Borrador de horario</h1>
+              <table className="tabla-cursos" cellPadding={5}>
+                <thead>
                   <tr>
-                    <td colSpan="12">No hay datos disponibles</td>
+                    <th>Grupo</th>
+                    <th>Profesor</th>
+                    <th>Calificación</th>
+                    <th>Materia</th>
+                    <th>Cupo</th>
+                    <th>Créditos</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                    <th>Válido</th>
+                    <th>Acciones</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {borr.length > 0 ? (
+                    borr.map((dato) => (
+                      <tr key={dato.id}>
+                        <td>{dato.Grupo.nombre}</td>
+                        <td>
+                          {dato.profesor.nombre} {dato.profesor.ape_paterno}{" "}
+                          {dato.profesor.ape_materno}
+                        </td>
+                        <td>{dato.calificacion}</td>
+                        <td>{dato.materia}</td>
+                        <td>{dato.Grupo.cupo}</td>
+                        <td>{dato.Grupo.Unidad_Aprendizaje.credito}</td>
+                        <td>{dato.horas_lun || " "}</td>
+                        <td>{dato.horas_mar || " "}</td>
+                        <td>{dato.horas_mie || " "}</td>
+                        <td>{dato.horas_jue || " "}</td>
+                        <td>{dato.horas_vie || " "}</td>
+                        <td>{dato.valido === 1 ? "Es válido" : "No válido"}</td>
+                        <td>
+                          <button
+                            className="btn-ver"
+                            onClick={() => handleClickD(dato.id_grupo)}
+                          >
+                            Retirar del borrador
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="13">No hay datos disponibles</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </Modal>
         </section>
-      
-   
-    </main>
+      </main>
     </div>
   );
 }
