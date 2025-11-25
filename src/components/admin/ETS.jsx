@@ -13,7 +13,19 @@ export function ETS() {
     const [alumnos, setAlumnos] = useState([]);
     const [idETS, setIdETS] = useState("");
     const [modalPdf, setModalPdf] = useState(false);   
-    const [pdfActual, setPdfActual] = useState(null);       
+    const [pdfActual, setPdfActual] = useState(null);
+    
+    const [modalCrear, setModalCrear] = useState(false);
+    const [profesores, setProfesores] = useState([]);
+    const [unidades, setUnidades] = useState([]);
+    const [nuevoGrupo, setNuevoGrupo] = useState({
+        id_ua: "",
+        id_profesor: "",
+        turno: "",
+        hora_inicio: "",
+        hora_final: "",
+        fecha: ""
+    });       
 
     useEffect(() => {
         fetch(`${API}/ObtenerGETS`, { credentials: "include" })
@@ -21,6 +33,83 @@ export function ETS() {
             .then((data) => setGrupos(data.grupos))
             .catch((err) => console.error("Error al obtener la información:", err));
     }, []);
+
+    // Cargar profesores y unidades cuando se abre el modal de crear
+    const handleAbrirModalCrear = () => {
+        // Obtener profesores
+        fetch(`${API}/ObtenerProfesoresETS`, { credentials: "include" })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setProfesores(data.profesores);
+                }
+            })
+            .catch((err) => console.error("Error al obtener profesores:", err));
+
+        // Obtener unidades de aprendizaje
+        fetch(`${API}/ObtenerUnidadesETS`, { credentials: "include" })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setUnidades(data.unidades);
+                }
+            })
+            .catch((err) => console.error("Error al obtener unidades:", err));
+
+        setModalCrear(true);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNuevoGrupo({
+            ...nuevoGrupo,
+            [name]: value
+        });
+    };
+
+    const handleCrearGrupo = async (e) => {
+        e.preventDefault();
+
+        // Validar que todos los campos estén llenos
+        if (!nuevoGrupo.id_ua || !nuevoGrupo.id_profesor || !nuevoGrupo.turno || 
+            !nuevoGrupo.hora_inicio || !nuevoGrupo.hora_final || !nuevoGrupo.fecha) {
+            alert("Por favor completa todos los campos");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API}/CrearGrupoETS`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(nuevoGrupo)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert("Grupo ETS creado exitosamente");
+                setModalCrear(false);
+                setNuevoGrupo({
+                    id_ua: "",
+                    id_profesor: "",
+                    turno: "",
+                    hora_inicio: "",
+                    hora_final: "",
+                    fecha: ""
+                });
+                // Recargar los grupos
+                window.location.reload();
+            } else {
+                alert(data.mensaje || "Error al crear el grupo ETS");
+            }
+        } catch (err) {
+            console.error("Error al crear grupo ETS:", err);
+            alert("Error al crear el grupo ETS");
+        }
+    };
 
     const handleClickAl = (id) => {
         fetch(`${API}/Comprobantes/${id}`, {
@@ -75,7 +164,7 @@ export function ETS() {
 
     return (
         <section>
-            <button>Crear nuevo grupo</button>
+            <button onClick={handleAbrirModalCrear}>Crear nuevo grupo</button>
 
             <table border="2" cellPadding={5}>
                 <thead>
@@ -173,9 +262,115 @@ export function ETS() {
                 ) : (
                     <p>No se pudo cargar el PDF.</p>
                 )}
-
-                
             </ModalPDF>
+
+            {/* Modal para crear nuevo grupo ETS */}
+            <Modal open={modalCrear} onClose={() => setModalCrear(false)}>
+                <h2>Crear Nuevo Grupo ETS</h2>
+                <form onSubmit={handleCrearGrupo} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px' }}>
+                    <div>
+                        <label htmlFor="id_ua">Unidad de Aprendizaje:</label>
+                        <select
+                            id="id_ua"
+                            name="id_ua"
+                            value={nuevoGrupo.id_ua}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                        >
+                            <option value="">-- Selecciona una unidad --</option>
+                            {unidades.map((ua) => (
+                                <option key={ua.id} value={ua.id}>
+                                    {ua.nombre} - Semestre {ua.semestre}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label htmlFor="id_profesor">Profesor:</label>
+                        <select
+                            id="id_profesor"
+                            name="id_profesor"
+                            value={nuevoGrupo.id_profesor}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                        >
+                            <option value="">-- Selecciona un profesor --</option>
+                            {profesores.map((prof) => (
+                                <option key={prof.id} value={prof.id}>
+                                    {prof.nombre} {prof.ape_paterno} {prof.ape_materno}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label htmlFor="turno">Turno:</label>
+                        <select
+                            id="turno"
+                            name="turno"
+                            value={nuevoGrupo.turno}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                        >
+                            <option value="">-- Selecciona un turno --</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label htmlFor="fecha">Fecha del ETS:</label>
+                        <input
+                            type="date"
+                            id="fecha"
+                            name="fecha"
+                            value={nuevoGrupo.fecha}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="hora_inicio">Hora de Inicio:</label>
+                        <input
+                            type="time"
+                            id="hora_inicio"
+                            name="hora_inicio"
+                            value={nuevoGrupo.hora_inicio}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="hora_final">Hora Final:</label>
+                        <input
+                            type="time"
+                            id="hora_final"
+                            name="hora_final"
+                            value={nuevoGrupo.hora_final}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                        />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                        <button type="submit" style={{ flex: 1, padding: '10px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                            Crear Grupo
+                        </button>
+                        <button type="button" onClick={() => setModalCrear(false)} style={{ flex: 1, padding: '10px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </Modal>
 
         </section>
     );

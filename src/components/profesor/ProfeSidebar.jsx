@@ -43,6 +43,11 @@ export function ProfeSideBar() {
     else navigate("/profesor");
   };
 
+  const handleETS = () => {
+    const ruta = `/profesor/${finalId}/ets`;
+    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
+  };
+
   const handleLogout = () => navigate(`/`);
 
   return (
@@ -59,6 +64,10 @@ export function ProfeSideBar() {
 
         <button className="menu-item" onClick={handleClases}>
           Clases Impartidas
+        </button>
+
+        <button className="menu-item" onClick={handleETS}>
+          ETS
         </button>
 
         <button className="menu-item" onClick={handleChat}>
