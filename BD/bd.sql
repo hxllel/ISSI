@@ -6367,3 +6367,10 @@ SELECT
 FROM estudiante e
     INNER JOIN inscripcion i ON e.id_usuario = i.id_alumno
 ORDER BY e.promedio DESC;
+
+UPDATE inscripcion
+set
+    fecha_hora_in = "2025-11-24 15:00:00",
+    fecha_hora_cad = "2025-11-24 16:00:00"
+where
+    id_alumno = "2021630310";
