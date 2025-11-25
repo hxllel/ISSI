@@ -436,3 +436,19 @@
     padding: 1.4rem;
   }
 }
+
+.btn.blanco {
+  background: #797979;
+  color: #fff;
+  font-size: 14px;
+  padding: 15px 30px;   /* ajusta el tamaño interno */
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  width: auto;         /* 👈 evita que se estire al 100% */
+  display: inline-block; /* 👈 hace que el tamaño se ajuste al contenido */
+}
+
+.btn.blanco:hover {
+  background: #004d99;
+}

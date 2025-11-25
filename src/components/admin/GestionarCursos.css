@@ -258,3 +258,10 @@
   }
 }
 
+
+.chat-header .btn.azul {
+  margin-left: auto;
+  width: auto;        /* evita que se haga enorme */
+  flex-shrink: 0;     /* evita que se deforme */
+  white-space: nowrap; /* evita que se parta el texto */
+}

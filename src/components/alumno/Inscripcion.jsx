@@ -210,24 +210,35 @@ export function Inscripcion() {
   };
 
   return (
-    <section>
-      {/* === SIDEBAR === */}
-      <SidebarAlumno />
+    <div className="alumno-container">
+          <SidebarAlumno />
+    
+          {/* =============== CONTENIDO PRINCIPAL =============== */}
+          <main className="main-content">
+            <header className="chat-header">
+              <div className ="encabezado-section">
+                <h1>Inscripción de Materias</h1>
+                </div>
+                <p>Realiza la inscripción de tus materias.</p>
+              
+              <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+    
+            </header>
 
-      {/* === CONTENIDO PRINCIPAL === */}
-      <main className="main-content">
+      
         <section className="gestion-alumnos">
-          <div className="header-section">
-            <h1>INSCRIPCIÓN DE MATERIAS</h1>
-          </div>
+          
 
           <div className="button-gap">
-            <button type="button" className="submit-btn" onClick={handleClickImport}>
+            <div>
+            <button type="button" className="btn azul" onClick={handleClickImport}>
               Importar del borrador
             </button>
-            <button type="button" className="submit-btn" onClick={() => setModalOpen2(true)}>
+            </div><div>
+            <button type="button" className="btn blanco" onClick={() => setModalOpen2(true)}>
               Visualizar borrador de horario
             </button>
+            </div>
           </div>
 
           {/* GRUPOS DISPONIBLES */}
@@ -261,7 +272,7 @@ export function Inscripcion() {
                       <td>
                         <button
                           type="button"
-                          className="submit-btn"
+                          className="btn azul"
                           onClick={() => handleClickAdd(grupo.id)}
                           disabled={
                             grupo.cupo <= 0 ||
@@ -274,7 +285,7 @@ export function Inscripcion() {
                         </button>
                         <button
                           type="button"
-                          className="submit-btn"
+                          className="btn azul"
                           onClick={() => handleClickAbrir(grupo.id)}
                         >
                           Mostrar Horario
@@ -327,7 +338,7 @@ export function Inscripcion() {
                         <td>
                           <button
                             type="button"
-                            className="submit-btn"
+                            className="btn azul"
                             onClick={() => handleClickEl(grupo.id)}
                           >
                             Eliminar
@@ -344,7 +355,7 @@ export function Inscripcion() {
             </table>
 
             <form className="formulario" onSubmit={handleSubmit}>
-              <button type="submit" className="submit-btn">
+              <button type="submit" className="btn azul">
                 Realizar inscripción
               </button>
             </form>
@@ -423,7 +434,7 @@ export function Inscripcion() {
                       <td>{dato.valido === 1 ? "Es válido" : "No válido"}</td>
                       <td>
                         <button
-                          className="submit-btn"
+                          className="btn azul"
                           onClick={() => handleClickD(dato.id_grupo)}
                         >
                           Retirar del borrador
@@ -440,7 +451,9 @@ export function Inscripcion() {
             </table>
           </Modal>
         </section>
-      </main>
-    </section>
+      
+   
+    </main>
+    </div>
   );
 }

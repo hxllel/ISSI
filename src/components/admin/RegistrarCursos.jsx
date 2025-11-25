@@ -149,7 +149,7 @@ export function RegistrarCursos() {
         </select>
 
         <button className="btn azul" type="submit">
-          Registrar Curso
+          Registrar Grupo
         </button>
       </form>
     </section>

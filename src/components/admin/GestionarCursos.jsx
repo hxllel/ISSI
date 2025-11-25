@@ -89,13 +89,14 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
       <main className="main-content">
       <header className="chat-header">
         <div className="encabezado-section">
-          <h1 className="gc-title">Gestionar Cursos</h1>
+          <h1>Gestionar Cursos</h1>
           </div>
           
-        
+        <div>
         <button className="btn azul" onClick={handleClickCur}>
-          Registrar Grupo
+          + Registrar Grupo
         </button>
+        </div>
         <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
       </header>
 

@@ -315,7 +315,7 @@ export function RegistrarProfesores() {
                             </div>
 
                             <div className="form-actions">
-                                <button type="submit" className="submit-btn">
+                                <button type="submit" className="btn azul">
                                     Registrar Profesor
                                 </button>
                             </div>

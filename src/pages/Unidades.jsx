@@ -1,9 +1,16 @@
 // src/pages/Unidades.jsx
 import { useEffect, useState } from 'react';
+import { AdminSidebar } from "../components/admin/AdminSidebar";
+import "./ModalStyle.css";
+
 
     const API = 'http://localhost:4000';
 
 export function Unidades() {
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // cuántas filas quieres por página
+
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editUA, setEditUA] = useState(null); // objeto UA (tiene id interno)
@@ -88,19 +95,44 @@ export function Unidades() {
     }
   };
 
-  return (
-    <div style={{ padding: 16 }}>
-      <h2>Unidades de Aprendizaje</h2>
-      {msg && <p>{msg}</p>}
+  const totalPages = Math.ceil(list.length / itemsPerPage);
 
-      <button onClick={openCreate}>Nueva UA</button>
+const startIndex = (currentPage - 1) * itemsPerPage;
+const visibleItems = list.slice(startIndex, startIndex + itemsPerPage);
+
+const nextPage = () => {
+  if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+};
+
+const prevPage = () => {
+  if (currentPage > 1) setCurrentPage(currentPage - 1);
+};
+
+  return (
+    <div className='admin-container'>
+      <AdminSidebar />
+      <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+          <h1>Unidades de Aprendizaje</h1>
+            
+          </div>
+          <div><button className='btn azul' onClick={openCreate}>Nueva UA</button></div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
+    <div>
+      
+      {msg && <p>hola{msg}</p>}
+
+      
 
       <hr />
 
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <table border="1" cellPadding="6">
+        <section className="horario-section">
+        <table className='horario-table'>
           <thead>
             <tr>
               {/* id interno ya no se muestra */}
@@ -112,74 +144,114 @@ export function Unidades() {
             </tr>
           </thead>
           <tbody>
-            {list.map((ua) => (
-              <tr key={ua.id}>
-                <td>{ua.nombre}</td>
-                <td>{ua.credito}</td>
-                <td>{ua.carrera}</td>
-                <td>{ua.semestre}</td>
-                <td>
-                  <button onClick={() => openEdit(ua)}>Editar</button>
-                  {/* Eliminado: botón Eliminar */}
-                </td>
-              </tr>
-            ))}
-            {list.length === 0 && (
-              <tr><td colSpan="5">Sin registros</td></tr>
-            )}
+             {visibleItems.map((ua) => (
+    <tr key={ua.id}>
+      <td>{ua.nombre}</td>
+      <td>{ua.credito}</td>
+      <td>{ua.carrera}</td>
+      <td>{ua.semestre}</td>
+      <td>
+        <button className='btn azul' onClick={() => openEdit(ua)}>Editar</button>
+      </td>
+    </tr>
+  ))}
+
+  {visibleItems.length === 0 && (
+    <tr><td colSpan="5">Sin registros</td></tr>
+  )}
           </tbody>
         </table>
+        <div className="pagination-container">
+  <button
+    className="btn azul"
+    onClick={prevPage}
+    disabled={currentPage === 1}
+  >
+    ◀ Anterior
+  </button>
+
+  <span style={{ margin: "0 15px" }}>
+    Página {currentPage} de {totalPages}
+  </span>
+
+  <button
+    className="btn azul"
+    onClick={nextPage}
+    disabled={currentPage === totalPages}
+  >
+    Siguiente ▶
+  </button>
+</div>
+
+        </section>
       )}
+      
 
       {/* MODAL simple sin librerías */}
       {modalOpen && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
-        }}>
-          <div style={{ background: '#fff', padding: 16, maxWidth: 480, width: '100%', borderRadius: 8 }}>
-            <h3>{editUA ? 'Editar UA' : 'Nueva UA'}</h3>
-            <form onSubmit={onSubmit} style={{ display: 'grid', gap: 8 }}>
-              <input
-                name="nombre"
-                placeholder="Nombre"
-                value={form.nombre}
-                onChange={onChange}
-                required
-              />
-              <input
-                name="credito"
-                type="number"
-                step="0.5"
-                placeholder="Crédito"
-                value={form.credito}
-                onChange={onChange}
-                required
-              />
-              <input
-                name="carrera"
-                placeholder="Carrera (coincide con carrera.nombre)"
-                value={form.carrera}
-                onChange={onChange}
-                required
-              />
-              <input
-                name="semestre"
-                type="number"
-                placeholder="Semestre"
-                value={form.semestre}
-                onChange={onChange}
-                required
-              />
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h3 className="modal-title">
+        {editUA ? "Editar UA" : "Nueva UA"}
+      </h3>
 
-              <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                <button type="submit">{editUA ? 'Guardar cambios' : 'Crear'}</button>
-                <button type="button" onClick={closeModal}>Cancelar</button>
-              </div>
-            </form>
-          </div>
+      <form onSubmit={onSubmit} className="modal-form">
+        <input
+          name="nombre"
+          placeholder="Nombre"
+          value={form.nombre}
+          onChange={onChange}
+          required
+          className="modal-input"
+        />
+
+        <input
+          name="credito"
+          type="number"
+          step="0.5"
+          placeholder="Crédito"
+          value={form.credito}
+          onChange={onChange}
+          required
+          className="modal-input"
+        />
+
+        <input
+          name="carrera"
+          placeholder="Carrera"
+          value={form.carrera}
+          onChange={onChange}
+          required
+          className="modal-input"
+        />
+
+        <input
+          name="semestre"
+          type="number"
+          placeholder="Semestre"
+          value={form.semestre}
+          onChange={onChange}
+          required
+          className="modal-input"
+        />
+
+        <div className="modal-actions">
+          <button type="submit" className="modal-btn primary">
+            {editUA ? "Guardar cambios" : "Crear"}
+          </button>
+
+          <button type="button" onClick={closeModal} className="modal-btn">
+            Cancelar
+          </button>
         </div>
-      )}
+      </form>
+    </div>
+  </div>
+)}
+
+    </div>
+    
+    </main>
     </div>
   );
 }

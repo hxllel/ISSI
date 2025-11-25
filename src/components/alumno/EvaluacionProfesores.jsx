@@ -279,12 +279,12 @@ export function EvaluacionProfesores() {
               ))}
 
               <div className="botones-container">
-                <button type="submit" className="btn-enviar">
+                <button type="submit" className="btn azul">
                   Enviar Evaluación
                 </button>
                 <button
                   type="button"
-                  className="btn-cancelar"
+                  className="btn blanco"
                   onClick={() => navigate(`/alumno/${id}`)}
                 >
                   Cancelar

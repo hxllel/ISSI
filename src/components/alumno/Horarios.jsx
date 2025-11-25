@@ -172,7 +172,7 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
                 <td>{horasPorDia('Miercoles') || ' '}</td>
                 <td>{horasPorDia('Jueves') || ' '}</td>
                 <td>{horasPorDia('Viernes') || ' '}</td>
-                <td><button type="button" className="submit-btn" onClick={() => handleClickAdd(dato.id)} disabled={borr.some(b => b.id_grupo === dato.id)}>
+                <td><button type="button" className="btn azul" onClick={() => handleClickAdd(dato.id)} disabled={borr.some(b => b.id_grupo === dato.id)}>
                   <FiPlus style={{ marginRight: "8px" }} />
                   Agregar al borrador
                   </button></td>
@@ -218,7 +218,7 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
                   <td>{dato.horas_jue || " "}</td>
                   <td>{dato.horas_vie || " "}</td>
                   <td>{dato.valido === 1 ? "Es valido" : " No es valido"}</td>
-                  <td><button type="button" className="submit-btn" onClick={() => handleClickDel(dato.id_grupo)}>
+                  <td><button type="button" className="btn azul" onClick={() => handleClickDel(dato.id_grupo)}>
                     Retirar del borrador</button></td>
                 </tr>
               ))
@@ -234,15 +234,18 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
      
         
         <div className="download-button">
-          <button type="button" className="submit-btn" onClick={() => setModalOpen(true)}>
+          <div>
+          <button type="button" className="btn azul" onClick={() => setModalOpen(true)}>
         <FiEye style={{ marginRight: "8px" }} />
         Ver borrador
         </button>
-        
-          <button type="button" className="submit-btn" >
+        </div>
+        <div> 
+          <button type="button" className="btn azul" >
         <FiDownload style={{ marginRight: "8px" }} />
         Descargar Horario
         </button>
+        </div>
         </div>
 
       </section>
