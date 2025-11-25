@@ -384,7 +384,6 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
-      console.log("Profesor obtenido: ", profesor);
       return res.json({ profesor: profesor });
     } catch (error) {
       console.error("Error al obtener la informacion del profesor: ", error);
@@ -592,7 +591,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            atributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         raw: true,
@@ -615,7 +614,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            atributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         where: { id_prof: us },
@@ -861,7 +860,9 @@ module.exports = (passport) => {
       return res.json({ success: true, profesores });
     } catch (err) {
       console.error("Error al obtener profesores:", err);
-      return res.status(500).json({ success: false, mensaje: "Error al obtener profesores" });
+      return res
+        .status(500)
+        .json({ success: false, mensaje: "Error al obtener profesores" });
     }
   });
 
@@ -876,7 +877,9 @@ module.exports = (passport) => {
       return res.json({ success: true, unidades });
     } catch (err) {
       console.error("Error al obtener unidades:", err);
-      return res.status(500).json({ success: false, mensaje: "Error al obtener unidades" });
+      return res
+        .status(500)
+        .json({ success: false, mensaje: "Error al obtener unidades" });
     }
   });
 
@@ -885,13 +888,21 @@ module.exports = (passport) => {
   // ============================
   router.post("/CrearGrupoETS", async (req, res) => {
     try {
-      const { id_ua, id_profesor, turno, hora_inicio, hora_final, fecha } = req.body;
+      const { id_ua, id_profesor, turno, hora_inicio, hora_final, fecha } =
+        req.body;
 
       // Validar que todos los campos estén presentes
-      if (!id_ua || !id_profesor || !turno || !hora_inicio || !hora_final || !fecha) {
+      if (
+        !id_ua ||
+        !id_profesor ||
+        !turno ||
+        !hora_inicio ||
+        !hora_final ||
+        !fecha
+      ) {
         return res.status(400).json({
           success: false,
-          mensaje: "Todos los campos son obligatorios"
+          mensaje: "Todos los campos son obligatorios",
         });
       }
 
@@ -906,18 +917,217 @@ module.exports = (passport) => {
         turno,
         hora_inicio,
         hora_final,
-        fecha
+        fecha,
       });
 
       return res.json({
         success: true,
-        mensaje: "Grupo ETS creado exitosamente"
+        mensaje: "Grupo ETS creado exitosamente",
       });
     } catch (err) {
       console.error("Error al crear grupo ETS:", err);
       return res.status(500).json({
         success: false,
-        mensaje: "Error al crear el grupo ETS"
+        mensaje: "Error al crear el grupo ETS",
+      });
+    }
+  });
+
+  // POST /GenerarCitas
+  router.post("/GenerarCitas/:edo", async (req, res) => {
+    const { fecha_ini, fecha_fin } = req.body;
+    const { edo } = req.params;
+
+    if (!fecha_ini || !fecha_fin) {
+      return res
+        .status(400)
+        .json({ error: "fecha_ini y fecha_fin son requeridos" });
+    }
+
+    const val = await bd.Inscripcion.count({
+      include: [
+        {
+          model: bd.DatosPersonales,
+          required: true,
+          include: [
+            {
+              model: bd.Estudiante,
+              required: true,
+              where: { estado_academico: edo },
+            },
+          ],
+        },
+      ],
+    });
+
+    console.log(val);
+    console.log(edo);
+    if (val != 0) {
+      return res.json({ success: false });
+    }
+    // VALIDACIÓN DE FECHAS
+    // Convertimos a Date solo para comparar validez y orden, pero usaremos los strings para la lógica
+    const inicioCheck = new Date(fecha_ini);
+    const finCheck = new Date(fecha_fin);
+
+    if (isNaN(inicioCheck) || isNaN(finCheck)) {
+      return res.status(400).json({ error: "Formato de fecha inválido" });
+    }
+    if (inicioCheck > finCheck) {
+      return res
+        .status(400)
+        .json({ error: "fecha_ini debe ser anterior o igual a fecha_fin" });
+    }
+
+    try {
+      // 1. OBTENER ALUMNOS
+      const alumnos = await bd.Estudiante.findAll({
+        where: { estado_academico: edo.toLowerCase() },
+        order: [["promedio", "DESC"]], // Prioridad por promedio
+        raw: true,
+      });
+
+      if (!alumnos || alumnos.length === 0) {
+        return res
+          .status(200)
+          .json({ message: "No hay alumnos regulares para generar citas" });
+      }
+
+      const nAlumnos = alumnos.length;
+
+      const strIni = new Date(fecha_ini).toISOString().split("T")[0];
+      const strFin = new Date(fecha_fin).toISOString().split("T")[0];
+
+      const oneDayMs = 24 * 60 * 60 * 1000;
+      // Usamos UTC para calcular la diferencia exacta de días calendario
+      const diffTime = new Date(strFin).getTime() - new Date(strIni).getTime();
+      const numDias = Math.round(diffTime / oneDayMs) + 1; // +1 porque es inclusivo
+
+      const horasDisponiblesDia = 15; // 07:00 a 22:00
+      const minutosDisponiblesDia = horasDisponiblesDia * 60; // 900 minutos
+      const minutosTotalesGlobales = numDias * minutosDisponiblesDia;
+
+      // LÓGICA DE DISTRIBUCIÓN
+      let intervaloMinutos = minutosTotalesGlobales / nAlumnos;
+      let concurrencia = 1; // Alumnos por turno
+
+      // Regla: Si el intervalo es menor a 10 minutos, forzamos 10 min y aumentamos concurrencia
+      if (intervaloMinutos < 10) {
+        intervaloMinutos = 10;
+        // ¿Cuántos slots de 10 minutos caben en todo el periodo?
+        const slotsTotalesPosibles = Math.floor(minutosTotalesGlobales / 10);
+        // ¿Cuántos alumnos debemos meter en cada slot para que quepan todos?
+        concurrencia = Math.ceil(nAlumnos / slotsTotalesPosibles);
+      }
+
+      console.log(
+        `Configuración: Días: ${numDias}, Alumnos: ${nAlumnos}, Intervalo: ${intervaloMinutos.toFixed(
+          2
+        )}m, Concurrencia: ${concurrencia}`
+      );
+
+      // Función auxiliar para construir fechas sin cambios de zona horaria extraños
+      // Toma el string base "YYYY-MM-DD", suma días y establece la hora
+      function construirFechaCita(fechaBaseStr, diasASumar, minutosDesdeLas7) {
+        const base = new Date(fechaBaseStr);
+        // Ajustamos la fecha base sumando los días (en UTC para no perder info)
+        base.setUTCDate(base.getUTCDate() + diasASumar);
+
+        // Calculamos hora y minuto
+        // Hora inicio es 7 AM.
+        const horasExtra = Math.floor(minutosDesdeLas7 / 60);
+        const minutosRestantes = Math.floor(minutosDesdeLas7 % 60);
+
+        const horaFinal = 7 + horasExtra;
+
+        // Establecemos la hora. IMPORTANTE: Usamos métodos UTC o Locales consistentemente.
+        // Para asegurar que coincida con el backend, asumiremos que queremos guardar la hora local
+        // tal cual se leería en el calendario.
+        const fechaFinal = new Date(
+          base.getUTCFullYear(),
+          base.getUTCMonth(),
+          base.getUTCDate(),
+          horaFinal,
+          minutosRestantes,
+          0
+        );
+        return fechaFinal;
+      }
+
+      const t = await bd.sequelize.transaction();
+
+      try {
+        let currentSlotIndex = 0;
+        let alumnosEnEsteSlot = 0;
+
+        for (let i = 0; i < nAlumnos; i++) {
+          const alumno = alumnos[i];
+
+          // Calcular en qué minuto global inicia este slot
+          const minutosGlobalesInicio = currentSlotIndex * intervaloMinutos;
+
+          // Determinar qué día es (0 es el primer día, 1 el segundo...)
+          const diaIndex = Math.floor(
+            minutosGlobalesInicio / minutosDisponiblesDia
+          );
+
+          // Determinar minutos dentro de ese día (desde las 07:00)
+          const minutosEnElDia = minutosGlobalesInicio % minutosDisponiblesDia;
+
+          // Construir fechas
+          // Nota: Si nos pasamos de días por redondeo (raro), el Math.floor lo manejará,
+          // pero asegúrate de que strIni sea la fecha base correcta.
+          const fechaHoraInicio = construirFechaCita(
+            strIni,
+            diaIndex,
+            minutosEnElDia
+          );
+
+          // Timespan de 1 hora
+          const fechaHoraFin = new Date(
+            fechaHoraInicio.getTime() + 60 * 60 * 1000
+          );
+
+          let id = uuidv4().replace(/-/g, "").substring(0, 15);
+
+          await bd.Inscripcion.create(
+            {
+              id,
+              id_alumno: alumno.id_usuario,
+              fecha_hora_in: fechaHoraInicio,
+              fecha_hora_cad: fechaHoraFin,
+            },
+            { transaction: t }
+          );
+
+          // Manejo de concurrencia
+          alumnosEnEsteSlot++;
+          if (alumnosEnEsteSlot >= concurrencia) {
+            // Llenamos este slot, avanzamos al siguiente intervalo de tiempo
+            alumnosEnEsteSlot = 0;
+            currentSlotIndex++;
+          }
+        }
+
+        await t.commit();
+      } catch (err) {
+        await t.rollback();
+        throw err;
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: "Citas generadas correctamente",
+        totalAlumnos: nAlumnos,
+        dias: numDias,
+        intervaloMinutos,
+        concurrencia,
+      });
+    } catch (error) {
+      console.error("Error GenerarCitas:", error);
+      return res.status(500).json({
+        error: "Error interno al generar citas",
+        details: error.message,
       });
     }
   });
