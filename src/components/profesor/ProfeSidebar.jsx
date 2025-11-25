@@ -7,6 +7,14 @@ export function ProfeSideBar() {
   const params = useParams();
   const location = useLocation();
 
+  const periodo = location.state?.periodo || localStorage.getItem("periodo");
+  useEffect(() => {
+  if (location.state?.periodo) {
+    localStorage.setItem("periodo", location.state.periodo);
+  }
+}, [location.state]);
+
+
   // Intentamos obtener el id por (1) location.state, (2) params, (3) localStorage
   const finalId = useMemo(() => {
     return location.state?.profesorId || params.id || localStorage.getItem("profesorId") || null;
@@ -22,6 +30,16 @@ export function ProfeSideBar() {
   // Handlers de navegación - PROFESOR (AHORA USAN finalId y pasan state correctamente)
   const handleClases = () => {
     const ruta = `/profesor/${finalId}/clases`;
+    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
+  };
+
+  const handlePaseLista = () => {
+    const ruta = `/profesor/paseLista/${finalId}`;
+    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
+  };
+
+  const handleRegistrarCal = () => {
+    const ruta = `/profesor/RegistrarCalificaciones/${finalId}/${periodo}`;
     navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
   };
 
@@ -64,6 +82,14 @@ export function ProfeSideBar() {
 
         <button className="menu-item" onClick={handleClases}>
           Clases Impartidas
+        </button>
+        
+        <button className="menu-item" onClick={handlePaseLista}>
+          Pase de Lista
+        </button>
+
+        <button className="menu-item" onClick={handleRegistrarCal}>
+          Registrar Calificaciones
         </button>
 
         <button className="menu-item" onClick={handleETS}>

@@ -166,7 +166,7 @@ const prevPage = () => {
         </table>
         <div className="pagination-container">
   <button
-    className="btn azul"
+    className="pagination-btn"
     onClick={prevPage}
     disabled={currentPage === 1}
   >
@@ -178,7 +178,7 @@ const prevPage = () => {
   </span>
 
   <button
-    className="btn azul"
+    className="pagination-btn"
     onClick={nextPage}
     disabled={currentPage === totalPages}
   >

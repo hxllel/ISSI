@@ -80,10 +80,20 @@ export function Profesor() {
       <main className="main-content">
         {!isClases ? (
           <>
-            <header className="prof-header">
-              <h2 className="title">¡Bienvenido, Juan Manuel!</h2>
+            <header className="chat-header">
+              <div className="encabezado-section">
+                <div>
+              <h1>
+                {profesor 
+                  ? `¡Bienvenido(a), ${profesor.nombre} ${profesor.ape_paterno}!`
+                  : "Cargando..."}
+              </h1>
+              </div>
+              </div>
               <img className="escom-logo" src="/escom.png" alt="ESCOM" />
+                  
             </header>
+
 
             <section className="kpi-row">
               <div className="kpi-card">
