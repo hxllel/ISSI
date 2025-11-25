@@ -33,9 +33,7 @@ export function SidebarAlumno() {
       </div>
 
       <nav className="menu">
-        <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item">
-          Inicio
-        </button>
+
 
         <button
   className={`menu-item ${isActive(`/alumno/${id}`) ? " active" : ""}`}
