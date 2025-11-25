@@ -489,14 +489,188 @@
 
 /* =================== RESPONSIVE =================== */
 
+/* =================== LISTA DE PROFESORES (TABLA) =================== */
+
+.lista-profesores {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.8rem 2rem 2.2rem;
+  border: 1px solid var(--eval-border);
+}
+
+.lista-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--eval-border);
+}
+
+.lista-header h2 {
+  margin: 0 0 0.4rem;
+  color: var(--eval-guinda);
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.lista-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.tabla-container {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.tabla-profesores {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+.tabla-profesores thead {
+  background: linear-gradient(135deg, var(--eval-guinda) 0%, var(--eval-guinda-dark) 100%);
+  color: #ffffff;
+}
+
+.tabla-profesores thead th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-profesores thead th:first-child {
+  border-radius: 8px 0 0 0;
+  text-align: center;
+  width: 60px;
+}
+
+.tabla-profesores thead th:last-child {
+  border-radius: 0 8px 0 0;
+  text-align: center;
+  width: 150px;
+}
+
+.tabla-profesores tbody tr {
+  border-bottom: 1px solid var(--eval-border);
+  transition: background-color 0.15s ease;
+}
+
+.tabla-profesores tbody tr:hover {
+  background-color: #fef2f5;
+}
+
+.tabla-profesores tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tabla-profesores tbody td {
+  padding: 1rem;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.tabla-profesores tbody td:first-child {
+  text-align: center;
+  font-weight: 600;
+  color: var(--eval-guinda);
+}
+
+.tabla-profesores tbody td:last-child {
+  text-align: center;
+}
+
+.nombre-profesor {
+  font-weight: 500;
+  color: var(--eval-text);
+}
+
+.btn-evaluar {
+  background: linear-gradient(135deg, var(--eval-guinda) 0%, var(--eval-guinda-dark) 100%);
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 6px rgba(125, 0, 36, 0.25);
+}
+
+.btn-evaluar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(125, 0, 36, 0.35);
+}
+
+.sin-datos {
+  text-align: center;
+  padding: 2rem !important;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* =================== PROFESOR EVALUANDO =================== */
+
+.profesor-evaluando {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--eval-border);
+}
+
+.profesor-evaluando h2 {
+  margin: 0;
+  color: var(--eval-guinda);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.btn-volver-lista {
+  background-color: #6b7280;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-volver-lista:hover {
+  background-color: #4b5563;
+  transform: translateX(-2px);
+}
+
+/* =================== RESPONSIVE =================== */
+
 @media (max-width: 900px) {
   .main-content {
     padding: 1.6rem 1.4rem;
   }
 
   .evaluacion-header,
-  .formulario-evaluacion {
+  .formulario-evaluacion,
+  .lista-profesores {
     padding: 1.5rem 1.4rem 1.8rem;
+  }
+
+  .profesor-evaluando {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .btn-volver-lista {
+    align-self: flex-end;
   }
 }
 
@@ -534,5 +708,20 @@
   .btn-volver {
     width: 100%;
     max-width: 260px;
+  }
+
+  .tabla-profesores thead th,
+  .tabla-profesores tbody td {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-evaluar {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .profesor-evaluando h2 {
+    font-size: 1.2rem;
   }
 }

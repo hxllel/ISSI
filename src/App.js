@@ -26,6 +26,7 @@ import { PaseLista } from "./components/profesor/PaseLista";
 import { RegistrarCalificaciones } from "./components/profesor/RegistrarCalificaciones";
 import { InformacionPersonal } from "./components/profesor/InformacionPersonal";
 import { EditarDatosPersonales } from "./components/profesor/EditarDatosPersonales";
+import { ETS as ETSProfesor } from "./components/profesor/ETS";
 
 // ADMIN
 import { Administrador } from "./components/admin/Administrador";
@@ -102,6 +103,7 @@ function App() {
           <Route path="/profesor/:id" element={<Profesor />} />
           <Route path="/profesor/Chat" element={<ChatbotProfesor />} />
           <Route path="/profesor/:id/clases" element={<ClasesImpartidas />} />
+          <Route path="/profesor/:id/ets" element={<ETSProfesor />} />
           <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
           <Route
             path="/profesor/RegistrarCalificaciones/:id/:periodo"
