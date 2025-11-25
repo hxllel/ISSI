@@ -7,6 +7,8 @@ import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 export function Inscripcion() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // Estados compartidos / fusionados
   const [grupos, setGrupos] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
@@ -21,6 +23,21 @@ export function Inscripcion() {
   const [cursadas, setCursadas] = useState([]);
   const [NoReinscripcion, setNoRe] = useState([]);
 
+  // filtros del código 1
+  const [filtroTurno, setFiltroTurno] = useState("");
+  const [filtroTipo, setFiltroTipo] = useState("");
+  const [filtroGrupo, setFiltroGrupo] = useState("");
+  const [filtroSemestre, setFiltroSemestre] = useState("");
+
+  // estados del código 2 (validaciones)
+  const [tiempo, setTiempo] = useState(false);
+  const [cita, setCita] = useState(false);
+  const [promedio, setPromedio] = useState("");
+  const [edo, setEdo] = useState("");
+  const [carrera, setCarrera] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [citas, setCitas] = useState("");
+
   const API = "http://localhost:4000";
 
   const safe = (value, fallback) =>
@@ -28,7 +45,29 @@ export function Inscripcion() {
 
   const safeArray = (value) => (Array.isArray(value) ? value : []);
 
-  // HISTORIAL CURSADAS
+  // ========== Tiempo / Cita (código 2) ==========
+  useEffect(() => {
+    fetch(`${API}/TiempoReinscripcion`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.tiempo) {
+          setTiempo(true);
+        } else if (data.cita) {
+          setCita(true);
+          setCitas(data.citas);
+        } else {
+          setTiempo(false);
+        }
+
+        setPromedio(data.promedio);
+        setEdo(data.edo);
+        setNombre(data.nombre);
+        setCarrera(data.carrera);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  // ========== HISTORIAL CURSADAS ==========
   useEffect(() => {
     fetch(`${API}/ObtenerHistorial`, { credentials: "include" })
       .then((res) => res.json())
@@ -41,18 +80,18 @@ export function Inscripcion() {
       .catch(() => setCursadas([]));
   }, []);
 
-  // BORRADOR
+  // ========== BORRADOR ==========
   useEffect(() => {
     fetch(`${API}/ConsultarBorrador`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        const borr = Array.isArray(data?.horario) ? data.horario : [];
-        setBorr(borr);
+        const borrData = Array.isArray(data?.horario) ? data.horario : [];
+        setBorr(borrData);
       })
       .catch(() => setBorr([]));
   }, []);
 
-  // NO REINSCRIPCIÓN
+  // ========== NO REINSCRIPCIÓN ==========
   useEffect(() => {
     fetch(`${API}/NoReinscripcion`, { credentials: "include" })
       .then((res) => res.json())
@@ -60,7 +99,7 @@ export function Inscripcion() {
       .catch(() => setNoRe([]));
   }, []);
 
-  // GRUPOS DISPONIBLES
+  // ========== GRUPOS DISPONIBLES ==========
   useEffect(() => {
     fetch(`${API}/Grupos/${id}`, { credentials: "include" })
       .then((res) => res.json())
@@ -79,7 +118,7 @@ export function Inscripcion() {
     setId_dis(id);
   };
 
-  // DISTRIBUCIÓN HORARIA
+  // ========== DISTRIBUCIÓN HORARIA ==========
   useEffect(() => {
     if (!modalOpen || !id_dis) return;
 
@@ -89,7 +128,7 @@ export function Inscripcion() {
       .catch(() => setDistri([]));
   }, [modalOpen, id_dis]);
 
-  // TEMPORALES
+  // ========== TEMPORALES ==========
   useEffect(() => {
     fetch(`${API}/Con`, { credentials: "include" })
       .then((res) => res.json())
@@ -107,7 +146,7 @@ export function Inscripcion() {
     setIdgru(id);
   };
 
-  // ELIMINAR DE BORRADOR
+  // ========== ELIMINAR DE BORRADOR (temporal) ==========
   useEffect(() => {
     if (!d || !idgru) return;
 
@@ -126,7 +165,7 @@ export function Inscripcion() {
       .finally(() => setd(false));
   }, [d, idgru]);
 
-  // AGREGAR A HORARIO
+  // ========== AGREGAR A HORARIO ==========
   const handleClickAdd = (id) => {
     if (!id) return;
 
@@ -141,7 +180,7 @@ export function Inscripcion() {
       });
   };
 
-  // ELIMINAR DEL HORARIO
+  // ========== ELIMINAR DEL HORARIO ==========
   const handleClickEl = (id) => {
     fetch(`${API}/Del/${id}`, {
       credentials: "include",
@@ -157,7 +196,7 @@ export function Inscripcion() {
       );
   };
 
-  // IMPORTAR BORRADOR
+  // ========== IMPORTAR BORRADOR ==========
   const handleClickImport = () => {
     fetch(`${API}/ImportarHorario`, {
       credentials: "include",
@@ -171,7 +210,7 @@ export function Inscripcion() {
       });
   };
 
-  // ELIMINAR BORRADOR FINAL
+  // ========== ELIMINAR BORRADOR FINAL ==========
   useEffect(() => {
     if (!del || !idgru) return;
 
@@ -190,7 +229,7 @@ export function Inscripcion() {
       .finally(() => setdel(false));
   }, [del, idgru]);
 
-  // INSCRIPCIÓN FINAL
+  // ========== INSCRIPCIÓN FINAL ==========
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -209,6 +248,84 @@ export function Inscripcion() {
       });
   };
 
+  // ===================== RENDERS CONDICIONALES (opción A) =====================
+
+  // 1) Si NO es tiempo y NO hay cita -> mostrar pantalla de bloqueo (no mostrar inscripción)
+  if (!tiempo && !cita) {
+    return (
+      <section>
+        <SidebarAlumno />
+        <main className="main-content">
+          <h1>No es tu tiempo de reinscripción</h1>
+          <div style={{ marginTop: "1rem" }}>
+            <p>
+              <strong>Nombre:</strong> {nombre || "—"}
+            </p>
+            <p>
+              <strong>Carrera:</strong> {carrera || "—"}
+            </p>
+            <p>
+              <strong>Promedio:</strong> {promedio || "—"}
+            </p>
+            <p>
+              <strong>Estado académico:</strong> {edo || "—"}
+            </p>
+            <p>
+              Si crees que hay un error, contacta con la coordinación.
+            </p>
+          </div>
+        </main>
+      </section>
+    );
+  }
+
+  // 2) Si hay cita pero no es tiempo -> mostrar la pantalla completa tipo código 2 (usuario pidió A)
+  if (cita && !tiempo) {
+    return (
+      <section>
+        <SidebarAlumno />
+        <main className="main-content">
+          <section className="gestion-alumnos">
+            <div className="header-section">
+              <h1>INSCRIPCIÓN DE MATERIAS</h1>
+            </div>
+
+            <br />
+            <h2>Nombre : {nombre}</h2>
+            <br />
+            <h2>Carrera : {carrera}</h2>
+            <br />
+            <section className="horario-section">
+              <table className="horario-table">
+                <thead>
+                  <tr>
+                    <td>Creditos disponibles</td>
+                    <td>Periodos cursados</td>
+                    <td>Periodos disponibles para terminar la carrera</td>
+                    <td>Promedio</td>
+                    <td>Estado academico</td>
+                    <td>Cita de reinscripción</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{creditos}</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>{promedio}</td>
+                    <td>{edo}</td>
+                    <td>{citas ? citas : <h3>No hay cita de reinscripcion</h3>}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+        </main>
+      </section>
+    );
+  }
+
+  // 3) Si es tiempo (tiempo === true) -> mostrar TODO el JSX de inscripción (código 1)
   return (
     <div className="alumno-container">
           <SidebarAlumno />
@@ -244,11 +361,60 @@ export function Inscripcion() {
           {/* GRUPOS DISPONIBLES */}
           <section className="horario-section">
             <h1>Grupos disponibles</h1>
+
+            <div
+              className="filtros-container"
+              style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}
+            >
+              <input
+                type="text"
+                placeholder="Buscar por grupo..."
+                value={filtroGrupo}
+                onChange={(e) => setFiltroGrupo(e.target.value)}
+                className="filtro-input"
+                style={{ padding: "0.5rem" }}
+              />
+              <select
+                value={filtroTurno}
+                onChange={(e) => setFiltroTurno(e.target.value)}
+                className="filtro-select"
+                style={{ padding: "0.5rem" }}
+              >
+                <option value="">Todos los turnos</option>
+                <option value="Matutino">Matutino</option>
+                <option value="Vespertino">Vespertino</option>
+              </select>
+              <select
+                value={filtroTipo}
+                onChange={(e) => setFiltroTipo(e.target.value)}
+                className="filtro-select"
+                style={{ padding: "0.5rem" }}
+              >
+                <option value="">Todos los tipos</option>
+                <option value="OBLIGATORIA">OBLIGATORIA</option>
+                <option value="OPTATIVA">OPTATIVA</option>
+              </select>
+              <select
+                value={filtroSemestre}
+                onChange={(e) => setFiltroSemestre(e.target.value)}
+                className="filtro-select"
+                style={{ padding: "0.5rem" }}
+              >
+                <option value="">Todos los semestres</option>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                  <option key={sem} value={sem}>
+                    {sem}° Semestre
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <table className="horario-table">
               <thead>
                 <tr>
                   <th>Grupo</th>
                   <th>Unidad de Aprendizaje</th>
+                  <th>Tipo</th>
                   <th>Créditos</th>
                   <th>Profesor</th>
                   <th>Disponibilidad</th>
@@ -258,41 +424,66 @@ export function Inscripcion() {
               </thead>
               <tbody>
                 {grupos.length > 0 ? (
-                  grupos.map((grupo) => (
-                    <tr key={grupo.id}>
-                      <td>{grupo.nombre}</td>
-                      <td>{grupo.Unidad_Aprendizaje.nombre}</td>
-                      <td>{grupo.Unidad_Aprendizaje.credito}</td>
-                      <td>
-                        {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
-                        {grupo.DatosPersonale.ape_materno}
-                      </td>
-                      <td>{grupo.cupo > 0 ? "Disponible" : "Lleno"}</td>
-                      <td>{grupo.cupo}</td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn azul"
-                          onClick={() => handleClickAdd(grupo.id)}
-                          disabled={
-                            grupo.cupo <= 0 ||
-                            gruposagg.includes(grupo.id) ||
-                            cursadas.includes(grupo.Unidad_Aprendizaje.nombre) ||
-                            NoReinscripcion.includes(grupo.Unidad_Aprendizaje.id)
-                          }
-                        >
-                          Seleccionar
-                        </button>
-                        <button
-                          type="button"
-                          className="btn azul"
-                          onClick={() => handleClickAbrir(grupo.id)}
-                        >
-                          Mostrar Horario
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                  grupos
+                    .filter((grupo) => {
+                      const matchTurno =
+                        !filtroTurno || grupo.turno === filtroTurno;
+                      const matchTipo =
+                        !filtroTipo ||
+                        grupo.Unidad_Aprendizaje.tipo === filtroTipo;
+                      const matchGrupo =
+                        !filtroGrupo ||
+                        grupo.nombre
+                          .toLowerCase()
+                          .includes(filtroGrupo.toLowerCase());
+                      const matchSemestre =
+                        !filtroSemestre ||
+                        grupo.nombre.charAt(0) === filtroSemestre;
+                      return (
+                        matchTurno && matchTipo && matchGrupo && matchSemestre
+                      );
+                    })
+                    .map((grupo) => (
+                      <tr key={grupo.id}>
+                        <td>{grupo.nombre}</td>
+                        <td>{grupo.Unidad_Aprendizaje.nombre}</td>
+                        <td>{grupo.Unidad_Aprendizaje.tipo}</td>
+                        <td>{grupo.Unidad_Aprendizaje.credito}</td>
+                        <td>
+                          {grupo.DatosPersonale.nombre}{" "}
+                          {grupo.DatosPersonale.ape_paterno}{" "}
+                          {grupo.DatosPersonale.ape_materno}
+                        </td>
+                        <td>{grupo.cupo > 0 ? "Disponible" : "Lleno"}</td>
+                        <td>{grupo.cupo}</td>
+                        <td>
+                          <button
+                            type="button"
+                            className="submit-btn"
+                            onClick={() => handleClickAdd(grupo.id)}
+                            disabled={
+                              grupo.cupo <= 0 ||
+                              gruposagg.includes(grupo.id) ||
+                              cursadas.includes(
+                                grupo.Unidad_Aprendizaje.nombre
+                              ) ||
+                              NoReinscripcion.includes(
+                                grupo.Unidad_Aprendizaje.id
+                              )
+                            }
+                          >
+                            Seleccionar
+                          </button>
+                          <button
+                            type="button"
+                            className="submit-btn"
+                            onClick={() => handleClickAbrir(grupo.id)}
+                          >
+                            Mostrar Horario
+                          </button>
+                        </td>
+                      </tr>
+                    ))
                 ) : (
                   <tr>
                     <td colSpan="7">No hay grupos disponibles</td>
@@ -312,6 +503,7 @@ export function Inscripcion() {
                 <tr>
                   <th>Grupo</th>
                   <th>Unidad de Aprendizaje</th>
+                  <th>Tipo</th>
                   <th>Créditos</th>
                   <th>Profesor</th>
                   <th>Disponibilidad</th>
@@ -328,9 +520,11 @@ export function Inscripcion() {
                       <tr key={grupo.id}>
                         <td>{grupo.nombre}</td>
                         <td>{grupo.Unidad_Aprendizaje.nombre}</td>
+                        <td>{grupo.Unidad_Aprendizaje.tipo}</td>
                         <td>{grupo.Unidad_Aprendizaje.credito}</td>
                         <td>
-                          {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
+                          {grupo.DatosPersonale.nombre}{" "}
+                          {grupo.DatosPersonale.ape_paterno}{" "}
                           {grupo.DatosPersonale.ape_materno}
                         </td>
                         <td>{grupo.cupo > 0 ? "Disponible" : "Lleno"}</td>
@@ -376,17 +570,19 @@ export function Inscripcion() {
               </thead>
               <tbody>
                 <tr>
-                  {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dia) => (
-                    <td key={dia}>
-                      {distri
-                        .filter((dis) => dis.dia === dia)
-                        .map((dis, i) => (
-                          <div key={i}>
-                            {dis.hora_ini} - {dis.hora_fin}
-                          </div>
-                        ))}
-                    </td>
-                  ))}
+                  {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map(
+                    (dia) => (
+                      <td key={dia}>
+                        {distri
+                          .filter((dis) => dis.dia === dia)
+                          .map((dis, i) => (
+                            <div key={i}>
+                              {dis.hora_ini} - {dis.hora_fin}
+                            </div>
+                          ))}
+                      </td>
+                    )
+                  )}
                 </tr>
               </tbody>
             </table>

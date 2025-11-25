@@ -14,6 +14,7 @@ export function RegistrarCursos() {
   const [turno, setTurno] = useState("");
   const [nombre, setNombre] = useState("");
   const [carreragru, setCarreragru] = useState("");
+  const [tipoFiltro, setTipoFiltro] = useState("");
 
   const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
     const handleClickProf = () => navigate("../administrador/gestionarProfesores");
@@ -128,13 +129,23 @@ export function RegistrarCursos() {
           ))}
         </select>
 
+        <label>Tipo de UA:</label>
+        <select
+          value={tipoFiltro}
+          onChange={(e) => setTipoFiltro(e.target.value)}
+        >
+          <option value="">Todos</option>
+          <option value="OBLIGATORIA">OBLIGATORIA</option>
+          <option value="OPTATIVA">OPTATIVA</option>
+        </select>
+
         <label>Unidad de Aprendizaje:</label>
         <select
           value={id_UA}
           onChange={(e) => setId_UA(e.target.value)}
         >
           <option value="">Seleccione una unidad de aprendizaje</option>
-          {UA.filter((ua) => ua.carrera === carreragru).map((ua) => (
+          {UA.filter((ua) => ua.carrera === carreragru && (!tipoFiltro || ua.tipo === tipoFiltro)).map((ua) => (
             <option key={ua.id} value={ua.id}>
               {ua.nombre}
             </option>

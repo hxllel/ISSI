@@ -228,7 +228,7 @@ module.exports = (passport) => {
             (Number(cali.calificacion_primer) +
               Number(cali.calificacion_segundo) +
               Number(cali.calificacion_tercer)) /
-            3
+              3
           );
 
           await bd.Mat_Inscritos.update(
@@ -357,6 +357,10 @@ module.exports = (passport) => {
                 estado_actual: "Reprobada",
                 periodos_restantes: 3,
                 recurse: 1,
+              });
+              await bd.Estudiante.update({
+                estado_academico: "Irregular",
+                where: { id_usuario: es.id },
               });
             }
           }
@@ -674,7 +678,9 @@ module.exports = (passport) => {
       });
 
       if (!grupo) {
-        return res.status(404).json({ success: false, msg: "Grupo no encontrado" });
+        return res
+          .status(404)
+          .json({ success: false, msg: "Grupo no encontrado" });
       }
 
       // Obtener inscritos
@@ -696,16 +702,21 @@ module.exports = (passport) => {
       });
 
       const profesorNombre = grupo.DatosPersonale
-        ? `${grupo.DatosPersonale.nombre || ''} ${grupo.DatosPersonale.ape_paterno || ''} ${grupo.DatosPersonale.ape_materno || ''}`
-        : '';
+        ? `${grupo.DatosPersonale.nombre || ""} ${
+            grupo.DatosPersonale.ape_paterno || ""
+          } ${grupo.DatosPersonale.ape_materno || ""}`
+        : "";
 
       // Construir filas de alumnos (hasta 30 filas)
       const filas = [];
       for (let i = 0; i < 30; i++) {
         const ins = inscritos[i];
-        const nombreEst = ins && ins.Horario && ins.Horario.DatosPersonale
-          ? `${ins.Horario.DatosPersonale.nombre || ''} ${ins.Horario.DatosPersonale.ape_paterno || ''} ${ins.Horario.DatosPersonale.ape_materno || ''}`
-          : '';
+        const nombreEst =
+          ins && ins.Horario && ins.Horario.DatosPersonale
+            ? `${ins.Horario.DatosPersonale.nombre || ""} ${
+                ins.Horario.DatosPersonale.ape_paterno || ""
+              } ${ins.Horario.DatosPersonale.ape_materno || ""}`
+            : "";
         filas.push({ no: i + 1, nombre: nombreEst });
       }
 
@@ -743,9 +754,15 @@ module.exports = (passport) => {
                 <div style="margin-top:4px"><strong>NOMBRE DEL MAESTRO(A):</strong> ${profesorNombre}</div>
               </div>
               <div class="right">
-                <div>MES: <strong>${new Date().toLocaleString('default', { month: 'long' }).toUpperCase()}</strong></div>
-                <div>GRADO: <strong>${grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.semestre || '' : ''}</strong></div>
-                <div>GRUPO: <strong>${grupo.nombre || ''}</strong></div>
+                <div>MES: <strong>${new Date()
+                  .toLocaleString("default", { month: "long" })
+                  .toUpperCase()}</strong></div>
+                <div>GRADO: <strong>${
+                  grupo.Unidad_Aprendizaje
+                    ? grupo.Unidad_Aprendizaje.semestre || ""
+                    : ""
+                }</strong></div>
+                <div>GRUPO: <strong>${grupo.nombre || ""}</strong></div>
               </div>
             </div>
 
@@ -754,19 +771,23 @@ module.exports = (passport) => {
                 <tr>
                   <th class="no-col">NO.</th>
                   <th class="name-col">NOMBRE Y APELLIDO</th>
-                  ${dayHeaders.map(d => `<th class="day">${d}</th>`).join('')}
+                  ${dayHeaders.map((d) => `<th class="day">${d}</th>`).join("")}
                   <th class="percent-col">%</th>
                 </tr>
               </thead>
               <tbody>
-                ${filas.map(f => `
+                ${filas
+                  .map(
+                    (f) => `
                   <tr>
                     <td style="text-align:center">${f.no}</td>
                     <td>${f.nombre}</td>
-                    ${dayHeaders.map(() => `<td>&nbsp;</td>`).join('')}
+                    ${dayHeaders.map(() => `<td>&nbsp;</td>`).join("")}
                     <td style="text-align:center">&nbsp;</td>
                   </tr>
-                `).join('')}
+                `
+                  )
+                  .join("")}
               </tbody>
             </table>
 
@@ -774,7 +795,9 @@ module.exports = (passport) => {
               <table style="width:100%">
                 <tr>
                   <td style="background:#f28b00;color:#fff;padding:6px;font-weight:700;">ASISTENCIAS DIARIAS</td>
-                  <td style="padding:6px">${dayHeaders.map(() => '0').join(' ')}</td>
+                  <td style="padding:6px">${dayHeaders
+                    .map(() => "0")
+                    .join(" ")}</td>
                 </tr>
               </table>
             </div>
@@ -786,10 +809,11 @@ module.exports = (passport) => {
 
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       res.send(html);
-
     } catch (err) {
       console.error("Error al generar PDF:", err);
-      return res.status(500).json({ success: false, msg: "Error al generar PDF" });
+      return res
+        .status(500)
+        .json({ success: false, msg: "Error al generar PDF" });
     }
   });
 
@@ -815,7 +839,9 @@ module.exports = (passport) => {
       });
 
       if (!grupo) {
-        return res.status(404).json({ success: false, msg: "Grupo no encontrado" });
+        return res
+          .status(404)
+          .json({ success: false, msg: "Grupo no encontrado" });
       }
 
       // Obtener inscritos
@@ -848,16 +874,33 @@ module.exports = (passport) => {
       // Información del grupo (primeras filas)
       worksheet.addRow(["INFORMACIÓN DEL GRUPO"]);
       worksheet.addRow(["Grupo:", grupo.nombre]);
-      worksheet.addRow(["Unidad de Aprendizaje:", grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.nombre : ""]);
-      worksheet.addRow(["Profesor:", grupo.DatosPersonale ? `${grupo.DatosPersonale.nombre || ""} ${grupo.DatosPersonale.ape_paterno || ""} ${grupo.DatosPersonale.ape_materno || ""}` : ""]);
+      worksheet.addRow([
+        "Unidad de Aprendizaje:",
+        grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.nombre : "",
+      ]);
+      worksheet.addRow([
+        "Profesor:",
+        grupo.DatosPersonale
+          ? `${grupo.DatosPersonale.nombre || ""} ${
+              grupo.DatosPersonale.ape_paterno || ""
+            } ${grupo.DatosPersonale.ape_materno || ""}`
+          : "",
+      ]);
       worksheet.addRow(["Turno:", grupo.turno]);
-      worksheet.addRow(["Carrera:", grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.carrera : ""]);
+      worksheet.addRow([
+        "Carrera:",
+        grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.carrera : "",
+      ]);
       worksheet.addRow(["Cupo:", grupo.cupo]);
       worksheet.addRow([]);
 
       // Horarios del grupo
       worksheet.addRow(["HORARIOS"]);
-      const horariosHeader = worksheet.addRow(["Día", "Hora Inicio", "Hora Fin"]);
+      const horariosHeader = worksheet.addRow([
+        "Día",
+        "Hora Inicio",
+        "Hora Fin",
+      ]);
       horariosHeader.font = { bold: true };
       horariosHeader.fill = {
         type: "pattern",
@@ -866,7 +909,7 @@ module.exports = (passport) => {
       };
       horariosHeader.font = { color: { argb: "FFFFFFFF" }, bold: true };
 
-      distribucion.forEach(d => {
+      distribucion.forEach((d) => {
         worksheet.addRow([d.dia, d.hora_ini, d.hora_fin]);
       });
 
@@ -878,7 +921,7 @@ module.exports = (passport) => {
         "No.",
         "ID Estudiante",
         "Nombre Completo",
-        "Calificación Final"
+        "Calificación Final",
       ]);
       estudiantesHeader.font = { bold: true };
       estudiantesHeader.fill = {
@@ -889,12 +932,19 @@ module.exports = (passport) => {
       estudiantesHeader.font = { color: { argb: "FFFFFFFF" }, bold: true };
 
       inscritos.forEach((ins, index) => {
-        const estudiante = ins.Horario && ins.Horario.DatosPersonale ? ins.Horario.DatosPersonale : null;
+        const estudiante =
+          ins.Horario && ins.Horario.DatosPersonale
+            ? ins.Horario.DatosPersonale
+            : null;
         worksheet.addRow([
           index + 1,
           estudiante ? estudiante.id : "",
-          estudiante ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${estudiante.ape_materno || ""}` : "",
-          ins.calificacion_final || ""
+          estudiante
+            ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${
+                estudiante.ape_materno || ""
+              }`
+            : "",
+          ins.calificacion_final || "",
         ]);
       });
 
@@ -913,15 +963,269 @@ module.exports = (passport) => {
       );
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename=clase_${grupo.nombre}_${new Date().toISOString().split('T')[0]}.xlsx`
+        `attachment; filename=clase_${grupo.nombre}_${
+          new Date().toISOString().split("T")[0]
+        }.xlsx`
       );
 
       await workbook.xlsx.write(res);
       res.end();
-
     } catch (err) {
       console.error("Error al generar Excel:", err);
-      return res.status(500).json({ success: false, msg: "Error al generar Excel" });
+      return res
+        .status(500)
+        .json({ success: false, msg: "Error al generar Excel" });
+    }
+  });
+
+  // ============================
+  //  VALIDAR FECHA DE EVALUACIÓN ETS
+  // ============================
+  router.get("/ValidarFechaETS", async (req, res) => {
+    try {
+      const fechas = await bd.FechasRelevantes.findOne();
+      
+      if (!fechas) {
+        return res.json({
+          valido: false,
+          mensaje: "No hay fechas configuradas en el sistema"
+        });
+      }
+
+      const hoy = new Date();
+      const inicio = new Date(fechas.eval_ets);
+      const fin = new Date(fechas.fin_evalu_ets);
+
+      // Normalizar fechas (solo día, mes, año)
+      const hoyNorm = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+      const inicioNorm = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate());
+      const finNorm = new Date(fin.getFullYear(), fin.getMonth(), fin.getDate());
+
+      if (hoyNorm >= inicioNorm && hoyNorm <= finNorm) {
+        return res.json({
+          valido: true,
+          mensaje: "Período de evaluación ETS activo"
+        });
+      } else {
+        return res.json({
+          valido: false,
+          mensaje: `El período de evaluación ETS es del ${inicio.toLocaleDateString('es-MX')} al ${fin.toLocaleDateString('es-MX')}`
+        });
+      }
+    } catch (err) {
+      console.error("Error al validar fecha ETS:", err);
+      return res.status(500).json({
+        valido: false,
+        mensaje: "Error al validar la fecha de evaluación"
+      });
+    }
+  });
+
+  // ============================
+  //  OBTENER GRUPOS ETS DEL PROFESOR
+  // ============================
+  router.get("/ObtenerMisGruposETS/:id", async (req, res) => {
+    try {
+      const { id } = req.params; // ID del profesor
+      console.log("Buscando grupos ETS para profesor:", id);
+
+      const gruposETS = await bd.ETS_grupo.findAll({
+        where: { id_aplicante: id },
+        include: [
+          {
+            model: bd.Unidad_Aprendizaje,
+            attributes: ['id', 'nombre', 'credito', 'semestre']
+          }
+        ]
+      });
+
+      console.log("Grupos encontrados en BD:", gruposETS.length);
+
+      const grupos = gruposETS.map(g => ({
+        id: g.id,
+        id_ua: g.id_ua,
+        nombre_ua: g.Unidad_Aprendizaje ? g.Unidad_Aprendizaje.nombre : '',
+        turno: g.turno,
+        hora_inicio: g.hora_inicio,
+        hora_final: g.hora_final,
+        fecha: g.fecha
+      }));
+
+      console.log("Enviando respuesta con", grupos.length, "grupos");
+
+      return res.json({
+        success: true,
+        grupos: grupos
+      });
+    } catch (err) {
+      console.error("Error al obtener grupos ETS:", err);
+      return res.status(500).json({
+        success: false,
+        mensaje: "Error al obtener grupos ETS"
+      });
+    }
+  });
+
+  // ============================
+  //  OBTENER ALUMNOS DE UN GRUPO ETS
+  // ============================
+  router.get("/ObtenerAlumnosETS/:idGrupo", async (req, res) => {
+    try {
+      const { idGrupo } = req.params;
+
+      const alumnosETS = await bd.ETS.findAll({
+        where: { id_grupo: idGrupo },
+        include: [
+          {
+            model: bd.Materia_Reprobada,
+            required: true,
+            include: [
+              {
+                model: bd.Estudiante,
+                required: true,
+                include: [
+                  {
+                    model: bd.DatosPersonales,
+                    required: true,
+                    attributes: ['id', 'nombre', 'ape_paterno', 'ape_materno']
+                  }
+                ]
+              },
+              {
+                model: bd.Unidad_Aprendizaje,
+                required: true,
+                attributes: ['id', 'nombre']
+              }
+            ]
+          }
+        ]
+      });
+
+      const alumnos = alumnosETS.map(ets => ({
+        id_ets: ets.id,
+        boleta: ets.Materia_Reprobada.Estudiante.DatosPersonale.id,
+        nombre: ets.Materia_Reprobada.Estudiante.DatosPersonale.nombre,
+        ape_paterno: ets.Materia_Reprobada.Estudiante.DatosPersonale.ape_paterno,
+        ape_materno: ets.Materia_Reprobada.Estudiante.DatosPersonale.ape_materno,
+        nombre_ua: ets.Materia_Reprobada.Unidad_Aprendizaje.nombre,
+        calificado: ets.calificado
+      }));
+
+      return res.json({
+        success: true,
+        alumnos: alumnos
+      });
+    } catch (err) {
+      console.error("Error al obtener alumnos ETS:", err);
+      return res.status(500).json({
+        success: false,
+        mensaje: "Error al obtener alumnos del grupo ETS"
+      });
+    }
+  });
+
+  // ============================
+  //  REGISTRAR CALIFICACIONES ETS
+  // ============================
+  router.post("/RegistrarCalificacionesETS", async (req, res) => {
+    try {
+      const { calificaciones } = req.body;
+
+      if (!calificaciones || !Array.isArray(calificaciones)) {
+        return res.status(400).json({
+          success: false,
+          mensaje: "Formato inválido de calificaciones"
+        });
+      }
+
+      for (const cal of calificaciones) {
+        const calificacion = cal.calificacion === null ? 0 : parseFloat(cal.calificacion);
+
+        // Actualizar la calificación en la tabla ETS
+        await bd.ETS.update(
+          { calificado: calificacion },
+          { where: { id: cal.id_ets } }
+        );
+
+        // Obtener información del ETS
+        const ets = await bd.ETS.findOne({
+          where: { id: cal.id_ets },
+          include: [
+            {
+              model: bd.Materia_Reprobada,
+              include: [
+                {
+                  model: bd.Estudiante,
+                  include: [{ model: bd.DatosPersonales }]
+                },
+                {
+                  model: bd.Unidad_Aprendizaje
+                }
+              ]
+            }
+          ]
+        });
+
+        if (!ets) continue;
+
+        const materiaRep = ets.Materia_Reprobada;
+        const estudiante = materiaRep.Estudiante;
+        const ua = materiaRep.Unidad_Aprendizaje;
+        const alumnoId = estudiante.DatosPersonale.id;
+
+        // Si aprueba (calificación >= 6.0)
+        if (calificacion >= 6.0) {
+          // Buscar el kardex del alumno
+          const kardex = await bd.Kardex.findOne({
+            where: { id_alumno: alumnoId }
+          });
+
+          if (kardex) {
+            // Agregar a UA_Aprobada
+            const fechas = await bd.FechasRelevantes.findOne();
+            
+            await bd.UA_Aprobada.create({
+              id: uuidv4().replace(/-/g, "").substring(0, 15),
+              id_kardex: kardex.id,
+              unidad_aprendizaje: ua.id,
+              calificacion_final: calificacion,
+              semestre: ua.semestre,
+              periodo: fechas ? fechas.periodo : 'N/A',
+              fecha: new Date(),
+              metodo_aprobado: "ETS"
+            });
+          }
+
+          // Eliminar de materia_reprobada
+          await bd.Materia_Reprobada.destroy({
+            where: { id: materiaRep.id }
+          });
+
+        } else {
+          // Si no aprueba (calificación < 6.0)
+          // Reducir un periodo en materia_reprobada
+          const nuevosPeriodos = Math.max(0, materiaRep.periodos_restantes - 1);
+          
+          await bd.Materia_Reprobada.update(
+            {
+              periodos_restantes: nuevosPeriodos,
+              estado_actual: "Reprobada"
+            },
+            { where: { id: materiaRep.id } }
+          );
+        }
+      }
+
+      return res.json({
+        success: true,
+        mensaje: "Calificaciones registradas correctamente"
+      });
+    } catch (err) {
+      console.error("Error al registrar calificaciones ETS:", err);
+      return res.status(500).json({
+        success: false,
+        mensaje: "Error al registrar las calificaciones"
+      });
     }
   });
 

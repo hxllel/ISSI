@@ -26,6 +26,7 @@ import { PaseLista } from "./components/profesor/PaseLista";
 import { RegistrarCalificaciones } from "./components/profesor/RegistrarCalificaciones";
 import { InformacionPersonal } from "./components/profesor/InformacionPersonal";
 import { EditarDatosPersonales } from "./components/profesor/EditarDatosPersonales";
+import { ETS as ETSProfesor } from "./components/profesor/ETS";
 
 // ADMIN
 import { Administrador } from "./components/admin/Administrador";
@@ -41,7 +42,7 @@ import { EditarGrupo } from "./components/admin/EditarGrupo";
 import { Distribucion } from "./components/admin/Distribucion";
 import { ETS } from "./components/admin/ETS";
 import { PublicarNoticia } from "./components/admin/PublicarNoticia";
-
+import { GenerarCitas } from "./components/admin/GenerarCitas";
 // PAGINAS INDIVIDUALES
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
@@ -102,6 +103,7 @@ function App() {
           <Route path="/profesor/:id" element={<Profesor />} />
           <Route path="/profesor/Chat" element={<ChatbotProfesor />} />
           <Route path="/profesor/:id/clases" element={<ClasesImpartidas />} />
+          <Route path="/profesor/:id/ets" element={<ETSProfesor />} />
           <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
           <Route
             path="/profesor/RegistrarCalificaciones/:id/:periodo"
@@ -175,6 +177,10 @@ function App() {
           <Route
             path="/administrador/datosMedicos"
             element={<DatosMedicos />}
+          />
+          <Route
+            path="/administrador/GenerarCitas"
+            element={<GenerarCitas />}
           />
         </Routes>
       </BrowserRouter>

@@ -10,7 +10,8 @@ export function EvaluacionProfesores() {
   const API = 'http://localhost:4000';
 
   const [profesores, setProfesores] = useState([]);
-  const [profesorSeleccionado, setProfesorSeleccionado] = useState("");
+  const [profesorSeleccionado, setProfesorSeleccionado] = useState(null);
+  const [mostrarCuestionario, setMostrarCuestionario] = useState(false);
   const [respuestas, setRespuestas] = useState({});
   const [mostrarResultado, setMostrarResultado] = useState(null);
   const [puntuacionTotal, setPuntuacionTotal] = useState(0);
@@ -132,12 +133,11 @@ export function EvaluacionProfesores() {
     }
   ];
 
-  // ---- VALIDAR FECHA ----
   useEffect(() => {
   fetch(`${API}/ValidarFechaEvaluacion`, { credentials: "include" })
     .then((res) => res.json())
     .then((data) => {
-      console.log("VALIDAR FECHA RESPUESTA:", data);  // ⬅️ AGREGA ESTO
+      console.log("VALIDAR FECHA RESPUESTA:", data); 
 
       setFechaValida(data.valido || false);
       setMensajeFecha(data.mensaje || "Error al validar fecha");
@@ -150,7 +150,6 @@ export function EvaluacionProfesores() {
 }, []);
 
 
-  // ---- OBTENER PROFESORES ----
   useEffect(() => {
     fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
       .then((res) => res.json())
@@ -163,12 +162,10 @@ export function EvaluacionProfesores() {
       .catch((err) => console.error("Error al obtener profesores:", err));
   }, [id]);
 
-  // ---- RESPUESTA ----
   const handleRespuesta = (preguntaId, peso) => {
     setRespuestas({ ...respuestas, [preguntaId]: peso });
   };
 
-  // ---- SUBMIT ----
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -209,10 +206,25 @@ export function EvaluacionProfesores() {
 
   // ---- RESET ----
   const resetEvaluacion = () => {
-    setProfesorSeleccionado("");
+    setProfesorSeleccionado(null);
+    setMostrarCuestionario(false);
     setRespuestas({});
     setMostrarResultado(false);
     setPuntuacionTotal(0);
+  };
+
+  // ---- SELECCIONAR PROFESOR PARA EVALUAR ----
+  const handleEvaluarProfesor = (profesor) => {
+    setProfesorSeleccionado(profesor);
+    setMostrarCuestionario(true);
+    setRespuestas({});
+  };
+
+  // ---- VOLVER A LA LISTA ----
+  const volverALista = () => {
+    setMostrarCuestionario(false);
+    setProfesorSeleccionado(null);
+    setRespuestas({});
   };
 
   // ---- RENDER ----
@@ -237,46 +249,70 @@ export function EvaluacionProfesores() {
             </div>
           </section>
         ) : !mostrarResultado ? (
-          <section className="formulario-evaluacion">
-            <div className="selector-profesor">
-              <label htmlFor="profesor">Selecciona al profesor a evaluar:</label>
-              <select
-                id="profesor"
-                value={profesorSeleccionado}
-                onChange={(e) => setProfesorSeleccionado(e.target.value)}
-                className="select-profesor"
-              >
-                <option value="">-- Selecciona un profesor --</option>
-                {profesores.map((prof, index) => (
-                  <option key={index} value={prof}>
-                    {prof}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <form onSubmit={handleSubmit} className="form-preguntas">
-              {preguntas.map((pregunta) => (
-                <div key={pregunta.id} className="pregunta-card">
-                  <h3 className="pregunta-texto">
-                    {pregunta.id}. {pregunta.pregunta}
-                  </h3>
-                  <div className="opciones-container">
-                    {pregunta.opciones.map((opc, i) => (
-                      <label key={i} className="opcion-label">
-                        <input
-                          type="radio"
-                          name={`pregunta-${pregunta.id}`}
-                          value={opc.peso}
-                          onChange={() => handleRespuesta(pregunta.id, opc.peso)}
-                          checked={respuestas[pregunta.id] === opc.peso}
-                        />
-                        <span className="opcion-texto">{opc.texto}</span>
-                      </label>
-                    ))}
-                  </div>
+          <>
+            {!mostrarCuestionario ? (
+              // ---- TABLA DE PROFESORES ----
+              <section className="lista-profesores">
+                <div className="lista-header">
+                  <h2>Mis Profesores</h2>
+                  <p>Selecciona un profesor para evaluar su desempeño</p>
                 </div>
-              ))}
+                
+                <div className="tabla-container">
+                  <table className="tabla-profesores">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Nombre del Profesor</th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {profesores.length > 0 ? (
+                        profesores.map((profesor, index) => (
+                          <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td className="nombre-profesor">{profesor}</td>
+                            <td>
+                              <button
+                                className="btn-evaluar"
+                                onClick={() => handleEvaluarProfesor(profesor)}
+                              >
+                                Evaluar
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="3" className="sin-datos">
+                            No hay profesores disponibles para evaluar
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div className="botones-container">
+                  <button
+                    type="button"
+                    className="btn-cancelar"
+                    onClick={() => navigate(`/alumno/${id}`)}
+                  >
+                    Volver al inicio
+                  </button>
+                </div>
+              </section>
+            ) : (
+              // ---- CUESTIONARIO DE EVALUACIÓN ----
+              <section className="formulario-evaluacion">
+                <div className="profesor-evaluando">
+                  <h2>Evaluando a: {profesorSeleccionado}</h2>
+                  <button className="btn-volver-lista" onClick={volverALista}>
+                    ← Volver a la lista
+                  </button>
+                </div>
 
               <div className="botones-container">
                 <button type="submit" className="btn azul">
@@ -292,6 +328,45 @@ export function EvaluacionProfesores() {
               </div>
             </form>
           </section>
+                <form onSubmit={handleSubmit} className="form-preguntas">
+                  {preguntas.map((pregunta) => (
+                    <div key={pregunta.id} className="pregunta-card">
+                      <h3 className="pregunta-texto">
+                        {pregunta.id}. {pregunta.pregunta}
+                      </h3>
+                      <div className="opciones-container">
+                        {pregunta.opciones.map((opc, i) => (
+                          <label key={i} className="opcion-label">
+                            <input
+                              type="radio"
+                              name={`pregunta-${pregunta.id}`}
+                              value={opc.peso}
+                              onChange={() => handleRespuesta(pregunta.id, opc.peso)}
+                              checked={respuestas[pregunta.id] === opc.peso}
+                            />
+                            <span className="opcion-texto">{opc.texto}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="botones-container">
+                    <button type="submit" className="btn-enviar">
+                      Enviar Evaluación
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-cancelar"
+                      onClick={volverALista}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </section>
+            )}
+          </>
         ) : (
           <section className="resultado-evaluacion">
             <div className="resultado-card">

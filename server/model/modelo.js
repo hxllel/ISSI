@@ -108,6 +108,10 @@ Estudiante.belongsTo(DatosPersonales, {
   foreignKey: "id_usuario",
   targetKey: "id",
 });
+DatosPersonales.hasOne(Estudiante, {
+  foreignKey: "id_usuario",
+  targetKey: "id",
+});
 
 const Carrera = sequelize.define(
   "Carrera",
@@ -128,6 +132,7 @@ const Unidad_Aprendizaje = sequelize.define(
     credito: { type: DataTypes.FLOAT, allowNull: false },
     carrera: { type: DataTypes.STRING(50), allowNull: false },
     semestre: { type: DataTypes.INTEGER, allowNull: false },
+    tipo: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "unidad_de_aprendizaje", timestamps: false }
 );
@@ -265,6 +270,10 @@ const Inscripcion = sequelize.define(
 );
 
 Inscripcion.belongsTo(DatosPersonales, {
+  foreignKey: "id_alumno",
+  targetKey: "id",
+});
+DatosPersonales.hasOne(Inscripcion, {
   foreignKey: "id_alumno",
   targetKey: "id",
 });
@@ -567,6 +576,8 @@ async function SincronizarModelo() {
 
 DatosPersonales.prototype.validPassword = async function (password) {
   const result = bcrypt.compareSync(password, this.contrasena);
+  console.log("Contraseña ingresada:", password);
+  console.log("Resultado de comparación:", result);
   return result;
 };
 
