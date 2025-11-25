@@ -436,7 +436,7 @@ module.exports = (passport) => {
         try {
           const base64Data =
             typeof req.body.fotoBase64 === "string" &&
-              req.body.fotoBase64.includes(",")
+            req.body.fotoBase64.includes(",")
               ? req.body.fotoBase64.split(",")[1]
               : req.body.fotoBase64;
           fields.foto = Buffer.from(base64Data, "base64");
@@ -860,7 +860,9 @@ module.exports = (passport) => {
       return res.json({ success: true, profesores });
     } catch (err) {
       console.error("Error al obtener profesores:", err);
-      return res.status(500).json({ success: false, mensaje: "Error al obtener profesores" });
+      return res
+        .status(500)
+        .json({ success: false, mensaje: "Error al obtener profesores" });
     }
   });
 
@@ -875,7 +877,9 @@ module.exports = (passport) => {
       return res.json({ success: true, unidades });
     } catch (err) {
       console.error("Error al obtener unidades:", err);
-      return res.status(500).json({ success: false, mensaje: "Error al obtener unidades" });
+      return res
+        .status(500)
+        .json({ success: false, mensaje: "Error al obtener unidades" });
     }
   });
 
@@ -884,13 +888,21 @@ module.exports = (passport) => {
   // ============================
   router.post("/CrearGrupoETS", async (req, res) => {
     try {
-      const { id_ua, id_profesor, turno, hora_inicio, hora_final, fecha } = req.body;
+      const { id_ua, id_profesor, turno, hora_inicio, hora_final, fecha } =
+        req.body;
 
       // Validar que todos los campos estén presentes
-      if (!id_ua || !id_profesor || !turno || !hora_inicio || !hora_final || !fecha) {
+      if (
+        !id_ua ||
+        !id_profesor ||
+        !turno ||
+        !hora_inicio ||
+        !hora_final ||
+        !fecha
+      ) {
         return res.status(400).json({
           success: false,
-          mensaje: "Todos los campos son obligatorios"
+          mensaje: "Todos los campos son obligatorios",
         });
       }
 
@@ -905,18 +917,22 @@ module.exports = (passport) => {
         turno,
         hora_inicio,
         hora_final,
-        fecha
+        fecha,
       });
 
       return res.json({
         success: true,
-        mensaje: "Grupo ETS creado exitosamente"
+        mensaje: "Grupo ETS creado exitosamente",
       });
     } catch (err) {
       console.error("Error al crear grupo ETS:", err);
       return res.status(500).json({
         success: false,
-        mensaje: "Error al crear el grupo ETS"
+        mensaje: "Error al crear el grupo ETS",
+      });
+    }
+  });
+
   // POST /GenerarCitas
   router.post("/GenerarCitas/:edo", async (req, res) => {
     const { fecha_ini, fecha_fin } = req.body;
