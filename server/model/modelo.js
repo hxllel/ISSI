@@ -567,6 +567,8 @@ async function SincronizarModelo() {
 
 DatosPersonales.prototype.validPassword = async function (password) {
   const result = bcrypt.compareSync(password, this.contrasena);
+  console.log("Contraseña ingresada:", password);
+  console.log("Resultado de comparación:", result);
   return result;
 };
 
