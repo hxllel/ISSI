@@ -314,6 +314,20 @@ export function EvaluacionProfesores() {
                   </button>
                 </div>
 
+              <div className="botones-container">
+                <button type="submit" className="btn azul">
+                  Enviar Evaluación
+                </button>
+                <button
+                  type="button"
+                  className="btn blanco"
+                  onClick={() => navigate(`/alumno/${id}`)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </section>
                 <form onSubmit={handleSubmit} className="form-preguntas">
                   {preguntas.map((pregunta) => (
                     <div key={pregunta.id} className="pregunta-card">

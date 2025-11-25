@@ -72,7 +72,7 @@ export function GestionarProfesores() {
       <AdminSidebar />
 
       {/* CONTENIDO PRINCIPAL */}
-      <main className="contenido">
+      <main className="main-content">
         <header className="chat-header">
           <div className="encabezado-section">
           <h1>Profesores</h1>

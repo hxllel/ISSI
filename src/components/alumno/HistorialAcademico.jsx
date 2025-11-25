@@ -38,7 +38,7 @@ export function HistorialAcademico() {
     return (
       <div key={semestre} className="historial-semestre">
         <h3>Semestre {semestre}</h3>
-        <table className="horario-table" border="1" cellPadding={5}>
+        <table className="ets-table" >
           <thead>
             <tr>
               <th>Unidad de Aprendizaje</th>

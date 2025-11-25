@@ -91,3 +91,10 @@
     box-shadow: none;
   }
 }
+
+.menu-item.active {
+  background-color: #4b2c82; /* moradito */
+  color: white;
+  font-weight: bold;
+  border-left: 4px solid #fff;
+}

@@ -232,7 +232,7 @@ export function MateriasReprobadas() {
                         {(() => {
                           if (validado) {
                             return (
-                              <button disabled>
+                              <button className="btn blanco"disabled>
                                 EL COMPROBANTE ESTA VALIDADO
                               </button>
                             );
@@ -240,7 +240,7 @@ export function MateriasReprobadas() {
                             if (etsDeEstaMateria) {
                               if (etsDeEstaMateria.comprobante) {
                                 return (
-                                  <button disabled style={{ opacity: 0.5 }}>
+                                  <button className="btn blanco">
                                     Comprobante subido
                                   </button>
                                 );
@@ -285,7 +285,7 @@ export function MateriasReprobadas() {
                           );
                         })()}
                         <br />
-                        <button onClick={() => handleHistor(materia.id)}>
+                        <button className="btn blanco" onClick={() => handleHistor(materia.id)}>
                           Revisar historial de ets
                         </button>
                       </td>
