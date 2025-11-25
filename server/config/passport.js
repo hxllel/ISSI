@@ -14,8 +14,8 @@ module.exports = function (passport) {
         console.log("Intento de inicio de sesión con ID:", id);
         try {
           const user = await DatosPersonales.findByPk(id);
+          console.log("Usuario no encontrado");
           if (!user) {
-            console.log("Usuario no encontrado");
             return done(null, false, { message: "Usuario no encontrado" });
           }
 

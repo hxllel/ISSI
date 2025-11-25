@@ -848,6 +848,75 @@ module.exports = (passport) => {
     }
   });
 
+  // ============================
+  //  OBTENER PROFESORES PARA ETS
+  // ============================
+  router.get("/ObtenerProfesoresETS", async (req, res) => {
+    try {
+      const profesores = await bd.DatosPersonales.findAll({
+        where: { tipo_usuario: "profesor" },
+        attributes: ["id", "nombre", "ape_paterno", "ape_materno"],
+      });
+      return res.json({ success: true, profesores });
+    } catch (err) {
+      console.error("Error al obtener profesores:", err);
+      return res.status(500).json({ success: false, mensaje: "Error al obtener profesores" });
+    }
+  });
+
+  // ============================
+  //  OBTENER UNIDADES DE APRENDIZAJE PARA ETS
+  // ============================
+  router.get("/ObtenerUnidadesETS", async (req, res) => {
+    try {
+      const unidades = await bd.Unidad_Aprendizaje.findAll({
+        attributes: ["id", "nombre", "credito", "semestre", "carrera"],
+      });
+      return res.json({ success: true, unidades });
+    } catch (err) {
+      console.error("Error al obtener unidades:", err);
+      return res.status(500).json({ success: false, mensaje: "Error al obtener unidades" });
+    }
+  });
+
+  // ============================
+  //  CREAR GRUPO ETS
+  // ============================
+  router.post("/CrearGrupoETS", async (req, res) => {
+    try {
+      const { id_ua, id_profesor, turno, hora_inicio, hora_final, fecha } = req.body;
+
+      // Validar que todos los campos estén presentes
+      if (!id_ua || !id_profesor || !turno || !hora_inicio || !hora_final || !fecha) {
+        return res.status(400).json({
+          success: false,
+          mensaje: "Todos los campos son obligatorios"
+        });
+      }
+
+      // Generar ID único para el grupo ETS
+      const id = uuidv4().replace(/-/g, "").substring(0, 15);
+
+      // Crear el grupo ETS
+      await bd.ETS_grupo.create({
+        id,
+        id_ua,
+        id_aplicante: id_profesor,
+        turno,
+        hora_inicio,
+        hora_final,
+        fecha
+      });
+
+      return res.json({
+        success: true,
+        mensaje: "Grupo ETS creado exitosamente"
+      });
+    } catch (err) {
+      console.error("Error al crear grupo ETS:", err);
+      return res.status(500).json({
+        success: false,
+        mensaje: "Error al crear el grupo ETS"
   // POST /GenerarCitas
   router.post("/GenerarCitas/:edo", async (req, res) => {
     const { fecha_ini, fecha_fin } = req.body;
