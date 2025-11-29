@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./Administrador.css";
 import {
   FaUserGraduate,
@@ -8,7 +9,11 @@ import {
   FaTrashAlt,
   FaFileAlt,
   FaBullhorn,
+  FaFileInvoiceDollar,
+  FaGraduationCap, FaBook
 } from "react-icons/fa";
+import { MdEventAvailable } from "react-icons/md";
+
 import { AdminSidebar } from "../admin/AdminSidebar.jsx";
 
 
@@ -21,6 +26,13 @@ export function Administrador() {
   const handleClickETS = () => navigate("ETS");
   const handleClickPublicarNoticia = () => navigate("publicarNoticia");
   const handleLogout = () => navigate("/");
+
+  const handleETS = () => navigate("/administrador/ETS");
+  const handlePublicarNoticia = () => navigate("/administrador/publicarNoticia");
+  const handleCarreras = () => navigate("/administrador/carreras");
+  const handleUnidades = () => navigate("/administrador/unidades");
+  const handleDatosMedicos = () => navigate("/administrador/datosMedicos");
+  const handleGenerarCitas = () => navigate("/administrador/GenerarCitas");
 
   return (
     <div className="admin-container">
@@ -60,25 +72,39 @@ export function Administrador() {
 
             {/* Esta tarjeta viene del primer código */}
             <div className="card">
-              <FaTrashAlt className="icon" />
-              <h3>Eliminar Cursos</h3>
-              <p>Archivar o eliminar cursos existentes del plan de estudios.</p>
-              <button>Eliminar</button>
+              <FaFileInvoiceDollar className="icon" />
+              <h3>ETS</h3>
+              <p>Revisión de comprobantes de pago de Examenes a Título de Suficiencia.</p>
+              <button onClick={handleETS}>Revisar</button>
             </div>
 
             <div className="card">
-              <FaFileAlt className="icon" />
-              <h3>Informes del Sistema</h3>
-              <p>Generar y ver análisis detallados del uso del sistema.</p>
-              <button>Ver Informes</button>
+              <FaBullhorn className="icon" />
+              <h3>Publicar Noticia</h3>
+              <p>Publica noticias o eventos relevantes dentro de la comunidad politecnica.</p>
+              <button onClick={handleClickPublicarNoticia}>Publicar</button>
             </div>
 
             {/* También del primer código */}
             <div className="card">
-              <FaBullhorn className="icon" />
-              <h3>Publicar Noticia</h3>
-              <p>Sube una noticia dirigida a la comunidad politécnica.</p>
-              <button onClick={handleClickPublicarNoticia}>Registrar</button>
+              <FaGraduationCap className="icon" />
+              <h3>Carreras</h3>
+              <p>Agrega nuevas carreras o consulta las que ya existen.</p>
+              <button onClick={handleCarreras}>Consultar</button>
+            </div>
+
+             <div className="card">
+              <FaBook className="icon" />
+              <h3>Unidades de Aprendizaje</h3>
+              <p>Agrega nuevas unidades o edita las que ya existen.</p>
+              <button onClick={handleUnidades}>Agregar</button>
+            </div>
+
+             <div className="card">
+              <MdEventAvailable className="icon" />
+              <h3>Citas de Inscripción</h3>
+              <p>Genera citas para alumnos regulares e irregulares.</p>
+              <button onClick={handleGenerarCitas}>Generar</button>
             </div>
           </div>
         </section>

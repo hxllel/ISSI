@@ -199,7 +199,7 @@ export function ETS() {
                       <td>{grupo.turno}</td>
                       <td>
                         <button
-                          className="ets-btn-revisar"
+                          className="btn azul"
                           onClick={() => handleClickAl(grupo.id)}
                         >
                           Revisar comprobantes de pago
@@ -420,32 +420,18 @@ export function ETS() {
                 }}
               >
                 <button
+                  className="btn azul"
                   type="submit"
-                  style={{
-                    flex: 1,
-                    padding: "10px",
-                    backgroundColor: "#4CAF50",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
+                  
                 >
                   Crear Grupo
                 </button>
 
                 <button
                   type="button"
+                  className="btn blanco"
                   onClick={() => setModalCrear(false)}
-                  style={{
-                    flex: 1,
-                    padding: "10px",
-                    backgroundColor: "#f44336",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
+                  
                 >
                   Cancelar
                 </button>

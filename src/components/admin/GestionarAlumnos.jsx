@@ -119,6 +119,9 @@ export function GestionarAlumnos() {
           <div className="encabezado-section">
             <h1>Gestión de Estudiantes</h1>
           </div>
+          <div> <button className="btn azul" onClick={handleRegistrar}>
+            + Registrar nuevo estudiante
+          </button></div>
           <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
 
@@ -139,9 +142,7 @@ export function GestionarAlumnos() {
             </select>
           </label>
 
-          <button className="btn azul" onClick={handleRegistrar}>
-            + Registrar nuevo estudiante
-          </button>
+          
         </div>
 
         {/* TABLA */}
@@ -161,9 +162,7 @@ export function GestionarAlumnos() {
               </button>
             </div>
 
-            <button className="btn azul" onClick={handleRegistrar}>
-              + Registrar nuevo estudiante
-            </button>
+            
           </div>
 
           <table className="tabla">
@@ -206,8 +205,9 @@ export function GestionarAlumnos() {
           </table>
 
           <div className="tabla-footer">
-            <button className="btn-descargar">Descargar Listado</button>
-
+            <div>
+            <button className="btn azul">Descargar Listado</button>
+            </div>
             <div className="paginacion">
               <button onClick={anteriorPagina} disabled={paginaActual === 1}>
                 Anterior
