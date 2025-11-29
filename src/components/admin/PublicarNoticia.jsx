@@ -286,7 +286,7 @@ export function PublicarNoticia() {
                   className="btn azul"
                   disabled={loading}
                 >
-                  {loading ? "Publicando..." : "Publicar Noticia"}
+                  {loading ? "Publicando..." : "Publicar"}
                 </button>
               </div>
             </form>

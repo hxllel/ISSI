@@ -75,8 +75,11 @@ export function GestionarProfesores() {
       <main className="main-content">
         <header className="chat-header">
           <div className="encabezado-section">
-          <h1>Profesores</h1>
+          <h1>Gestión de Profesores</h1>
           </div>
+          <div> <button className="btn azul" onClick={handleRegistrarProf}>
+              + Registrar nuevo profesor
+            </button></div>
           <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
 
@@ -98,9 +101,7 @@ export function GestionarProfesores() {
 </div>
 
 
-            <button className="btn azul" onClick={handleRegistrarProf}>
-              + Registrar nuevo profesor
-            </button>
+            
           </div>
 
           <table className="tabla">
@@ -151,7 +152,9 @@ export function GestionarProfesores() {
           </table>
 
           <div className="tabla-footer">
-            <button className="btn-descargar">Descargar Listado</button>
+            <div>
+            <button className="btn azul">Descargar Listado</button>
+            </div>
             <div className="paginacion">
               <button>Anterior</button>
               <span className="pagina-activa">1</span>

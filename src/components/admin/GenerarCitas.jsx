@@ -187,7 +187,7 @@ export function GenerarCitas() {
               <div className="gc-form-actions">
                 <button
                   type="button"
-                  className="gc-btn gc-btn-cancelar"
+                  className="btn blanco"
                   onClick={() => setModalOpen(false)}
                   disabled={loading}
                 >
@@ -195,7 +195,7 @@ export function GenerarCitas() {
                 </button>
                 <button
                   type="submit"
-                  className="gc-btn gc-btn-enviar"
+                  className="btn azul"
                   disabled={loading}
                 >
                   {loading ? "Generando..." : "Generar Citas"}

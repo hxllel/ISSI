@@ -229,12 +229,12 @@ export function Carreras() {
               />
 
               <div className="modal-actions">
-                <button type="submit" className="btn-guardar">
+                <button type="submit" className="btn azul">
                   {editNombre ? "Guardar cambios" : "Crear"}
                 </button>
                 <button
                   type="button"
-                  className="btn-cancelar-modal"
+                  className="btn blanco"
                   onClick={closeModal}
                 >
                   Cancelar
