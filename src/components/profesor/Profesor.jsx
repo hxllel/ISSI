@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import "./Profesor.css";
 import { ClasesImpartidas } from "./ClasesImpartidas";
 import { ProfeSideBar } from "./ProfeSidebar";
+import { VerAvisos } from "../shared/VerAvisos";
+
 
 export function Profesor() {
   const { id } = useParams();
@@ -140,7 +142,14 @@ export function Profesor() {
         ) : (
           <ClasesImpartidas profesorId={id} />
         )}
+
+         <section className="avisos-section">
+                  <VerAvisos objetivo="profesor" />
+                </section>
       </main>
+
     </div>
+
+    
   );
 }
