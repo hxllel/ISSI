@@ -2,12 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarAlumnos.css";
 
-
-    
 export function GestionarAlumnos() {
 
-    
-        
   const [carreras, setCarreras] = useState([]);
   const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
   const [datos, setDatos] = useState([]);
@@ -20,15 +16,26 @@ export function GestionarAlumnos() {
   const handleClickProf = () => navigate("../administrador/gestionarProfesores");
   const handleClickCursos = () => navigate("../administrador/gestionarCursos");
   const handleRegistrar = () => navigate("registrarAlumno");
-  const handleClickEdit = (id) => { navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
-    };
+
+  const handleClickEdit = (id) => { 
+    navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
+  };
+
   const handleAbrirModal = (id) => {
     setMostrarModal(true);
     setIdAlumno(id);
   };
+
   const handleCerrarModal = () => setMostrarModal(false);
+
   const handleEliminar = () => setDelete(true);
 
+  // NUEVO → Navegar a Datos Médicos y Enfermedades
+  const handleVerDatosMedicos = (idAlumno) => {
+    navigate(`/administrador/datosMedicos/${idAlumno}`);
+  };
+
+  // Obtener alumnos
   useEffect(() => {
     fetch("http://localhost:4000/ObtenerAlumnos", { credentials: "include" })
       .then((res) => res.json())
@@ -36,15 +43,17 @@ export function GestionarAlumnos() {
       .catch(() => setDatos([]));
   }, []);
 
+  // Obtener carreras
   useEffect(() => {
-        fetch("http://localhost:4000/ObtenerCarreras", { credentials: "include" })
-            .then((res) => res.json())
-            .then((data) => {
-                setCarreras(data.carreras || []);
-            })
-            .catch((err) => console.error("Error al obtener las carreras:", err));
-    }, []);
+    fetch("http://localhost:4000/ObtenerCarreras", { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        setCarreras(data.carreras || []);
+      })
+      .catch((err) => console.error("Error al obtener las carreras:", err));
+  }, []);
 
+  // Eliminar alumno
   useEffect(() => {
     if (del) {
       fetch(`http://localhost:4000/EliminarAlumno/${idAlumno}`, {
@@ -67,11 +76,12 @@ export function GestionarAlumnos() {
 
   return (
     <div className="layout">
+
       {/* PANEL LATERAL */}
       <aside className="sidebar">
         <div className="logo">
-            <img src="/ipn.png" alt="Logo" className="logo-img" />
-            <span>Gestión Escolar</span>
+          <img src="/ipn.png" alt="Logo" className="logo-img" />
+          <span>Gestión Escolar</span>
         </div>
         <nav className="menu">
           <button onClick={() => navigate("/administrador")} className="menu-item">Panel de Control</button>
@@ -85,11 +95,13 @@ export function GestionarAlumnos() {
 
       {/* CONTENIDO PRINCIPAL */}
       <main className="contenido">
+        
         <header className="encabezado">
           <h1>Estudiantes</h1>
           <div className="acciones">
-            <button className="btn azul" onClick={handleRegistrar}>+ Registrar nuevo estudiantes</button>
-            
+            <button className="btn azul" onClick={handleRegistrar}>
+              + Registrar nuevo estudiante
+            </button>
           </div>
         </header>
 
@@ -97,23 +109,17 @@ export function GestionarAlumnos() {
         <div className="filtros">
           <label>
             Carrera:
-            <select value={carreraSeleccionada} onChange={(e) => setCarreraSeleccionada(e.target.value)}>
-                            <option value="">Seleccione una carrera</option>
-                            {carreras.map((c) => (
-                                <option key={c.id || c.nombre} value={c.nombre}>{c.nombre}</option>
-                            ))}</select>
-          </label>
-          <label>
-            Semestre:
-            <select><option>Seleccionar Semestre</option></select>
-          </label>
-          <label>
-            Grupo:
-            <select><option>Seleccionar Grupo</option></select>
-          </label>
-          <label>
-            Horario:
-            <select><option>Seleccionar Horario</option></select>
+            <select
+              value={carreraSeleccionada}
+              onChange={(e) => setCarreraSeleccionada(e.target.value)}
+            >
+              <option value="">Seleccione una carrera</option>
+              {carreras.map((c) => (
+                <option key={c.id || c.nombre} value={c.nombre}>
+                  {c.nombre}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
 
@@ -134,6 +140,7 @@ export function GestionarAlumnos() {
                 <th>Acciones</th>
               </tr>
             </thead>
+
             <tbody>
               {datos.length > 0 ? (
                 datos.map((a) => (
@@ -142,9 +149,33 @@ export function GestionarAlumnos() {
                     <td>{a.nombre} {a.ape_paterno} {a.ape_materno}</td>
                     <td>{a.carrera}</td>
                     <td>{a.email}</td>
-                    <td>
-                      <button className="icono editar" onClick={() => handleClickEdit(a.id)}>✎</button>
-                      <button className="icono eliminar" onClick={() => handleAbrirModal(a.id)}>🗑</button>
+
+                    <td className="acciones">
+
+                      {/* Editar */}
+                      <button
+                        className="icono editar"
+                        onClick={() => handleClickEdit(a.id)}
+                      >
+                        Editar
+                      </button>
+
+                      {/* Eliminar */}
+                      <button
+                        className="icono eliminar"
+                        onClick={() => handleAbrirModal(a.id)}
+                      >
+                        Eliminar
+                      </button>
+
+                      {/* NUEVO → Datos Médicos */}
+                      <button
+                        className="icono medico"
+                        onClick={() => handleVerDatosMedicos(a.id)}
+                      >
+                        DM
+                      </button>
+
                     </td>
                   </tr>
                 ))
@@ -152,6 +183,7 @@ export function GestionarAlumnos() {
                 <tr><td colSpan="5">No hay alumnos disponibles</td></tr>
               )}
             </tbody>
+
           </table>
 
           <div className="tabla-footer">
@@ -177,7 +209,10 @@ export function GestionarAlumnos() {
             </div>
           </div>
         )}
+
       </main>
+
     </div>
   );
 }
+

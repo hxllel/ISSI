@@ -11,6 +11,9 @@ export default function Unidades() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
+  // NUEVO: lista de carreras para el select
+  const [carreras, setCarreras] = useState([]);
+
   const load = async () => {
     setLoading(true);
     try {
@@ -23,7 +26,18 @@ export default function Unidades() {
     }
   };
 
+  // Carga de UAs
   useEffect(() => { load(); }, []);
+
+  // NUEVO: carga de carreras desde el backend (igual que en RegistrarCurso)
+  useEffect(() => {
+    fetch('http://localhost:4000/ObtenerCarreras', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        setCarreras(data.carreras || []);
+      })
+      .catch((err) => console.error('Error al obtener las carreras:', err));
+  }, []);
 
   const openCreate = () => {
     setEditUA(null);
@@ -56,7 +70,7 @@ export default function Unidades() {
       const payload = {
         nombre: form.nombre,
         credito: Number(form.credito),
-        carrera: form.carrera,
+        carrera: form.carrera,      // sigue siendo string con el nombre de la carrera
         semestre: Number(form.semestre)
       };
 
@@ -156,13 +170,22 @@ export default function Unidades() {
                 onChange={onChange}
                 required
               />
-              <input
+
+              {/* AQUÍ VA EL SELECT DE CARRERA EN VEZ DEL INPUT */}
+              <select
                 name="carrera"
-                placeholder="Carrera (coincide con carrera.nombre)"
                 value={form.carrera}
                 onChange={onChange}
                 required
-              />
+              >
+                <option value="">Seleccione una carrera</option>
+                {carreras.map((c) => (
+                  <option key={c.id || c.nombre} value={c.nombre}>
+                    {c.nombre}
+                  </option>
+                ))}
+              </select>
+
               <input
                 name="semestre"
                 type="number"
@@ -183,4 +206,5 @@ export default function Unidades() {
     </div>
   );
 }
+
 

@@ -102,7 +102,7 @@ function App() {
             path="administrador/gestionarCursos/distribucionHorarios/:id"
             element={<Distribucion />}
           />
-          <Route path="administrador/datosMedicos" element={<DatosMedicos />} />
+          <Route path="administrador/datosMedicos/:id" element={<DatosMedicos />} />
 
           <Route path="alumno/inscripcion/:id" element={<Inscripcion />} />
           <Route path="alumno/editarDatos/:id" element={<EditarDatos />} />
