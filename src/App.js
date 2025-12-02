@@ -171,6 +171,7 @@ function App() {
             path="/administrador/gestionarCursos/distribucionHorarios/:id"
             element={<Distribucion />}
           />
+          <Route path="administrador/datosMedicos/:id" element={<DatosMedicos />} />
 
           {/* ADMIN PÁGINAS */}
           <Route path="/administrador/carreras" element={<Carreras />} />

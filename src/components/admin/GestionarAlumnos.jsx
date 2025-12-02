@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./GestionarAlumnos.css";
 import { AdminSidebar } from "./AdminSidebar";
 
-
 export function GestionarAlumnos() {
+
   const [carreras, setCarreras] = useState([]);
   const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
   const [datos, setDatos] = useState([]);
@@ -26,18 +26,26 @@ export function GestionarAlumnos() {
   const handleClickProf = () => navigate("../administrador/gestionarProfesores");
   const handleClickCursos = () => navigate("../administrador/gestionarCursos");
   const handleRegistrar = () => navigate("registrarAlumno");
-  const handleClickEdit = (id) =>
-    navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
 
-  // Modal
+  const handleClickEdit = (id) => { 
+    navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
+  };
+
   const handleAbrirModal = (id) => {
     setMostrarModal(true);
     setIdAlumno(id);
   };
+
   const handleCerrarModal = () => setMostrarModal(false);
+
   const handleEliminar = () => setDelete(true);
 
-  // Cargar alumnos
+  // NUEVO → Navegar a Datos Médicos y Enfermedades
+  const handleVerDatosMedicos = (idAlumno) => {
+    navigate(`/administrador/datosMedicos/${idAlumno}`);
+  };
+
+  // Obtener alumnos
   useEffect(() => {
     fetch(`${API}/ObtenerAlumnos`, { credentials: "include" })
       .then((res) => res.json())
@@ -186,13 +194,33 @@ export function GestionarAlumnos() {
                     </td>
                     <td>{a.carrera}</td>
                     <td>{a.email}</td>
-                    <td>
-                      <button className="icono editar" onClick={() => handleClickEdit(a.id)}>
-                        ✎
+
+                    <td className="acciones">
+
+                      {/* Editar */}
+                      <button
+                        className="icono editar"
+                        onClick={() => handleClickEdit(a.id)}
+                      >
+                        Editar
                       </button>
-                      <button className="icono eliminar" onClick={() => handleAbrirModal(a.id)}>
-                        🗑
+
+                      {/* Eliminar */}
+                      <button
+                        className="icono eliminar"
+                        onClick={() => handleAbrirModal(a.id)}
+                      >
+                        Eliminar
                       </button>
+
+                      {/* NUEVO → Datos Médicos */}
+                      <button
+                        className="icono medico"
+                        onClick={() => handleVerDatosMedicos(a.id)}
+                      >
+                        DM
+                      </button>
+
                     </td>
                   </tr>
                 ))
@@ -202,6 +230,7 @@ export function GestionarAlumnos() {
                 </tr>
               )}
             </tbody>
+
           </table>
 
           <div className="tabla-footer">
@@ -244,7 +273,10 @@ export function GestionarAlumnos() {
             </div>
           </div>
         )}
+
       </main>
+
     </div>
   );
 }
+
