@@ -265,6 +265,15 @@ export function Inscripcion() {
       <section>
         <SidebarAlumno />
         <main className="main-content">
+          <header className="chat-header">
+          <div className="encabezado-section">
+            <h1 className="titulo">Inscripción de Materias</h1>
+          </div>
+          <p className="descripcion">Realiza la inscripción de tus materias.</p>
+
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
+        <section className="gestion-alumnos"> 
           <div className="inscripcion-container">
             <h1 className="titulo">No es tu tiempo de reinscripción</h1>
             <div style={{ marginTop: "1rem" }}>
@@ -283,6 +292,7 @@ export function Inscripcion() {
               <p>Si crees que hay un error, contacta con la coordinación.</p>
             </div>
           </div>
+          </section>
         </main>
       </section>
     );

@@ -74,6 +74,9 @@ export function ProfeSideBar() {
       state: { profesorId: finalId, fromSidebar: true },
     });
   };
+  const handlePase = () => {navigate(`/profesor/PaseLista/${finalId}`)}
+  const handleCalificaciones = () => {navigate(`/profesor/RegistrarCalificaciones/${finalId}/${periodo}`)}
+  
 
   const handleLogout = () => {
     navigate(`/`);
@@ -89,6 +92,14 @@ export function ProfeSideBar() {
       <nav className="menu">
         <button onClick={handleInicio} className="menu-item">
           Inicio
+        </button>
+
+        <button onClick={handlePase} className="menu-item">
+          Pase de Lista
+        </button>
+
+        <button onClick={handleCalificaciones} className="menu-item">
+          Registrar Calificaciones
         </button>
 
         <button className="menu-item" onClick={handleClases}>

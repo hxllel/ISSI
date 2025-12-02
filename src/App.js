@@ -7,6 +7,8 @@ import { Formulario } from "./components/formulario/Formulario";
 import RecuperarContra from "./components/formulario/RecuperarContra";
 
 // ALUMNO
+
+import { ConocenosAlumno } from "./components/alumno/ConocenosAlumno";
 import { Alumno } from "./components/alumno/Alumno";
 import { ChatbotAsistente } from "./components/alumno/Chat";
 import Horarios from "./components/alumno/Horarios";
@@ -17,7 +19,9 @@ import { MateriasReprobadas } from "./components/alumno/MateriasReprobadas";
 import { EvaluacionProfesores } from "./components/alumno/EvaluacionProfesores";
 import { DatosPersonales } from "./components/alumno/DatosPersonales";
 import { ConsultarCalificaciones } from "./components/alumno/ConsultarCalificaciones";
-
+import ResenarProfesores from "./components/alumno/ResenarProfesores";
+import DetalleProfesorResenas from "./components/alumno/DetalleProfesorResenas";
+import MapasCurriculares from "./components/alumno/MapasCurriculares";
 // PROFESOR
 import { Profesor } from "./components/profesor/Profesor";
 import { ChatbotProfesor } from "./components/profesor/Chat";
@@ -27,6 +31,9 @@ import { RegistrarCalificaciones } from "./components/profesor/RegistrarCalifica
 import { InformacionPersonal } from "./components/profesor/InformacionPersonal";
 import { EditarDatosPersonales } from "./components/profesor/EditarDatosPersonales";
 import { ETS as ETSProfesor } from "./components/profesor/ETS";
+import { Reglamentos } from "./pages/Reglamentos";
+
+// PROFESOR
 
 // ADMIN
 import { Administrador } from "./components/admin/Administrador";
@@ -48,6 +55,7 @@ import { SituacionesEspeciales } from "./components/admin/SituacionesEspeciales"
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
 import { DatosMedicos } from "./pages/DatosMedicos";
+import { ErrorView } from "./pages/Errores";
 
 function App() {
   const [success, setSuccess] = useState("");
@@ -84,6 +92,7 @@ function App() {
             path="/alumno/evaluacion/:id"
             element={<EvaluacionProfesores />}
           />
+          <Route path="/alumno/conocenosAlumno" element={<ConocenosAlumno />} />
           <Route path="/alumno/inscripcion/:id" element={<Inscripcion />} />
           <Route path="/alumno/editarDatos/:id" element={<EditarDatos />} />
           <Route path="/alumno/Kardex" element={<HistorialAcademico />} />
@@ -99,7 +108,9 @@ function App() {
             path="/alumno/ConsultarCalificaciones"
             element={<ConsultarCalificaciones />}
           />
-
+          <Route path="/alumno/resenar-profesores" element={<ResenarProfesores />} />
+          <Route path="/alumno/resenas-profesor/:id" element={<DetalleProfesorResenas />} />
+          <Route path="/alumno/MapasCurriculares"element={<MapasCurriculares />}/>
           {/* PROFESOR */}
           <Route path="/profesor/:id" element={<Profesor />} />
           <Route path="/profesor/Chat" element={<ChatbotProfesor />} />
@@ -122,7 +133,7 @@ function App() {
             path="/profesor/editarDatosPersonales/:id"
             element={<EditarDatosPersonales />}
           />
-          {/* ADMINISTRADOR */}
+          
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/ETS" element={<ETS />} />
           <Route
@@ -184,7 +195,13 @@ function App() {
             path="/administrador/SituacionesEspeciales"
             element={<SituacionesEspeciales />}
           />
+           <Route path="/error" element={<ErrorView />} />
+           <Route path="*" element={<ErrorView />} />
+           <Route path="/reglamentos" element={<Reglamentos />} />
+
         </Routes>
+       
+        
       </BrowserRouter>
     </div>
   );
