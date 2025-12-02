@@ -228,7 +228,7 @@ module.exports = (passport) => {
             (Number(cali.calificacion_primer) +
               Number(cali.calificacion_segundo) +
               Number(cali.calificacion_tercer)) /
-            3
+              3
           );
 
           await bd.Mat_Inscritos.update(
@@ -357,6 +357,10 @@ module.exports = (passport) => {
                 estado_actual: "Reprobada",
                 periodos_restantes: 3,
                 recurse: 1,
+              });
+              await bd.Estudiante.update({
+                estado_academico: "Irregular",
+                where: { id_usuario: es.id },
               });
             }
           }
@@ -674,7 +678,9 @@ module.exports = (passport) => {
       });
 
       if (!grupo) {
-        return res.status(404).json({ success: false, msg: "Grupo no encontrado" });
+        return res
+          .status(404)
+          .json({ success: false, msg: "Grupo no encontrado" });
       }
 
       // Obtener inscritos
@@ -696,16 +702,21 @@ module.exports = (passport) => {
       });
 
       const profesorNombre = grupo.DatosPersonale
-        ? `${grupo.DatosPersonale.nombre || ''} ${grupo.DatosPersonale.ape_paterno || ''} ${grupo.DatosPersonale.ape_materno || ''}`
-        : '';
+        ? `${grupo.DatosPersonale.nombre || ""} ${
+            grupo.DatosPersonale.ape_paterno || ""
+          } ${grupo.DatosPersonale.ape_materno || ""}`
+        : "";
 
       // Construir filas de alumnos (hasta 30 filas)
       const filas = [];
       for (let i = 0; i < 30; i++) {
         const ins = inscritos[i];
-        const nombreEst = ins && ins.Horario && ins.Horario.DatosPersonale
-          ? `${ins.Horario.DatosPersonale.nombre || ''} ${ins.Horario.DatosPersonale.ape_paterno || ''} ${ins.Horario.DatosPersonale.ape_materno || ''}`
-          : '';
+        const nombreEst =
+          ins && ins.Horario && ins.Horario.DatosPersonale
+            ? `${ins.Horario.DatosPersonale.nombre || ""} ${
+                ins.Horario.DatosPersonale.ape_paterno || ""
+              } ${ins.Horario.DatosPersonale.ape_materno || ""}`
+            : "";
         filas.push({ no: i + 1, nombre: nombreEst });
       }
 
@@ -743,9 +754,15 @@ module.exports = (passport) => {
                 <div style="margin-top:4px"><strong>NOMBRE DEL MAESTRO(A):</strong> ${profesorNombre}</div>
               </div>
               <div class="right">
-                <div>MES: <strong>${new Date().toLocaleString('default', { month: 'long' }).toUpperCase()}</strong></div>
-                <div>GRADO: <strong>${grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.semestre || '' : ''}</strong></div>
-                <div>GRUPO: <strong>${grupo.nombre || ''}</strong></div>
+                <div>MES: <strong>${new Date()
+                  .toLocaleString("default", { month: "long" })
+                  .toUpperCase()}</strong></div>
+                <div>GRADO: <strong>${
+                  grupo.Unidad_Aprendizaje
+                    ? grupo.Unidad_Aprendizaje.semestre || ""
+                    : ""
+                }</strong></div>
+                <div>GRUPO: <strong>${grupo.nombre || ""}</strong></div>
               </div>
             </div>
 
@@ -754,19 +771,23 @@ module.exports = (passport) => {
                 <tr>
                   <th class="no-col">NO.</th>
                   <th class="name-col">NOMBRE Y APELLIDO</th>
-                  ${dayHeaders.map(d => `<th class="day">${d}</th>`).join('')}
+                  ${dayHeaders.map((d) => `<th class="day">${d}</th>`).join("")}
                   <th class="percent-col">%</th>
                 </tr>
               </thead>
               <tbody>
-                ${filas.map(f => `
+                ${filas
+                  .map(
+                    (f) => `
                   <tr>
                     <td style="text-align:center">${f.no}</td>
                     <td>${f.nombre}</td>
-                    ${dayHeaders.map(() => `<td>&nbsp;</td>`).join('')}
+                    ${dayHeaders.map(() => `<td>&nbsp;</td>`).join("")}
                     <td style="text-align:center">&nbsp;</td>
                   </tr>
-                `).join('')}
+                `
+                  )
+                  .join("")}
               </tbody>
             </table>
 
@@ -774,7 +795,9 @@ module.exports = (passport) => {
               <table style="width:100%">
                 <tr>
                   <td style="background:#f28b00;color:#fff;padding:6px;font-weight:700;">ASISTENCIAS DIARIAS</td>
-                  <td style="padding:6px">${dayHeaders.map(() => '0').join(' ')}</td>
+                  <td style="padding:6px">${dayHeaders
+                    .map(() => "0")
+                    .join(" ")}</td>
                 </tr>
               </table>
             </div>
@@ -786,10 +809,11 @@ module.exports = (passport) => {
 
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       res.send(html);
-
     } catch (err) {
       console.error("Error al generar PDF:", err);
-      return res.status(500).json({ success: false, msg: "Error al generar PDF" });
+      return res
+        .status(500)
+        .json({ success: false, msg: "Error al generar PDF" });
     }
   });
 
@@ -815,7 +839,9 @@ module.exports = (passport) => {
       });
 
       if (!grupo) {
-        return res.status(404).json({ success: false, msg: "Grupo no encontrado" });
+        return res
+          .status(404)
+          .json({ success: false, msg: "Grupo no encontrado" });
       }
 
       // Obtener inscritos
@@ -848,16 +874,33 @@ module.exports = (passport) => {
       // Información del grupo (primeras filas)
       worksheet.addRow(["INFORMACIÓN DEL GRUPO"]);
       worksheet.addRow(["Grupo:", grupo.nombre]);
-      worksheet.addRow(["Unidad de Aprendizaje:", grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.nombre : ""]);
-      worksheet.addRow(["Profesor:", grupo.DatosPersonale ? `${grupo.DatosPersonale.nombre || ""} ${grupo.DatosPersonale.ape_paterno || ""} ${grupo.DatosPersonale.ape_materno || ""}` : ""]);
+      worksheet.addRow([
+        "Unidad de Aprendizaje:",
+        grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.nombre : "",
+      ]);
+      worksheet.addRow([
+        "Profesor:",
+        grupo.DatosPersonale
+          ? `${grupo.DatosPersonale.nombre || ""} ${
+              grupo.DatosPersonale.ape_paterno || ""
+            } ${grupo.DatosPersonale.ape_materno || ""}`
+          : "",
+      ]);
       worksheet.addRow(["Turno:", grupo.turno]);
-      worksheet.addRow(["Carrera:", grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.carrera : ""]);
+      worksheet.addRow([
+        "Carrera:",
+        grupo.Unidad_Aprendizaje ? grupo.Unidad_Aprendizaje.carrera : "",
+      ]);
       worksheet.addRow(["Cupo:", grupo.cupo]);
       worksheet.addRow([]);
 
       // Horarios del grupo
       worksheet.addRow(["HORARIOS"]);
-      const horariosHeader = worksheet.addRow(["Día", "Hora Inicio", "Hora Fin"]);
+      const horariosHeader = worksheet.addRow([
+        "Día",
+        "Hora Inicio",
+        "Hora Fin",
+      ]);
       horariosHeader.font = { bold: true };
       horariosHeader.fill = {
         type: "pattern",
@@ -866,7 +909,7 @@ module.exports = (passport) => {
       };
       horariosHeader.font = { color: { argb: "FFFFFFFF" }, bold: true };
 
-      distribucion.forEach(d => {
+      distribucion.forEach((d) => {
         worksheet.addRow([d.dia, d.hora_ini, d.hora_fin]);
       });
 
@@ -878,7 +921,7 @@ module.exports = (passport) => {
         "No.",
         "ID Estudiante",
         "Nombre Completo",
-        "Calificación Final"
+        "Calificación Final",
       ]);
       estudiantesHeader.font = { bold: true };
       estudiantesHeader.fill = {
@@ -889,12 +932,19 @@ module.exports = (passport) => {
       estudiantesHeader.font = { color: { argb: "FFFFFFFF" }, bold: true };
 
       inscritos.forEach((ins, index) => {
-        const estudiante = ins.Horario && ins.Horario.DatosPersonale ? ins.Horario.DatosPersonale : null;
+        const estudiante =
+          ins.Horario && ins.Horario.DatosPersonale
+            ? ins.Horario.DatosPersonale
+            : null;
         worksheet.addRow([
           index + 1,
           estudiante ? estudiante.id : "",
-          estudiante ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${estudiante.ape_materno || ""}` : "",
-          ins.calificacion_final || ""
+          estudiante
+            ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${
+                estudiante.ape_materno || ""
+              }`
+            : "",
+          ins.calificacion_final || "",
         ]);
       });
 
@@ -913,7 +963,9 @@ module.exports = (passport) => {
       );
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename=clase_${grupo.nombre}_${new Date().toISOString().split('T')[0]}.xlsx`
+        `attachment; filename=clase_${grupo.nombre}_${
+          new Date().toISOString().split("T")[0]
+        }.xlsx`
       );
 
       await workbook.xlsx.write(res);
@@ -1191,10 +1243,6 @@ module.exports = (passport) => {
         success: false,
         mensaje: "Error al registrar las calificaciones",
       });
-
-    } catch (err) {
-      console.error("Error al generar Excel:", err);
-      return res.status(500).json({ success: false, msg: "Error al generar Excel" });
     }
   });
 
