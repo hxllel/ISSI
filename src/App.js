@@ -43,6 +43,8 @@ import { Distribucion } from "./components/admin/Distribucion";
 import { ETS } from "./components/admin/ETS";
 import { PublicarNoticia } from "./components/admin/PublicarNoticia";
 import { GenerarCitas } from "./components/admin/GenerarCitas";
+import { InscripcionAdmin } from "./components/admin/InscripcionAdmin";
+
 // PAGINAS INDIVIDUALES
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
@@ -128,7 +130,7 @@ function App() {
             path="/administrador/publicarNoticia"
             element={<PublicarNoticia />}
           />
-
+           
           {/* ADMINISTRADOR - CRUD */}
           <Route
             path="/administrador/gestionarAlumnos"
@@ -169,6 +171,10 @@ function App() {
           <Route
             path="/administrador/gestionarCursos/distribucionHorarios/:id"
             element={<Distribucion />}
+          />
+          <Route
+           path="/administrador/gestionarAlumnos/inscripcion/:id"
+           element={<InscripcionAdmin />}
           />
 
           {/* ADMIN PÁGINAS */}
