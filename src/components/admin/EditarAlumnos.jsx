@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./EditarAlumnos.css"; // 👈 Se agrega el CSS
+import "./EditarAlumnos.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function EditarAlumnos() {
     const { id } = useParams();

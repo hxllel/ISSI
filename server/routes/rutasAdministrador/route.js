@@ -2,8 +2,10 @@
 const express = require("express");
 const bd = require("../../model/modelo");
 const { v4: uuidv4 } = require("uuid");
-const { Op } = require("sequelize");
+const { Op, INTEGER } = require("sequelize");
 const bcrypt = require("bcryptjs");
+const { raw } = require("mysql2");
+const { truncates } = require("bcryptjs");
 module.exports = (passport) => {
   const router = express.Router();
 
@@ -45,10 +47,15 @@ module.exports = (passport) => {
       let fotoBuffer = null;
       if (fotoBase64) {
         try {
-          const base64Data = typeof fotoBase64 === 'string' && fotoBase64.includes(',') ? fotoBase64.split(',')[1] : fotoBase64;
-          fotoBuffer = Buffer.from(base64Data, 'base64');
+          const base64Data =
+            typeof fotoBase64 === "string" && fotoBase64.includes(",")
+              ? fotoBase64.split(",")[1]
+              : fotoBase64;
+          fotoBuffer = Buffer.from(base64Data, "base64");
         } catch (e) {
-          console.warn('No se pudo procesar fotoBase64 en registro, se ignora la foto.');
+          console.warn(
+            "No se pudo procesar fotoBase64 en registro, se ignora la foto."
+          );
         }
       }
 
@@ -94,6 +101,7 @@ module.exports = (passport) => {
         promedio: 0,
         situacion_academica: "regular",
         semestres_restantes: carr.duracion_max,
+        creditos_obtenidos: 0,
       });
       console.log("Alumno creado: ");
       return res.json({ success: true });
@@ -194,10 +202,15 @@ module.exports = (passport) => {
       let fotoBuffer = null;
       if (fotoBase64) {
         try {
-          const base64Data = typeof fotoBase64 === 'string' && fotoBase64.includes(',') ? fotoBase64.split(',')[1] : fotoBase64;
-          fotoBuffer = Buffer.from(base64Data, 'base64');
+          const base64Data =
+            typeof fotoBase64 === "string" && fotoBase64.includes(",")
+              ? fotoBase64.split(",")[1]
+              : fotoBase64;
+          fotoBuffer = Buffer.from(base64Data, "base64");
         } catch (e) {
-          console.warn('No se pudo procesar fotoBase64 en registro de profesor, se ignora la foto.');
+          console.warn(
+            "No se pudo procesar fotoBase64 en registro de profesor, se ignora la foto."
+          );
         }
       }
 
@@ -373,7 +386,6 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
-      console.log("Profesor obtenido: ", profesor);
       return res.json({ profesor: profesor });
     } catch (error) {
       console.error("Error al obtener la informacion del profesor: ", error);
@@ -401,83 +413,91 @@ module.exports = (passport) => {
       email,
       carrera,
     } = req.body;
-      try {
-          const fields = {
-              nombre,
-              ape_paterno,
-              ape_materno,
-              fecha_nacimiento,
-              tipo_sangre,
-              CURP,
-              nacionalidad,
-              calle,
-              num_exterior,
-              num_interior,
-              codigo_postal,
-              colonia,
-              delegacion,
-              ciudad,
-              telefono,
-              email,
-              carrera
-          };
+    try {
+      const fields = {
+        nombre,
+        ape_paterno,
+        ape_materno,
+        fecha_nacimiento,
+        tipo_sangre,
+        CURP,
+        nacionalidad,
+        calle,
+        num_exterior,
+        num_interior,
+        codigo_postal,
+        colonia,
+        delegacion,
+        ciudad,
+        telefono,
+        email,
+        carrera,
+      };
 
-          if (req.body.fotoBase64) {
-              try {
-                  const base64Data = typeof req.body.fotoBase64 === 'string' && req.body.fotoBase64.includes(',') ? req.body.fotoBase64.split(',')[1] : req.body.fotoBase64;
-                  fields.foto = Buffer.from(base64Data, 'base64');
-              } catch (e) {
-                  console.warn('No se pudo procesar fotoBase64, ignorando campo foto.');
-              }
-          }
-
-          await bd.DatosPersonales.update(fields, { where: { id: id, tipo_usuario: "alumno" } });
-          console.log("Alumno actualizado: ");
-          return res.json({ success: true });
-      } catch (error) {
-          console.error("Error al actualizar el alumno: ", error);
-          return res.status(500).json({ success: false, error: 'Error al actualizar el alumno' });
+      if (req.body.fotoBase64) {
+        try {
+          const base64Data =
+            typeof req.body.fotoBase64 === "string" &&
+            req.body.fotoBase64.includes(",")
+              ? req.body.fotoBase64.split(",")[1]
+              : req.body.fotoBase64;
+          fields.foto = Buffer.from(base64Data, "base64");
+        } catch (e) {
+          console.warn("No se pudo procesar fotoBase64, ignorando campo foto.");
+        }
       }
+
+      await bd.DatosPersonales.update(fields, {
+        where: { id: id, tipo_usuario: "alumno" },
+      });
+      console.log("Alumno actualizado: ");
+      return res.json({ success: true });
+    } catch (error) {
+      console.error("Error al actualizar el alumno: ", error);
+      return res
+        .status(500)
+        .json({ success: false, error: "Error al actualizar el alumno" });
+    }
   });
 
   // Obtener foto de alumno en binario para consumo en otras vistas
-  router.get('/Alumno/Foto/:id', async (req, res) => {
-      const { id } = req.params;
-      try {
-          const alumno = await bd.DatosPersonales.findOne({
-              attributes: ['foto'],
-              where: { id: id, tipo_usuario: 'alumno' },
-              raw: true
-          });
-          if (!alumno || !alumno.foto) {
-              return res.status(404).send('Foto no encontrada');
-          }
-          res.setHeader('Content-Type', 'image/jpeg');
-          return res.end(alumno.foto);
-      } catch (e) {
-          console.error('Error al obtener foto del alumno:', e);
-          return res.status(500).send('Error interno');
+  router.get("/Alumno/Foto/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const alumno = await bd.DatosPersonales.findOne({
+        attributes: ["foto"],
+        where: { id: id, tipo_usuario: "alumno" },
+        raw: true,
+      });
+      if (!alumno || !alumno.foto) {
+        return res.status(404).send("Foto no encontrada");
       }
+      res.setHeader("Content-Type", "image/jpeg");
+      return res.end(alumno.foto);
+    } catch (e) {
+      console.error("Error al obtener foto del alumno:", e);
+      return res.status(500).send("Error interno");
+    }
   });
 
   // Obtener foto de profesor en binario para consumo en otras vistas
-  router.get('/Profesor/Foto/:id', async (req, res) => {
-      const { id } = req.params;
-      try {
-          const profesor = await bd.DatosPersonales.findOne({
-              attributes: ['foto'],
-              where: { id: id, tipo_usuario: 'profesor' },
-              raw: true
-          });
-          if (!profesor || !profesor.foto) {
-              return res.status(404).send('Foto no encontrada');
-          }
-          res.setHeader('Content-Type', 'image/jpeg');
-          return res.end(profesor.foto);
-      } catch (e) {
-          console.error('Error al obtener foto del profesor:', e);
-          return res.status(500).send('Error interno');
+  router.get("/Profesor/Foto/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const profesor = await bd.DatosPersonales.findOne({
+        attributes: ["foto"],
+        where: { id: id, tipo_usuario: "profesor" },
+        raw: true,
+      });
+      if (!profesor || !profesor.foto) {
+        return res.status(404).send("Foto no encontrada");
       }
+      res.setHeader("Content-Type", "image/jpeg");
+      return res.end(profesor.foto);
+    } catch (e) {
+      console.error("Error al obtener foto del profesor:", e);
+      return res.status(500).send("Error interno");
+    }
   });
 
   router.delete("/EliminarDist/:id", async (req, res) => {
@@ -539,22 +559,28 @@ module.exports = (passport) => {
 
       if (fotoBase64) {
         try {
-          const base64Data = typeof fotoBase64 === 'string' && fotoBase64.includes(',') ? fotoBase64.split(',')[1] : fotoBase64;
-          fields.foto = Buffer.from(base64Data, 'base64');
+          const base64Data =
+            typeof fotoBase64 === "string" && fotoBase64.includes(",")
+              ? fotoBase64.split(",")[1]
+              : fotoBase64;
+          fields.foto = Buffer.from(base64Data, "base64");
         } catch (e) {
-          console.warn('No se pudo procesar fotoBase64 en edición de profesor, se ignora la foto.');
+          console.warn(
+            "No se pudo procesar fotoBase64 en edición de profesor, se ignora la foto."
+          );
         }
       }
 
-      const actualizarProfesor = await bd.DatosPersonales.update(
-        fields,
-        { where: { id: id, tipo_usuario: "profesor" } }
-      );
+      const actualizarProfesor = await bd.DatosPersonales.update(fields, {
+        where: { id: id, tipo_usuario: "profesor" },
+      });
       console.log("Profesor actualizado: ");
       return res.json({ success: true });
     } catch (error) {
       console.error("Error al actualizar el profesor: ", error);
-      return res.status(500).json({ success: false, error: 'Error al actualizar el profesor' });
+      return res
+        .status(500)
+        .json({ success: false, error: "Error al actualizar el profesor" });
     }
   });
   router.get("/ObtenerCursos", async (req, res) => {
@@ -567,7 +593,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            atributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         raw: true,
@@ -590,10 +616,15 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            atributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         where: { id_prof: us },
+        raw: true,
+        nest: true,
+      });
+      const profe = await bd.Grupo.findOne({
+        where: { id: "1BM1_UA006" },
         raw: true,
         nest: true,
       });
@@ -739,6 +770,682 @@ module.exports = (passport) => {
       }
     } catch (error) {
       console.error("Error al crear el curso: ", error);
+    }
+  });
+
+  router.get("/ObtenerGETS", async (req, res) => {
+    try {
+      const p = await bd.FechasRelevantes.findOne();
+
+      console.log(p.periodo);
+
+      const grupos = await bd.ETS_grupo.findAll({
+        where: {
+          periodo: {
+            [Op.like]: p.periodo,
+          },
+        },
+        include: [
+          {
+            model: bd.Unidad_Aprendizaje,
+          },
+          {
+            model: bd.DatosPersonales,
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      return res.json({ grupos });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.get("/Comprobantes/:id", async (req, res) => {
+    const id = req.params.id;
+
+    const comprobantes = await bd.ETS.findAll({
+      where: { id_grupo: id },
+      include: [
+        {
+          model: bd.Materia_Reprobada,
+          include: [
+            {
+              model: bd.Estudiante,
+              include: [bd.DatosPersonales],
+            },
+          ],
+        },
+      ],
+    });
+
+    const result = comprobantes.map((c) => ({
+      ...c.toJSON(),
+      comprobante: c.comprobante ? c.comprobante.toString("base64") : null,
+    }));
+
+    return res.json({ comprobantes: result });
+  });
+
+  router.post("/TerminarSemestre", async (req, res) => {
+    const {
+      p1_inicio,
+      p1_fin,
+      p2_inicio,
+      p2_fin,
+      p3_inicio,
+      p3_fin,
+      ext_inicio,
+      ext_fin,
+      eval_inicio,
+      eval_fin,
+      ets_inicio,
+      ets_fin,
+      ets_pago_inicio,
+      ets_pago_fin,
+      ets_cal_inicio,
+      ets_cal_fin,
+      periodo,
+    } = req.body;
+
+    try {
+      const aprobados = await bd.Mat_Inscritos.findAll({
+        where: {
+          calificacion_final: { [Op.gte]: 6 } || { extra: { [Op.gte]: 6 } },
+        },
+      });
+
+      for (const a of aprobados) {
+        const grupo = await bd.Grupo.findOne({
+          where: { id: a.id_grupo },
+          include: [{ model: bd.Unidad_Aprendizaje }],
+        });
+
+        // Obtener alumno desde horario -> DatosPersonales -> Estudiante
+        const datos = await bd.DatosPersonales.findOne({
+          include: [
+            {
+              model: bd.Horario,
+              where: { id: a.id_horario },
+              required: true,
+            },
+          ],
+        });
+
+        // Id del estudiante real
+        const idEst = datos.id;
+
+        // Calificación final
+        let calificacion = 0;
+        if (parseFloat(a.calificacion_final) >= 6) {
+          calificacion = parseFloat(a.calificacion_final);
+        } else if (parseFloat(a.extra) >= 6) {
+          calificacion = parseFloat(a.extra);
+        }
+
+        // Obtener estudiante
+        const est = await bd.Estudiante.findOne({
+          where: { id_usuario: idEst },
+        });
+
+        // Actualizar estudiante
+        await est.update({
+          promedio: (parseFloat(est.promedio) + calificacion) / 2,
+          creditos_disponibles: 50,
+        });
+
+        // Obtener kardex del alumno
+        const kardex = await bd.Kardex.findOne({
+          where: { id_alumno: datos.id },
+        });
+
+        // Actualizar kardex
+        await kardex.update({
+          promedio: (parseFloat(kardex.promedio) + calificacion) / 2,
+          creditos_obtenidos:
+            parseFloat(kardex.creditos_obtenidos) +
+            parseFloat(grupo.Unidad_Aprendizaje.credito),
+        });
+      }
+
+      await bd.Lista.destroy({ where: {} });
+      await bd.Borrador_Horario.destroy({ where: {} });
+      await bd.Inscripcion.destroy({ where: {} });
+      await bd.Mat_Inscritos.destroy({ where: {} });
+      await bd.Distribucion.destroy({ where: {} });
+      await bd.Grupo.destroy({ where: {} });
+
+      await bd.Materia_Reprobada.increment(
+        { periodos_restantes: -1 },
+        { where: {} }
+      );
+
+      await bd.Materia_Reprobada.update(
+        {
+          estado_actual: "Desfasada",
+        },
+        { where: { periodos_restantes: { [Op.lte]: 0 } } }
+      );
+
+      await bd.Kardex.increment({ semestres_restantes: -1 }, { where: {} });
+
+      await bd.Kardex.update(
+        { situacion_academica: "Periodos disponibles agotados" },
+        { where: { semestres_restantes: { [Op.lte]: 0 } } }
+      );
+
+      const alumnosConKardex = await bd.DatosPersonales.findAll({
+        include: [
+          {
+            model: bd.Kardex,
+            where: {
+              semestres_restantes: { [Op.lte]: 0 },
+            },
+            required: true,
+          },
+        ],
+      });
+
+      // Extraer solo los IDs de estudiante
+      const idsEstudiantes = alumnosConKardex.map((a) => a.id);
+
+      // Actualizar el estado académico en Estudiante
+      await bd.Estudiante.update(
+        { estado_academico: "Periodos disponibles agotados" },
+        { where: { id_usuario: idsEstudiantes } }
+      );
+
+      const registro = await bd.FechasRelevantes.findOne();
+      await registro.update({
+        registro_primer_parcial: p1_inicio,
+        fin_registro_primer_parcial: p1_fin,
+        registro_segundo_parcial: p2_inicio,
+        fin_registro_segundo_parcial: p2_fin,
+        registro_tercer_parcial: p3_inicio,
+        fin_registro_tercer_parcial: p3_fin,
+        registro_extra: ext_inicio,
+        fin_registro_extra: ext_fin,
+        evalu_profe: eval_inicio,
+        fin_evalu_profe: eval_fin,
+        inscribir_ets: ets_inicio,
+        fin_inscribir_ets: ets_fin,
+        subir_doc_ets: ets_pago_inicio,
+        fin_subir_doc_ets: ets_pago_fin,
+        eval_ets: ets_cal_inicio,
+        fin_evalu_ets: ets_cal_fin,
+        periodo: periodo,
+      });
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+      return res.json({ success: false });
+    }
+  });
+
+  router.post("/Validar/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      await bd.ETS.update(
+        {
+          validado: 1,
+        },
+        { where: { id: id } }
+      );
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.post("/Denegar/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      await bd.ETS.update(
+        {
+          comprobante: null,
+        },
+        { where: { id: id } }
+      );
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  // ============================
+  //  OBTENER PROFESORES PARA ETS
+  // ============================
+  router.get("/ObtenerProfesoresETS", async (req, res) => {
+    try {
+      const profesores = await bd.DatosPersonales.findAll({
+        where: { tipo_usuario: "profesor" },
+        attributes: ["id", "nombre", "ape_paterno", "ape_materno"],
+      });
+      return res.json({ success: true, profesores });
+    } catch (err) {
+      console.error("Error al obtener profesores:", err);
+      return res
+        .status(500)
+        .json({ success: false, mensaje: "Error al obtener profesores" });
+    }
+  });
+
+  // ============================
+  //  OBTENER UNIDADES DE APRENDIZAJE PARA ETS
+  // ============================
+  router.get("/ObtenerUnidadesETS", async (req, res) => {
+    try {
+      const unidades = await bd.Unidad_Aprendizaje.findAll({
+        attributes: ["id", "nombre", "credito", "semestre", "carrera"],
+      });
+      return res.json({ success: true, unidades });
+    } catch (err) {
+      console.error("Error al obtener unidades:", err);
+      return res
+        .status(500)
+        .json({ success: false, mensaje: "Error al obtener unidades" });
+    }
+  });
+
+  // ============================
+  //  CREAR GRUPO ETS
+  // ============================
+  router.post("/CrearGrupoETS", async (req, res) => {
+    try {
+      const { id_ua, id_profesor, turno, hora_inicio, hora_final, fecha } =
+        req.body;
+
+      // Validar que todos los campos estén presentes
+      if (
+        !id_ua ||
+        !id_profesor ||
+        !turno ||
+        !hora_inicio ||
+        !hora_final ||
+        !fecha
+      ) {
+        return res.status(400).json({
+          success: false,
+          mensaje: "Todos los campos son obligatorios",
+        });
+      }
+
+      // Generar ID único para el grupo ETS
+      const id = uuidv4().replace(/-/g, "").substring(0, 15);
+      const p = await bd.FechasRelevantes.findOne({});
+
+      // Crear el grupo ETS
+      await bd.ETS_grupo.create({
+        id,
+        id_ua,
+        id_aplicante: id_profesor,
+        turno,
+        hora_inicio,
+        hora_final,
+        fecha,
+        periodo: p.periodo,
+      });
+
+      return res.json({
+        success: true,
+        mensaje: "Grupo ETS creado exitosamente",
+      });
+    } catch (err) {
+      console.error("Error al crear grupo ETS:", err);
+      return res.status(500).json({
+        success: false,
+        mensaje: "Error al crear el grupo ETS",
+      });
+    }
+  });
+
+  // POST /GenerarCitas
+  router.post("/GenerarCitas/:edo", async (req, res) => {
+    const { fecha_ini, fecha_fin } = req.body;
+    const { edo } = req.params;
+
+    if (!fecha_ini || !fecha_fin) {
+      return res
+        .status(400)
+        .json({ error: "fecha_ini y fecha_fin son requeridos" });
+    }
+
+    const val = await bd.Inscripcion.count({
+      include: [
+        {
+          model: bd.DatosPersonales,
+          required: true,
+          include: [
+            {
+              model: bd.Estudiante,
+              required: true,
+              where: { estado_academico: edo },
+            },
+          ],
+        },
+      ],
+    });
+
+    console.log(val);
+    console.log(edo);
+    if (val != 0) {
+      return res.json({ success: false });
+    }
+    // VALIDACIÓN DE FECHAS
+    // Convertimos a Date solo para comparar validez y orden, pero usaremos los strings para la lógica
+    const inicioCheck = new Date(fecha_ini);
+    const finCheck = new Date(fecha_fin);
+
+    if (isNaN(inicioCheck) || isNaN(finCheck)) {
+      return res.status(400).json({ error: "Formato de fecha inválido" });
+    }
+    if (inicioCheck > finCheck) {
+      return res
+        .status(400)
+        .json({ error: "fecha_ini debe ser anterior o igual a fecha_fin" });
+    }
+
+    try {
+      // 1. OBTENER ALUMNOS
+      const alumnos = await bd.Estudiante.findAll({
+        where: { estado_academico: edo.toLowerCase() },
+        order: [["promedio", "DESC"]], // Prioridad por promedio
+        raw: true,
+      });
+
+      if (!alumnos || alumnos.length === 0) {
+        return res
+          .status(200)
+          .json({ message: "No hay alumnos regulares para generar citas" });
+      }
+
+      const nAlumnos = alumnos.length;
+
+      const strIni = new Date(fecha_ini).toISOString().split("T")[0];
+      const strFin = new Date(fecha_fin).toISOString().split("T")[0];
+
+      const oneDayMs = 24 * 60 * 60 * 1000;
+      // Usamos UTC para calcular la diferencia exacta de días calendario
+      const diffTime = new Date(strFin).getTime() - new Date(strIni).getTime();
+      const numDias = Math.round(diffTime / oneDayMs) + 1; // +1 porque es inclusivo
+
+      const horasDisponiblesDia = 15; // 07:00 a 22:00
+      const minutosDisponiblesDia = horasDisponiblesDia * 60; // 900 minutos
+      const minutosTotalesGlobales = numDias * minutosDisponiblesDia;
+
+      // LÓGICA DE DISTRIBUCIÓN
+      let intervaloMinutos = minutosTotalesGlobales / nAlumnos;
+      let concurrencia = 1; // Alumnos por turno
+
+      // Regla: Si el intervalo es menor a 10 minutos, forzamos 10 min y aumentamos concurrencia
+      if (intervaloMinutos < 10) {
+        intervaloMinutos = 10;
+        // ¿Cuántos slots de 10 minutos caben en todo el periodo?
+        const slotsTotalesPosibles = Math.floor(minutosTotalesGlobales / 10);
+        // ¿Cuántos alumnos debemos meter en cada slot para que quepan todos?
+        concurrencia = Math.ceil(nAlumnos / slotsTotalesPosibles);
+      }
+
+      console.log(
+        `Configuración: Días: ${numDias}, Alumnos: ${nAlumnos}, Intervalo: ${intervaloMinutos.toFixed(
+          2
+        )}m, Concurrencia: ${concurrencia}`
+      );
+
+      // Función auxiliar para construir fechas sin cambios de zona horaria extraños
+      // Toma el string base "YYYY-MM-DD", suma días y establece la hora
+      function construirFechaCita(fechaBaseStr, diasASumar, minutosDesdeLas7) {
+        const base = new Date(fechaBaseStr);
+        // Ajustamos la fecha base sumando los días (en UTC para no perder info)
+        base.setUTCDate(base.getUTCDate() + diasASumar);
+
+        // Calculamos hora y minuto
+        // Hora inicio es 7 AM.
+        const horasExtra = Math.floor(minutosDesdeLas7 / 60);
+        const minutosRestantes = Math.floor(minutosDesdeLas7 % 60);
+
+        const horaFinal = 7 + horasExtra;
+
+        // Establecemos la hora. IMPORTANTE: Usamos métodos UTC o Locales consistentemente.
+        // Para asegurar que coincida con el backend, asumiremos que queremos guardar la hora local
+        // tal cual se leería en el calendario.
+        const fechaFinal = new Date(
+          base.getUTCFullYear(),
+          base.getUTCMonth(),
+          base.getUTCDate(),
+          horaFinal,
+          minutosRestantes,
+          0
+        );
+        return fechaFinal;
+      }
+
+      const t = await bd.sequelize.transaction();
+
+      try {
+        let currentSlotIndex = 0;
+        let alumnosEnEsteSlot = 0;
+
+        for (let i = 0; i < nAlumnos; i++) {
+          const alumno = alumnos[i];
+
+          // Calcular en qué minuto global inicia este slot
+          const minutosGlobalesInicio = currentSlotIndex * intervaloMinutos;
+
+          // Determinar qué día es (0 es el primer día, 1 el segundo...)
+          const diaIndex = Math.floor(
+            minutosGlobalesInicio / minutosDisponiblesDia
+          );
+
+          // Determinar minutos dentro de ese día (desde las 07:00)
+          const minutosEnElDia = minutosGlobalesInicio % minutosDisponiblesDia;
+
+          // Construir fechas
+          // Nota: Si nos pasamos de días por redondeo (raro), el Math.floor lo manejará,
+          // pero asegúrate de que strIni sea la fecha base correcta.
+          const fechaHoraInicio = construirFechaCita(
+            strIni,
+            diaIndex,
+            minutosEnElDia
+          );
+
+          // Timespan de 1 hora
+          const fechaHoraFin = new Date(
+            fechaHoraInicio.getTime() + 60 * 60 * 1000
+          );
+
+          let id = uuidv4().replace(/-/g, "").substring(0, 15);
+
+          await bd.Inscripcion.create(
+            {
+              id,
+              id_alumno: alumno.id_usuario,
+              fecha_hora_in: fechaHoraInicio,
+              fecha_hora_cad: fechaHoraFin,
+            },
+            { transaction: t }
+          );
+
+          // Manejo de concurrencia
+          alumnosEnEsteSlot++;
+          if (alumnosEnEsteSlot >= concurrencia) {
+            // Llenamos este slot, avanzamos al siguiente intervalo de tiempo
+            alumnosEnEsteSlot = 0;
+            currentSlotIndex++;
+          }
+        }
+
+        await t.commit();
+      } catch (err) {
+        await t.rollback();
+        throw err;
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: "Citas generadas correctamente",
+        totalAlumnos: nAlumnos,
+        dias: numDias,
+        intervaloMinutos,
+        concurrencia,
+      });
+    } catch (error) {
+      console.error("Error GenerarCitas:", error);
+      return res.status(500).json({
+        error: "Error interno al generar citas",
+        details: error.message,
+      });
+    }
+  });
+
+  router.get("/SituacionesEspeciales", async (req, res) => {
+    try {
+      const alumnos = await bd.DatosPersonales.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: {
+              estado_academico: { [Op.notIn]: ["Regular", "Irregular"] },
+            },
+            required: true,
+          },
+          {
+            model: bd.Kardex,
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      const alDes = await bd.DatosPersonales.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            include: [
+              {
+                model: bd.Materia_Reprobada,
+                where: { estado_actual: "Desfasada" },
+                required: true,
+              },
+            ],
+            required: true,
+          },
+          {
+            model: bd.Kardex,
+          },
+        ],
+      });
+
+      return res.json({
+        alumnosSinSemestres: alumnos,
+        alumnosDesfasados: alDes,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.get("/DesfasadasAl/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const mr = await bd.Materia_Reprobada.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+            required: true,
+          },
+          {
+            model: bd.Unidad_Aprendizaje,
+          },
+        ],
+        where: { estado_actual: "Desfasada" },
+        required: true,
+      });
+
+      return res.json({ materiasDes: mr });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.post("/AutorizarCambiosDesfase", async (req, res) => {
+    const { materias, id } = req.body;
+    console.log(materias);
+    try {
+      for (const m of materias) {
+        let reinscripcion = 0;
+
+        if (m.reinscripcion == true) {
+          reinscripcion = 1;
+        }
+
+        await bd.Materia_Reprobada.update(
+          {
+            periodos_restantes: m.semestresExtra,
+            recurse: m.reinscripcion,
+            estado_actual: "Reprobada",
+          },
+          {
+            where: { id: m.id },
+          }
+        );
+        await bd.Estudiante.update(
+          {
+            creditos_disponibles: m.creditosExtra,
+            estado_academico: "Irregular",
+          },
+          { where: { id_usuario: id } }
+        );
+        await bd.Kardex.update(
+          {
+            situacion_academica: "Irregular",
+          },
+          { where: { id_alumno: id } }
+        );
+      }
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  router.post("/AutorizarCambiosSS", async (req, res) => {
+    const { periodosExtra, id } = req.body;
+
+    try {
+      const c = await bd.Materia_Reprobada.count({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+            required: true,
+          },
+        ],
+      });
+      let tipo;
+      if (c > 0) {
+        tipo = "Irregular";
+      } else {
+        tipo = "Regular";
+      }
+      await bd.Kardex.update(
+        {
+          semestres_restantes: periodosExtra,
+          situacion_academica: tipo,
+        },
+        { where: { id_alumno: id } }
+      );
+      await bd.Estudiante.update(
+        {
+          estado_academico: tipo,
+        },
+        { where: { id_usuario: id } }
+      );
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
     }
   });
 

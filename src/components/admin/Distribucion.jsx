@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Modal from "../Modal";
 import "./Distribucion.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function Distribucion() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -11,9 +13,10 @@ export function Distribucion() {
   const [hora_fin, setHora_fin] = useState("");
   const [del, setDelete] = useState(false);
   const [id_delete, setId_delete] = useState("");
-
+ const navigate = useNavigate();
   const [modalOpen2, setModalOpen2] = useState(false);
   const [Distri, setDistri] = useState([]);
+  const API = 'http://localhost:4000';
 
   const { id } = useParams();
 
@@ -38,7 +41,7 @@ export function Distribucion() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:4000/ObtenerDist/${id}`, {
+    fetch(`${API}/ObtenerDist/${id}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -53,7 +56,7 @@ export function Distribucion() {
   const enviarFormulario = (e) => {
     e.preventDefault();
 
-    fetch(`http://localhost:4000/AgregarDist/${id}`, {
+    fetch(`${API}/AgregarDist/${id}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -72,6 +75,10 @@ export function Distribucion() {
     setModalOpen(false);
   };
 
+  const handleCerrarModal = () => {
+    setModalOpen(false);
+    };
+
   const handleClickAbrir = (id) => {
     setModalOpen2(true);
     setId_delete(id);
@@ -84,7 +91,7 @@ export function Distribucion() {
   useEffect(() => {
     if (!del) return;
 
-    fetch(`http://localhost:4000/EliminarDist/${id_delete}`, {
+    fetch(`${API}/EliminarDist/${id_delete}`, {
       method: "DELETE",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -104,17 +111,31 @@ export function Distribucion() {
     setModalOpen2(false);
   }, [del, id_delete]);
 
-  return (
-    <section className="dist-wrap">
-      <h1 className="dist-title">Distribución del grupo</h1>
+   const handleClickAlu = () => navigate("gestionarAlumnos");
+  const handleClickProf = () => navigate("gestionarProfesores");
+  const handleClickCursos = () => navigate("gestionarCursos");
+const handleLogout = () => {navigate(`/`);};
 
-      <button className="btn dist-add-btn" onClick={() => setModalOpen(true)}>
+  return (
+    <div className="admin-container">
+      <AdminSidebar />
+      <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+          <h1>Distribución</h1>
+          </div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
+    <section className="dist-wrap">
+      
+
+      <button className="btn azul" onClick={() => setModalOpen(true)}>
         Agregar un día
       </button>
 
       {mensaje && <p className="mensaje dist-message">{mensaje}</p>}
 
-      <table className="dist-table" border="1" cellPadding={5}>
+      <table className="table" >
         <thead>
           <tr>
             <th>Día</th>
@@ -132,7 +153,7 @@ export function Distribucion() {
                 <td>{dato.hora_fin}</td>
                 <td>
                   <button
-                    className="btn dist-btn-delete"
+                    className="btn blanco"
                     onClick={() => handleClickAbrir(dato.id)}
                   >
                     Eliminar
@@ -187,7 +208,7 @@ export function Distribucion() {
             required
           />
 
-          <button type="submit" className="btn-enviar">
+          <button type="submit" className="btn azul">
             Enviar
           </button>
         </form>
@@ -198,14 +219,15 @@ export function Distribucion() {
         <p className="dist-modal-text">
           ¿Estás seguro de que deseas eliminar este día?
         </p>
-        <button
-          type="button"
-          className="btn-enviar dist-btn-danger"
-          onClick={handleClickDelete}
-        >
+        <button className="btn azul" onClick={handleClickDelete}>
           Eliminar
         </button>
+        <button className="btn blanco" onClick={() => setModalOpen2(false)}>
+    Cancelar
+      </button>
       </Modal>
     </section>
+    </main>
+    </div>
   );
 }

@@ -66,6 +66,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin-top: 20px
 }
 
 .tabla-profesores {
@@ -172,4 +173,100 @@
   font-size: 1.8rem;         /* tamaño de la letra */
   font-weight: bold;       /* negrita */
   color: #333;             /* color del texto */
+}
+
+.busqueda {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 5px 10px;
+  transition: box-shadow 0.2s;
+}
+
+.busqueda input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+}
+
+.btn-buscar {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-buscar:hover {
+  background: #0056b3;
+}
+
+.busqueda:focus-within {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.tabla-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px; /* ← SEPARA LOS ELEMENTOS */
+}
+
+.busqueda {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* ← SEPARA input y botón */
+}
+
+.busqueda input {
+  padding: 6px 10px;
+}
+
+.btn-buscar {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.tabla-header .btn.azul,
+.tabla-header .btn.registrar {
+  flex-shrink: 0;     /* No se estira */
+  width: auto;        /* Tamaño natural */
+  padding: 10px 16px; /* Botón compacto */
+  white-space: nowrap; /* El texto no se parte */
+}
+
+.tabla-header h2 {
+  flex-shrink: 0;
+}
+
+.tabla-header .busqueda {
+  flex-grow: 0; /* NO crece */
+}
+
+.tabla-header .btn.azul {
+  flex-shrink: 0; /* NO se achica ni se estira */
+  width: auto;
+}
+.tabla-header .btn.registrar {
+  flex-shrink: 0;
+  width: auto;
+}
+.tabla-header h2 {
+  flex-grow: 1; /* solo el título crece */
+}
+.tabla-header .btn.azul,
+.tabla-header .btn.registrar {
+  margin-right: auto;
 }

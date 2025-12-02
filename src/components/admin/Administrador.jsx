@@ -1,7 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./Administrador.css";
-import { FaUserGraduate, FaChalkboardTeacher, FaBookOpen, FaTrashAlt, FaFileAlt, FaBullhorn } from "react-icons/fa";
+import {
+  FaUserGraduate,
+  FaChalkboardTeacher,
+  FaBookOpen,
+  FaTrashAlt,
+  FaFileAlt,
+  FaBullhorn,
+  FaFileInvoiceDollar,
+  FaGraduationCap, FaBook
+} from "react-icons/fa";
+import { MdEventAvailable } from "react-icons/md";
+
+import { AdminSidebar } from "../admin/AdminSidebar.jsx";
+
 
 export function Administrador() {
   const navigate = useNavigate();
@@ -9,35 +23,31 @@ export function Administrador() {
   const handleClickAlu = () => navigate("gestionarAlumnos");
   const handleClickProf = () => navigate("gestionarProfesores");
   const handleClickCursos = () => navigate("gestionarCursos");
+  const handleClickETS = () => navigate("ETS");
+  const handleClickPublicarNoticia = () => navigate("publicarNoticia");
+  const handleLogout = () => navigate("/");
+
+  const handleETS = () => navigate("/administrador/ETS");
+  const handlePublicarNoticia = () => navigate("/administrador/publicarNoticia");
+  const handleCarreras = () => navigate("/administrador/carreras");
+  const handleUnidades = () => navigate("/administrador/unidades");
+  const handleDatosMedicos = () => navigate("/administrador/datosMedicos");
+  const handleGenerarCitas = () => navigate("/administrador/GenerarCitas");
 
   return (
     <div className="admin-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-    <img src="ipn.png" alt="Logo" className="logo-img" />
-    <span>Gestión Escolar</span>
-  </div>
-        <nav className="menu">
-          <button onClick={() => navigate("/administrador")} className="menu-item active">
-            Panel de Control
-          </button>
-          <button onClick={handleClickAlu} className="menu-item">Estudiantes</button>
-          <button onClick={handleClickProf} className="menu-item">Profesores</button>
-          <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-          <button className="menu-item">Informes</button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
-
-      {/* Main content */}
+      <AdminSidebar />
+      {/* Main content con DISEÑO DEL SEGUNDO */}
       <main className="main-content">
-        <header>
-          <h1>¡Hola, Administrador!</h1>
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <h1>¡Bienvenido, Administrador!</h1>
+          </div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
 
+        {/* Acciones rápidas (diseño del segundo, contenido del primero) */}
         <section className="acciones-rapidas">
-          <h2>Acciones Rápidas</h2>
           <div className="acciones-grid">
             <div className="card highlighted">
               <FaUserGraduate className="icon" />
@@ -60,29 +70,46 @@ export function Administrador() {
               <button onClick={handleClickCursos}>Añadir</button>
             </div>
 
+            {/* Esta tarjeta viene del primer código */}
             <div className="card">
-              <FaTrashAlt className="icon" />
-              <h3>Eliminar Cursos</h3>
-              <p>Archivar o eliminar cursos existentes del plan de estudios.</p>
-              <button>Eliminar</button>
-            </div>
-
-            <div className="card">
-              <FaFileAlt className="icon" />
-              <h3>Informes del Sistema</h3>
-              <p>Generar y ver análisis detallados del uso del sistema.</p>
-              <button>Ver Informes</button>
+              <FaFileInvoiceDollar className="icon" />
+              <h3>ETS</h3>
+              <p>Revisión de comprobantes de pago de Examenes a Título de Suficiencia.</p>
+              <button onClick={handleETS}>Revisar</button>
             </div>
 
             <div className="card">
               <FaBullhorn className="icon" />
               <h3>Publicar Noticia</h3>
-              <p>Sube una noticia dirigida a la comunidad politécnica.</p>
-              <button>Registrar</button>
+              <p>Publica noticias o eventos relevantes dentro de la comunidad politecnica.</p>
+              <button onClick={handleClickPublicarNoticia}>Publicar</button>
+            </div>
+
+            {/* También del primer código */}
+            <div className="card">
+              <FaGraduationCap className="icon" />
+              <h3>Carreras</h3>
+              <p>Agrega nuevas carreras o consulta las que ya existen.</p>
+              <button onClick={handleCarreras}>Consultar</button>
+            </div>
+
+             <div className="card">
+              <FaBook className="icon" />
+              <h3>Unidades de Aprendizaje</h3>
+              <p>Agrega nuevas unidades o edita las que ya existen.</p>
+              <button onClick={handleUnidades}>Agregar</button>
+            </div>
+
+             <div className="card">
+              <MdEventAvailable className="icon" />
+              <h3>Citas de Inscripción</h3>
+              <p>Genera citas para alumnos regulares e irregulares.</p>
+              <button onClick={handleGenerarCitas}>Generar</button>
             </div>
           </div>
         </section>
 
+        {/* Estadísticas con diseño del segundo */}
         <section className="estadisticas">
           <h2>Estadísticas Generales</h2>
           <div className="stats-grid">
@@ -90,14 +117,17 @@ export function Administrador() {
               <p>Total de Estudiantes</p>
               <h3>1,250</h3>
             </div>
+
             <div className="stat-card">
               <p>Total de Profesores</p>
               <h3>85</h3>
             </div>
+
             <div className="stat-card">
               <p>Cursos Activos</p>
               <h3>32</h3>
             </div>
+
             <div className="stat-card">
               <p>Próximos Eventos</p>
               <h3>5</h3>

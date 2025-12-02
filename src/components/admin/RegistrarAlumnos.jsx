@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrarAlumnos.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function RegistrarAlumnos() {
     const navigate = useNavigate();
@@ -38,9 +40,7 @@ export function RegistrarAlumnos() {
             .catch((err) => console.error("Error al obtener las carreras:", err));
     }, []);
 
-    const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
-    const handleClickProf = () => navigate("../administrador/gestionarProfesores");
-    const handleClickCursos = () => navigate("../administrador/gestionarCursos");
+   
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -83,26 +83,10 @@ export function RegistrarAlumnos() {
 
     return (
         <div className="admin-container">
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="logo">
-                    <img src="/ipn.png" alt="Logo" className="logo-img" />
-                    <span>Gestión Escolar</span>
-                </div>
-                <nav className="menu">
-                    <button onClick={() => navigate("/administrador")} className="menu-item">
-                        Panel de Control
-                    </button>
-                    <button onClick={() => navigate("/estudiantes")} className="menu-item active">Estudiantes</button>
-                    <button onClick={handleClickProf} className="menu-item">Profesores</button>
-                    <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-                    <button className="menu-item">Informes</button>
-                </nav>
-                <button className="logout">Cerrar sesión</button>
-            </aside>
-
+            <AdminSidebar />
             
             <main className="main-content">
+                
                 <section className="gestion-alumnos">
                     
                     <div className="header-section">
@@ -116,11 +100,7 @@ export function RegistrarAlumnos() {
                         </div>
                     </div>
 
-                    <nav className="alumnos-nav">
-                        <button className="nav-btn active">Registrar Alumno</button>
-                        <button className="nav-btn">Editar Alumno</button>
-                        <button className="nav-btn">Eliminar Alumno</button>
-                    </nav>
+                    
 
                     {/* Formulario principal */}
                     <div className="form-container">
@@ -351,10 +331,10 @@ export function RegistrarAlumnos() {
                             </div>
 
                             <div className="form-actions">
-                                <button type="button" className="btn-secondary">
+                                <button type ="button" onClick ={() => navigate("../administrador/gestionarAlumnos")} className="btn-secondary">
                                     Cancelar
                                 </button>
-                                <button type="submit" className="submit-btn">
+                                <button type="submit" className="btn azul">
                                     Registrar Alumno
                                 </button>
                             </div>

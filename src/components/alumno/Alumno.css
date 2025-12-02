@@ -266,3 +266,14 @@
     padding: 0.6rem 1.2rem;
   }
 }
+
+.subheader-section {
+  text-align: left; /* Mueve el texto a la derecha */
+  margin-left: 30px; /* Separación del borde derecho (ajusta si quieres más o menos) */
+}
+
+.subheader-section p {
+  color: #6c757d; /* Gris elegante */
+  font-size: 0.95rem; /* Tamaño ligeramente más pequeño */
+  margin: 0; /* Quita márgenes por defecto */
+}

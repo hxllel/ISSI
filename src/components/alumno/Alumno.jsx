@@ -2,38 +2,42 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Alumno.css";
+import { VerAvisos } from "../shared/VerAvisos";
+import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 
 export function Alumno() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const API = "http://localhost:4000";
 
   const [alumno, setAlumno] = useState(null);
   const [horario, setHorario] = useState([]);
 
-    useEffect(() => {
-  fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      setAlumno(data.alumno || null);
-    })
-    .catch(() => setAlumno(null));
-}, [id]);
-
-  useEffect(()=>{
-    fetch(`http://localhost:4000/ObtenerHorario/${id}`, {credentials : "include"})
-    .then((res) => res.json())
-    .then((data) => {
-      setHorario(data.horario);
-    })
-    .catch(() => setAlumno(null));
+  useEffect(() => {
+    fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        setAlumno(data.alumno || null);
+      })
+      .catch(() => setAlumno(null));
   }, [id]);
 
+  /** ============================
+   *   Cargar horario del alumno
+   *  ============================ */
+  useEffect(() => {
+    fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        setHorario(data.horario);
+      })
+      .catch(() => setAlumno(null));
+  }, [id]);
 
-  const handleIns = () => {navigate(`/alumno/inscripcion/${id}`);};
-  const handleEditPer = () => {navigate(`/alumno/editarDatos/${id}`);};
-  const handleHorarios = () => { navigate(`/alumno/horarios/${id}`);};
-  const handleChat = () => {navigate(`/alumno/Chat`, { state: { alumnoId: id } });};
-
+  /** ============================
+   *  Descargar comprobante horario
+   *  (del primer código)
+   *  ============================ */
   const handleDescargarComprobante = () => {
     try {
       if (!Array.isArray(horario) || horario.length === 0) {
@@ -41,20 +45,25 @@ export function Alumno() {
         return;
       }
 
-      const normalizaDia = (d) => (d === 'Miércoles' || d === 'Miercoles' ? 'Miércoles' : d);
-      const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+      const normalizaDia = (d) =>
+        d === "Miércoles" || d === "Miércoles" ? "Miércoles" : d;
+
+      const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
       const filas = horario.map((h, idx) => {
         const horasPorDia = dias.map((dia) => {
-          const matches = (Array.isArray(h.distribuciones) ? h.distribuciones : [])
+          const matches = (Array.isArray(h.distribuciones)
+            ? h.distribuciones
+            : []
+          )
             .filter((d) => normalizaDia(d.dia) === dia)
             .map((d) => `${d.hora_ini} - ${d.hora_fin}`);
-          return matches.join(', ');
+          return matches.join(", ");
         });
         return {
           id: h.grupo || String(idx + 1),
-          ua: h.materia || '',
-          profesor: h.profesor || '',
+          ua: h.materia || "",
+          profesor: h.profesor || "",
           horas: horasPorDia,
         };
       });
@@ -70,23 +79,23 @@ export function Alumno() {
           table { width: 100%; border-collapse: collapse; font-size: 12px; }
           th, td { border: 1px solid #333; padding: 6px 8px; }
           th { background: #f0f0f0; text-align: left; }
-          .id { width: 120px; }
-          .ua { width: 260px; }
-          .prof { width: 240px; }
-          .dia { width: 120px; text-align: left; }
-          @media print { @page { size: A4; margin: 16mm; } }
         </style>`;
 
-      const fotoUrl = alumno && alumno.id ? `http://localhost:4000/Alumno/Foto/${alumno.id}` : '';
-      
+      const fotoUrl =
+        alumno && alumno.id ? `${API}/Alumno/Foto/${alumno.id}` : "";
+
       const cabecera = `
         <h1>Comprobante de horario</h1>
         <div class="header-container">
-          ${fotoUrl ? `<img src="${fotoUrl}" alt="Foto alumno" class="foto-alumno" onerror="this.style.display='none'" />` : ''}
+          ${
+            fotoUrl
+              ? `<img src="${fotoUrl}" class="foto-alumno" onerror="this.style.display='none'" />`
+              : ""
+          }
           <div class="meta-info">
             <div class="meta">
-              ${alumno ? `<div><strong>Alumno:</strong> ${alumno.nombre || ''} ${alumno.ape_paterno || ''} ${alumno.ape_materno || ''}</div>` : ''}
-              ${alumno ? `<div><strong>Boleta:</strong> ${alumno.id || ''}</div>` : ''}
+              <div><strong>Alumno:</strong> ${alumno.nombre} ${alumno.ape_paterno} ${alumno.ape_materno}</div>
+              <div><strong>Boleta:</strong> ${alumno.id}</div>
               <div><strong>Fecha de emisión:</strong> ${new Date().toLocaleString()}</div>
             </div>
           </div>
@@ -94,137 +103,128 @@ export function Alumno() {
 
       const encabezados = `
         <tr>
-          <th class="id">ID de la materia</th>
-          <th class="ua">Unidad de aprendizaje</th>
-          <th class="prof">Profesor</th>
-          ${dias.map(d => `<th class="dia">${d}</th>`).join('')}
+          <th>ID</th>
+          <th>Unidad de aprendizaje</th>
+          <th>Profesor</th>
+          ${dias.map((d) => `<th>${d}</th>`).join("")}
         </tr>`;
 
-      const cuerpo = filas.map(f => `
+      const cuerpo = filas
+        .map(
+          (f) => `
         <tr>
-          <td class="id">${f.id}</td>
-          <td class="ua">${f.ua}</td>
-          <td class="prof">${f.profesor}</td>
-          ${f.horas.map(hh => `<td class="dia">${hh || '&nbsp;'}</td>`).join('')}
-        </tr>`).join('');
+          <td>${f.id}</td>
+          <td>${f.ua}</td>
+          <td>${f.profesor}</td>
+          ${f.horas.map((hh) => `<td>${hh || "&nbsp;"}</td>`).join("")}
+        </tr>`
+        )
+        .join("");
 
       const html = `
         <html>
-          <head>
-            <meta charset="utf-8"/>
-            <title>Comprobante de horario</title>
-            ${estilo}
-          </head>
-          <body>
-            ${cabecera}
-            <table>
-              <thead>${encabezados}</thead>
-              <tbody>${cuerpo}</tbody>
-            </table>
+          <head><meta charset="utf-8"/>${estilo}</head>
+          <body>${cabecera}
+            <table><thead>${encabezados}</thead><tbody>${cuerpo}</tbody></table>
           </body>
         </html>`;
 
-      const w = window.open('', '_blank', 'width=1024,height=768');
-      if (!w) {
-        alert('No se pudo abrir la ventana de impresión. Permite ventanas emergentes para continuar.');
-        return;
-      }
-      w.document.open();
+      const w = window.open("", "_blank", "width=1024,height=768");
+      if (!w) return alert("Permite ventanas emergentes.");
+
       w.document.write(html);
       w.document.close();
-      w.focus();
       setTimeout(() => w.print(), 350);
     } catch (e) {
-      console.error('Error al generar el comprobante de horario:', e);
-      alert('No se pudo generar el comprobante. Vuelve a intentarlo.');
+      console.error("Error al generar comprobante:", e);
+      alert("No se pudo generar el comprobante.");
     }
   };
 
+  /** ============================
+   *        UI (DISEÑO #2)
+   *  ============================ */
   return (
     <div className="alumno-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo">
-          <img src="/ipn.png" alt="Logo" className="logo-img" />
-          <span>SAES-R</span>
-        </div>
-        <nav className="menu">
-          <button onClick={() => navigate(`/alumno/${id}`)} className="menu-item active">
-            Inicio
-          </button>
-          <button className="menu-item"  onClick={handleIns}>Inscribir Materias </button>
-          <button className="menu-item" onClick={handleHorarios}>Horarios</button>
-          <button className="menu-item" onClick = {() => navigate("/alumno/Kardex")}>Kardex</button>
-          <button className="menu-item" onClick={handleChat}>Asistente de Chat</button>
-          <button className="menu-item" onClick={handleEditPer}>Información Personal</button>
-        </nav>
-        <button className="logout">Cerrar sesión</button>
-      </aside>
+      <SidebarAlumno />
 
+      {/* Contenido principal */}
       <main className="main-content">
-        <header className="alumno-header">
+        <header className="chat-header">
           <div>
-    {alumno ? (
-      <>
-        <h2>¡Bienvenido {alumno.nombre} {alumno.ape_paterno} {alumno.ape_materno}!</h2>
-        <p>Boleta: {alumno.id}</p>
-      </>
-    ) : (
-      <p>Cargando alumno...</p>
-    )}
-  </div>
-          
+            {alumno ? (
+              <>
+                <div className="encabezado-section">
+                  <h1>¡Bienvenido {alumno.nombre} {alumno.ape_paterno} {alumno.ape_materno}!</h1>
+                </div>
+                <div className="subheader-section">
+                  <p>Boleta: {alumno.id}</p>
+                </div>
+              </>
+            ) : (
+              <p>Cargando alumno...</p>
+            )}
+          </div>
+
+          <img src="/escom.png" alt="Logo ESCOM" className="header-logo" />
         </header>
 
+        {/* Horario */}
         <section className="horario-section">
           <h2>Horario Semanal</h2>
+
           <table className="horario-table">
-  <thead>
-    <tr>
-      <th>Profesor</th>
-      <th>Materia</th>
-      <th>Lunes</th>
-      <th>Martes</th>
-      <th>Miércoles</th>
-      <th>Jueves</th>
-      <th>Viernes</th>
-    </tr>
-  </thead>
-  <tbody>
-    {horario.map((h, index) => (
-      <tr key={index}>
-        <td>{h.profesor}</td>
-        <td>{h.materia}</td>
+            <thead>
+              <tr>
+                <th>Profesor</th>
+                <th>Materia</th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+              </tr>
+            </thead>
 
-        {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dia) => {
-          const distrib = h.distribuciones.filter((d) => d.dia === dia);
-          return (
-            <td key={dia}>
-              {distrib.length > 0 ? (
-                distrib.map((d, i) => (
-                  <div key={i} className="horario">
-                    {d.hora_ini} - {d.hora_fin}
-                  </div>
-                ))
-              ) : (
-                ""
-              )}
-            </td>
-          );
-        })}
-      </tr>
-    ))}
-  </tbody>
-</table>
+            <tbody>
+              {horario.map((h, index) => (
+                <tr key={index}>
+                  <td>{h.profesor}</td>
+                  <td>{h.materia}</td>
 
+                  {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dia) => {
+                    const distrib = h.distribuciones.filter((d) => d.dia === dia);
+                    return (
+                      <td key={dia}>
+                        {distrib.length > 0
+                          ? distrib.map((d, i) => (
+                              <div key={i} className="horario">
+                                {d.hora_ini} - {d.hora_fin}
+                              </div>
+                            ))
+                          : ""}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
- {/* comprobante de horario*/}
           <div className="boton-container">
             <button className="comprobante-btn" onClick={handleDescargarComprobante}>
-              Solicitar comprobante de horario
+              Descargar comprobante de horario
             </button>
           </div>
         </section>
+
+        {/* Avisos del primer código */}
+        <section className="avisos-section">
+          <VerAvisos objetivo="alumno" />
+        </section>
+
+       
+
       </main>
     </div>
   );

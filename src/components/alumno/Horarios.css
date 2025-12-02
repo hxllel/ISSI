@@ -1,9 +1,9 @@
-.header-section h1 {
+.encabezado-section h1 {
     display: flex;
   justify-content: center; 
    font-family: 'Montserrat', sans-serif;
   font-size: 1.5rem; /* tamaño de la letra */
-  color: #ffffff; /* color del texto */
+  color: #000000; /* color del texto */
   text-align: center; /* centrar el texto */
   font-weight: bold; /* ponerlo en negritas */
   text-transform: uppercase; /* mayúsculas */
@@ -11,13 +11,16 @@
   margin-bottom: 5px; /* separación inferior */
   margin-left: 15px;
   letter-spacing: 2px; /* espacio entre letras */
+  gap: 20px;
   
 }
 
-.header-section {
-  background-color: #5f1717;
+.encabezado-section {
+  background-color: #ffffff;
   padding: 10px;
   border-radius: 10px;
+  gap: 20px;
+  
 }
 
 .horario-section {
@@ -68,3 +71,6 @@
   gap: 15px;               /* 👈 espacio entre los botones */
   margin-top: 20px;        /* opcional: separa del contenido superior */
 }
+
+
+

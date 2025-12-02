@@ -15,7 +15,6 @@ module.exports = function (passport) {
         try {
           const user = await DatosPersonales.findByPk(id);
           if (!user) {
-            console.log("Usuario no encontrado");
             return done(null, false, { message: "Usuario no encontrado" });
           }
 

@@ -1,25 +1,28 @@
 /* Estructura principal */
 .admin-container {
-  display: flex;
-  min-height: 100vh;
-  font-family: "Poppins", sans-serif;
-  background-color: #f9f9fb;
+  display: flex ;
+  height: auto ;      /* <- muy importante */
+  min-height: 100% ;  /* <- no fuerces 100vh */
+  font-family: "Poppins", sans-serif ;
+  background-color: #ffffff ;
+  overflow: visible ; /* <- NO manejar scroll aquí */
 }
+
 
 /* Sidebar */
 .sidebar {
-  position: fixed;                /* Menú fijo en la izquierda */
-  top: 0;
-  left: 0;
-  width: 240px;                   /* Ancho del menú */
-  height: 100vh;                  /* Ocupa toda la altura */
-  background: #fff;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;        /* Alinea texto e ítems a la izquierda */
-  justify-content: flex-start;    /* Todo arriba */
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+  position: fixed !important;             /* Menú fijo en la izquierda */
+  top: 0 !important;  
+  left: 0 !important;  
+  width: 240px !important;                   /* Ancho del menú */
+  height: 100vh !important;                  /* Ocupa toda la altura */
+  background: #fff !important;  
+  padding: 20px !important;  
+  display: flex !important;  
+  flex-direction: column !important;  
+  align-items: flex-start !important;         /* Alinea texto e ítems a la izquierda */
+  justify-content: flex-start !important;     /* Todo arriba */
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08) !important;  
 }
 
 /* Logo */
@@ -41,46 +44,50 @@
 }
 
 .menu-item {
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 1rem;
-  color: #333;
-  cursor: pointer;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  width: 100%;
-  transition: background-color 0.2s;
+  background: none !important;
+  border: none ;
+  text-align: left ;
+  font-size: 1rem !important;
+  color: #333 !important;
+  cursor: pointer !important;
+  padding: 0.6rem 1rem !important;
+  border-radius: 8px !important;
+  width: 100% !important;
+  transition: background-color 0.2s !important;
 }
 
 .menu-item:hover,
 .menu-item.active {
-  background-color: #f3d9df;
-  color: #7d0024;
-  font-weight: 600;
+  background-color: #f3d9df !important;
+  color: #7d0024 !important;
+  font-weight: 600 !important;
 }
 
 .logout {
-  margin-top: auto;               /* Lo empuja al final del menú */
-  background: none;
-  border: none;
-  color: #7d0024;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  padding-top: 1rem;
+  margin-top: auto !important;                /* Lo empuja al final del menú */
+  background: none !important;
+  border: none ;
+  color: #7d0024 !important;  
+  cursor: pointer ;
+  font-weight: 600 ;
+  font-size: 0.95rem ;
+  padding-top: 1rem ;
+}
+.logout:hover {
+  text-decoration: underline ;
 }
 
 /* Contenido principal */
 .main-content {
-  flex: 1;
-  margin-left: 240px;             /* Deja espacio para el menú */
-  padding: 2rem 3rem;
+  flex: 1!important;  
+  margin-left: 240px !important;              /* Deja espacio para el menú */
+  padding: 2rem 3rem !important;  
+  gap: 20px !important;  
 }
 
 .main-content h1 {
-  color: #222;
-  margin-bottom: 1rem;
+  color: #222 !important;  
+  margin-bottom: 1rem !important;  
 }
 
 /* Acciones rápidas */
@@ -88,6 +95,7 @@
 .estadisticas h2 {
   color: #222;
   margin-bottom: 1rem;
+  margin-top: 20px;
 }
 
 .acciones-grid {
@@ -125,22 +133,23 @@
 }
 
 .card button {
-  background-color: #7d0024;
+  background-color: #7d0024 !important;
   color: #fff;
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
+  margin-top: auto;
 }
 
 .card button:hover {
-  background-color: #60001c;
+  background-color: #60001c!important;
 }
 
 .icon {
   font-size: 1.8rem;
-  color: #7d0024;
+  color: #7d0024 !important;
 }
 
 /* Estadísticas */
@@ -165,7 +174,7 @@
 }
 
 .stat-card h3 {
-  color: #7d0024;
+  color: #7d0024 !important;
   font-size: 1.5rem;
   margin-top: 0.5rem;
 }
@@ -193,10 +202,31 @@
 }
 /* Asegura que el contenido nunca quede debajo del sidebar */
 .main-content {
-  flex: 1;
-  margin-left: 260px; /* un poco más de espacio para asegurar separación */
-  padding: 2rem 3rem;
-  position: relative;
-  z-index: 1; /* para que quede encima si hay sombras o solapamientos */
-  box-sizing: border-box;
+  flex: 1 !important;  
+  margin-left: 260px !important;   /* un poco más de espacio para asegurar separación */
+  padding: 2rem 3rem !important;  
+  position: relative !important;  
+  z-index: 1 !important;   /* para que quede encima si hay sombras o solapamientos */
+  box-sizing: border-box !important;  
 }
+
+
+.chat-header {
+  background: #fff;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.chat-header h1 {
+  color: #222;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+

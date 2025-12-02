@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrarProfesores.css";
+import { AdminSidebar } from "./AdminSidebar";
+
 
 export function RegistrarProfesores() {
     const navigate = useNavigate();
@@ -29,7 +31,7 @@ export function RegistrarProfesores() {
     const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
     const handleClickProf = () => navigate("../administrador/gestionarProfesores");
     const handleClickCursos = () => navigate("../administrador/gestionarCursos");
-    
+    const handleLogout = () => {navigate(`/`);};
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -77,24 +79,7 @@ export function RegistrarProfesores() {
 
     return (
         <div className="admin-container">
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="logo">
-                    <img src="/ipn.png" alt="Logo" className="logo-img" />
-                    <span>Gestión Escolar</span>
-                </div>
-                <nav className="menu">
-                    <button onClick={() => navigate("/administrador")} className="menu-item">
-                        Panel de Control
-                    </button>
-                    <button onClick={handleClickAlu} className="menu-item">Estudiantes</button>
-                    <button onClick={handleClickProf} className="menu-item active">Profesores</button>
-                    <button onClick={handleClickCursos} className="menu-item">Cursos</button>
-                    <button className="menu-item">Informes</button>
-                </nav>
-                <button className="logout">Cerrar sesión</button>
-            </aside>
-
+            <AdminSidebar />
             {/* Contenido principal */}
             <main className="main-content">
                 <section className="gestion-profesores">
@@ -330,7 +315,7 @@ export function RegistrarProfesores() {
                             </div>
 
                             <div className="form-actions">
-                                <button type="submit" className="submit-btn">
+                                <button type="submit" className="btn azul">
                                     Registrar Profesor
                                 </button>
                             </div>
