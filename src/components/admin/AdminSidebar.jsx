@@ -15,7 +15,8 @@ export function AdminSidebar() {
   const handleCarreras = () => navigate("/administrador/carreras");
   const handleUnidades = () => navigate("/administrador/unidades");
   const handleDatosMedicos = () => navigate("/administrador/datosMedicos");
-  const handleGenerarCitas = () => navigate("/administrador/GenerarCitas");
+  const handleGenerarCitas = () => navigate("/administrador/Fechas");
+  const handleSituacionesEspeciales = () => navigate("/administrador/SituacionesEspeciales");
   const handleLogout = () => navigate(`/`);
 
   // Aquí agrego un objeto state común que quieras mandar
@@ -112,10 +113,18 @@ export function AdminSidebar() {
           className="menu-item"
           onClick={() => {
             handleGenerarCitas();
-            navigate("/administrador/GenerarCitas", { state: sharedState });
+            navigate("/administrador/Fechas", { state: sharedState });
           }}
         >
-          Generar Citas 
+          Configuración de Fechas 
+        </button>
+        <button 
+          className="menu-item" 
+          onClick={() =>{
+          navigate("/administrador/SituacionesEspeciales", { state: sharedState })
+        }}
+        >
+          Situaciones Especiales
         </button>
       </nav>
 

@@ -43,6 +43,7 @@ import { Distribucion } from "./components/admin/Distribucion";
 import { ETS } from "./components/admin/ETS";
 import { PublicarNoticia } from "./components/admin/PublicarNoticia";
 import { GenerarCitas } from "./components/admin/GenerarCitas";
+import { SituacionesEspeciales } from "./components/admin/SituacionesEspeciales";
 // PAGINAS INDIVIDUALES
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
@@ -178,9 +179,10 @@ function App() {
             path="/administrador/datosMedicos"
             element={<DatosMedicos />}
           />
+          <Route path="/administrador/Fechas" element={<GenerarCitas />} />
           <Route
-            path="/administrador/GenerarCitas"
-            element={<GenerarCitas />}
+            path="/administrador/SituacionesEspeciales"
+            element={<SituacionesEspeciales />}
           />
         </Routes>
       </BrowserRouter>
