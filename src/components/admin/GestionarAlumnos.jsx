@@ -22,6 +22,15 @@ export function GestionarAlumnos() {
   const alumnosPorPagina = 8;
 
   // Navegación
+  const handleRegistrar = () =>
+    navigate("/administrador/gestionarAlumnos/registrarAlumno");
+
+  const handleClickEdit = (id) =>
+    navigate(`/administrador/gestionarAlumnos/editarAlumnos/${id}`);
+
+  // NUEVO: ir a la vista de inscripción admin para un alumno
+  const handleClickInscribir = (id) =>
+    navigate(`/administrador/gestionarAlumnos/inscripcion/${id}`);
   const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
   const handleClickProf = () => navigate("../administrador/gestionarProfesores");
   const handleClickCursos = () => navigate("../administrador/gestionarCursos");
@@ -61,7 +70,7 @@ export function GestionarAlumnos() {
       .catch((err) => console.error("Error al obtener las carreras:", err));
   }, []);
 
-  // Eliminar alumno
+  // Eliminar alumno (ponerlo inactivo)
   useEffect(() => {
     if (del) {
       fetch(`${API}/EliminarAlumno/${idAlumno}`, {
@@ -81,11 +90,13 @@ export function GestionarAlumnos() {
 
       setDelete(false);
     }
-  }, [del]);
+  }, [del, idAlumno]);
 
   // Filtrado y búsqueda
   const alumnosFiltrados = datos.filter((a) => {
-    const nombreCompleto = `${a.nombre || ""} ${a.ape_paterno || ""} ${a.ape_materno || ""}`.toLowerCase();
+    const nombreCompleto = `${a.nombre || ""} ${a.ape_paterno || ""} ${
+      a.ape_materno || ""
+    }`.toLowerCase();
     const busq = busqueda.toLowerCase().trim();
 
     const coincideCarrera = carreraSeleccionada
@@ -101,9 +112,15 @@ export function GestionarAlumnos() {
   });
 
   // Paginación
-  const totalPaginas = Math.max(1, Math.ceil(alumnosFiltrados.length / alumnosPorPagina));
+  const totalPaginas = Math.max(
+    1,
+    Math.ceil(alumnosFiltrados.length / alumnosPorPagina)
+  );
   const indiceInicio = (paginaActual - 1) * alumnosPorPagina;
-  const alumnosPagina = alumnosFiltrados.slice(indiceInicio, indiceInicio + alumnosPorPagina);
+  const alumnosPagina = alumnosFiltrados.slice(
+    indiceInicio,
+    indiceInicio + alumnosPorPagina
+  );
 
   const siguientePagina = () => {
     if (paginaActual < totalPaginas) setPaginaActual(paginaActual + 1);
@@ -127,9 +144,11 @@ export function GestionarAlumnos() {
           <div className="encabezado-section">
             <h1>Gestión de Estudiantes</h1>
           </div>
-          <div> <button className="btn azul" onClick={handleRegistrar}>
-            + Registrar nuevo estudiante
-          </button></div>
+          <div>
+            <button className="btn azul" onClick={handleRegistrar}>
+              + Registrar nuevo estudiante
+            </button>
+          </div>
           <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
 
@@ -149,8 +168,6 @@ export function GestionarAlumnos() {
               ))}
             </select>
           </label>
-
-          
         </div>
 
         {/* TABLA */}
@@ -169,8 +186,6 @@ export function GestionarAlumnos() {
                 🔎
               </button>
             </div>
-
-            
           </div>
 
           <table className="tabla">
@@ -194,6 +209,7 @@ export function GestionarAlumnos() {
                     </td>
                     <td>{a.carrera}</td>
                     <td>{a.email}</td>
+                    <td>
 
                     <td className="acciones">
 
@@ -211,6 +227,14 @@ export function GestionarAlumnos() {
                         onClick={() => handleAbrirModal(a.id)}
                       >
                         🗑
+                      </button>
+                      {/* NUEVO: botón para inscripción admin */}
+                      <button
+                        className="icono inscribir"
+                        title="Inscribir / dar de baja materias"
+                        onClick={() => handleClickInscribir(a.id)}
+                      >
+                        📚
                       </button>
 
                       {/* NUEVO → Datos Médicos */}
@@ -235,7 +259,7 @@ export function GestionarAlumnos() {
 
           <div className="tabla-footer">
             <div>
-            <button className="btn azul">Descargar Listado</button>
+              <button className="btn azul">Descargar Listado</button>
             </div>
             <div className="paginacion">
               <button onClick={anteriorPagina} disabled={paginaActual === 1}>
@@ -256,7 +280,7 @@ export function GestionarAlumnos() {
           </div>
         </div>
 
-        {/* MODAL */}
+        {/* MODAL ELIMINAR */}
         {mostrarModal && (
           <div className="modal-overlay">
             <div className="modal">
@@ -279,4 +303,5 @@ export function GestionarAlumnos() {
     </div>
   );
 }
+
 
