@@ -18,6 +18,9 @@ export function Unidades() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
+  // NUEVO: lista de carreras para el select
+  const [carreras, setCarreras] = useState([]);
+
   const load = async () => {
     setLoading(true);
     try {
@@ -30,7 +33,18 @@ export function Unidades() {
     }
   };
 
+  // Carga de UAs
   useEffect(() => { load(); }, []);
+
+  // NUEVO: carga de carreras desde el backend (igual que en RegistrarCurso)
+  useEffect(() => {
+    fetch('http://localhost:4000/ObtenerCarreras', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        setCarreras(data.carreras || []);
+      })
+      .catch((err) => console.error('Error al obtener las carreras:', err));
+  }, []);
 
   const openCreate = () => {
     setEditUA(null);
@@ -192,64 +206,61 @@ const prevPage = () => {
 
       {/* MODAL simple sin librerías */}
       {modalOpen && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <h3 className="modal-title">
-        {editUA ? "Editar UA" : "Nueva UA"}
-      </h3>
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
+        }}>
+          <div style={{ background: '#fff', padding: 16, maxWidth: 480, width: '100%', borderRadius: 8 }}>
+            <h3>{editUA ? 'Editar UA' : 'Nueva UA'}</h3>
+            <form onSubmit={onSubmit} style={{ display: 'grid', gap: 8 }}>
+              <input
+                name="nombre"
+                placeholder="Nombre"
+                value={form.nombre}
+                onChange={onChange}
+                required
+              />
+              <input
+                name="credito"
+                type="number"
+                step="0.5"
+                placeholder="Crédito"
+                value={form.credito}
+                onChange={onChange}
+                required
+              />
 
-      <form onSubmit={onSubmit} className="modal-form">
-        <input
-          name="nombre"
-          placeholder="Nombre"
-          value={form.nombre}
-          onChange={onChange}
-          required
-          className="modal-input"
-        />
+              {/* AQUÍ VA EL SELECT DE CARRERA EN VEZ DEL INPUT */}
+              <select
+                name="carrera"
+                value={form.carrera}
+                onChange={onChange}
+                required
+              >
+                <option value="">Seleccione una carrera</option>
+                {carreras.map((c) => (
+                  <option key={c.id || c.nombre} value={c.nombre}>
+                    {c.nombre}
+                  </option>
+                ))}
+              </select>
 
-        <input
-          name="credito"
-          type="number"
-          step="0.5"
-          placeholder="Crédito"
-          value={form.credito}
-          onChange={onChange}
-          required
-          className="modal-input"
-        />
+              <input
+                name="semestre"
+                type="number"
+                placeholder="Semestre"
+                value={form.semestre}
+                onChange={onChange}
+                required
+              />
 
-        <input
-          name="carrera"
-          placeholder="Carrera"
-          value={form.carrera}
-          onChange={onChange}
-          required
-          className="modal-input"
-        />
-
-        <input
-          name="semestre"
-          type="number"
-          placeholder="Semestre"
-          value={form.semestre}
-          onChange={onChange}
-          required
-          className="modal-input"
-        />
-
-        <div className="modal-actions">
-          <button type="submit" className="modal-btn primary">
-            {editUA ? "Guardar cambios" : "Crear"}
-          </button>
-
-          <button type="button" onClick={closeModal} className="modal-btn">
-            Cancelar
-          </button>
+              <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                <button type="submit">{editUA ? 'Guardar cambios' : 'Crear'}</button>
+                <button type="button" onClick={closeModal}>Cancelar</button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
-    </div>
-  </div>
 )}
 
     </div>
@@ -258,4 +269,5 @@ const prevPage = () => {
     </div>
   );
 }
+
 

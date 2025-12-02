@@ -203,6 +203,7 @@ CREATE TABLE kardex (
     promedio FLOAT NOT NULL,
     situacion_academica TEXT NOT NULL,
     semestres_restantes INT NOT NULL,
+    creditos_obtenidos FLOAT NOT NULL,
     CONSTRAINT PK_KAR PRIMARY KEY (id),
     CONSTRAINT FK_KAR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
@@ -286,6 +287,7 @@ create table ets_grupo (
     hora_inicio TEXT NOT NULL,
     hora_final TEXT NOT NULL,
     fecha DATE NOT NULL,
+    periodo TEXT NOT NULL,
     CONSTRAINT PK_ETS_G PRIMARY KEY (id),
     CONSTRAINT FK_ETSG_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id),
     CONSTRAINT FK_ETSG_DP FOREIGN KEY (id_aplicante) REFERENCES datos_personales (id)
@@ -325,11 +327,13 @@ CREATE TABLE fechas_relevantes (
     registro_extra DATETIME NOT NULL,
     fin_registro_extra DATETIME NOT NULL,
     evalu_profe DATETIME NOT NULL,
+    fin_evalu_profe DATETIME NOT NULL,
+    inscribir_ets DATETIME NOT NULL,
+    fin_inscribir_ets DATETIME NOT NULL,
     subir_doc_ets DATETIME NOT NULL,
     fin_subir_doc_ets DATETIME NOT NULL,
     eval_ets DATETIME NOT NULL,
     fin_evalu_ets DATETIME NOT NULL,
-    cal_ets DATETIME NOT NULL,
     periodo TEXT NOT NULL
 );
 
@@ -2205,16 +2209,12 @@ BEGIN
     CLOSE ua_cursor;
 END $$
 
-DELIMITER;
+DELIMITER ;
 
 CALL generate_groups_and_schedules ();
 
 DROP PROCEDURE generate_groups_and_schedules;
 
--- ==================================================================
--- 4. INSERCIÓN DE DATOS REALISTAS DE ALUMNOS (10 alumnos)
--- Se asegura que los alumnos queden inscritos en el grupo matutino (M1)
--- ==================================================================
 DELETE FROM datos_personales WHERE tipo_usuario = 'alumno';
 
 INSERT INTO
@@ -2597,77 +2597,88 @@ INSERT INTO
         id_alumno,
         promedio,
         situacion_academica,
-        semestres_restantes
+        semestres_restantes,
+        creditos_obtenidos
     )
 VALUES (
         'K2024630101',
         '2024630101',
         8.5,
         'Regular',
-        7
+        1,
+        37.5
     ),
     (
         'K2024630102',
         '2024630102',
         8.5,
         'Regular',
-        7
+        5,
+        30.0
     ),
     (
         'K2024630201',
         '2024630201',
         8.5,
         'Regular',
-        7
+        7,
+        22.5
     ),
     (
         'K2024630202',
         '2024630202',
         8.5,
         'Regular',
-        7
+        7,
+        45.0
     ),
     (
         'K2024630301',
         '2024630301',
         8.5,
         'Regular',
-        7
+        1,
+        52.5
     ),
     (
         'K2024630302',
         '2024630302',
         8.5,
         'Regular',
-        7
+        1,
+        40.5
     ),
     (
         'K2023630107',
         '2023630107',
         8.8,
         'Regular',
-        5
+        5,
+        60.0
     ),
     (
         'K2022630208',
         '2022630208',
         8.6,
         'Regular',
-        3
+        3,
+        112.5
     ),
     (
         'K2021630309',
         '2021630309',
         8.3,
         'Regular',
-        1
+        1,
+        142.5
     ),
     (
         'K2021630310',
         '2021630310',
         8.7,
         'Regular',
-        0
+        2,
+        157.5
     );
 
 -- ==================================================================
@@ -6320,31 +6331,35 @@ INSERT INTO
         registro_extra,
         fin_registro_extra,
         evalu_profe,
+        fin_evalu_profe,
+        inscribir_ets,
+        fin_inscribir_ets,
         subir_doc_ets,
         fin_subir_doc_ets,
         eval_ets,
         fin_evalu_ets,
-        cal_ets,
         periodo
     )
 VALUES (
-        '2025-02-03 00:00:00',
-        '2025-06-20 23:59:59',
-        '2025-03-01 00:00:00',
-        '2025-03-07 23:59:59',
-        '2025-04-01 00:00:00',
-        '2025-04-07 23:59:59',
-        '2025-05-01 00:00:00',
-        '2025-05-07 23:59:59',
-        '2025-06-10 00:00:00',
-        '2025-06-12 23:59:59',
-        '2025-06-01 00:00:00',
-        '2025-06-15 00:00:00',
-        '2025-06-18 23:59:59',
-        '2025-11-20 00:00:00',
-        '2025-11-30 00:59:59',
-        '2025-06-25 00:00:00',
-        '2025-1'
+        '2025-02-03 00:00:00', -- inicio_semestre
+        '2025-06-20 23:59:59', -- fin_semestre
+        '2025-12-01 00:00:00', -- registro_primer_parcial
+        '2025-12-07 23:59:59', -- fin_registro_primer_parcial
+        '2025-04-01 00:00:00', -- registro_segundo_parcial
+        '2025-04-07 23:59:59', -- fin_registro_segundo_parcial
+        '2025-05-01 00:00:00', -- registro_tercer_parcial
+        '2025-05-07 23:59:59', -- fin_registro_tercer_parcial
+        '2025-06-10 00:00:00', -- registro_extra
+        '2025-06-12 23:59:59', -- fin_registro_extra
+        '2025-06-01 00:00:00', -- evalu_profe
+        '2025-06-15 23:59:59', -- fin_evalu_profe
+        '2025-11-27 00:00:00', -- inscribir_ets
+        '2025-11-30 23:59:59', -- fin_inscribir_ets
+        '2025-11-28 00:00:00', -- subir_doc_ets
+        '2025-11-29 23:59:59', -- fin_subir_doc_ets
+        '2025-11-26 00:00:00', -- eval_ets
+        '2025-11-30 23:59:59', -- fin_evalu_ets
+        '2025-1' -- periodo
     );
 
 SELECT * FROM unidad_de_aprendizaje WHERE tipo = "OBLIGATORIA";
@@ -6365,9 +6380,9 @@ INSERT INTO
         estado_actual
     )
 VALUES (
-        '12345',
+        '457',
         'EST2021630309',
-        'UA0001',
+        'UA0008',
         '2',
         '1',
         'Reprobada'
@@ -6392,3 +6407,467 @@ set
     fecha_hora_cad = "2025-11-24 22:00:00"
 where
     id_alumno = "2021630310";
+
+-- ==================================================================
+-- ACTUALIZAR MAT_INSCRITOS CON CALIFICACIONES FINALES Y EXTRA
+-- ==================================================================
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.0,
+    extra = NULL
+WHERE
+    id = 'M0001';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.3,
+    extra = NULL
+WHERE
+    id = 'M0002';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.5,
+    extra = NULL
+WHERE
+    id = 'M0003';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.9,
+    extra = NULL
+WHERE
+    id = 'M0004';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0005';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.2,
+    extra = NULL
+WHERE
+    id = 'M0006';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.0,
+    extra = NULL
+WHERE
+    id = 'M0007';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.6,
+    extra = NULL
+WHERE
+    id = 'M0008';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.6,
+    extra = NULL
+WHERE
+    id = 'M0009';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.8,
+    extra = NULL
+WHERE
+    id = 'M0010';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.2,
+    extra = NULL
+WHERE
+    id = 'M0011';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 9.0,
+    extra = NULL
+WHERE
+    id = 'M0012';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.9,
+    extra = NULL
+WHERE
+    id = 'M0013';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0014';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.8,
+    extra = NULL
+WHERE
+    id = 'M0015';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.4,
+    extra = NULL
+WHERE
+    id = 'M0016';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.4,
+    extra = NULL
+WHERE
+    id = 'M0017';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.0,
+    extra = NULL
+WHERE
+    id = 'M0018';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 6.9,
+    extra = NULL
+WHERE
+    id = 'M0019';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.2,
+    extra = NULL
+WHERE
+    id = 'M0020';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.3,
+    extra = NULL
+WHERE
+    id = 'M0021';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 9.0,
+    extra = NULL
+WHERE
+    id = 'M0022';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.7,
+    extra = NULL
+WHERE
+    id = 'M0023';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.8,
+    extra = NULL
+WHERE
+    id = 'M0024';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0025';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.9,
+    extra = NULL
+WHERE
+    id = 'M0026';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.3,
+    extra = NULL
+WHERE
+    id = 'M0027';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.6,
+    extra = NULL
+WHERE
+    id = 'M0028';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.5,
+    extra = NULL
+WHERE
+    id = 'M0029';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.9,
+    extra = NULL
+WHERE
+    id = 'M0030';
+
+-- Alumno 2023630107 - 3BM1 (IIA) - Semestre 3 completado
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.6,
+    extra = NULL
+WHERE
+    id = 'M0031';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.2,
+    extra = NULL
+WHERE
+    id = 'M0032';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.9,
+    extra = NULL
+WHERE
+    id = 'M0033';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.1,
+    extra = NULL
+WHERE
+    id = 'M0034';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.7,
+    extra = NULL
+WHERE
+    id = 'M0035';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.4,
+    extra = NULL
+WHERE
+    id = 'M0036';
+
+-- Alumno 2022630208 - 5AM1 (LCD) - Semestre 5 completado
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.1,
+    extra = NULL
+WHERE
+    id = 'M0037';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 9.2,
+    extra = NULL
+WHERE
+    id = 'M0038';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0039';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.8,
+    extra = NULL
+WHERE
+    id = 'M0040';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.7,
+    extra = NULL
+WHERE
+    id = 'M0041';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.3,
+    extra = NULL
+WHERE
+    id = 'M0042';
+
+-- Alumno 2021630309 - 7CM1 (ISC) - Semestre 7
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0043';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.2,
+    extra = NULL
+WHERE
+    id = 'M0044';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.8,
+    extra = NULL
+WHERE
+    id = 'M0045';
+
+-- Alumno 2021630310 - 8CM1 (ISC) - Semestre 8
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.7,
+    extra = NULL
+WHERE
+    id = 'M0046';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 9.1,
+    extra = NULL
+WHERE
+    id = 'M0047';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.4,
+    extra = NULL
+WHERE
+    id = 'M0048';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.9,
+    extra = NULL
+WHERE
+    id = 'M0049';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0050';
+
+UPDATE mat_inscritos
+SET
+    calificacion_final = 8.8,
+    extra = NULL
+WHERE
+    id = 'M0051';
+
+-- ==================================================================
+-- AGREGAR CALIFICACIONES EXTRA PARA ALGUNOS ALUMNOS (RECUPERACIÓN)
+-- ==================================================================
+
+-- Alumno 2024630101 - Una materia con extra (reprobó en ordinario)
+UPDATE mat_inscritos
+SET
+    calificacion_final = 5.2,
+    extra = 7.5
+WHERE
+    id = 'M0003';
+
+-- Alumno 2024630102 - Una materia con extra
+UPDATE mat_inscritos
+SET
+    calificacion_final = 5.8,
+    extra = 8.0
+WHERE
+    id = 'M0009';
+
+-- Alumno 2024630201 - Una materia reprobada sin recuperación
+UPDATE mat_inscritos
+SET
+    calificacion_final = 4.5,
+    extra = NULL
+WHERE
+    id = 'M0013';
+
+-- Alumno 2024630202 - Una materia con extra
+UPDATE mat_inscritos
+SET
+    calificacion_final = 5.0,
+    extra = 7.2
+WHERE
+    id = 'M0019';
+
+-- Alumno 2024630301 - Una materia reprobada
+UPDATE mat_inscritos
+SET
+    calificacion_final = 4.9,
+    extra = NULL
+WHERE
+    id = 'M0023';
+
+-- Alumno 2024630302 - Una materia con extra
+UPDATE mat_inscritos
+SET
+    calificacion_final = 5.3,
+    extra = 7.8
+WHERE
+    id = 'M0029';
+
+-- Alumno 2023630107 - Una materia reprobada pero pasó
+UPDATE mat_inscritos
+SET
+    calificacion_final = 6.0,
+    extra = NULL
+WHERE
+    id = 'M0034';
+
+-- Alumno 2022630208 - Una materia con extra
+UPDATE mat_inscritos
+SET
+    calificacion_final = 5.5,
+    extra = 7.9
+WHERE
+    id = 'M0040';
+
+-- Alumno 2021630309 - Fundamentos de Diseño Digital reprobada (según historial)
+UPDATE mat_inscritos
+SET
+    calificacion_final = 7.2,
+    extra = NULL
+WHERE
+    id = 'M0045';
+
+-- Alumno 2021630310 - Sin reprobaciones (alumno excelente)
+-- Se mantienen todas sus calificaciones sin cambios
+
+-- Verificar las actualizaciones
+SELECT
+    g.nombre AS grupo,
+    ua.nombre AS materia,
+    mi.calificacion_primer,
+    mi.calificacion_segundo,
+    mi.calificacion_tercer,
+    mi.calificacion_final,
+    mi.extra,
+    k.creditos_obtenidos,
+    e.creditos_disponibles
+FROM
+    mat_inscritos mi
+    INNER JOIN horario h ON mi.id_horario = h.id
+    INNER JOIN grupo g ON mi.id_grupo = g.id
+    INNER JOIN unidad_de_aprendizaje ua ON g.id_ua = ua.id
+    INNER JOIN kardex k ON k.id_alumno = h.id_alumno
+    INNER JOIN estudiante e ON e.id_usuario = h.id_alumno
+ORDER BY h.id_alumno, g.nombre;

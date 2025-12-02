@@ -38,6 +38,7 @@ export function Inscripcion() {
   const [nombre, setNombre] = useState("");
   const [citas, setCitas] = useState("");
 
+  const [horarios, setHorarios] = useState([]);
   const API = "http://localhost:4000";
 
   const safe = (value, fallback) =>
@@ -56,7 +57,7 @@ export function Inscripcion() {
           setCita(true);
           setCitas(data.citas);
         } else {
-          setTiempo(false);
+          setTiempo(true);
         }
 
         setPromedio(data.promedio);
@@ -118,6 +119,13 @@ export function Inscripcion() {
     setId_dis(id);
   };
 
+  const obtenerHorarioDia = (arr, dia) => {
+  if (!Array.isArray(arr)) return "";
+  const h = arr.find((d) => d.dia === dia);
+  return h ? `${h.hora_ini} - ${h.hora_fin}` : "";
+};
+
+
   // ========== DISTRIBUCIÓN HORARIA ==========
   useEffect(() => {
     if (!modalOpen || !id_dis) return;
@@ -136,6 +144,7 @@ export function Inscripcion() {
         if (data?.success) {
           setGruposagg(safeArray(data?.tempGrupo));
           setCreditos(safe(data?.creditos, 0));
+          setHorarios(safeArray(data?.horarios));
         }
       })
       .catch(() => {});
@@ -256,6 +265,15 @@ export function Inscripcion() {
       <section>
         <SidebarAlumno />
         <main className="main-content">
+          <header className="chat-header">
+          <div className="encabezado-section">
+            <h1 className="titulo">Inscripción de Materias</h1>
+          </div>
+          <p className="descripcion">Realiza la inscripción de tus materias.</p>
+
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
+        <section className="gestion-alumnos"> 
           <div className="inscripcion-container">
             <h1 className="titulo">No es tu tiempo de reinscripción</h1>
             <div style={{ marginTop: "1rem" }}>
@@ -274,6 +292,7 @@ export function Inscripcion() {
               <p>Si crees que hay un error, contacta con la coordinación.</p>
             </div>
           </div>
+          </section>
         </main>
       </section>
     );
@@ -420,74 +439,119 @@ export function Inscripcion() {
                   <th>Tipo</th>
                   <th>Créditos</th>
                   <th>Profesor</th>
+                  <th>Lunes</th>
+                  <th>Martes</th>
+                  <th>Miércoles</th>
+                  <th>Jueves</th>
+                  <th>Viernes </th>
                   <th>Disponibilidad</th>
                   <th>Cupo</th>
                   <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
-                {grupos.length > 0 ? (
-                  grupos
-                    .filter((grupo) => {
-                      const matchTurno = !filtroTurno || grupo.turno === filtroTurno;
-                      const matchTipo =
-                        !filtroTipo || grupo.Unidad_Aprendizaje.tipo === filtroTipo;
-                      const matchGrupo =
-                        !filtroGrupo ||
-                        grupo.nombre.toLowerCase().includes(filtroGrupo.toLowerCase());
-                      const matchSemestre =
-                        !filtroSemestre || grupo.nombre.charAt(0) === filtroSemestre;
-                      return matchTurno && matchTipo && matchGrupo && matchSemestre;
-                    })
-                    .map((grupo) => (
-                      <tr key={grupo.id}>
-                        <td>{grupo.nombre}</td>
-                        <td>{grupo.Unidad_Aprendizaje.nombre}</td>
-                        <td>{grupo.Unidad_Aprendizaje.tipo}</td>
-                        <td>{grupo.Unidad_Aprendizaje.credito}</td>
-                        <td>
-                          {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
-                          {grupo.DatosPersonale.ape_materno}
-                        </td>
-                        <td>
-                          <span
-                            className={`estado ${grupo.cupo > 0 ? "disponible" : "lleno"}`}
-                          >
-                            {grupo.cupo > 0 ? "Disponible" : "Lleno"}
-                          </span>
-                        </td>
-                        <td>{grupo.cupo}</td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn-inscribir"
-                            onClick={() => handleClickAdd(grupo.id)}
-                            disabled={
-                              grupo.cupo <= 0 ||
-                              gruposagg.includes(grupo.id) ||
-                              cursadas.includes(grupo.Unidad_Aprendizaje.nombre) ||
-                              NoReinscripcion.includes(grupo.Unidad_Aprendizaje.id)
-                            }
-                          >
-                            Seleccionar
-                          </button>
-                          <button
-                            type="button"
-                            className="btn-ver"
-                            onClick={() => handleClickAbrir(grupo.id)}
-                            style={{ marginLeft: "8px" }}
-                          >
-                            Mostrar Horario
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                ) : (
-                  <tr>
-                    <td colSpan="8">No hay grupos disponibles</td>
-                  </tr>
-                )}
-              </tbody>
+  {grupos.length > 0 ? (
+    grupos
+      .filter((grupo) => {
+        const matchTurno = !filtroTurno || grupo.turno === filtroTurno;
+        const matchTipo =
+          !filtroTipo || grupo.Unidad_Aprendizaje.tipo === filtroTipo;
+        const matchGrupo =
+          !filtroGrupo ||
+          grupo.nombre.toLowerCase().includes(filtroGrupo.toLowerCase());
+        const matchSemestre =
+          !filtroSemestre || grupo.nombre.charAt(0) === filtroSemestre;
+
+        return matchTurno && matchTipo && matchGrupo && matchSemestre;
+      })
+
+      .map((grupo) => {
+        const profesor = grupo.DatosPersonale;
+        const distribsRaw = grupo.Distribucion || [];
+        const distribs = Array.isArray(distribsRaw) ? distribsRaw : [distribsRaw];
+
+        // función horarios por día
+        const horasPorDia = (dia) => {
+          if (dia === "Miércoles") {
+            const vals = distribs
+              .filter(
+                (d) =>
+                  d &&
+                  (d.dia === "Miércoles" || d.dia === "Miércoles")
+              )
+              .map((d) => `${d.hora_ini} - ${d.hora_fin}`);
+            return vals.join(", ");
+          }
+          const vals = distribs
+            .filter((d) => d && d.dia === dia)
+            .map((d) => `${d.hora_ini} - ${d.hora_fin}`);
+          return vals.join(", ");
+        };
+
+        // validaciones
+        const estaCursada = cursadas.includes(grupo.Unidad_Aprendizaje.nombre);
+        const estaEnBorrador = gruposagg.includes(grupo.id);
+        const noPermitida = NoReinscripcion.includes(
+          grupo.Unidad_Aprendizaje.id
+        );
+
+        return (
+          <tr key={grupo.id}>
+            <td>{grupo.nombre}</td>
+            <td>{grupo.Unidad_Aprendizaje.nombre}</td>
+            <td>{grupo.Unidad_Aprendizaje.tipo}</td>
+            <td>{grupo.Unidad_Aprendizaje.credito}</td>
+
+            <td>
+              {profesor.nombre} {profesor.ape_paterno} {profesor.ape_materno}
+            </td>
+
+            {/* HORARIOS */}
+            <td>{horasPorDia("Lunes") || " "}</td>
+            <td>{horasPorDia("Martes") || " "}</td>
+            <td>{horasPorDia("Miércoles") || " "}</td>
+            <td>{horasPorDia("Jueves") || " "}</td>
+            <td>{horasPorDia("Viernes") || " "}</td>
+
+            {/* DISPONIBILIDAD */}
+            <td>
+              <span
+                className={`estado ${
+                  grupo.cupo > 0 ? "disponible" : "lleno"
+                }`}
+              >
+                {grupo.cupo > 0 ? "Disponible" : "Lleno"}
+              </span>
+            </td>
+
+            <td>{grupo.cupo}</td>
+
+            {/* ACCIONES */}
+            <td>
+              <button
+                type="button"
+                className="btn-inscribir"
+                onClick={() => handleClickAdd(grupo.id)}
+                disabled={
+                  grupo.cupo <= 0 ||
+                  estaEnBorrador ||
+                  estaCursada ||
+                  noPermitida
+                }
+              >
+                Seleccionar
+              </button>
+            </td>
+          </tr>
+        );
+      })
+  ) : (
+    <tr>
+      <td colSpan="14">No hay grupos disponibles</td>
+    </tr>
+  )}
+</tbody>
+
             </table>
           </section>
 
@@ -506,49 +570,68 @@ export function Inscripcion() {
                   <th>Profesor</th>
                   <th>Disponibilidad</th>
                   <th>Cupos</th>
+                  <th>Lunes</th>
+                  <th>Martes</th>
+                  <th>Miércoles</th>
+                  <th>Jueves</th>
+                  <th>Viernes</th>
                   <th>Acción</th>
                 </tr>
               </thead>
 
               <tbody>
-                {gruposagg.length > 0 ? (
-                  grupos
-                    .filter((grupo) => gruposagg.includes(grupo.id))
-                    .map((grupo) => (
-                      <tr key={grupo.id}>
-                        <td>{grupo.nombre}</td>
-                        <td>{grupo.Unidad_Aprendizaje.nombre}</td>
-                        <td>{grupo.Unidad_Aprendizaje.tipo}</td>
-                        <td>{grupo.Unidad_Aprendizaje.credito}</td>
-                        <td>
-                          {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
-                          {grupo.DatosPersonale.ape_materno}
-                        </td>
-                        <td>
-                          <span
-                            className={`estado ${grupo.cupo > 0 ? "disponible" : "lleno"}`}
-                          >
-                            {grupo.cupo > 0 ? "Disponible" : "Lleno"}
-                          </span>
-                        </td>
-                        <td>{grupo.cupo}</td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn-ver"
-                            onClick={() => handleClickEl(grupo.id)}
-                          >
-                            Eliminar
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                ) : (
-                  <tr>
-                    <td colSpan="8">No hay grupos seleccionados</td>
-                  </tr>
-                )}
-              </tbody>
+  {gruposagg.length > 0 ? (
+    grupos
+      .filter((grupo) => gruposagg.includes(grupo.id))
+      .map((grupo) => {
+        const index = gruposagg.indexOf(grupo.id);
+        const horarioGrupo = horarios[index] || [];
+
+        return (
+          <tr key={grupo.id}>
+            <td>{grupo.nombre}</td>
+            <td>{grupo.Unidad_Aprendizaje.nombre}</td>
+            <td>{grupo.Unidad_Aprendizaje.tipo}</td>
+            <td>{grupo.Unidad_Aprendizaje.credito}</td>
+            <td>
+              {grupo.DatosPersonale.nombre} {grupo.DatosPersonale.ape_paterno}{" "}
+              {grupo.DatosPersonale.ape_materno}
+            </td>
+            <td>
+              <span
+                className={`estado ${grupo.cupo > 0 ? "disponible" : "lleno"}`}
+              >
+                {grupo.cupo > 0 ? "Disponible" : "Lleno"}
+              </span>
+            </td>
+            <td>{grupo.cupo}</td>
+
+            {/* HORARIOS */}
+            <td>{obtenerHorarioDia(horarioGrupo, "Lunes")}</td>
+            <td>{obtenerHorarioDia(horarioGrupo, "Martes")}</td>
+            <td>{obtenerHorarioDia(horarioGrupo, "Miércoles")}</td>
+            <td>{obtenerHorarioDia(horarioGrupo, "Jueves")}</td>
+            <td>{obtenerHorarioDia(horarioGrupo, "Viernes")}</td>
+
+            <td>
+              <button
+                type="button"
+                className="btn-ver"
+                onClick={() => handleClickEl(grupo.id)}
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        );
+      })
+  ) : (
+    <tr>
+      <td colSpan="13">No hay grupos seleccionados</td>
+    </tr>
+  )}
+</tbody>
+
             </table>
 
             <form className="resumen" onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>

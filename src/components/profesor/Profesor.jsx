@@ -67,7 +67,7 @@ export function Profesor() {
     const hoy = dias[new Date().getDay()];
     return cursos.reduce((acc, c) => {
       const d = Array.isArray(c?.Distribucion) ? c.Distribucion : [];
-      const n = d.filter(x => x?.dia === hoy || (hoy === "Miércoles" && x?.dia === "Miercoles")).length;
+      const n = d.filter(x => x?.dia === hoy || (hoy === "Miércoles" && x?.dia === "Miércoles")).length;
       return acc + n;
     }, 0);
   }, [cursos]);

@@ -2,9 +2,10 @@
 const express = require("express");
 const bd = require("../../model/modelo");
 const { v4: uuidv4 } = require("uuid");
-const { Op } = require("sequelize");
+const { Op, INTEGER } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { raw } = require("mysql2");
+const { truncates } = require("bcryptjs");
 module.exports = (passport) => {
   const router = express.Router();
 
@@ -100,6 +101,7 @@ module.exports = (passport) => {
         promedio: 0,
         situacion_academica: "regular",
         semestres_restantes: carr.duracion_max,
+        creditos_obtenidos: 0,
       });
       console.log("Alumno creado: ");
       return res.json({ success: true });
@@ -774,7 +776,16 @@ module.exports = (passport) => {
 
   router.get("/ObtenerGETS", async (req, res) => {
     try {
+      const p = await bd.FechasRelevantes.findOne();
+
+      console.log(p.periodo);
+
       const grupos = await bd.ETS_grupo.findAll({
+        where: {
+          periodo: {
+            [Op.like]: p.periodo,
+          },
+        },
         include: [
           {
             model: bd.Unidad_Aprendizaje,
@@ -786,7 +797,8 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
-      return res.json({ grupos: grupos });
+
+      return res.json({ grupos });
     } catch (err) {
       console.log(err);
     }
@@ -816,6 +828,161 @@ module.exports = (passport) => {
     }));
 
     return res.json({ comprobantes: result });
+  });
+
+  router.post("/TerminarSemestre", async (req, res) => {
+    const {
+      p1_inicio,
+      p1_fin,
+      p2_inicio,
+      p2_fin,
+      p3_inicio,
+      p3_fin,
+      ext_inicio,
+      ext_fin,
+      eval_inicio,
+      eval_fin,
+      ets_inicio,
+      ets_fin,
+      ets_pago_inicio,
+      ets_pago_fin,
+      ets_cal_inicio,
+      ets_cal_fin,
+      periodo,
+    } = req.body;
+
+    try {
+      const aprobados = await bd.Mat_Inscritos.findAll({
+        where: {
+          calificacion_final: { [Op.gte]: 6 } || { extra: { [Op.gte]: 6 } },
+        },
+      });
+
+      for (const a of aprobados) {
+        const grupo = await bd.Grupo.findOne({
+          where: { id: a.id_grupo },
+          include: [{ model: bd.Unidad_Aprendizaje }],
+        });
+
+        // Obtener alumno desde horario -> DatosPersonales -> Estudiante
+        const datos = await bd.DatosPersonales.findOne({
+          include: [
+            {
+              model: bd.Horario,
+              where: { id: a.id_horario },
+              required: true,
+            },
+          ],
+        });
+
+        // Id del estudiante real
+        const idEst = datos.id;
+
+        // Calificación final
+        let calificacion = 0;
+        if (parseFloat(a.calificacion_final) >= 6) {
+          calificacion = parseFloat(a.calificacion_final);
+        } else if (parseFloat(a.extra) >= 6) {
+          calificacion = parseFloat(a.extra);
+        }
+
+        // Obtener estudiante
+        const est = await bd.Estudiante.findOne({
+          where: { id_usuario: idEst },
+        });
+
+        // Actualizar estudiante
+        await est.update({
+          promedio: (parseFloat(est.promedio) + calificacion) / 2,
+          creditos_disponibles: 50,
+        });
+
+        // Obtener kardex del alumno
+        const kardex = await bd.Kardex.findOne({
+          where: { id_alumno: datos.id },
+        });
+
+        // Actualizar kardex
+        await kardex.update({
+          promedio: (parseFloat(kardex.promedio) + calificacion) / 2,
+          creditos_obtenidos:
+            parseFloat(kardex.creditos_obtenidos) +
+            parseFloat(grupo.Unidad_Aprendizaje.credito),
+        });
+      }
+
+      await bd.Lista.destroy({ where: {} });
+      await bd.Borrador_Horario.destroy({ where: {} });
+      await bd.Inscripcion.destroy({ where: {} });
+      await bd.Mat_Inscritos.destroy({ where: {} });
+      await bd.Distribucion.destroy({ where: {} });
+      await bd.Grupo.destroy({ where: {} });
+
+      await bd.Materia_Reprobada.increment(
+        { periodos_restantes: -1 },
+        { where: {} }
+      );
+
+      await bd.Materia_Reprobada.update(
+        {
+          estado_actual: "Desfasada",
+        },
+        { where: { periodos_restantes: { [Op.lte]: 0 } } }
+      );
+
+      await bd.Kardex.increment({ semestres_restantes: -1 }, { where: {} });
+
+      await bd.Kardex.update(
+        { situacion_academica: "Periodos disponibles agotados" },
+        { where: { semestres_restantes: { [Op.lte]: 0 } } }
+      );
+
+      const alumnosConKardex = await bd.DatosPersonales.findAll({
+        include: [
+          {
+            model: bd.Kardex,
+            where: {
+              semestres_restantes: { [Op.lte]: 0 },
+            },
+            required: true,
+          },
+        ],
+      });
+
+      // Extraer solo los IDs de estudiante
+      const idsEstudiantes = alumnosConKardex.map((a) => a.id);
+
+      // Actualizar el estado académico en Estudiante
+      await bd.Estudiante.update(
+        { estado_academico: "Periodos disponibles agotados" },
+        { where: { id_usuario: idsEstudiantes } }
+      );
+
+      const registro = await bd.FechasRelevantes.findOne();
+      await registro.update({
+        registro_primer_parcial: p1_inicio,
+        fin_registro_primer_parcial: p1_fin,
+        registro_segundo_parcial: p2_inicio,
+        fin_registro_segundo_parcial: p2_fin,
+        registro_tercer_parcial: p3_inicio,
+        fin_registro_tercer_parcial: p3_fin,
+        registro_extra: ext_inicio,
+        fin_registro_extra: ext_fin,
+        evalu_profe: eval_inicio,
+        fin_evalu_profe: eval_fin,
+        inscribir_ets: ets_inicio,
+        fin_inscribir_ets: ets_fin,
+        subir_doc_ets: ets_pago_inicio,
+        fin_subir_doc_ets: ets_pago_fin,
+        eval_ets: ets_cal_inicio,
+        fin_evalu_ets: ets_cal_fin,
+        periodo: periodo,
+      });
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+      return res.json({ success: false });
+    }
   });
 
   router.post("/Validar/:id", async (req, res) => {
@@ -909,6 +1076,7 @@ module.exports = (passport) => {
 
       // Generar ID único para el grupo ETS
       const id = uuidv4().replace(/-/g, "").substring(0, 15);
+      const p = await bd.FechasRelevantes.findOne({});
 
       // Crear el grupo ETS
       await bd.ETS_grupo.create({
@@ -919,6 +1087,7 @@ module.exports = (passport) => {
         hora_inicio,
         hora_final,
         fecha,
+        periodo: p.periodo,
       });
 
       return res.json({
@@ -1565,6 +1734,154 @@ module.exports = (passport) => {
         error: "Error interno al generar citas",
         details: error.message,
       });
+    }
+  });
+
+  router.get("/SituacionesEspeciales", async (req, res) => {
+    try {
+      const alumnos = await bd.DatosPersonales.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: {
+              estado_academico: { [Op.notIn]: ["Regular", "Irregular"] },
+            },
+            required: true,
+          },
+          {
+            model: bd.Kardex,
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      const alDes = await bd.DatosPersonales.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            include: [
+              {
+                model: bd.Materia_Reprobada,
+                where: { estado_actual: "Desfasada" },
+                required: true,
+              },
+            ],
+            required: true,
+          },
+          {
+            model: bd.Kardex,
+          },
+        ],
+      });
+
+      return res.json({
+        alumnosSinSemestres: alumnos,
+        alumnosDesfasados: alDes,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.get("/DesfasadasAl/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const mr = await bd.Materia_Reprobada.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+            required: true,
+          },
+          {
+            model: bd.Unidad_Aprendizaje,
+          },
+        ],
+        where: { estado_actual: "Desfasada" },
+        required: true,
+      });
+
+      return res.json({ materiasDes: mr });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.post("/AutorizarCambiosDesfase", async (req, res) => {
+    const { materias, id } = req.body;
+    console.log(materias);
+    try {
+      for (const m of materias) {
+        let reinscripcion = 0;
+
+        if (m.reinscripcion == true) {
+          reinscripcion = 1;
+        }
+
+        await bd.Materia_Reprobada.update(
+          {
+            periodos_restantes: m.semestresExtra,
+            recurse: m.reinscripcion,
+            estado_actual: "Reprobada",
+          },
+          {
+            where: { id: m.id },
+          }
+        );
+        await bd.Estudiante.update(
+          {
+            creditos_disponibles: m.creditosExtra,
+            estado_academico: "Irregular",
+          },
+          { where: { id_usuario: id } }
+        );
+        await bd.Kardex.update(
+          {
+            situacion_academica: "Irregular",
+          },
+          { where: { id_alumno: id } }
+        );
+      }
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  router.post("/AutorizarCambiosSS", async (req, res) => {
+    const { periodosExtra, id } = req.body;
+
+    try {
+      const c = await bd.Materia_Reprobada.count({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+            required: true,
+          },
+        ],
+      });
+      let tipo;
+      if (c > 0) {
+        tipo = "Irregular";
+      } else {
+        tipo = "Regular";
+      }
+      await bd.Kardex.update(
+        {
+          semestres_restantes: periodosExtra,
+          situacion_academica: tipo,
+        },
+        { where: { id_alumno: id } }
+      );
+      await bd.Estudiante.update(
+        {
+          estado_academico: tipo,
+        },
+        { where: { id_usuario: id } }
+      );
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
     }
   });
 

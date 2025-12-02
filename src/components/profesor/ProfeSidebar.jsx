@@ -7,66 +7,80 @@ export function ProfeSideBar() {
   const params = useParams();
   const location = useLocation();
 
+  // Obtener periodo
   const periodo = location.state?.periodo || localStorage.getItem("periodo");
+
   useEffect(() => {
-  if (location.state?.periodo) {
-    localStorage.setItem("periodo", location.state.periodo);
-  }
-}, [location.state]);
+    if (location.state?.periodo) {
+      localStorage.setItem("periodo", location.state.periodo);
+    }
+  }, [location.state]);
 
-
-  // Intentamos obtener el id por (1) location.state, (2) params, (3) localStorage
+  // Obtener ID del profesor (state → params → localStorage)
   const finalId = useMemo(() => {
-    return location.state?.profesorId || params.id || localStorage.getItem("profesorId") || null;
+    return (
+      location.state?.profesorId ||
+      params.id ||
+      localStorage.getItem("profesorId") ||
+      null
+    );
   }, [location, params]);
 
-  // Si encontramos finalId, lo persistimos
+  // Persistir ID si existe
   useEffect(() => {
     if (finalId) {
       localStorage.setItem("profesorId", finalId);
     }
   }, [finalId]);
 
-  // Handlers de navegación - PROFESOR (AHORA USAN finalId y pasan state correctamente)
+  // -------------------------
+  // NAVEGACIÓN — SIEMPRE PASA EL ID CORRECTO
+  // -------------------------
+
   const handleClases = () => {
-    const ruta = `/profesor/${finalId}/clases`;
-    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
-  };
-
-  const handlePaseLista = () => {
-    const ruta = `/profesor/paseLista/${finalId}`;
-    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
-  };
-
-  const handleRegistrarCal = () => {
-    const ruta = `/profesor/RegistrarCalificaciones/${finalId}/${periodo}`;
-    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
+    navigate(`/profesor/${finalId}/clases`, {
+      state: { profesorId: finalId, fromSidebar: true },
+    });
   };
 
   const handleChat = () => {
-    // Ruta de chat no tiene :id en la URL en tu diseño original,
-    // así que pasamos el id por state (si existe)
-    navigate(`/profesor/Chat`, { state: { profesorId: finalId, fromSidebar: true } });
+    navigate(`/profesor/Chat`, {
+      state: {
+        profesorId: finalId,
+        tipo_usuario: "profesor",
+        fromSidebar: true,
+      },
+    });
   };
 
   const handleInfoPersonal = () => {
-    const ruta = `/profesor/informacionPersonal/${finalId}`;
-    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
+    navigate(`/profesor/informacionPersonal/${finalId}`, {
+      state: { profesorId: finalId, fromSidebar: true },
+    });
   };
 
   const handleInicio = () => {
-    const ruta = `/profesor/${finalId || ""}`;
-    // si no hay finalId, igual navegamos a /profesor/ (o /profesor/undefined sería malo)
-    if (finalId) navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
-    else navigate("/profesor");
+    if (finalId) {
+      navigate(`/profesor/${finalId}`, {
+        state: { profesorId: finalId, fromSidebar: true },
+      });
+    } else {
+      navigate("/profesor");
+    }
   };
 
   const handleETS = () => {
-    const ruta = `/profesor/${finalId}/ets`;
-    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
+    navigate(`/profesor/${finalId}/ets`, {
+      state: { profesorId: finalId, fromSidebar: true },
+    });
   };
+  const handlePase = () => {navigate(`/profesor/PaseLista/${finalId}`)}
+  const handleCalificaciones = () => {navigate(`/profesor/RegistrarCalificaciones/${finalId}/${periodo}`)}
+  
 
-  const handleLogout = () => navigate(`/`);
+  const handleLogout = () => {
+    navigate(`/`);
+  };
 
   return (
     <aside className="sidebar">
@@ -80,17 +94,18 @@ export function ProfeSideBar() {
           Inicio
         </button>
 
-        <button className="menu-item" onClick={handleClases}>
-          Clases Impartidas
-        </button>
-        
-        <button className="menu-item" onClick={handlePaseLista}>
+        <button onClick={handlePase} className="menu-item">
           Pase de Lista
         </button>
 
-        <button className="menu-item" onClick={handleRegistrarCal}>
+        <button onClick={handleCalificaciones} className="menu-item">
           Registrar Calificaciones
         </button>
+
+        <button className="menu-item" onClick={handleClases}>
+          Clases Impartidas
+        </button>
+
 
         <button className="menu-item" onClick={handleETS}>
           ETS
