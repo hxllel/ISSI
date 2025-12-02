@@ -57,7 +57,7 @@ export function Inscripcion() {
           setCita(true);
           setCitas(data.citas);
         } else {
-          setTiempo(false);
+          setTiempo(true);
         }
 
         setPromedio(data.promedio);
@@ -540,15 +540,6 @@ export function Inscripcion() {
                 }
               >
                 Seleccionar
-              </button>
-
-              <button
-                type="button"
-                className="btn-ver"
-                onClick={() => handleClickAbrir(grupo.id)}
-                style={{ marginLeft: "8px" }}
-              >
-                Mostrar Horario
               </button>
             </td>
           </tr>
