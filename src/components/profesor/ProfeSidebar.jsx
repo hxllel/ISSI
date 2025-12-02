@@ -9,11 +9,10 @@ export function ProfeSideBar() {
 
   const periodo = location.state?.periodo || localStorage.getItem("periodo");
   useEffect(() => {
-  if (location.state?.periodo) {
-    localStorage.setItem("periodo", location.state.periodo);
-  }
-}, [location.state]);
-
+    if (location.state?.periodo) {
+      localStorage.setItem("periodo", location.state.periodo);
+    }
+  }, [location.state]);
 
   // Intentamos obtener el id por (1) location.state, (2) params, (3) localStorage
   const finalId = useMemo(() => {
@@ -44,9 +43,13 @@ export function ProfeSideBar() {
   };
 
   const handleChat = () => {
-    // Ruta de chat no tiene :id en la URL en tu diseño original,
-    // así que pasamos el id por state (si existe)
-    navigate(`/profesor/Chat`, { state: { profesorId: finalId, fromSidebar: true } });
+    navigate(`/profesor/Chat`, { 
+      state: { 
+        profesorId: finalId, 
+        tipo_usuario: "profesor",  // NUEVO: Agregar tipo de usuario
+        fromSidebar: true 
+      } 
+    });
   };
 
   const handleInfoPersonal = () => {
