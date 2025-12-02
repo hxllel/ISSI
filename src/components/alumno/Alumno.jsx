@@ -46,7 +46,7 @@ export function Alumno() {
       }
 
       const normalizaDia = (d) =>
-        d === "Miércoles" || d === "Miercoles" ? "Miércoles" : d;
+        d === "Miércoles" || d === "Miércoles" ? "Miércoles" : d;
 
       const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 

@@ -353,11 +353,9 @@ module.exports = (passport) => {
     }
 
     try {
-      const carr = await bd.DatosPersonales.findOne({
-        where: { id: id },
-      });
+      const carr = await bd.DatosPersonales.findOne({ where: { id } });
 
-      // Obtener materias ya aprobadas
+      // Aprobadas
       const kardex = await bd.Kardex.findOne({ where: { id_alumno: us } });
       let nombresAprobadas = [];
       if (kardex) {
@@ -367,7 +365,7 @@ module.exports = (passport) => {
         nombresAprobadas = aprobadas.map((a) => a.unidad_aprendizaje);
       }
 
-      // Obtener los grupos con includes
+      // Obtener grupos con UA + profesor
       const grupos = await bd.Grupo.findAll({
         attributes: ["id", "nombre", "turno", "cupo"],
         include: [
@@ -391,10 +389,32 @@ module.exports = (passport) => {
             attributes: ["nombre", "ape_paterno", "ape_materno"],
           },
         ],
+        raw: true,
         nest: true,
       });
 
-      return res.json({ grupos, creditos: req.session.creditos });
+      if (!grupos || grupos.length === 0)
+        return res.json({ grupos: [], creditos: req.session.creditos });
+
+      // Obtener distribuciones
+      const ids = grupos.map((g) => g.id);
+
+      const distribuciones = await bd.Distribucion.findAll({
+        where: { id_grupo: ids },
+        attributes: ["id", "id_grupo", "dia", "hora_ini", "hora_fin"],
+        raw: true,
+      });
+
+      // adjuntar distribuciones igual que ObtenerGrupo
+      const gruposConDistrib = grupos.map((g) => {
+        const d = distribuciones.filter((x) => x.id_grupo === g.id);
+        return { ...g, Distribucion: d };
+      });
+
+      return res.json({
+        grupos: gruposConDistrib,
+        creditos: req.session.creditos,
+      });
     } catch (error) {
       console.error("Error al obtener los grupos:", error);
       res.status(500).json({ error: "Error interno" });
@@ -502,14 +522,14 @@ module.exports = (passport) => {
         const dias = {
           Lunes: [],
           Martes: [],
-          Miercoles: [],
+          Miércoles: [],
           Jueves: [],
           Viernes: [],
         };
         distribuciones.forEach((d) => {
           const diaKey =
-            d.dia === "Miércoles" || d.dia === "Miercoles"
-              ? "Miercoles"
+            d.dia === "Miércoles" || d.dia === "Miércoles"
+              ? "Miércoles"
               : d.dia;
           if (dias[diaKey] !== undefined)
             dias[diaKey].push(`${d.hora_ini}-${d.hora_fin}`);
@@ -627,6 +647,7 @@ module.exports = (passport) => {
     if (!req.session.tempGrupos) {
       req.session.tempGrupos = [];
       req.session.creditos = parseInt(cre.creditos_disponibles, 10);
+      req.session.horarios = [[[]]];
     }
     if (!req.session.tempGrupos.includes(id)) {
       const gruposActuales = req.session.tempGrupos || [];
@@ -681,13 +702,28 @@ module.exports = (passport) => {
         req.session.creditos =
           parseInt(req.session.creditos, 10) -
           parseInt(cuesta.Unidad_Aprendizaje.credito, 10);
+
+        if (!req.session.horarios) {
+          req.session.horarios = [];
+        }
+
+        const distribsDelGrupo = distriNuevo.map((d) => ({
+          dia: d.dia,
+          hora_ini: d.hora_ini,
+          hora_fin: d.hora_fin,
+        }));
+        const index = req.session.tempGrupos.length;
+        req.session.horarios[index] = distribsDelGrupo;
+
         req.session.tempGrupos.push(id);
-        console.log("Grupo guardado: ", req.session.tempGrupos);
-        console.log("Creditos:", req.session.creditos);
+
+        console.log("Horarios:", JSON.stringify(req.session.horarios, null, 2));
+
         return res.json({
           success: true,
           tempGrupo: req.session.tempGrupos,
           creditos: req.session.creditos,
+          horarios: req.session.horarios, // <-- LO ENVÍAS AL FRONT
         });
       }
     }
@@ -705,14 +741,19 @@ module.exports = (passport) => {
     const cre = await bd.Estudiante.findOne({
       where: { id_usuario: us },
     });
+
+    // Inicializar sesión si está vacía
     if (!req.session.tempGrupos) {
       req.session.tempGrupos = [];
       req.session.creditos = parseInt(cre.creditos_disponibles, 10);
+      req.session.horarios = []; // <--- Inicialización de horarios
     }
+
     return res.json({
       success: true,
       tempGrupo: req.session.tempGrupos,
       creditos: req.session.creditos,
+      horarios: req.session.horarios, // <---- ENVIAMOS HORARIOS
     });
   });
 
@@ -1127,7 +1168,7 @@ module.exports = (passport) => {
         const horas = `${g.hora_ini} - ${g.hora_fin}`;
         if (g.dia === "Lunes") lun = horas;
         else if (g.dia === "Martes") mar = horas;
-        else if (g.dia === "Miercoles") mier = horas;
+        else if (g.dia === "Miércoles") mier = horas;
         else if (g.dia === "Jueves") jue = horas;
         else if (g.dia === "Viernes") vie = horas;
       }
@@ -1186,10 +1227,17 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
+      const car = await bd.DatosPersonales.findOne({
+        where: { id: us },
+      });
 
       const semestres = [...new Set(sems.map((s) => s.semestre))];
 
-      return res.json({ historial: sems, semestres: semestres });
+      return res.json({
+        historial: sems,
+        semestres: semestres,
+        carrera: car.carrera,
+      });
     } catch (err) {
       console.error("Error en /ObtenerHistorial:", err);
       return res.status(500).json({
@@ -1782,6 +1830,26 @@ module.exports = (passport) => {
     });
   });
 
+  router.get("/TiempoInscripcionETS", async (req, res) => {
+    const tiempo = await bd.FechasRelevantes.findOne();
+    const hoy = toCDMX(new Date());
+    const fechaInicio = new Date(tiempo.inscribir_ets);
+    const fechaFin = new Date(tiempo.fin_inscribir_ets);
+
+    const estaEnRango = hoy >= fechaInicio && hoy <= fechaFin;
+
+    return res.json({ success: estaEnRango });
+  });
+  router.get("/TiempoSubirComprobante", async (req, res) => {
+    const tiempo = await bd.FechasRelevantes.findOne();
+    const hoy = toCDMX(new Date());
+    const fechaInicio = new Date(tiempo.subir_doc_ets);
+    const fechaFin = new Date(tiempo.fin_subir_doc_ets);
+
+    const estaEnRango = hoy >= fechaInicio && hoy <= fechaFin;
+
+    return res.json({ success: estaEnRango });
+  });
   return router;
 };
 

@@ -984,11 +984,11 @@ module.exports = (passport) => {
   router.get("/ValidarFechaETS", async (req, res) => {
     try {
       const fechas = await bd.FechasRelevantes.findOne();
-      
+
       if (!fechas) {
         return res.json({
           valido: false,
-          mensaje: "No hay fechas configuradas en el sistema"
+          mensaje: "No hay fechas configuradas en el sistema",
         });
       }
 
@@ -997,26 +997,40 @@ module.exports = (passport) => {
       const fin = new Date(fechas.fin_evalu_ets);
 
       // Normalizar fechas (solo día, mes, año)
-      const hoyNorm = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-      const inicioNorm = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate());
-      const finNorm = new Date(fin.getFullYear(), fin.getMonth(), fin.getDate());
+      const hoyNorm = new Date(
+        hoy.getFullYear(),
+        hoy.getMonth(),
+        hoy.getDate()
+      );
+      const inicioNorm = new Date(
+        inicio.getFullYear(),
+        inicio.getMonth(),
+        inicio.getDate()
+      );
+      const finNorm = new Date(
+        fin.getFullYear(),
+        fin.getMonth(),
+        fin.getDate()
+      );
 
       if (hoyNorm >= inicioNorm && hoyNorm <= finNorm) {
         return res.json({
           valido: true,
-          mensaje: "Período de evaluación ETS activo"
+          mensaje: "Período de evaluación ETS activo",
         });
       } else {
         return res.json({
           valido: false,
-          mensaje: `El período de evaluación ETS es del ${inicio.toLocaleDateString('es-MX')} al ${fin.toLocaleDateString('es-MX')}`
+          mensaje: `El período de evaluación ETS es del ${inicio.toLocaleDateString(
+            "es-MX"
+          )} al ${fin.toLocaleDateString("es-MX")}`,
         });
       }
     } catch (err) {
       console.error("Error al validar fecha ETS:", err);
       return res.status(500).json({
         valido: false,
-        mensaje: "Error al validar la fecha de evaluación"
+        mensaje: "Error al validar la fecha de evaluación",
       });
     }
   });
@@ -1034,34 +1048,34 @@ module.exports = (passport) => {
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ['id', 'nombre', 'credito', 'semestre']
-          }
-        ]
+            attributes: ["id", "nombre", "credito", "semestre"],
+          },
+        ],
       });
 
       console.log("Grupos encontrados en BD:", gruposETS.length);
 
-      const grupos = gruposETS.map(g => ({
+      const grupos = gruposETS.map((g) => ({
         id: g.id,
         id_ua: g.id_ua,
-        nombre_ua: g.Unidad_Aprendizaje ? g.Unidad_Aprendizaje.nombre : '',
+        nombre_ua: g.Unidad_Aprendizaje ? g.Unidad_Aprendizaje.nombre : "",
         turno: g.turno,
         hora_inicio: g.hora_inicio,
         hora_final: g.hora_final,
-        fecha: g.fecha
+        fecha: g.fecha,
       }));
 
       console.log("Enviando respuesta con", grupos.length, "grupos");
 
       return res.json({
         success: true,
-        grupos: grupos
+        grupos: grupos,
       });
     } catch (err) {
       console.error("Error al obtener grupos ETS:", err);
       return res.status(500).json({
         success: false,
-        mensaje: "Error al obtener grupos ETS"
+        mensaje: "Error al obtener grupos ETS",
       });
     }
   });
@@ -1087,39 +1101,42 @@ module.exports = (passport) => {
                   {
                     model: bd.DatosPersonales,
                     required: true,
-                    attributes: ['id', 'nombre', 'ape_paterno', 'ape_materno']
-                  }
-                ]
+                    attributes: ["id", "nombre", "ape_paterno", "ape_materno"],
+                  },
+                ],
               },
               {
                 model: bd.Unidad_Aprendizaje,
                 required: true,
-                attributes: ['id', 'nombre']
-              }
-            ]
-          }
-        ]
+                attributes: ["id", "nombre"],
+              },
+            ],
+          },
+        ],
+        where: { validado: 1 },
       });
 
-      const alumnos = alumnosETS.map(ets => ({
+      const alumnos = alumnosETS.map((ets) => ({
         id_ets: ets.id,
         boleta: ets.Materia_Reprobada.Estudiante.DatosPersonale.id,
         nombre: ets.Materia_Reprobada.Estudiante.DatosPersonale.nombre,
-        ape_paterno: ets.Materia_Reprobada.Estudiante.DatosPersonale.ape_paterno,
-        ape_materno: ets.Materia_Reprobada.Estudiante.DatosPersonale.ape_materno,
+        ape_paterno:
+          ets.Materia_Reprobada.Estudiante.DatosPersonale.ape_paterno,
+        ape_materno:
+          ets.Materia_Reprobada.Estudiante.DatosPersonale.ape_materno,
         nombre_ua: ets.Materia_Reprobada.Unidad_Aprendizaje.nombre,
-        calificado: ets.calificado
+        calificado: ets.calificado,
       }));
 
       return res.json({
         success: true,
-        alumnos: alumnos
+        alumnos: alumnos,
       });
     } catch (err) {
       console.error("Error al obtener alumnos ETS:", err);
       return res.status(500).json({
         success: false,
-        mensaje: "Error al obtener alumnos del grupo ETS"
+        mensaje: "Error al obtener alumnos del grupo ETS",
       });
     }
   });
@@ -1134,12 +1151,13 @@ module.exports = (passport) => {
       if (!calificaciones || !Array.isArray(calificaciones)) {
         return res.status(400).json({
           success: false,
-          mensaje: "Formato inválido de calificaciones"
+          mensaje: "Formato inválido de calificaciones",
         });
       }
 
       for (const cal of calificaciones) {
-        const calificacion = cal.calificacion === null ? 0 : parseFloat(cal.calificacion);
+        const calificacion =
+          cal.calificacion === null ? 0 : parseFloat(cal.calificacion);
 
         // Actualizar la calificación en la tabla ETS
         await bd.ETS.update(
@@ -1156,14 +1174,14 @@ module.exports = (passport) => {
               include: [
                 {
                   model: bd.Estudiante,
-                  include: [{ model: bd.DatosPersonales }]
+                  include: [{ model: bd.DatosPersonales }],
                 },
                 {
-                  model: bd.Unidad_Aprendizaje
-                }
-              ]
-            }
-          ]
+                  model: bd.Unidad_Aprendizaje,
+                },
+              ],
+            },
+          ],
         });
 
         if (!ets) continue;
@@ -1177,39 +1195,38 @@ module.exports = (passport) => {
         if (calificacion >= 6.0) {
           // Buscar el kardex del alumno
           const kardex = await bd.Kardex.findOne({
-            where: { id_alumno: alumnoId }
+            where: { id_alumno: alumnoId },
           });
 
           if (kardex) {
             // Agregar a UA_Aprobada
             const fechas = await bd.FechasRelevantes.findOne();
-            
+
             await bd.UA_Aprobada.create({
               id: uuidv4().replace(/-/g, "").substring(0, 15),
               id_kardex: kardex.id,
               unidad_aprendizaje: ua.id,
               calificacion_final: calificacion,
               semestre: ua.semestre,
-              periodo: fechas ? fechas.periodo : 'N/A',
+              periodo: fechas ? fechas.periodo : "N/A",
               fecha: new Date(),
-              metodo_aprobado: "ETS"
+              metodo_aprobado: "ETS",
             });
           }
 
           // Eliminar de materia_reprobada
           await bd.Materia_Reprobada.destroy({
-            where: { id: materiaRep.id }
+            where: { id: materiaRep.id },
           });
-
         } else {
           // Si no aprueba (calificación < 6.0)
           // Reducir un periodo en materia_reprobada
           const nuevosPeriodos = Math.max(0, materiaRep.periodos_restantes - 1);
-          
+
           await bd.Materia_Reprobada.update(
             {
               periodos_restantes: nuevosPeriodos,
-              estado_actual: "Reprobada"
+              estado_actual: "Reprobada",
             },
             { where: { id: materiaRep.id } }
           );
@@ -1218,13 +1235,13 @@ module.exports = (passport) => {
 
       return res.json({
         success: true,
-        mensaje: "Calificaciones registradas correctamente"
+        mensaje: "Calificaciones registradas correctamente",
       });
     } catch (err) {
       console.error("Error al registrar calificaciones ETS:", err);
       return res.status(500).json({
         success: false,
-        mensaje: "Error al registrar las calificaciones"
+        mensaje: "Error al registrar las calificaciones",
       });
     }
   });

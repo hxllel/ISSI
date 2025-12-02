@@ -305,11 +305,13 @@ const Kardex = sequelize.define(
     promedio: { type: DataTypes.FLOAT, allowNull: false },
     situacion_academica: { type: DataTypes.TEXT, allowNull: false },
     semestres_restantes: { type: DataTypes.INTEGER, allowNull: false },
+    creditos_obtenidos: { type: DataTypes.FLOAT, allowNull: false },
   },
   { tableName: "kardex", timestamps: false }
 );
 
 Kardex.belongsTo(DatosPersonales, { foreignKey: "id_alumno", targetKey: "id" });
+DatosPersonales.hasOne(Kardex, { foreignKey: "id_alumno", targetKey: "id" });
 
 const UA_Aprobada = sequelize.define(
   "UA_Aprobada",
@@ -456,6 +458,7 @@ const ETS_grupo = sequelize.define(
     hora_inicio: { type: DataTypes.TEXT, allowNull: false },
     hora_final: { type: DataTypes.TEXT, allowNull: false },
     fecha: { type: DataTypes.DATEONLY, allowNull: false },
+    periodo: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "ets_grupo", timestamps: false }
 );
@@ -534,11 +537,13 @@ const FechasRelevantes = sequelize.define(
     registro_extra: { type: DataTypes.DATE, allowNull: false },
     fin_registro_extra: { type: DataTypes.DATE, allowNull: false },
     evalu_profe: { type: DataTypes.DATE, allowNull: false },
+    fin_evalu_profe: { type: DataTypes.DATE, allowNull: false },
+    inscribir_ets: { type: DataTypes.DATE, allowNull: false },
+    fin_inscribir_ets: { type: DataTypes.DATE, allowNull: false },
     subir_doc_ets: { type: DataTypes.DATE, allowNull: false },
     fin_subir_doc_ets: { type: DataTypes.DATE, allowNull: false },
     eval_ets: { type: DataTypes.DATE, allowNull: false },
     fin_evalu_ets: { type: DataTypes.DATE, allowNull: false },
-    cal_ets: { type: DataTypes.DATE, allowNull: false },
     periodo: { type: DataTypes.TEXT, allowNull: false },
   },
   { tableName: "fechas_relevantes", timestamps: false }

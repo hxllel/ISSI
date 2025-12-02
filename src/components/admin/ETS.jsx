@@ -108,13 +108,15 @@ export function ETS() {
   };
 
   const handleClickAl = (id) => {
-    fetch(`${API}/Comprobantes/${id}`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => setAlumnos(data.comprobantes))
-      .catch((err) => console.error("Error", err));
+  fetch(`${API}/Comprobantes/${id}`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      setAlumnos(data.comprobantes);
+      setModalOpen(true);  // ✅ AHORA SÍ abre después de tener los datos
+    })
+    .catch((err) => console.error("Error", err));
+};
 
-    setModalOpen(true);
-  };
 
   const handleVerPDF = (pdfBase64, id) => {
     setPdfActual(pdfBase64);
@@ -262,7 +264,9 @@ export function ETS() {
                               Ver comprobante
                             </button>
                           ) : (
-                            "-"
+                              alumno.comprobante && alumno.validado === 1 ? (<h7>Comprobante Validado</h7>) 
+                              : ("--")
+          
                           )}
                         </td>
                       </tr>
