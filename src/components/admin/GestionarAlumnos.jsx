@@ -202,7 +202,7 @@ export function GestionarAlumnos() {
                         className="icono editar"
                         onClick={() => handleClickEdit(a.id)}
                       >
-                        Editar
+                        ✎
                       </button>
 
                       {/* Eliminar */}
@@ -210,7 +210,7 @@ export function GestionarAlumnos() {
                         className="icono eliminar"
                         onClick={() => handleAbrirModal(a.id)}
                       >
-                        Eliminar
+                        🗑
                       </button>
 
                       {/* NUEVO → Datos Médicos */}

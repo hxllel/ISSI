@@ -6343,8 +6343,8 @@ INSERT INTO
 VALUES (
         '2025-02-03 00:00:00', -- inicio_semestre
         '2025-06-20 23:59:59', -- fin_semestre
-        '2025-03-01 00:00:00', -- registro_primer_parcial
-        '2025-03-07 23:59:59', -- fin_registro_primer_parcial
+        '2025-12-01 00:00:00', -- registro_primer_parcial
+        '2025-12-07 23:59:59', -- fin_registro_primer_parcial
         '2025-04-01 00:00:00', -- registro_segundo_parcial
         '2025-04-07 23:59:59', -- fin_registro_segundo_parcial
         '2025-05-01 00:00:00', -- registro_tercer_parcial
@@ -6854,9 +6854,6 @@ WHERE
 
 -- Verificar las actualizaciones
 SELECT
-    mi.id,
-    mi.id_horario,
-    h.id_alumno,
     g.nombre AS grupo,
     ua.nombre AS materia,
     mi.calificacion_primer,
@@ -6864,15 +6861,13 @@ SELECT
     mi.calificacion_tercer,
     mi.calificacion_final,
     mi.extra,
-    CASE
-        WHEN mi.calificacion_final >= 6.0 THEN 'APROBADO'
-        WHEN mi.extra IS NOT NULL
-        AND mi.extra >= 6.0 THEN 'APROBADO (EXTRA)'
-        ELSE 'REPROBADO'
-    END AS estado
+    k.creditos_obtenidos,
+    e.creditos_disponibles
 FROM
     mat_inscritos mi
     INNER JOIN horario h ON mi.id_horario = h.id
     INNER JOIN grupo g ON mi.id_grupo = g.id
     INNER JOIN unidad_de_aprendizaje ua ON g.id_ua = ua.id
+    INNER JOIN kardex k ON k.id_alumno = h.id_alumno
+    INNER JOIN estudiante e ON e.id_usuario = h.id_alumno
 ORDER BY h.id_alumno, g.nombre;
