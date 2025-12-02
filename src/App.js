@@ -171,15 +171,14 @@ function App() {
             path="/administrador/gestionarCursos/distribucionHorarios/:id"
             element={<Distribucion />}
           />
-          <Route path="administrador/datosMedicos/:id" element={<DatosMedicos />} />
+          <Route
+            path="administrador/datosMedicos/:id"
+            element={<DatosMedicos />}
+          />
 
           {/* ADMIN PÁGINAS */}
           <Route path="/administrador/carreras" element={<Carreras />} />
           <Route path="/administrador/unidades" element={<Unidades />} />
-          <Route
-            path="/administrador/datosMedicos"
-            element={<DatosMedicos />}
-          />
           <Route path="/administrador/Fechas" element={<GenerarCitas />} />
           <Route
             path="/administrador/SituacionesEspeciales"

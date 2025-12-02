@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const API = "http://localhost:4000";
 
-export default function DatosMedicos() {
+export function DatosMedicos() {
   // ID del alumno viene de la URL: /administrador/datosMedicos/:id
   const { id } = useParams();
   const navigate = useNavigate();
