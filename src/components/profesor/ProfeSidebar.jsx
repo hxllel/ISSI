@@ -94,14 +94,6 @@ export function ProfeSideBar() {
           Inicio
         </button>
 
-        <button onClick={handlePase} className="menu-item">
-          Pase de Lista
-        </button>
-
-        <button onClick={handleCalificaciones} className="menu-item">
-          Registrar Calificaciones
-        </button>
-
         <button className="menu-item" onClick={handleClases}>
           Clases Impartidas
         </button>

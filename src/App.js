@@ -110,9 +110,18 @@ function App() {
             path="/alumno/ConsultarCalificaciones"
             element={<ConsultarCalificaciones />}
           />
-          <Route path="/alumno/resenar-profesores" element={<ResenarProfesores />} />
-          <Route path="/alumno/resenas-profesor/:id" element={<DetalleProfesorResenas />} />
-          <Route path="/alumno/MapasCurriculares"element={<MapasCurriculares />}/>
+          <Route
+            path="/alumno/resenar-profesores"
+            element={<ResenarProfesores />}
+          />
+          <Route
+            path="/alumno/resenas-profesor/:id"
+            element={<DetalleProfesorResenas />}
+          />
+          <Route
+            path="/alumno/MapasCurriculares"
+            element={<MapasCurriculares />}
+          />
           {/* PROFESOR */}
           <Route path="/profesor/:id" element={<Profesor />} />
           <Route path="/profesor/Chat" element={<ChatbotProfesor />} />
@@ -135,14 +144,14 @@ function App() {
             path="/profesor/editarDatosPersonales/:id"
             element={<EditarDatosPersonales />}
           />
-          
+
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/ETS" element={<ETS />} />
           <Route
             path="/administrador/publicarNoticia"
             element={<PublicarNoticia />}
           />
-           
+
           {/* ADMINISTRADOR - CRUD */}
           <Route
             path="/administrador/gestionarAlumnos"
@@ -185,8 +194,10 @@ function App() {
             element={<Distribucion />}
           />
           <Route
-           path="/administrador/gestionarAlumnos/inscripcion/:id"
-           element={<InscripcionAdmin />}
+            path="/administrador/gestionarAlumnos/inscripcion/:id"
+            element={<InscripcionAdmin />}
+          />
+          <Route
             path="administrador/datosMedicos/:id"
             element={<DatosMedicos />}
           />
@@ -199,13 +210,10 @@ function App() {
             path="/administrador/SituacionesEspeciales"
             element={<SituacionesEspeciales />}
           />
-           <Route path="/error" element={<ErrorView />} />
-           <Route path="*" element={<ErrorView />} />
-           <Route path="/reglamentos" element={<Reglamentos />} />
-
+          <Route path="/error" element={<ErrorView />} />
+          <Route path="*" element={<ErrorView />} />
+          <Route path="/reglamentos" element={<Reglamentos />} />
         </Routes>
-       
-        
       </BrowserRouter>
     </div>
   );
