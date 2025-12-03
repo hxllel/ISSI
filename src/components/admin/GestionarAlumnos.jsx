@@ -21,13 +21,7 @@ export function GestionarAlumnos() {
   const [paginaActual, setPaginaActual] = useState(1);
   const alumnosPorPagina = 8;
 
-  // Navegación
-  const handleRegistrar = () =>
-    navigate("/administrador/gestionarAlumnos/registrarAlumno");
-
-  const handleClickEdit = (id) =>
-    navigate(`/administrador/gestionarAlumnos/editarAlumnos/${id}`);
-
+  
   // NUEVO: ir a la vista de inscripción admin para un alumno
   const handleClickInscribir = (id) =>
     navigate(`/administrador/gestionarAlumnos/inscripcion/${id}`);
@@ -209,8 +203,6 @@ export function GestionarAlumnos() {
                     </td>
                     <td>{a.carrera}</td>
                     <td>{a.email}</td>
-                    <td>
-
                     <td className="acciones">
 
                       {/* Editar */}
