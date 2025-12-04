@@ -47,8 +47,28 @@ export function RegistrarCalificaciones() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataEnviar = Object.entries(calificaciones).map(
-      ([id_alumno, calificacion]) =>({
+
+    // Validar que todos los alumnos con asistencia suficiente tengan calificación
+    const alumnosSinAsistencia = alumnos.filter(al => !al.tieneAsistenciaSuficiente);
+    
+    if (alumnosSinAsistencia.length > 0) {
+      const nombres = alumnosSinAsistencia
+        .map(al => `${al.ape_paterno} ${al.ape_materno} ${al.nombre}`)
+        .join(', ');
+      
+      const confirmar = window.confirm(
+        `Los siguientes alumnos no tienen el 80% de asistencia requerido y no se les podrá registrar calificación:\n\n${nombres}\n\n¿Deseas continuar?`
+      );
+      
+      if (!confirmar) return;
+    }
+
+    const dataEnviar = Object.entries(calificaciones)
+      .filter(([id_alumno]) => {
+        const alumno = alumnos.find(al => al.id === id_alumno);
+        return alumno && alumno.tieneAsistenciaSuficiente;
+      })
+      .map(([id_alumno, calificacion]) => ({
         id_alumno,
         calificacion
       }));
@@ -94,6 +114,7 @@ export function RegistrarCalificaciones() {
         <thead>
           <tr>
             <th>Nombre completo</th>
+            <th>Asistencia</th>
             <th>Calificación</th>
           </tr>
         </thead>
@@ -101,15 +122,28 @@ export function RegistrarCalificaciones() {
         <tbody>
           {alumnos.length === 0 ? (
             <tr>
-              <td colSpan={2} className="pase-empty">
+              <td colSpan={3} className="pase-empty">
                 No hay alumnos.
               </td>
             </tr>
           ) : (
             alumnos.map((alumno) => (
-              <tr key={alumno.id}>
+              <tr key={alumno.id} style={{ 
+                backgroundColor: !alumno.tieneAsistenciaSuficiente ? '#ffebee' : 'transparent' 
+              }}>
                 <td>
                   {alumno.ape_paterno} {alumno.ape_materno} {alumno.nombre}
+                </td>
+                <td style={{ 
+                  color: alumno.tieneAsistenciaSuficiente ? '#4caf50' : '#f44336',
+                  fontWeight: 'bold'
+                }}>
+                  {alumno.porcentajeAsistencia}%
+                  {!alumno.tieneAsistenciaSuficiente && (
+                    <span style={{ display: 'block', fontSize: '0.85em', fontWeight: 'normal' }}>
+                      (Mínimo 80%)
+                    </span>
+                  )}
                 </td>
                 <td>
                   <input
@@ -118,6 +152,13 @@ export function RegistrarCalificaciones() {
                     onChange={(e) =>
                       handleChange(alumno.id, e.target.value)
                     }
+                    disabled={!alumno.tieneAsistenciaSuficiente}
+                    title={!alumno.tieneAsistenciaSuficiente ? 
+                      'No se puede registrar calificación sin el 80% de asistencia' : ''}
+                    style={{
+                      backgroundColor: !alumno.tieneAsistenciaSuficiente ? '#f5f5f5' : 'white',
+                      cursor: !alumno.tieneAsistenciaSuficiente ? 'not-allowed' : 'text'
+                    }}
                   />
                 </td>
               </tr>

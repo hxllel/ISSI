@@ -525,6 +525,7 @@ const FechasRelevantes = sequelize.define(
     registro_extra: { type: DataTypes.DATE, allowNull: false },
     fin_registro_extra: { type: DataTypes.DATE, allowNull: false },
     evalu_profe: { type: DataTypes.DATE, allowNull: false },
+    fin_evalu_profe: { type: DataTypes.DATE, allowNull: false },
     subir_doc_ets: { type: DataTypes.DATE, allowNull: false },
     fin_subir_doc_ets: { type: DataTypes.DATE, allowNull: false },
     eval_ets: { type: DataTypes.DATE, allowNull: false },

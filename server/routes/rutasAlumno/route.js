@@ -1234,9 +1234,84 @@ module.exports = (passport) => {
     }
   });
 
+  // Validar fechas de evaluación de profesores
+  router.get("/ValidarFechaEvaluacionProfe", async (req, res) => {
+    try {
+      console.log("Endpoint ValidarFechaEvaluacionProfe llamado");
+      const fechaActual = new Date();
+      const fechas = await bd.FechasRelevantes.findOne({
+        order: [["inicio_semestre", "DESC"]],
+      });
+
+      console.log("Fechas encontradas:", fechas ? {
+        evalu_profe: fechas.evalu_profe,
+        fin_evalu_profe: fechas.fin_evalu_profe
+      } : "No hay fechas");
+
+      if (!fechas) {
+        return res.status(404).json({
+          success: false,
+          error: "No se encontraron fechas relevantes",
+        });
+      }
+
+      const inicioEvalProfe = new Date(fechas.evalu_profe);
+      const finEvalProfe = new Date(fechas.fin_evalu_profe);
+
+      console.log("Fecha actual:", fechaActual);
+      console.log("Inicio eval:", inicioEvalProfe);
+      console.log("Fin eval:", finEvalProfe);
+
+      const dentroDelPeriodo = fechaActual >= inicioEvalProfe && fechaActual <= finEvalProfe;
+
+      console.log("Dentro del periodo:", dentroDelPeriodo);
+
+      return res.json({
+        success: true,
+        valida: dentroDelPeriodo,
+        fechaInicio: fechas.evalu_profe,
+        fechaFin: fechas.fin_evalu_profe,
+        mensaje: dentroDelPeriodo
+          ? "Periodo de evaluación activo"
+          : "Fuera del periodo de evaluación de profesores",
+      });
+    } catch (err) {
+      console.error("Error en /ValidarFechaEvaluacionProfe:", err);
+      return res.status(500).json({
+        success: false,
+        error: "Error al validar fechas",
+      });
+    }
+  });
+
   // Actualizar o crear registro en la tabla 'contador' para un profesor
   router.post("/ActualizarContadorProfesor", async (req, res) => {
     try {
+      // Validar fechas primero
+      const fechaActual = new Date();
+      const fechas = await bd.FechasRelevantes.findOne({
+        order: [["inicio_semestre", "DESC"]],
+      });
+
+      if (!fechas) {
+        return res.status(404).json({
+          success: false,
+          error: "No se encontraron fechas relevantes",
+        });
+      }
+
+      const inicioEvalProfe = new Date(fechas.evalu_profe);
+      const finEvalProfe = new Date(fechas.fin_evalu_profe);
+
+      if (fechaActual < inicioEvalProfe || fechaActual > finEvalProfe) {
+        return res.status(403).json({
+          success: false,
+          error: "Fuera del periodo de evaluación de profesores",
+          fechaInicio: fechas.evalu_profe,
+          fechaFin: fechas.fin_evalu_profe,
+        });
+      }
+
       // Requerir usuario autenticado
       if (!req.user || !req.user.id) {
         return res
