@@ -183,6 +183,7 @@ export function ChatbotAsistente() {
             body: JSON.stringify({
               query: combinedText,
               id_usuario: alumnoId,
+              tipo_usuario: "alumno", 
               history: null,
             }),
             signal: controller.signal,

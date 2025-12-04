@@ -16,6 +16,8 @@ export function MateriasReprobadas() {
   const [documento, setDocumento] = useState(null);
   const [id_mr, setIDMR] = useState("");
   const [id_grupo, setIDGRU] = useState("");
+  const [tiempo, setTiempo] = useState(false);
+  const [tiempoSubirComprobante , setTiempoSubirComprobante] = useState(false);
   const API = "http://localhost:4000";
 
   const navigate = useNavigate();
@@ -33,63 +35,29 @@ export function MateriasReprobadas() {
         console.error("Error al obtener la informacion: ", err)
       );
   }, []);
-
-  // ================== MODO DEMO (DESCOMENTAR PARA PROBAR UI) ==================
-  /*
-  useEffect(() => {
-    // Datos de prueba para ver la UI aunque el backend no regrese nada
-    setMaterias([
-      {
-        id: 1,
-        Unidad_Aprendizaje: { nombre: "Matemáticas I", credito: 8 },
-        periodos_restantes: 2,
-        recurse: 1,
-        estado_actual: "ETS",
-      },
-    ]);
-    setComprobante([]);
+  useEffect(()=>{
+    fetch(`${API}/TiempoInscripcionETS`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) =>{
+      if(data.success){
+        setTiempo(true)
+      }else{
+        setTiempo(false)
+      }
+    }).catch((err) => console.log("Error"));
   }, []);
-  */
+  useEffect(() =>{
+    fetch(`${API}/TiempoSubirComprobante`, { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) =>{
+      if(data.success){
+        setTiempoSubirComprobante(true)
+      }else{
+        setTiempoSubirComprobante(false)
+      }
+    }).catch((err) => console.log("Error"));
+  }, [])
 
-  // ================== HANDLERS DE NAVEGACIÓN DEL SIDEBAR ==================
-  const goInicio = () => {
-    if (id) navigate(`/alumno/${id}`);
-    else navigate("/alumno");
-  };
-
-  const handleIns = () => {
-    if (id) navigate(`/alumno/inscripcion/${id}`);
-    else alert("No se encontró el id del alumno para inscribir materias.");
-  };
-
-  const handleHorarios = () => {
-    if (id) navigate(`/alumno/horarios/${id}`);
-    else alert("No se encontró el id del alumno para ver horarios.");
-  };
-
-  const handleChat = () => {
-    if (id) navigate(`/alumno/Chat`, { state: { alumnoId: id } });
-    else navigate("/alumno/Chat");
-  };
-
-  const handleKardex = () => {
-    navigate("/alumno/Kardex");
-  };
-
-  const handleEvaluacion = () => {
-    if (id) navigate(`/alumno/evaluacion/${id}`);
-    else alert("No se encontró el id del alumno para evaluación.");
-  };
-
-  const handleEditPer = () => {
-    if (id) navigate(`/alumno/editarDatos/${id}`);
-    else alert("No se encontró el id del alumno para editar datos.");
-  };
-
-  const handleLogout = () => {
-    // aquí puedes meter tu lógica real de logout
-    navigate("/");
-  };
 
   // ================== LÓGICA DE ETS / COMPROBANTES ==================
 
@@ -232,7 +200,7 @@ export function MateriasReprobadas() {
                         {(() => {
                           if (validado) {
                             return (
-                              <button disabled>
+                              <button className="btn blanco"disabled>
                                 EL COMPROBANTE ESTA VALIDADO
                               </button>
                             );
@@ -240,7 +208,7 @@ export function MateriasReprobadas() {
                             if (etsDeEstaMateria) {
                               if (etsDeEstaMateria.comprobante) {
                                 return (
-                                  <button disabled style={{ opacity: 0.5 }}>
+                                  <button className="btn blanco">
                                     Comprobante subido
                                   </button>
                                 );
@@ -253,6 +221,9 @@ export function MateriasReprobadas() {
                                         etsDeEstaMateria?.id_mr
                                       )
                                     }
+                                    disabled = {
+                                      !tiempoSubirComprobante
+                                    }
                                   >
                                     Subir comprobante de ETS
                                   </button>
@@ -261,7 +232,7 @@ export function MateriasReprobadas() {
                             }
                           }
 
-                          if (materia.estado_actual === "Recurse") {
+                          if (materia.estado_actual === "Recurse" || materia.estado_actual === "Desfasada") {
                             return " ";
                           }
 
@@ -273,7 +244,11 @@ export function MateriasReprobadas() {
                                   materia.id
                                 )
                               }
-                              disabled={etsDeEstaMateria !== undefined}
+                              disabled={
+                                etsDeEstaMateria !== undefined ||
+                                !tiempo
+
+                              }
                               style={
                                 etsDeEstaMateria
                                   ? { opacity: 0.5 }
@@ -285,7 +260,7 @@ export function MateriasReprobadas() {
                           );
                         })()}
                         <br />
-                        <button onClick={() => handleHistor(materia.id)}>
+                        <button className="btn blanco" onClick={() => handleHistor(materia.id)}>
                           Revisar historial de ets
                         </button>
                       </td>

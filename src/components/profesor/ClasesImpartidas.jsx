@@ -226,9 +226,9 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
                     : [];
 
                   const horasPorDia = (dia) => {
-                    if (dia === "Miercoles") {
+                    if (dia === "Miércoles") {
                       return dist
-                        .filter((d) => d.dia === "Miércoles" || d.dia === "Miercoles")
+                        .filter((d) => d.dia === "Miércoles" || d.dia === "Miércoles")
                         .map((d) => `${d.hora_ini} - ${d.hora_fin}`)
                         .join(", ");
                     }
@@ -250,7 +250,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
                       <td>{dato.Unidad_Aprendizaje?.carrera}</td>
                       <td>{horasPorDia("Lunes") || "—"}</td>
                       <td>{horasPorDia("Martes") || "—"}</td>
-                      <td>{horasPorDia("Miercoles") || "—"}</td>
+                      <td>{horasPorDia("Miércoles") || "—"}</td>
                       <td>{horasPorDia("Jueves") || "—"}</td>
                       <td>{horasPorDia("Viernes") || "—"}</td>
 

@@ -13,9 +13,6 @@ export function Alumno() {
   const [alumno, setAlumno] = useState(null);
   const [horario, setHorario] = useState([]);
 
-  /** ============================
-   *   Cargar datos del alumno
-   *  ============================ */
   useEffect(() => {
     fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
       .then((res) => res.json())
@@ -38,26 +35,6 @@ export function Alumno() {
   }, [id]);
 
   /** ============================
-   *        Navegaciones
-   *  ============================ */
-  const handleIns = () => navigate(`/alumno/inscripcion/${id}`);
-  const handleHorarios = () => navigate(`/alumno/horarios/${id}`);
-  const handleEditPer = () => navigate(`/alumno/editarDatos/${id}`);
-  const handleChat = () =>
-    navigate(`/alumno/Chat`, { state: { alumnoId: id } });
-
-  // Del primer código, sin ID
-  const handleMatRe = () => navigate(`/alumno/MateriasReprobadas`);
-
-  // Del segundo código, Evaluación con ID
-  const handleEvaluacion = () => navigate(`/alumno/evaluacion/${id}`);
-
-  const handleKardex = () => navigate(`/alumno/Kardex`);
-  const handleCalif = () => navigate(`/alumno/ConsultarCalificaciones`);
-
-  const handleLogout = () => navigate(`/`);
-
-  /** ============================
    *  Descargar comprobante horario
    *  (del primer código)
    *  ============================ */
@@ -69,7 +46,7 @@ export function Alumno() {
       }
 
       const normalizaDia = (d) =>
-        d === "Miércoles" || d === "Miercoles" ? "Miércoles" : d;
+        d === "Miércoles" || d === "Miércoles" ? "Miércoles" : d;
 
       const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 

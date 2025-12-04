@@ -40,10 +40,7 @@ export function RegistrarAlumnos() {
             .catch((err) => console.error("Error al obtener las carreras:", err));
     }, []);
 
-    const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
-    const handleClickProf = () => navigate("../administrador/gestionarProfesores");
-    const handleClickCursos = () => navigate("../administrador/gestionarCursos");
-    const handleLogout = () => {navigate(`/`);};
+   
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -334,10 +331,10 @@ export function RegistrarAlumnos() {
                             </div>
 
                             <div className="form-actions">
-                                <button type="button" className="btn-secondary">
+                                <button type ="button" onClick ={() => navigate("../administrador/gestionarAlumnos")} className="btn-secondary">
                                     Cancelar
                                 </button>
-                                <button type="submit" className="submit-btn">
+                                <button type="submit" className="btn azul">
                                     Registrar Alumno
                                 </button>
                             </div>

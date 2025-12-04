@@ -289,28 +289,28 @@ export function EvaluacionProfesores() {
         ) : !mostrarResultado ? (
           <>
             {!mostrarCuestionario ? (
-              // ---- TABLA DE PROFESORES ----
               <section className="lista-profesores">
                 <div className="lista-header">
                   <h2>Mis Profesores</h2>
-                  <p>Selecciona un profesor para evaluar su desempeño</p>
+                  <p>Selecciona un profesor para evaluar</p>
                 </div>
-                
+
                 <div className="tabla-container">
                   <table className="tabla-profesores">
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th>Nombre del Profesor</th>
+                        <th>Profesor</th>
                         <th>Acción</th>
                       </tr>
                     </thead>
+
                     <tbody>
                       {profesores.length > 0 ? (
                         profesores.map((profesor, index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
-                            <td className="nombre-profesor">{profesor}</td>
+                            <td>{profesor}</td>
                             <td>
                               <button
                                 className="btn-evaluar"
@@ -323,27 +323,21 @@ export function EvaluacionProfesores() {
                         ))
                       ) : (
                         <tr>
-                          <td colSpan="3" className="sin-datos">
-                            No hay profesores disponibles para evaluar
-                          </td>
+                          <td colSpan="3">No hay profesores disponibles</td>
                         </tr>
                       )}
                     </tbody>
                   </table>
                 </div>
-                
-                <div className="botones-container">
-                  <button
-                    type="button"
-                    className="btn-cancelar"
-                    onClick={() => navigate(`/alumno/${id}`)}
-                  >
-                    Volver al inicio
-                  </button>
-                </div>
+
+                <button
+                  className="btn-cancelar"
+                  onClick={() => navigate(`/alumno/${id}`)}
+                >
+                  Volver al inicio
+                </button>
               </section>
             ) : (
-              // ---- CUESTIONARIO DE EVALUACIÓN ----
               <section className="formulario-evaluacion">
                 <div className="profesor-evaluando">
                   <h2>Evaluando a: {profesorSeleccionado}</h2>
@@ -355,9 +349,10 @@ export function EvaluacionProfesores() {
                 <form onSubmit={handleSubmit} className="form-preguntas">
                   {preguntas.map((pregunta) => (
                     <div key={pregunta.id} className="pregunta-card">
-                      <h3 className="pregunta-texto">
+                      <h3>
                         {pregunta.id}. {pregunta.pregunta}
                       </h3>
+
                       <div className="opciones-container">
                         {pregunta.opciones.map((opc, i) => (
                           <label key={i} className="opcion-label">
@@ -365,10 +360,12 @@ export function EvaluacionProfesores() {
                               type="radio"
                               name={`pregunta-${pregunta.id}`}
                               value={opc.peso}
-                              onChange={() => handleRespuesta(pregunta.id, opc.peso)}
+                              onChange={() =>
+                                handleRespuesta(pregunta.id, opc.peso)
+                              }
                               checked={respuestas[pregunta.id] === opc.peso}
                             />
-                            <span className="opcion-texto">{opc.texto}</span>
+                            {opc.texto}
                           </label>
                         ))}
                       </div>
@@ -379,6 +376,7 @@ export function EvaluacionProfesores() {
                     <button type="submit" className="btn-enviar">
                       Enviar Evaluación
                     </button>
+
                     <button
                       type="button"
                       className="btn-cancelar"
@@ -395,34 +393,23 @@ export function EvaluacionProfesores() {
           <section className="resultado-evaluacion">
             <div className="resultado-card">
               <h2>¡Evaluación Completada!</h2>
-              <div className="resultado-info">
-                <p><strong>Profesor evaluado:</strong> {profesorSeleccionado}</p>
 
-                <div className="puntuacion-box">
-                  <p className="puntuacion-label">Puntuación Total enviada:</p>
-                  <p className="puntuacion-valor">{puntuacionTotal} / {preguntas.length * 5}</p>
-                  {registroCount !== null && (
-                    <p className="registro-count">Veces evaluado: {registroCount}</p>
-                  )}
-                </div>
+              <p><strong>Profesor:</strong> {profesorSeleccionado}</p>
+              <p>Puntuación total: {puntuacionTotal}</p>
+              {registroCount !== null && (
+                <p>Veces evaluado: {registroCount}</p>
+              )}
 
-                <p className="mensaje-agradecimiento">
-                  Gracias por tu participación. Tu opinión es valiosa para mejorar la calidad educativa.
-                </p>
-              </div>
+              <button className="btn-nueva" onClick={resetEvaluacion}>
+                Evaluar otro profesor
+              </button>
 
-              <div className="botones-resultado">
-                <button className="btn-nueva" onClick={resetEvaluacion}>
-                  Evaluar otro profesor
-                </button>
-
-                <button
-                  className="btn-volver"
-                  onClick={() => navigate(`/alumno/${id}`)}
-                >
-                  Volver al inicio
-                </button>
-              </div>
+              <button
+                className="btn-volver"
+                onClick={() => navigate(`/alumno/${id}`)}
+              >
+                Volver al inicio
+              </button>
             </div>
           </section>
         )}
