@@ -18,6 +18,8 @@ export function EvaluacionProfesores() {
   const [registroCount, setRegistroCount] = useState(null);
   const [fechaValida, setFechaValida] = useState(null);
   const [mensajeFecha, setMensajeFecha] = useState("Cargando...");
+  const [fechaInicio, setFechaInicio] = useState(null);
+  const [fechaFin, setFechaFin] = useState(null);
 
   // ---- PREGUNTAS ----
   const preguntas = [
@@ -151,6 +153,27 @@ export function EvaluacionProfesores() {
 
 
   useEffect(() => {
+    // Validar fechas de evaluación
+    fetch(`${API}/ValidarFechaEvaluacionProfe`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Respuesta validación fechas:", data);
+        if (data.success) {
+          setFechaValida(data.valida);
+          setMensajeFecha(data.mensaje);
+          setFechaInicio(data.fechaInicio);
+          setFechaFin(data.fechaFin);
+        } else {
+          setFechaValida(false);
+          setMensajeFecha(data.error || "No hay fechas de evaluación configuradas");
+        }
+      })
+      .catch((err) => {
+        console.error("Error al validar fechas:", err);
+        setFechaValida(false);
+        setMensajeFecha("Error al verificar periodo de evaluación");
+      });
+
     fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
@@ -215,6 +238,12 @@ export function EvaluacionProfesores() {
 
   // ---- SELECCIONAR PROFESOR PARA EVALUAR ----
   const handleEvaluarProfesor = (profesor) => {
+    if (!fechaValida) {
+      const inicio = fechaInicio ? new Date(fechaInicio).toLocaleDateString() : 'N/A';
+      const fin = fechaFin ? new Date(fechaFin).toLocaleDateString() : 'N/A';
+      alert(`No se puede evaluar fuera del periodo de evaluación.\n\nPeriodo: ${inicio} - ${fin}`);
+      return;
+    }
     setProfesorSeleccionado(profesor);
     setMostrarCuestionario(true);
     setRespuestas({});
@@ -241,11 +270,20 @@ export function EvaluacionProfesores() {
           <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
 
-        {!fechaValida ? (
+        {fechaValida === null ? (
           <section className="mensaje-no-disponible">
             <div className="mensaje-card">
               <h3>{mensajeFecha}</h3>
-              <p>La evaluación solo está disponible en la fecha indicada.</p>
+            </div>
+          </section>
+        ) : !fechaValida ? (
+          <section className="mensaje-no-disponible">
+            <div className="mensaje-card">
+              <h3>{mensajeFecha}</h3>
+              <p>La evaluación de profesores solo está disponible en la fecha indicada por la institución.</p>
+              {fechaInicio && fechaFin && (
+                <p><strong>Periodo:</strong> {new Date(fechaInicio).toLocaleDateString()} - {new Date(fechaFin).toLocaleDateString()}</p>
+              )}
             </div>
           </section>
         ) : !mostrarResultado ? (

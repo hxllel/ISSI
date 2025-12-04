@@ -529,12 +529,32 @@ module.exports = (passport) => {
           calificacion = ins.extra;
         }
 
+        // Calcular porcentaje de asistencia
+        const totalAsistencias = await bd.Lista.count({
+          where: { id_inscrito: ins.id }
+        });
+
+        const asistenciasPresentes = await bd.Lista.count({
+          where: { 
+            id_inscrito: ins.id,
+            asistencia: "Presente"
+          }
+        });
+
+        const porcentajeAsistencia = totalAsistencias > 0 
+          ? (asistenciasPresentes / totalAsistencias) * 100 
+          : 0;
+
+        const tieneAsistenciaSuficiente = porcentajeAsistencia >= 80;
+
         alumnosConCalificaciones.push({
           id: alumno.id,
           nombre: alumno.nombre,
           ape_paterno: alumno.ape_paterno,
           ape_materno: alumno.ape_materno,
           calificacion,
+          porcentajeAsistencia: Math.round(porcentajeAsistencia),
+          tieneAsistenciaSuficiente
         });
       }
 
