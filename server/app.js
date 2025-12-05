@@ -21,6 +21,7 @@ const uaRoutes = require("./routes/uaRoutes");
 const datosMedicosRoutes = require("./routes/datosMedicosRoutes");
 
 const avisosRoutes = require("./routes/avisosRoutes");
+const profesorEvaluaciones = require("./routes/api/profesorEvaluaciones");
 
 const app = express();
 app.set("port", 4000);
@@ -61,4 +62,5 @@ app.use("/api/unidades", uaRoutes);
 
 app.use("/api/datos-medicos", datosMedicosRoutes);
 app.use("/api/avisos", avisosRoutes);
+app.use("/api/profesor", profesorEvaluaciones);
 app.listen(app.get("port"));
