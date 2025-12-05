@@ -28,6 +28,7 @@ export function ChatbotProfesor() {
   const [messages, setMessages] = useState([])
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [razonamientoMode, setRazonamientoMode] = useState(0) // NUEVO: Estado para modo razonamiento
   const [lastMessageId, setLastMessageId] = useState(null)
   const messagesEndRef = useRef(null)
   const messagesContainerRef = useRef(null)
@@ -134,8 +135,8 @@ export function ChatbotProfesor() {
     try {
       console.log("=== DEBUG: Iniciando guardado de mensaje ===");
       console.log("Profesor ID:", profesorId);
-      console.log("Tipo Usuario:", tipoUsuario); // NUEVO: Log del tipo
-      console.log("Texto combinado:", combinedText.substring(0, 100));
+      console.log("Tipo Usuario:", tipoUsuario);
+      console.log("Modo Razonamiento:", razonamientoMode); // NUEVO: Log del modo
 
       // 1. Guardar la pregunta en BD
       const saveResponse = await fetch(`${API}/GuardarMensajeChat`, {
@@ -203,7 +204,8 @@ export function ChatbotProfesor() {
           console.log("Body:", {
             query: combinedText.substring(0, 50) + "...",
             id_usuario: profesorId,
-            tipo_usuario: tipoUsuario  // MODIFICADO: Usar la variable tipoUsuario
+            tipo_usuario: tipoUsuario,
+            razonamiento: razonamientoMode // NUEVO: Log del modo
           });
 
           const startTime = performance.now()
@@ -217,7 +219,8 @@ export function ChatbotProfesor() {
             body: JSON.stringify({
               query: combinedText,
               id_usuario: profesorId,
-              tipo_usuario: tipoUsuario,  // MODIFICADO: Usar la variable tipoUsuario
+              tipo_usuario: tipoUsuario,
+              razonamiento: razonamientoMode, // NUEVO: Enviar modo razonamiento
               history: null,
             }),
             signal: controller.signal,
@@ -429,6 +432,19 @@ export function ChatbotProfesor() {
             onKeyPress={handleKeyPress}
             disabled={isLoading}
           />
+          {/* NUEVO: Toggle button para modo razonamiento */}
+          <div className="reasoning-toggle-container">
+            <span className="reasoning-label">Modo de razonamiento avanzado</span>
+            <label className="reasoning-toggle" title={razonamientoMode === 1 ? "Modo Razonamiento Activo" : "Modo Razonamiento Inactivo"}>
+              <input
+                type="checkbox"
+                checked={razonamientoMode === 1}
+                onChange={(e) => setRazonamientoMode(e.target.checked ? 1 : 0)}
+                disabled={isLoading}
+              />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
           <button className="send-button" onClick={handleSendMessage} disabled={isLoading}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
