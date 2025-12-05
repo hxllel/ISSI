@@ -48,6 +48,11 @@ export function ProfeSideBar() {
     navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
   };
 
+  const handleEvaluacion = () => {
+    const ruta = `/profesor/${finalId}/evaluacion`;
+    navigate(ruta, { state: { profesorId: finalId, fromSidebar: true } });
+  };
+
   const handleLogout = () => navigate(`/`);
 
   return (
@@ -76,6 +81,10 @@ export function ProfeSideBar() {
 
         <button className="menu-item" onClick={handleInfoPersonal}>
           Información Personal
+        </button>
+
+        <button className="menu-item" onClick={handleEvaluacion}>
+          Evaluación Docente
         </button>
       </nav>
 

@@ -82,7 +82,7 @@ module.exports = (passport) => {
             include: [
               {
                 model: bd.Grupo,
-                attributes: ["nombre", "turno"],
+                attributes: ["nombre", "turno", "id_prof"],
                 include: [
                   {
                     model: bd.Distribucion,
@@ -115,6 +115,7 @@ module.exports = (passport) => {
             materia: materia || "Sin materia",
             grupo: grupo?.nombre || "Sin grupo",
             turno: grupo?.turno || "Sin turno",
+            id_profesor: grupo?.id_prof || null,
             profesor: prof
               ? `${prof.nombre} ${prof.ape_paterno} ${prof.ape_materno}`
               : "Sin profesor",
@@ -693,7 +694,7 @@ module.exports = (passport) => {
     res.json({
       success: true,
       tempGrupo: req.session.tempGrupos,
-      creditos: req.session.creditos,
+      credits: req.session.creditos,
     });
   });
 
@@ -1318,35 +1319,28 @@ module.exports = (passport) => {
           .status(401)
           .json({ success: false, error: "Usuario no autenticado" });
       }
-      const { profesor, alumnoId, suma } = req.body;
+      const { profesor, id_profesor, alumnoId, suma } = req.body;
 
-      if (!profesor || suma === undefined || suma === null) {
+      if (!id_profesor && !profesor) {
         return res
           .status(400)
-          .json({ success: false, error: "Faltan datos (profesor o suma)" });
+          .json({ success: false, error: "Faltan datos (id_profesor o profesor)" });
       }
 
-      // Intentar localizar al profesor por nombre completo
-      const nombreCompleto = profesor.trim();
+      if (suma === undefined || suma === null) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Falta la suma" });
+      }
 
-      // Buscar por concatenación de nombre y apellidos
-      let prof = await bd.DatosPersonales.findOne({
-        where: bd.sequelize.where(
-          bd.sequelize.fn(
-            "concat",
-            bd.sequelize.col("nombre"),
-            " ",
-            bd.sequelize.col("ape_paterno"),
-            " ",
-            bd.sequelize.col("ape_materno")
-          ),
-          nombreCompleto
-        ),
-      });
+      let idProf = id_profesor;
 
-      // Si no se encontró con la concatenación exacta, intentar búsqueda LIKE
-      if (!prof) {
-        prof = await bd.DatosPersonales.findOne({
+      // Si no hay id_profesor, intentar localizar al profesor por nombre completo
+      if (!idProf && profesor) {
+        const nombreCompleto = profesor.trim();
+
+        // Buscar por concatenación de nombre y apellidos
+        let prof = await bd.DatosPersonales.findOne({
           where: bd.sequelize.where(
             bd.sequelize.fn(
               "concat",
@@ -1356,18 +1350,35 @@ module.exports = (passport) => {
               " ",
               bd.sequelize.col("ape_materno")
             ),
-            { [Op.like]: `%${nombreCompleto}%` }
+            nombreCompleto
           ),
         });
-      }
 
-      if (!prof) {
-        return res
-          .status(404)
-          .json({ success: false, error: "Profesor no encontrado" });
-      }
+        // Si no se encontró con la concatenación exacta, intentar búsqueda LIKE
+        if (!prof) {
+          prof = await bd.DatosPersonales.findOne({
+            where: bd.sequelize.where(
+              bd.sequelize.fn(
+                "concat",
+                bd.sequelize.col("nombre"),
+                " ",
+                bd.sequelize.col("ape_paterno"),
+                " ",
+                bd.sequelize.col("ape_materno")
+              ),
+              { [Op.like]: `%${nombreCompleto}%` }
+            ),
+          });
+        }
 
-      const idProf = prof.id;
+        if (!prof) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Profesor no encontrado" });
+        }
+
+        idProf = prof.id;
+      }
 
       // Buscar registro en Contador
       let contador = await bd.Contador.findByPk(idProf);
@@ -1518,6 +1529,24 @@ module.exports = (passport) => {
         success: false,
         error: "Error al validar fecha de evaluación",
       });
+    }
+  });
+
+  // Devuelve los IDs de los profesores evaluados por el alumno
+  router.get("/api/profesor/evaluados/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      // Buscar todas las reseñas hechas por el alumno
+      const resenas = await bd.Resena.findAll({
+        where: { id_alumno: id },
+        attributes: ["id_profesor"]
+      });
+      // Extraer IDs únicos de los profesores evaluados
+      const evaluados = [...new Set(resenas.map(r => r.id_profesor).filter(Boolean))];
+      return res.json({ evaluados });
+    } catch (err) {
+      console.error("Error en /api/profesor/evaluados/:id", err);
+      return res.status(500).json({ error: "Error interno" });
     }
   });
 

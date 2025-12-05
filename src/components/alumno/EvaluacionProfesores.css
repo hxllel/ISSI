@@ -275,6 +275,49 @@
   color: #374151;
 }
 
+/* Comentario libre */
+.comentario-section {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.comentario-label {
+  display: block;
+  font-weight: 600;
+  color: var(--eval-text);
+  font-size: 0.98rem;
+}
+
+.comentario-input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--eval-border);
+  border-left: 4px solid var(--eval-guinda);
+  min-height: 120px;
+  resize: vertical;
+  font-size: 0.95rem;
+  color: #374151;
+  background-color: #fafafa;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.comentario-input:hover {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.comentario-input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: var(--eval-guinda);
+  box-shadow: 0 0 0 3px rgba(125, 0, 36, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
 /* =================== BOTONES FORM =================== */
 
 .botones-container {
