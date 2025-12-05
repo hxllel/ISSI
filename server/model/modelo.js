@@ -152,6 +152,7 @@ const Grupo = sequelize.define(
     id_prof: { type: DataTypes.STRING(15), allowNull: false },
     turno: { type: DataTypes.TEXT, allowNull: false },
     cupo: { type: DataTypes.INTEGER, allowNull: false },
+    salon: { type: DataTypes.TEXT, allowNull: true },
     reg_final: { type: DataTypes.INTEGER, allowNull: true, defaultValue: 0 },
     reg_extra: { type: DataTypes.INTEGER, allowNull: true, defaultValue: 0 },
   },
@@ -200,11 +201,17 @@ const Distribucion = sequelize.define(
 Distribucion.belongsTo(Grupo, {
   foreignKey: "id_grupo",
   targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 Grupo.hasMany(Distribucion, {
   foreignKey: "id_grupo",
   targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 const Horario = sequelize.define(
@@ -431,21 +438,33 @@ const Materia_Reprobada = sequelize.define(
 Materia_Reprobada.belongsTo(Estudiante, {
   foreignKey: "id_estudiante",
   targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 Materia_Reprobada.belongsTo(Unidad_Aprendizaje, {
   foreignKey: "id_ua",
   targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 Estudiante.hasMany(Materia_Reprobada, {
   foreignKey: "id_estudiante",
   sourceKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 Unidad_Aprendizaje.hasMany(Materia_Reprobada, {
   foreignKey: "id_ua",
   sourceKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 const ETS_grupo = sequelize.define(
@@ -466,9 +485,18 @@ const ETS_grupo = sequelize.define(
 ETS_grupo.belongsTo(Unidad_Aprendizaje, {
   foreignKey: "id_ua",
   targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
-Unidad_Aprendizaje.hasMany(ETS_grupo, { foreignKey: "id_ua", targetKey: "id" });
+Unidad_Aprendizaje.hasMany(ETS_grupo, {
+  foreignKey: "id_ua",
+  targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
+});
 ETS_grupo.belongsTo(DatosPersonales, {
   foreignKey: "id_aplicante",
   targetKey: "id",
@@ -494,16 +522,25 @@ const ETS = sequelize.define(
 ETS.belongsTo(ETS_grupo, {
   foreignKey: "id_grupo",
   targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 ETS.belongsTo(Materia_Reprobada, {
   foreignKey: "id_mr",
   targetKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 Materia_Reprobada.hasMany(ETS, {
   foreignKey: "id_mr",
   sourceKey: "id",
+  onDelete: "CASCADE",
+  hooks: true,
+  constraints: true,
 });
 
 const Avisos = sequelize.define(

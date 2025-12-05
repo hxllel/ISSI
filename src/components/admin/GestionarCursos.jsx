@@ -107,6 +107,7 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
               <tr>
                 <th>ID</th>
                 <th>Profesor</th>
+                <th>Salón</th>
                 <th>Unidad de Aprendizaje</th>
                 <th>Tipo</th>
                 <th>Turno</th>
@@ -123,6 +124,7 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
                     {dato.DatosPersonale.ape_paterno}{" "}
                     {dato.DatosPersonale.ape_materno}
                   </td>
+                  <td>{dato.salon}</td>
                   <td>{dato.Unidad_Aprendizaje.nombre}</td>
                   <td>{dato.Unidad_Aprendizaje.tipo}</td>
                   <td>{dato.turno}</td>

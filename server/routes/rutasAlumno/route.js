@@ -262,7 +262,7 @@ module.exports = (passport) => {
             include: [
               {
                 model: bd.Grupo,
-                attributes: ["nombre", "turno"],
+                attributes: ["nombre", "turno", "salon"],
                 include: [
                   {
                     model: bd.Distribucion,
@@ -292,6 +292,7 @@ module.exports = (passport) => {
           const materia = grupo?.Unidad_Aprendizaje?.nombre;
 
           const base = {
+            salon: grupo?.salon || "Sin salon",
             materia: materia || "Sin materia",
             grupo: grupo?.nombre || "Sin grupo",
             turno: grupo?.turno || "Sin turno",
@@ -325,6 +326,7 @@ module.exports = (passport) => {
           return acc;
         }, {})
       );
+      console.log(horarioUnificado);
       res.json({ horario: horarioUnificado });
     } catch (err) {
       console.error(err);
@@ -441,7 +443,13 @@ module.exports = (passport) => {
         include: [
           {
             model: bd.DatosPersonales,
-            attributes: ["nombre", "ape_paterno", "ape_materno"],
+            attributes: [
+              "id",
+              "nombre",
+              "ape_paterno",
+              "ape_materno",
+              "calificacion",
+            ],
           },
           {
             model: bd.Unidad_Aprendizaje,
@@ -883,13 +891,27 @@ module.exports = (passport) => {
 
   router.post("/Inscribirse", async (req, res) => {
     if (req.session.tempGrupos.length === 0) {
-      return res.json({ success: false });
+      return res.json({
+        success: false,
+        message: "No tienes materias seleccionadas",
+      });
     } else {
       try {
         const ids = req.session.tempGrupos;
         const creditos_restantes = req.session.creditos;
         const id = req.user.id;
+        const creditos = await bd.Estudiante.findOne({
+          where: { id_usuario: id },
+        });
 
+        let c = creditos.creditos_disponibles - creditos_restantes;
+        console.log("Creditos consumidos", c);
+        if (c < 33.33 || c > 50) {
+          return res.json({
+            success: false,
+            message: "No cumple con la carga mínima o máxima",
+          });
+        }
         console.log("creditos restantes", creditos_restantes);
         console.log("ID: ", id);
 
@@ -960,6 +982,7 @@ module.exports = (passport) => {
         await bd.Inscripcion.destroy({
           where: { id_alumno: id },
         });
+        console.log("SE INSCRIBIO");
         return res.json({ success: true });
       } catch (err) {
         console.log(err);
@@ -1555,10 +1578,15 @@ module.exports = (passport) => {
         order: [["inicio_semestre", "DESC"]],
       });
 
-      console.log("Fechas encontradas:", fechas ? {
-        evalu_profe: fechas.evalu_profe,
-        fin_evalu_profe: fechas.fin_evalu_profe
-      } : "No hay fechas");
+      console.log(
+        "Fechas encontradas:",
+        fechas
+          ? {
+              evalu_profe: fechas.evalu_profe,
+              fin_evalu_profe: fechas.fin_evalu_profe,
+            }
+          : "No hay fechas"
+      );
 
       if (!fechas) {
         return res.status(404).json({
@@ -1574,7 +1602,8 @@ module.exports = (passport) => {
       console.log("Inicio eval:", inicioEvalProfe);
       console.log("Fin eval:", finEvalProfe);
 
-      const dentroDelPeriodo = fechaActual >= inicioEvalProfe && fechaActual <= finEvalProfe;
+      const dentroDelPeriodo =
+        fechaActual >= inicioEvalProfe && fechaActual <= finEvalProfe;
 
       console.log("Dentro del periodo:", dentroDelPeriodo);
 
@@ -1924,6 +1953,19 @@ module.exports = (passport) => {
     const estaEnRango = hoy >= fechaInicio && hoy <= fechaFin;
 
     return res.json({ success: estaEnRango });
+  });
+
+  router.get("/ConsultarResenas/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const resena = await bd.Resena.findAll({
+        where: { id_profesor: id },
+      });
+
+      return res.json({ resenas: resena });
+    } catch (err) {
+      console.log(err);
+    }
   });
   return router;
 };

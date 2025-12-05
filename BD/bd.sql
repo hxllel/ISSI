@@ -301,8 +301,15 @@ create table ets (
     validado INTEGER NOT NULL,
     calificado FLOAT NOT NULL,
     CONSTRAINT PK_ETS PRIMARY KEY (id),
-    CONSTRAINT FK_ETS_MR FOREIGN KEY (id_mr) REFERENCES materia_reprobada (id),
-    CONSTRAINT FK_ETS_AP FOREIGN KEY (id_grupo) REFERENCES ets_grupo (id)
+
+-- CASCADE para borrar ETS cuando se elimine la materia reprobada
+CONSTRAINT FK_ETS_MR FOREIGN KEY (id_mr) REFERENCES materia_reprobada (id) ON DELETE CASCADE,
+
+-- CASCADE para borrar ETS cuando se elimine el grupo del ETS
+CONSTRAINT FK_ETS_AP 
+        FOREIGN KEY (id_grupo) 
+        REFERENCES ets_grupo (id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE avisos (
@@ -2209,7 +2216,7 @@ BEGIN
     CLOSE ua_cursor;
 END $$
 
-DELIMITER ;
+DELIMITER;
 
 CALL generate_groups_and_schedules ();
 
@@ -6353,12 +6360,12 @@ VALUES (
         '2025-06-12 23:59:59', -- fin_registro_extra
         '2025-06-01 00:00:00', -- evalu_profe
         '2025-06-15 23:59:59', -- fin_evalu_profe
-        '2025-11-27 00:00:00', -- inscribir_ets
-        '2025-11-30 23:59:59', -- fin_inscribir_ets
-        '2025-11-28 00:00:00', -- subir_doc_ets
-        '2025-11-29 23:59:59', -- fin_subir_doc_ets
-        '2025-11-26 00:00:00', -- eval_ets
-        '2025-11-30 23:59:59', -- fin_evalu_ets
+        '2025-12-01 00:00:00', -- inscribir_ets
+        '2025-12-30 23:59:59', -- fin_inscribir_ets
+        '2025-12-01 00:00:00', -- subir_doc_ets
+        '2025-12-03 23:59:59', -- fin_subir_doc_ets
+        '2025-12-01 00:00:00', -- eval_ets
+        '2025-12-30 23:59:59', -- fin_evalu_ets
         '2025-1' -- periodo
     );
 
@@ -6871,3 +6878,11 @@ FROM
     INNER JOIN kardex k ON k.id_alumno = h.id_alumno
     INNER JOIN estudiante e ON e.id_usuario = h.id_alumno
 ORDER BY h.id_alumno, g.nombre;
+
+SELECT h.id, k.promedio, k.situacion_academica, e.promedio, e.estado_academico
+FROM
+    datos_personales h
+    INNER JOIN kardex k ON k.id_alumno = h.id
+    INNER JOIN estudiante e ON e.id_usuario = h.id
+WHERE
+    h.id = "2021630309";

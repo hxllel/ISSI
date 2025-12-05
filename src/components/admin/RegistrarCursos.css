@@ -125,3 +125,59 @@
   margin-top:16px;
   align-self:flex-end;
 }
+
+.dias-container {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.dia-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dia-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #d93025;
+  background-color: white;
+  color: #d93025;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dia-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.dia-btn.activo {
+  background-color: #d93025;
+  color: white;
+}
+
+.horas-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+}
+
+.horas-inputs input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.horas-inputs input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+

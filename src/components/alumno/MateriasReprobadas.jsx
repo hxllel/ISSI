@@ -18,10 +18,11 @@ export function MateriasReprobadas() {
   const [id_grupo, setIDGRU] = useState("");
   const [tiempo, setTiempo] = useState(false);
   const [tiempoSubirComprobante , setTiempoSubirComprobante] = useState(false);
+  const [paginaActual, setPaginaActual] = useState(0);
   const API = "http://localhost:4000";
 
   const navigate = useNavigate();
-  const { id } = useParams(); // por si lo usas en la URL, si no, queda undefined
+  const { id } = useParams();
 
   // ================== DATOS REALES DESDE BACKEND ==================
   useEffect(() => {
@@ -58,12 +59,32 @@ export function MateriasReprobadas() {
     }).catch((err) => console.log("Error"));
   }, [])
 
+  // ================== LÓGICA DE PAGINACIÓN ==================
+  const gruposMatutinos = horarios.filter((h) => h.turno === "Matutino");
+  const gruposVespertinos = horarios.filter((h) => h.turno === "Vespertino");
+  const maxGrupos = Math.max(gruposMatutinos.length, gruposVespertinos.length);
+  
+  const grupoMatutinoActual = gruposMatutinos[paginaActual];
+  const grupoVespertinoActual = gruposVespertinos[paginaActual];
+
+  const handleSiguiente = () => {
+    if (paginaActual < maxGrupos - 1) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
+
+  const handleAnterior = () => {
+    if (paginaActual > 0) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
 
   // ================== LÓGICA DE ETS / COMPROBANTES ==================
 
   // Traer grupos ETS y abrir modal de horarios
   const handleClickIns = (idUnidadAprendizaje, idMateriaReprobada) => {
     setIDMR(idMateriaReprobada);
+    setPaginaActual(0);
     fetch(`${API}/ObtenerGruposEts/${idUnidadAprendizaje}`, {
       credentials: "include",
     })
@@ -277,7 +298,7 @@ export function MateriasReprobadas() {
         </section>
       </main>
 
-      {/* =============== MODAL: HORARIOS ETS =============== */}
+      {/* =============== MODAL: HORARIOS ETS CON PAGINACIÓN =============== */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         <div className="ets-container">
           <h1 className="ets-title">Horarios para inscribir ETS</h1>
@@ -287,101 +308,104 @@ export function MateriasReprobadas() {
               No hay grupos disponibles para esta unidad de aprendizaje.
             </p>
           ) : (
-            <div className="ets-grid">
-              {/* MATUTINO */}
-              <div className="ets-card">
-                <h2 className="ets-subtitle">Matutino</h2>
-                {(() => {
-                  const grupoMatutino = horarios.filter(
-                    (h) => h.turno === "Matutino"
-                  )[0];
-
-                  return (
+            <>
+              <div className="ets-grid">
+                {/* MATUTINO */}
+                <div className="ets-card">
+                  <h2 className="ets-subtitle">Matutino</h2>
+                  {grupoMatutinoActual ? (
                     <>
-                      {grupoMatutino ? (
-                        <>
-                          <div className="ets-info">
-                            <p>
-                              <strong>Turno:</strong> {grupoMatutino.turno}
-                            </p>
-                            <p>
-                              <strong>Horas:</strong>{" "}
-                              {grupoMatutino.hora_inicio} -{" "}
-                              {grupoMatutino.hora_final}
-                            </p>
-                            <p>
-                              <strong>Fecha:</strong> {grupoMatutino.fecha}
-                            </p>
-                            <p>
-                              <strong>Aplicante:</strong>{" "}
-                              {grupoMatutino.DatosPersonale?.nombre}{" "}
-                              {grupoMatutino.DatosPersonale?.ape_paterno}{" "}
-                              {grupoMatutino.DatosPersonale?.ape_materno}
-                            </p>
-                          </div>
+                      <div className="ets-info">
+                        <p>
+                          <strong>Turno:</strong> {grupoMatutinoActual.turno}
+                        </p>
+                        <p>
+                          <strong>Horas:</strong>{" "}
+                          {grupoMatutinoActual.hora_inicio} -{" "}
+                          {grupoMatutinoActual.hora_final}
+                        </p>
+                        <p>
+                          <strong>Fecha:</strong> {grupoMatutinoActual.fecha}
+                        </p>
+                        <p>
+                          <strong>Aplicante:</strong>{" "}
+                          {grupoMatutinoActual.DatosPersonale?.nombre}{" "}
+                          {grupoMatutinoActual.DatosPersonale?.ape_paterno}{" "}
+                          {grupoMatutinoActual.DatosPersonale?.ape_materno}
+                        </p>
+                      </div>
 
-                          <button
-                            onClick={() => handleI(grupoMatutino.id)}
-                            className="ets-btn-inscribir"
-                          >
-                            Inscribir
-                          </button>
-                        </>
-                      ) : (
-                        <p>No hay grupos matutinos disponibles.</p>
-                      )}
+                      <button
+                        onClick={() => handleI(grupoMatutinoActual.id)}
+                        className="ets-btn-inscribir"
+                      >
+                        Inscribir
+                      </button>
                     </>
-                  );
-                })()}
+                  ) : (
+                    <p>No hay grupos matutinos disponibles en esta página.</p>
+                  )}
+                </div>
+
+                {/* VESPERTINO */}
+                <div className="ets-card">
+                  <h2 className="ets-subtitle">Vespertino</h2>
+                  {grupoVespertinoActual ? (
+                    <>
+                      <div className="ets-info">
+                        <p>
+                          <strong>Turno:</strong> {grupoVespertinoActual.turno}
+                        </p>
+                        <p>
+                          <strong>Horas:</strong>{" "}
+                          {grupoVespertinoActual.hora_inicio} -{" "}
+                          {grupoVespertinoActual.hora_final}
+                        </p>
+                        <p>
+                          <strong>Fecha:</strong> {grupoVespertinoActual.fecha}
+                        </p>
+                        <p>
+                          <strong>Aplicante:</strong>{" "}
+                          {grupoVespertinoActual.DatosPersonale?.nombre}{" "}
+                          {grupoVespertinoActual.DatosPersonale?.ape_paterno}{" "}
+                          {grupoVespertinoActual.DatosPersonale?.ape_materno}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => handleI(grupoVespertinoActual.id)}
+                        className="ets-btn-inscribir"
+                      >
+                        Inscribir
+                      </button>
+                    </>
+                  ) : (
+                    <p>No hay grupos vespertinos disponibles en esta página.</p>
+                  )}
+                </div>
               </div>
 
-              {/* VESPERTINO */}
-              <div className="ets-card">
-                <h2 className="ets-subtitle">Vespertino</h2>
-                {(() => {
-                  const grupoVespertino = horarios.filter(
-                    (h) => h.turno === "Vespertino"
-                  )[0];
-
-                  return (
-                    <>
-                      {grupoVespertino ? (
-                        <>
-                          <div className="ets-info">
-                            <p>
-                              <strong>Turno:</strong> {grupoVespertino.turno}
-                            </p>
-                            <p>
-                              <strong>Horas:</strong>{" "}
-                              {grupoVespertino.hora_inicio} -{" "}
-                              {grupoVespertino.hora_final}
-                            </p>
-                            <p>
-                              <strong>Fecha:</strong> {grupoVespertino.fecha}
-                            </p>
-                            <p>
-                              <strong>Aplicante:</strong>{" "}
-                              {grupoVespertino.DatosPersonale?.nombre}{" "}
-                              {grupoVespertino.DatosPersonale?.ape_paterno}{" "}
-                              {grupoVespertino.DatosPersonale?.ape_materno}
-                            </p>
-                          </div>
-
-                          <button
-                            onClick={() => handleI(grupoVespertino.id)}
-                            className="ets-btn-inscribir"
-                          >
-                            Inscribir
-                          </button>
-                        </>
-                      ) : (
-                        <p>No hay grupos vespertinos disponibles.</p>
-                      )}
-                    </>
-                  );
-                })()}
+              {/* CONTROLES DE PAGINACIÓN */}
+              <div className="ets-pagination">
+                <button
+                  onClick={handleAnterior}
+                  disabled={paginaActual === 0}
+                  className="ets-btn-paginacion"
+                >
+                  ← Anterior
+                </button>
+                <span className="ets-pagina-info">
+                  Página {paginaActual + 1} de {maxGrupos}
+                </span>
+                <button
+                  onClick={handleSiguiente}
+                  disabled={paginaActual === maxGrupos - 1}
+                  className="ets-btn-paginacion"
+                >
+                  Siguiente →
+                </button>
               </div>
-            </div>
+            </>
           )}
 
           <div className="ets-footer">

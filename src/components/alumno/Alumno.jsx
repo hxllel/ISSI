@@ -176,6 +176,8 @@ export function Alumno() {
           <table className="horario-table">
             <thead>
               <tr>
+                <th>Grupo</th>
+                <th>Salon</th>
                 <th>Profesor</th>
                 <th>Materia</th>
                 <th>Lunes</th>
@@ -189,6 +191,8 @@ export function Alumno() {
             <tbody>
               {horario.map((h, index) => (
                 <tr key={index}>
+                  <td>{h.grupo}</td>
+                  <td>{h.salon}</td>
                   <td>{h.profesor}</td>
                   <td>{h.materia}</td>
 

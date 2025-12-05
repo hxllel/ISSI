@@ -13,19 +13,21 @@ export function EditarGrupo() {
     const [grupo, setGrupo] = useState({
         id_profesor: "",
         id_UA: "",
-        turno: ""
+        turno: "",
+        salon: ""
     });
     const navigate = useNavigate();
+      const API = "http://localhost:4000";
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerProfesores", { credentials: "include" })
+        fetch(`${API}/ObtenerProfesores`, { credentials: "include" })
             .then((res) => res.json())
             .then((data) => setProfesores(data.profesores))
             .catch((err) => console.error("Error al obtener los profesores:", err));
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:4000/ObtenerUA")
+        fetch(`${API}/ObtenerUA`)
             .then((res) => res.json())
             .then((data) => setUA(data.UA))
             .catch((err) => console.error("Error al obtener las unidades de aprendizaje:", err));
@@ -37,7 +39,7 @@ export function EditarGrupo() {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:4000/ObtenerGrupo/${id}`)
+        fetch(`${API}/ObtenerGrupo/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.grupo) setGrupo(data.grupo);
@@ -47,7 +49,7 @@ export function EditarGrupo() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch(`http://localhost:4000/EditarGrupo/${id}`, {
+        fetch(`${API}/EditarGrupo/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(grupo),
@@ -108,7 +110,14 @@ const handleLogout = () => {navigate(`/`);};
                         </option>
                     ))}
                 </select>
-
+                <label className="eg-label">Salón</label>
+                <input
+                    className="eg-input"
+                    type="text"
+                    name="salon"
+                    value={grupo.salon || ""}
+                    onChange={handleChange}
+                />
                 <label className="eg-label">Unidad de Aprendizaje:</label>
                 <select
                     className="eg-select"
