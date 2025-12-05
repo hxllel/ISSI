@@ -7,15 +7,14 @@ import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 export function EvaluacionProfesores() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const API = 'http://localhost:4000';
+  const API = "http://localhost:4000";
 
-  // Guardar objetos con id y nombre
   const [profesores, setProfesores] = useState([]);
   const [profesoresEvaluados, setProfesoresEvaluados] = useState([]);
   const [profesorSeleccionado, setProfesorSeleccionado] = useState(null);
   const [mostrarCuestionario, setMostrarCuestionario] = useState(false);
   const [respuestas, setRespuestas] = useState({});
-  const [mostrarResultado, setMostrarResultado] = useState(null);
+  const [mostrarResultado, setMostrarResultado] = useState(false);
   const [puntuacionTotal, setPuntuacionTotal] = useState(0);
   const [registroCount, setRegistroCount] = useState(null);
   const [fechaValida, setFechaValida] = useState(null);
@@ -24,7 +23,6 @@ export function EvaluacionProfesores() {
   const [fechaFin, setFechaFin] = useState(null);
   const [comentario, setComentario] = useState("");
 
-  // ---- PREGUNTAS ----
   const preguntas = [
     {
       id: 1,
@@ -34,8 +32,8 @@ export function EvaluacionProfesores() {
         { texto: "Muy bueno", peso: 4 },
         { texto: "Bueno", peso: 3 },
         { texto: "Regular", peso: 2 },
-        { texto: "Deficiente", peso: 1 }
-      ]
+        { texto: "Deficiente", peso: 1 },
+      ],
     },
     {
       id: 2,
@@ -45,8 +43,8 @@ export function EvaluacionProfesores() {
         { texto: "Muy bueno", peso: 4 },
         { texto: "Bueno", peso: 3 },
         { texto: "Regular", peso: 2 },
-        { texto: "Deficiente", peso: 1 }
-      ]
+        { texto: "Deficiente", peso: 1 },
+      ],
     },
     {
       id: 3,
@@ -56,8 +54,8 @@ export function EvaluacionProfesores() {
         { texto: "Casi siempre", peso: 4 },
         { texto: "Algunas veces", peso: 3 },
         { texto: "Pocas veces", peso: 2 },
-        { texto: "Nunca", peso: 1 }
-      ]
+        { texto: "Nunca", peso: 1 },
+      ],
     },
     {
       id: 4,
@@ -67,8 +65,8 @@ export function EvaluacionProfesores() {
         { texto: "Casi siempre", peso: 4 },
         { texto: "Algunas veces", peso: 3 },
         { texto: "Pocas veces", peso: 2 },
-        { texto: "Nunca", peso: 1 }
-      ]
+        { texto: "Nunca", peso: 1 },
+      ],
     },
     {
       id: 5,
@@ -78,8 +76,8 @@ export function EvaluacionProfesores() {
         { texto: "Muy bueno", peso: 4 },
         { texto: "Bueno", peso: 3 },
         { texto: "Regular", peso: 2 },
-        { texto: "Deficiente", peso: 1 }
-      ]
+        { texto: "Deficiente", peso: 1 },
+      ],
     },
     {
       id: 6,
@@ -89,8 +87,8 @@ export function EvaluacionProfesores() {
         { texto: "De acuerdo", peso: 4 },
         { texto: "Neutral", peso: 3 },
         { texto: "En desacuerdo", peso: 2 },
-        { texto: "Totalmente en desacuerdo", peso: 1 }
-      ]
+        { texto: "Totalmente en desacuerdo", peso: 1 },
+      ],
     },
     {
       id: 7,
@@ -100,8 +98,8 @@ export function EvaluacionProfesores() {
         { texto: "Casi siempre", peso: 4 },
         { texto: "Algunas veces", peso: 3 },
         { texto: "Pocas veces", peso: 2 },
-        { texto: "Nunca", peso: 1 }
-      ]
+        { texto: "Nunca", peso: 1 },
+      ],
     },
     {
       id: 8,
@@ -111,8 +109,8 @@ export function EvaluacionProfesores() {
         { texto: "De acuerdo", peso: 4 },
         { texto: "Neutral", peso: 3 },
         { texto: "En desacuerdo", peso: 2 },
-        { texto: "Totalmente en desacuerdo", peso: 1 }
-      ]
+        { texto: "Totalmente en desacuerdo", peso: 1 },
+      ],
     },
     {
       id: 9,
@@ -122,8 +120,8 @@ export function EvaluacionProfesores() {
         { texto: "Casi siempre", peso: 4 },
         { texto: "Algunas veces", peso: 3 },
         { texto: "Pocas veces", peso: 2 },
-        { texto: "Nunca", peso: 1 }
-      ]
+        { texto: "Nunca", peso: 1 },
+      ],
     },
     {
       id: 10,
@@ -133,61 +131,49 @@ export function EvaluacionProfesores() {
         { texto: "Probablemente sí", peso: 4 },
         { texto: "No estoy seguro", peso: 3 },
         { texto: "Probablemente no", peso: 2 },
-        { texto: "Definitivamente no", peso: 1 }
-      ]
-    }
+        { texto: "Definitivamente no", peso: 1 },
+      ],
+    },
   ];
 
+  // Validar periodo de evaluación (al montar)
   useEffect(() => {
-  fetch(`${API}/ValidarFechaEvaluacion`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("VALIDAR FECHA RESPUESTA:", data); 
-
-      setFechaValida(data.valido || false);
-      setMensajeFecha(data.mensaje || "Error al validar fecha");
-    })
-    .catch((err) => {
-      console.error("Error al validar fecha:", err);
-      setFechaValida(false);
-      setMensajeFecha("Error al validar la fecha de evaluación");
-    });
-}, []);
-
-
-  useEffect(() => {
-    // Validar fechas de evaluación
     fetch(`${API}/ValidarFechaEvaluacionProfe`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) {
-          setFechaValida(data.valida);
-          setMensajeFecha(data.mensaje);
-          setFechaInicio(data.fechaInicio);
-          setFechaFin(data.fechaFin);
+        if (data.success || data.valida || data.valido) {
+          // diferentes respuestas posibles del backend
+          setFechaValida(data.valida ?? data.valido ?? true);
+          setMensajeFecha(data.mensaje ?? "");
+          setFechaInicio(data.fechaInicio ?? data.inicio ?? null);
+          setFechaFin(data.fechaFin ?? data.fin ?? null);
         } else {
           setFechaValida(false);
-          setMensajeFecha(data.error || "No hay fechas de evaluación configuradas");
+          setMensajeFecha(data.mensaje || data.error || "No hay fechas de evaluación configuradas");
         }
       })
       .catch((err) => {
+        console.error("Error al verificar periodo de evaluación:", err);
         setFechaValida(false);
         setMensajeFecha("Error al verificar periodo de evaluación");
       });
+  }, []);
 
-    // Obtener profesores del horario
+  // Obtener horario (profesores) y profesores ya evaluados
+  useEffect(() => {
+    if (!id) return;
+
     fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.horario && Array.isArray(data.horario)) {
-          // Extraer id y nombre del profesor
           const profUnicos = [];
           const idsSet = new Set();
           data.horario.forEach((h) => {
             if (h.id_profesor && !idsSet.has(h.id_profesor)) {
               profUnicos.push({
                 id: h.id_profesor,
-                nombre: h.profesor
+                nombre: h.profesor,
               });
               idsSet.add(h.id_profesor);
             }
@@ -195,9 +181,10 @@ export function EvaluacionProfesores() {
           setProfesores(profUnicos);
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error("Error al obtener horario:", err);
+      });
 
-    // Obtener profesores ya evaluados por el alumno
     fetch(`${API}/api/profesor/evaluados/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
@@ -205,7 +192,9 @@ export function EvaluacionProfesores() {
           setProfesoresEvaluados(data.evaluados);
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error("Error al obtener profesores evaluados:", err);
+      });
   }, [id]);
 
   const handleRespuesta = (preguntaId, peso) => {
@@ -235,27 +224,30 @@ export function EvaluacionProfesores() {
           id_profesor: profesorSeleccionado.id,
           profesor: profesorSeleccionado.nombre,
           alumnoId: id,
-          suma: total,
+          suma: (total/5),
         },
         { withCredentials: true }
       );
 
       const registrado = resp?.data?.registrado ?? resp?.data?.registro ?? resp?.data?.count ?? null;
-
-      if (registroCount !== null) setRegistroCount(registrado);
+      if (registrado !== null) setRegistroCount(registrado);
 
       setMostrarResultado(true);
-      // Enviar reseña de texto al endpoint de reseñas (sin bloquear UX)
+
+      // enviar reseña textual (no bloquear UX)
       try {
-        const calPromedio = total / preguntas.length; // promedio entre 1 y 5
-        await axios.post(`${API}/api/profesor/${profesorSeleccionado.id}/evaluaciones`, {
-          id_alumno: id,
-          calificacion: calPromedio,
-          comentario: comentario ? comentario.trim() : null,
-        }, { withCredentials: true });
+        const calPromedio = total / 5;
+        await axios.post(
+          `${API}/api/profesor/${profesorSeleccionado.id}/evaluaciones`,
+          {
+            id_alumno: id,
+            calificacion: calPromedio,
+            comentario: comentario ? comentario.trim() : null,
+          },
+          { withCredentials: true }
+        );
       } catch (errPost) {
-        console.error('Error al enviar reseña textual:', errPost);
-        // No mostramos error al usuario para no romper flujo; lo registramos en consola.
+        console.error("Error al enviar reseña textual:", errPost);
       }
     } catch (err) {
       console.error("Error al enviar evaluación:", err);
@@ -263,20 +255,20 @@ export function EvaluacionProfesores() {
     }
   };
 
-  // ---- RESET ----
   const resetEvaluacion = () => {
     setProfesorSeleccionado(null);
     setMostrarCuestionario(false);
     setRespuestas({});
     setMostrarResultado(false);
     setPuntuacionTotal(0);
+    setRegistroCount(null);
+    setComentario("");
   };
 
-  // ---- SELECCIONAR PROFESOR PARA EVALUAR ----
   const handleEvaluarProfesor = (profesorObj) => {
     if (!fechaValida) {
-      const inicio = fechaInicio ? new Date(fechaInicio).toLocaleDateString() : 'N/A';
-      const fin = fechaFin ? new Date(fechaFin).toLocaleDateString() : 'N/A';
+      const inicio = fechaInicio ? new Date(fechaInicio).toLocaleDateString() : "N/A";
+      const fin = fechaFin ? new Date(fechaFin).toLocaleDateString() : "N/A";
       alert(`No se puede evaluar fuera del periodo de evaluación.\n\nPeriodo: ${inicio} - ${fin}`);
       return;
     }
@@ -285,14 +277,12 @@ export function EvaluacionProfesores() {
     setRespuestas({});
   };
 
-  // ---- VOLVER A LA LISTA ----
   const volverALista = () => {
     setMostrarCuestionario(false);
     setProfesorSeleccionado(null);
     setRespuestas({});
   };
 
-  // ---- RENDER ----
   return (
     <div className="alumno-container">
       <SidebarAlumno />
@@ -318,7 +308,9 @@ export function EvaluacionProfesores() {
               <h3>{mensajeFecha}</h3>
               <p>La evaluación de profesores solo está disponible en la fecha indicada por la institución.</p>
               {fechaInicio && fechaFin && (
-                <p><strong>Periodo:</strong> {new Date(fechaInicio).toLocaleDateString()} - {new Date(fechaFin).toLocaleDateString()}</p>
+                <p>
+                  <strong>Periodo:</strong> {new Date(fechaInicio).toLocaleDateString()} - {new Date(fechaFin).toLocaleDateString()}
+                </p>
               )}
             </div>
           </section>
@@ -342,21 +334,20 @@ export function EvaluacionProfesores() {
                     </thead>
 
                     <tbody>
-                      {profesores.filter(p => !profesoresEvaluados.includes(p.id)).length > 0 ? (
-                        profesores.filter(p => !profesoresEvaluados.includes(p.id)).map((profesorObj, index) => (
-                          <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td className="nombre-profesor">{profesorObj.nombre}</td>
-                            <td>
-                              <button
-                                className="btn-evaluar"
-                                onClick={() => handleEvaluarProfesor(profesorObj)}
-                              >
-                                Evaluar
-                              </button>
-                            </td>
-                          </tr>
-                        ))
+                      {profesores.filter((p) => !profesoresEvaluados.includes(p.id)).length > 0 ? (
+                        profesores
+                          .filter((p) => !profesoresEvaluados.includes(p.id))
+                          .map((profesorObj, index) => (
+                            <tr key={profesorObj.id}>
+                              <td>{index + 1}</td>
+                              <td className="nombre-profesor">{profesorObj.nombre}</td>
+                              <td>
+                                <button className="btn-evaluar" onClick={() => handleEvaluarProfesor(profesorObj)}>
+                                  Evaluar
+                                </button>
+                              </td>
+                            </tr>
+                          ))
                       ) : (
                         <tr>
                           <td colSpan="3">No hay profesores disponibles</td>
@@ -366,10 +357,7 @@ export function EvaluacionProfesores() {
                   </table>
                 </div>
 
-                <button
-                  className="btn-cancelar"
-                  onClick={() => navigate(`/alumno/${id}`)}
-                >
+                <button className="btn-cancelar" onClick={() => navigate(`/alumno/${id}`)}>
                   Volver al inicio
                 </button>
               </section>
@@ -396,9 +384,7 @@ export function EvaluacionProfesores() {
                               type="radio"
                               name={`pregunta-${pregunta.id}`}
                               value={opc.peso}
-                              onChange={() =>
-                                handleRespuesta(pregunta.id, opc.peso)
-                              }
+                              onChange={() => handleRespuesta(pregunta.id, opc.peso)}
                               checked={respuestas[pregunta.id] === opc.peso}
                             />
                             {opc.texto}
@@ -409,7 +395,9 @@ export function EvaluacionProfesores() {
                   ))}
 
                   <div className="comentario-section">
-                    <label htmlFor="comentario" className="comentario-label">Comentario (opcional):</label>
+                    <label htmlFor="comentario" className="comentario-label">
+                      Comentario (opcional):
+                    </label>
                     <textarea
                       id="comentario"
                       className="comentario-input"
@@ -426,11 +414,7 @@ export function EvaluacionProfesores() {
                       Enviar Evaluación
                     </button>
 
-                    <button
-                      type="button"
-                      className="btn-cancelar"
-                      onClick={volverALista}
-                    >
+                    <button type="button" className="btn-cancelar" onClick={volverALista}>
                       Cancelar
                     </button>
                   </div>
@@ -443,32 +427,26 @@ export function EvaluacionProfesores() {
             <div className="resultado-card">
               <h2>¡Evaluación Completada!</h2>
               <div className="resultado-info">
-                <p><strong>Profesor evaluado:</strong> {profesorSeleccionado?.nombre}</p>
+                <p>
+                  <strong>Profesor evaluado:</strong> {profesorSeleccionado?.nombre}
+                </p>
 
                 <div className="puntuacion-box">
                   <p className="puntuacion-label">Puntuación Total enviada:</p>
-                  <p className="puntuacion-valor">{puntuacionTotal} / {preguntas.length * 5}</p>
-                  {registroCount !== null && (
-                    <p className="registro-count">Veces evaluado: {registroCount}</p>
-                  )}
+                  <p className="puntuacion-valor">
+                    {puntuacionTotal} / {preguntas.length * 5}
+                  </p>
+                  {registroCount !== null && <p className="registro-count">Veces evaluado: {registroCount}</p>}
                 </div>
 
-              <p><strong>Profesor:</strong> {profesorSeleccionado}</p>
-              <p>Puntuación total: {puntuacionTotal}</p>
-              {registroCount !== null && (
-                <p>Veces evaluado: {registroCount}</p>
-              )}
+                <button className="btn-nueva" onClick={resetEvaluacion}>
+                  Evaluar otro profesor
+                </button>
 
-              <button className="btn-nueva" onClick={resetEvaluacion}>
-                Evaluar otro profesor
-              </button>
-
-              <button
-                className="btn-volver"
-                onClick={() => navigate(`/alumno/${id}`)}
-              >
-                Volver al inicio
-              </button>
+                <button className="btn-volver" onClick={() => navigate(`/alumno/${id}`)}>
+                  Volver al inicio
+                </button>
+              </div>
             </div>
           </section>
         )}

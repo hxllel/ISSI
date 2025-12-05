@@ -1629,18 +1629,16 @@ module.exports = (passport) => {
   // Actualizar o crear registro en la tabla 'contador' para un profesor
   router.post("/ActualizarContadorProfesor", async (req, res) => {
     try {
-      // Validar fechas primero
       const fechaActual = new Date();
       const fechas = await bd.FechasRelevantes.findOne({
         order: [["inicio_semestre", "DESC"]],
       });
 
-      if (!fechas) {
+      if (!fechas)
         return res.status(404).json({
           success: false,
           error: "No se encontraron fechas relevantes",
         });
-      }
 
       const inicioEvalProfe = new Date(fechas.evalu_profe);
       const finEvalProfe = new Date(fechas.fin_evalu_profe);
@@ -1654,33 +1652,32 @@ module.exports = (passport) => {
         });
       }
 
-      // Requerir usuario autenticado
-      if (!req.user || !req.user.id) {
-        return res
-          .status(401)
-          .json({ success: false, error: "Usuario no autenticado" });
-      }
+      if (!req.user || !req.user.id)
+        return res.status(401).json({
+          success: false,
+          error: "Usuario no autenticado",
+        });
+
       const { profesor, id_profesor, alumnoId, suma } = req.body;
 
-      if (!id_profesor && !profesor) {
-        return res
-          .status(400)
-          .json({ success: false, error: "Faltan datos (id_profesor o profesor)" });
-      }
+      if (!id_profesor && !profesor)
+        return res.status(400).json({
+          success: false,
+          error: "Faltan datos (id_profesor o profesor)",
+        });
 
-      if (suma === undefined || suma === null) {
-        return res
-          .status(400)
-          .json({ success: false, error: "Falta la suma" });
-      }
+      if (suma === undefined || suma === null)
+        return res.status(400).json({
+          success: false,
+          error: "Falta la suma",
+        });
 
       let idProf = id_profesor;
 
-      // Si no hay id_profesor, intentar localizar al profesor por nombre completo
       if (!idProf && profesor) {
         const nombreCompleto = profesor.trim();
 
-        // Buscar por concatenación de nombre y apellidos
+        // Buscar por nombre exacto
         let prof = await bd.DatosPersonales.findOne({
           where: bd.sequelize.where(
             bd.sequelize.fn(
@@ -1695,7 +1692,7 @@ module.exports = (passport) => {
           ),
         });
 
-        // Si no se encontró con la concatenación exacta, intentar búsqueda LIKE
+        // Buscar por LIKE si no se encontró
         if (!prof) {
           prof = await bd.DatosPersonales.findOne({
             where: bd.sequelize.where(
@@ -1713,37 +1710,56 @@ module.exports = (passport) => {
         }
 
         if (!prof) {
-          return res
-            .status(404)
-            .json({ success: false, error: "Profesor no encontrado" });
+          return res.status(404).json({
+            success: false,
+            error: "Profesor no encontrado",
+          });
         }
 
-        idProf = prof.id;
+        idProf = prof.id; // ESTE ES EL ID REAL
       }
 
-      // Buscar registro en Contador
-      let contador = await bd.Contador.findByPk(idProf);
+      // Buscar registro en CONTADOR
+      let contador = await bd.Contador.findOne({
+        where: { id_profesor: idProf },
+      });
 
       if (contador) {
-        // Actualizar sumas y registrados
-        const nuevaSuma = parseInt(contador.suma || 0, 10) + parseInt(suma, 10);
-        const nuevosRegistrados = parseInt(contador.registrados || 0, 10) + 1;
+        // Sumar valores
+        const nuevaSuma = (contador.suma || 0) + parseInt(suma, 10);
+        const nuevosRegistrados = (contador.registrados || 0) + 1;
+
+        // UPDATE correcto
         await bd.Contador.update(
           { suma: nuevaSuma, registrados: nuevosRegistrados },
           { where: { id_profesor: idProf } }
         );
-        contador = await bd.Contador.findByPk(idProf);
+
+        contador = await bd.Contador.findOne({
+          where: { id_profesor: idProf },
+        });
       } else {
         // Crear nuevo registro
-        const crear = await bd.Contador.create({
+        contador = await bd.Contador.create({
           id_profesor: idProf,
           suma: parseInt(suma, 10),
           registrados: 1,
         });
-        contador = crear;
       }
 
-      return res.json({ success: true, registrado: contador.registrados });
+      // Calcular calificación
+      const cal = parseFloat(contador.suma) / parseFloat(contador.registrados);
+
+      // UPDATE correcto en DatosPersonales
+      await bd.DatosPersonales.update(
+        { calificacion: cal },
+        { where: { id: idProf } } // 🔥 ESTE ES EL CORRECTO
+      );
+
+      return res.json({
+        success: true,
+        registrado: contador.registrados,
+      });
     } catch (err) {
       console.error("Error en /ActualizarContadorProfesor:", err);
       return res.status(500).json({
@@ -1870,13 +1886,16 @@ module.exports = (passport) => {
   router.get("/api/profesor/evaluados/:id", async (req, res) => {
     try {
       const { id } = req.params;
+      const periodo = await bd.FechasRelevantes.findOne({ where: {} });
       // Buscar todas las reseñas hechas por el alumno
       const resenas = await bd.Resena.findAll({
-        where: { id_alumno: id },
-        attributes: ["id_profesor"]
+        where: { id_alumno: id, periodo: { [Op.like]: periodo.periodo } },
+        attributes: ["id_profesor"],
       });
       // Extraer IDs únicos de los profesores evaluados
-      const evaluados = [...new Set(resenas.map(r => r.id_profesor).filter(Boolean))];
+      const evaluados = [
+        ...new Set(resenas.map((r) => r.id_profesor).filter(Boolean)),
+      ];
       return res.json({ evaluados });
     } catch (err) {
       console.error("Error en /api/profesor/evaluados/:id", err);
