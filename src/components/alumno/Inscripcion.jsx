@@ -39,6 +39,9 @@ export function Inscripcion() {
   const [citas, setCitas] = useState("");
 
   const [horarios, setHorarios] = useState([]);
+
+
+
   const API = "http://localhost:4000";
 
   const safe = (value, fallback) =>
@@ -57,7 +60,7 @@ export function Inscripcion() {
           setCita(true);
           setCitas(data.citas);
         } else {
-          setTiempo(true);
+          setTiempo(false);
         }
 
         setPromedio(data.promedio);
@@ -253,7 +256,7 @@ export function Inscripcion() {
           alert("Se ha inscrito satisfactoriamente");
           navigate(`/alumno/${id}`);
           window.location.reload();
-        } else alert("Ha ocurrido un error");
+        } else alert(`Ha ocurrido un error ${data.message}`);
       });
   };
 

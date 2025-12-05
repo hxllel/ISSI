@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import "./SideBar.css";
-
 
 export function SidebarAlumno() {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
+
   const isActive = (path) => location.pathname.startsWith(path);
 
   const STORAGE_KEY = "saesr_sidebar_alumno_open";
+
   const [open, setOpen] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved === null ? true : saved === "1";
@@ -20,52 +21,83 @@ export function SidebarAlumno() {
   }, [open]);
 
   const closeIfMobile = useCallback(() => {
-    if (typeof window !== "undefined" && window.innerWidth <= 768) setOpen(false);
+    if (window.innerWidth <= 768) setOpen(false);
   }, []);
 
-  // El ID viene de params o de state
-  const id = params.id || location.state?.alumnoId;
+  // ⭐⭐⭐ ID universal: URL → state → localStorage
+  const id = useMemo(() => {
+    const fromUrl = params.id;
+    const fromState = location.state?.alumnoId;
+    const fromStorage = localStorage.getItem("alumno_id");
 
-  // Handlers de navegación
-  const handleIns = () => { navigate(`/alumno/inscripcion/${id}`); closeIfMobile(); };
-  const handleHorarios = () => { navigate(`/alumno/horarios/${id}`); closeIfMobile(); };
-  const handleKardex = () => { navigate(`/alumno/Kardex`, { state: { alumnoId: id } }); closeIfMobile(); };
-  const handleChat = () => { navigate(`/alumno/Chat`, { state: { alumnoId: id } }); closeIfMobile(); };
-  const handleMatRe = () => { navigate(`/alumno/MateriasReprobadas`, { state: { alumnoId: id } }); closeIfMobile(); };
-  const handleEvaluacion = () => { navigate(`/alumno/evaluacion/${id}`); closeIfMobile(); };
-  const handleEditPer = () => { navigate(`/alumno/datosPersonales/${id}`); closeIfMobile(); };
-  const handleCalif = () => { navigate(`/alumno/ConsultarCalificaciones`, { state: { alumnoId: id } }); closeIfMobile(); };
-  const handleCono = () => { navigate(`/alumno/conocenosAlumno`); closeIfMobile(); };
-  const handleDetalle = () => { navigate(`/alumno/resenas-profesor/${id}`); closeIfMobile(); };
-  const handleResena = () => { navigate(`/alumno/resenar-profesores`); closeIfMobile(); };
-  const handleMapas = () => navigate(`/alumno/MapasCurriculares`, { state: { alumnoId: id } });
+    const finalId = fromUrl || fromState || fromStorage;
 
-  const handleLogout = () => { setOpen(false); navigate(`/`); };
+    // Guardamos solo si viene uno nuevo
+    if (finalId && finalId !== fromStorage) {
+      localStorage.setItem("alumno_id", finalId);
+    }
+
+    return finalId;
+  }, [params.id, location.state]);
+
+  // Función de seguridad para evitar errores
+  const safeNavigate = (path, state = null) => {
+    if (!id) {
+      alert("⚠ No se pudo obtener tu ID. Inicia sesión nuevamente.");
+      return navigate("/");
+    }
+    closeIfMobile();
+    navigate(path, state ? { state } : undefined);
+  };
+
+  // Handlers
+  const handleIns = () => safeNavigate(`/alumno/inscripcion/${id}`);
+  const handleHorarios = () => safeNavigate(`/alumno/horarios/${id}`);
+  const handleKardex = () =>
+    safeNavigate(`/alumno/Kardex`, { alumnoId: id });
+  const handleChat = () =>
+    safeNavigate(`/alumno/Chat`, { alumnoId: id });
+  const handleMatRe = () =>
+    safeNavigate(`/alumno/MateriasReprobadas`, { alumnoId: id });
+  const handleEvaluacion = () => safeNavigate(`/alumno/evaluacion/${id}`);
+  const handleEditPer = () => safeNavigate(`/alumno/datosPersonales/${id}`);
+  const handleCalif = () =>
+    safeNavigate(`/alumno/ConsultarCalificaciones`, { alumnoId: id });
+  const handleCono = () => safeNavigate(`/alumno/conocenosAlumno`);
+  const handleDetalle = () => safeNavigate(`/alumno/resenas-profesor/${id}`);
+  const handleMapas = () =>
+    safeNavigate(`/alumno/MapasCurriculares`, { alumnoId: id });
+
+  const handleLogout = () => {
+    localStorage.removeItem("alumno_id");
+    setOpen(false);
+    navigate(`/`);
+  };
 
   return (
     <>
       {!open && (
-        <button className="sidebar-fab" onClick={() => setOpen(true)} aria-label="Mostrar menú">
+        <button className="sidebar-fab" onClick={() => setOpen(true)}>
           ☰
         </button>
       )}
 
-      <aside className={`sidebar ${open ? "is-open" : "is-closed"}`} aria-hidden={!open}>
+      <aside className={`sidebar ${open ? "is-open" : "is-closed"}`}>
         <div className="sidebar-header">
           <div className="logo">
             <img src="/ipn.png" alt="Logo" className="logo-img" />
             <span>SAES-R</span>
           </div>
 
-          <button className="sidebar-close" onClick={() => setOpen(false)} aria-label="Ocultar sidebar">
+          <button className="sidebar-close" onClick={() => setOpen(false)}>
             ✕
           </button>
         </div>
 
         <nav className="menu">
           <button
-            className={`menu-item ${isActive(`/alumno/${id}`) ? " active" : ""}`}
-            onClick={() => { navigate(`/alumno/${id}`); closeIfMobile(); }}
+            className={`menu-item ${isActive(`/alumno/${id}`) ? "active" : ""}`}
+            onClick={() => safeNavigate(`/alumno/${id}`)}
           >
             Inicio
           </button>
@@ -107,29 +139,21 @@ export function SidebarAlumno() {
           >
             Consultar Calificaciones
           </button>
-          <button
-            className={`menu-item ${isActive("/alumno/conocenosAlumno") ? "active" : ""}`}
-            onClick={handleCono}
-          >
+
+          <button className={`menu-item ${isActive("/alumno/conocenosAlumno") ? "active" : ""}`} onClick={handleCono}>
             Conocenos
           </button>
-          <button
-            className={`menu-item ${isActive("/alumno/resenas-profesor/:id") ? "active" : ""}`}
-            onClick={handleDetalle}
-          >
-            Reseñas profesores
-          </button>
-          
-          <button
-          className={`menu-item ${
-            isActive("/alumno/mapas-curriculares") ? "active" : ""
-          }`}
-          onClick={handleMapas}
-        >
-          Mapas Curriculares
-        </button>
-        <Link to="/reglamentos">Reglamentos</Link>
 
+          <button
+            className={`menu-item ${isActive("/alumno/mapas-curriculares") ? "active" : ""}`}
+            onClick={handleMapas}
+          >
+            Mapas Curriculares
+          </button>
+
+          <Link to="/reglamentos" className="menu-item">
+            Reglamentos
+          </Link>
         </nav>
 
         <button className="logout" onClick={handleLogout}>
@@ -137,7 +161,7 @@ export function SidebarAlumno() {
         </button>
       </aside>
 
-      <button className={`sidebar-overlay ${open ? "show" : ""}`} onClick={() => setOpen(false)} aria-label="Cerrar menú" />
+      <button className={`sidebar-overlay ${open ? "show" : ""}`} onClick={() => setOpen(false)} />
     </>
   );
 }

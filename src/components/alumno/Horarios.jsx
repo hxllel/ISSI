@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FiPlus, FiEye, FiDownload } from "react-icons/fi";
 import Modal from "../Modal";
 import  "./Horarios.css";
+import Stars from "../alumno/Stars.jsx";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 
 
@@ -12,8 +13,9 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   const [borr, setBorr] = useState([]);
   const [cursadas, setCursadas] = useState([]);
   const [carrera, setCarrera] = useState("");
-
+  const [modalResenas, setModalResenas] = useState(false);
   const alumnoId = propAlumnoId || params.id;
+  const [resenas, setResenas] = useState([]);
 
   const [add, setAdd] = useState(null);
   const [idgru, setIdgru] = useState("");
@@ -79,6 +81,21 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
     setIdgru(id);
   }
 
+  const handleClickResena = (id) =>{
+
+    fetch(`${API}/ConsultarResenas/${id}`, { credentials: "include", })
+      .then((res) => res.json())
+      .then((data) => {
+        const rese = Array.isArray(data && data.resenas) ? data.resenas : [];
+        setResenas(rese);
+      })
+      .catch((err) => {
+        console.error("Error al obtener las resenas:", err);
+        setResenas([]);
+      });
+
+      setModalResenas(true);
+  }
 
   useEffect(() => {
     if (add) {
@@ -146,6 +163,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
           <tr>
             <th>ID</th>
             <th>Profesor</th>
+            <th>Calificación del profesor</th>
             <th>Unidad de Aprendizaje</th>
             <th>Turno</th>
             <th>Carrera</th>
@@ -187,6 +205,11 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
               <tr key={dato.id}>
                 <td>{dato.nombre}</td>
                 <td>{dato.DatosPersonale && `${dato.DatosPersonale.nombre || ''} ${dato.DatosPersonale.ape_paterno || ''} ${dato.DatosPersonale.ape_materno || ''}`}</td>
+                <th>
+                    <div style={{ display: "flex", justifyContent: "center" }} onClick={()=>handleClickResena(dato.DatosPersonale.id)}>
+                      <Stars value={(dato.DatosPersonale?.calificacion || 0) / 2} />
+                    </div>
+                </th>                
                 <td>{dato.Unidad_Aprendizaje && dato.Unidad_Aprendizaje.nombre}</td>
                 <td>{dato.turno}</td>
                 <td>{dato.Unidad_Aprendizaje && dato.Unidad_Aprendizaje.carrera}</td>
@@ -215,6 +238,9 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
           })}
         </tbody>
       </table>
+
+
+
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         <h1>Borrador de horario</h1>
         <table border="1" cellPadding={5}>
@@ -264,6 +290,48 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
         </table>
 
       </Modal>
+
+      <Modal open={modalResenas} onClose={() => setModalResenas(false)}>
+  <h1>Reseñas del profesor</h1>
+
+  {resenas.length === 0 ? (
+    <p>No hay reseñas registradas.</p>
+  ) : (
+    <table className="resenas-table">
+      <thead>
+        <tr>
+          <th>Calificación</th>
+          <th>Comentarios</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        {resenas.map((r) => (
+          <tr key={r.id}>
+            <td style={{ textAlign: "center" }}>
+              <Stars value={(r.calificacion || 0) / 2} />
+            </td>
+
+            <td>
+              <div className="resena-comentario">
+                {r.comentarios || "Sin comentarios"}
+              </div>
+            </td>
+
+            <td style={{ textAlign: "center" }}>
+              {new Date(r.fecha).toLocaleDateString("es-MX", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</Modal>
+
       
      
         

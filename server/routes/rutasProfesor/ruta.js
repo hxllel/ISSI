@@ -531,19 +531,20 @@ module.exports = (passport) => {
 
         // Calcular porcentaje de asistencia
         const totalAsistencias = await bd.Lista.count({
-          where: { id_inscrito: ins.id }
+          where: { id_inscrito: ins.id },
         });
 
         const asistenciasPresentes = await bd.Lista.count({
-          where: { 
+          where: {
             id_inscrito: ins.id,
-            asistencia: "Presente"
-          }
+            asistencia: "Presente",
+          },
         });
 
-        const porcentajeAsistencia = totalAsistencias > 0 
-          ? (asistenciasPresentes / totalAsistencias) * 100 
-          : 0;
+        const porcentajeAsistencia =
+          totalAsistencias > 0
+            ? (asistenciasPresentes / totalAsistencias) * 100
+            : 0;
 
         const tieneAsistenciaSuficiente = porcentajeAsistencia >= 80;
 
@@ -554,7 +555,7 @@ module.exports = (passport) => {
           ape_materno: alumno.ape_materno,
           calificacion,
           porcentajeAsistencia: Math.round(porcentajeAsistencia),
-          tieneAsistenciaSuficiente
+          tieneAsistenciaSuficiente,
         });
       }
 
@@ -1217,6 +1218,12 @@ module.exports = (passport) => {
           const kardex = await bd.Kardex.findOne({
             where: { id_alumno: alumnoId },
           });
+          const alumno = await bd.Estudiante.findOne({
+            where: { id_usuario: alumnoId },
+          });
+          const n = await bd.Materia_Reprobada.count({
+            where: { id_estudiante: alumno.id },
+          });
 
           if (kardex) {
             // Agregar a UA_Aprobada
@@ -1225,7 +1232,7 @@ module.exports = (passport) => {
             await bd.UA_Aprobada.create({
               id: uuidv4().replace(/-/g, "").substring(0, 15),
               id_kardex: kardex.id,
-              unidad_aprendizaje: ua.id,
+              unidad_aprendizaje: ua.nombre,
               calificacion_final: calificacion,
               semestre: ua.semestre,
               periodo: fechas ? fechas.periodo : "N/A",
@@ -1233,7 +1240,22 @@ module.exports = (passport) => {
               metodo_aprobado: "ETS",
             });
           }
+          let situacion = "";
 
+          if (n == 1) {
+            situacion = "Regular";
+          } else {
+            situacion = "Irregular";
+          }
+          await alumno.update({
+            estado_academico: situacion,
+            promedio: (parseFloat(alumno.promedio) + calificacion) / 2,
+            where: { id_usuario: alumnoId },
+          });
+          await kardex.update({
+            situacion_academica: situacion,
+            promedio: (parseFloat(kardex.promedio) + calificacion) / 2,
+          });
           // Eliminar de materia_reprobada
           await bd.Materia_Reprobada.destroy({
             where: { id: materiaRep.id },
