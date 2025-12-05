@@ -14,7 +14,7 @@ const AnimatedThinkingDots = () => {
 }
 
 export function ChatbotAsistente() {
-      const API = 'http://localhost:4000';
+  const API = 'http://localhost:4000';
 
   const location = useLocation()
   const params = useParams()
@@ -25,6 +25,7 @@ export function ChatbotAsistente() {
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [lastMessageId, setLastMessageId] = useState(null)
+  const [razonamientoMode, setRazonamientoMode] = useState(0) // NUEVO: Estado para modo razonamiento
   const messagesEndRef = useRef(null)
   const messagesContainerRef = useRef(null)
   const [allMessages, setAllMessages] = useState([])
@@ -183,7 +184,8 @@ export function ChatbotAsistente() {
             body: JSON.stringify({
               query: combinedText,
               id_usuario: alumnoId,
-              tipo_usuario: "alumno", 
+              tipo_usuario: "alumno",
+              razonamiento: razonamientoMode, // NUEVO: Enviar modo razonamiento
               history: null,
             }),
             signal: controller.signal,
@@ -382,6 +384,19 @@ export function ChatbotAsistente() {
             onKeyPress={handleKeyPress}
             disabled={isLoading}
           />
+          {/* NUEVO: Toggle button para modo razonamiento */}
+          <div className="reasoning-toggle-container">
+            <span className="reasoning-label">Modo de razonamiento avanzado</span>
+            <label className="reasoning-toggle" title={razonamientoMode === 1 ? "Modo Razonamiento Activo" : "Modo Razonamiento Inactivo"}>
+              <input
+                type="checkbox"
+                checked={razonamientoMode === 1}
+                onChange={(e) => setRazonamientoMode(e.target.checked ? 1 : 0)}
+                disabled={isLoading}
+              />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
           <button className="send-button" onClick={handleSendMessage} disabled={isLoading}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
