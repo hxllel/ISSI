@@ -112,3 +112,12 @@
     padding: 6px 8px;
   }
 }
+
+.historial-semestre {
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+}
+
+.historial-semestre h3 {
+  margin-bottom: 10px;
+}

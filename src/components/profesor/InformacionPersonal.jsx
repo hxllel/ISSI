@@ -118,14 +118,7 @@ const API = "http://localhost:4000";
     );
 
   return (
-    <ProfesorLayout profesorId={id}>
-      <div className="info-personal-page">
-        <div className="info-personal-header">
-          <h1>Información Personal</h1>
-          <p className="info-personal-subtitle">
-            Consulta y edita los datos registrados para tu cuenta.
-          </p>
-        </div>
+    
 
         <div className="admin-container" style={{ padding: 0 }}>
           {/* Sidebar (simplificado, mantiene tu estructura) */}
@@ -269,7 +262,7 @@ const API = "http://localhost:4000";
                   </div>
 
                   <div className="form-actions">
-                    <button type="button" className="submit-btn" onClick={handleEdit}>
+                    <button type="button" className="btn azul" onClick={handleEdit}>
                       <FiEdit2 style={{ marginRight: "8px" }} />
                       Editar
                     </button>
@@ -279,7 +272,8 @@ const API = "http://localhost:4000";
             </section>
           </main>
         </div>
-      </div>
-    </ProfesorLayout>
+      
+    
+   
   );
 }

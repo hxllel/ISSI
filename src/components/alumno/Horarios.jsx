@@ -10,6 +10,8 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   const params = useParams();
   const [datos, setDatos] = useState([]);
   const [borr, setBorr] = useState([]);
+  const [cursadas, setCursadas] = useState([]);
+  const [carrera, setCarrera] = useState("");
 
   const alumnoId = propAlumnoId || params.id;
 
@@ -21,8 +23,25 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
 
   const navigate = useNavigate();
   const { id } = useParams();
+  const API = "http://localhost:4000";
+
+  const safeArray = (value) => (Array.isArray(value) ? value : []);
+
+    useEffect(() => {
+      fetch(`${API}/ObtenerHistorial`, { credentials: "include" })
+        .then((res) => res.json())
+        .then((data) => {
+          const nombres = safeArray(data?.historial).map(
+            (h) => h.unidad_aprendizaje
+          );
+          setCursadas(nombres);
+          setCarrera(data.carrera);
+        })
+        .catch(() => setCursadas([]));
+    }, []);
+
   useEffect(() => {
-    fetch("http://localhost:4000/ObtenerGrupo", { credentials: "include", })
+    fetch(`${API}/ObtenerGrupo`, { credentials: "include", })
       .then((res) => res.json())
       .then((data) => {
         const cursos = Array.isArray(data && data.cursos) ? data.cursos : [];
@@ -36,7 +55,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:4000/ConsultarBorrador", { credentials: "include", })
+    fetch(`${API}/ConsultarBorrador`, { credentials: "include", })
       .then((res) => res.json())
       .then((data) => {
         const borr = Array.isArray(data && data.horario) ? data.horario : [];
@@ -63,46 +82,46 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
 
   useEffect(() => {
     if (add) {
-      fetch(`http://localhost:4000/AgregarBorrador/${idgru}`, { method: "POST", credentials: "include" })
+      fetch(`${API}/AgregarBorrador/${idgru}`, { method: "POST", credentials: "include" })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
             alert("Se ha agregado exitosamente a tu borrador de horario la materia");
+            window.location.reload();
+
           } else {
             alert("No se ha podido agregar la materia al borrador de horario");
+            window.location.reload();
+
           }
         })
         .catch((err) => console.error("Error al agregar borrador:", err))
         .finally(() => setAdd(false));
     }
-  }, [add, idgru]);
+  }, [add]);
 
   useEffect(() => {
     if (del) {
-      fetch(`http://localhost:4000/EliminarBorrador/${idgru}`, { method: "POST", credentials: "include" })
+      fetch(`${API}/EliminarBorrador/${idgru}`, { method: "POST", credentials: "include" })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
             alert("Se ha eliminado la materia de tu borrador de horario");
+            window.location.reload();
+
           } else {
             alert("No se ha podido eliminar la materia al borrador de horario");
+            window.location.reload();
+
           }
         })
         .catch((err) => console.error("Error al eliminar borrador:", err))
         .finally(() => setAdd(false));
 
     }
-  }, [del, idgru]);
+  }, [del]);
 
 
-    const handleIns = () => {navigate(`/alumno/inscripcion/${id}`);};
-    const handleEditPer = () => {navigate(`/alumno/datosPersonales/${id}`);};
-    const handleHorarios = () => {navigate(`/alumno/horarios/${id}`);};
-    const handleLogout = () => {navigate(`/`);};
-    const handleKardex = () => {navigate(`/alumno/Kardex/${id}`);};
-    const handleChat = () => {navigate(`/alumno/Chat`, { state: { alumnoId: id } });};
-const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
-     const handleETS = () => {navigate(`/alumno/MateriasReprobadas/${id}`);};
 
   return (
     <div className="alumno-container">
@@ -146,10 +165,9 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
             const distribs = Array.isArray(distribsRaw) ? distribsRaw : [distribsRaw];
 
             const horasPorDia = (dia) => {
-              // Normalizar día Miércoles
-              if (dia === 'Miercoles') {
+              if (dia === 'Miércoles') {
                 const vals = distribs
-                  .filter(d => d && (d.dia === 'Miércoles' || d.dia === 'Miercoles'))
+                  .filter(d => d && (d.dia === 'Miércoles' || d.dia === 'Miércoles'))
                   .map(d => `${d.hora_ini} - ${d.hora_fin}`);
                 return vals.join(', ');
               }
@@ -159,7 +177,13 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
               return vals.join(', ');
             };
 
+            const estaCursada = cursadas.includes(dato.Unidad_Aprendizaje.nombre);
+            let carreraValida = false;
+            if(dato.Unidad_Aprendizaje.carrera != carrera){
+              carreraValida = true;
+            }
             return (
+              
               <tr key={dato.id}>
                 <td>{dato.nombre}</td>
                 <td>{dato.DatosPersonale && `${dato.DatosPersonale.nombre || ''} ${dato.DatosPersonale.ape_paterno || ''} ${dato.DatosPersonale.ape_materno || ''}`}</td>
@@ -169,13 +193,23 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
                 <td>{dato.cupo}</td>
                 <td>{horasPorDia('Lunes') || ' '}</td>
                 <td>{horasPorDia('Martes') || ' '}</td>
-                <td>{horasPorDia('Miercoles') || ' '}</td>
+                <td>{horasPorDia('Miércoles') || ' '}</td>
                 <td>{horasPorDia('Jueves') || ' '}</td>
                 <td>{horasPorDia('Viernes') || ' '}</td>
-                <td><button type="button" className="submit-btn" onClick={() => handleClickAdd(dato.id)} disabled={borr.some(b => b.id_grupo === dato.id)}>
-                  <FiPlus style={{ marginRight: "8px" }} />
-                  Agregar al borrador
-                  </button></td>
+                <td><button
+                      type="button"
+                      className="btn azul"
+                      onClick={() => handleClickAdd(dato.id)}
+                      disabled={
+                        borr.some(b => b.id_grupo === dato.id) ||
+                        estaCursada || 
+                        carreraValida
+                      }
+                    >
+                      <FiPlus style={{ marginRight: "8px" }} />
+                        Agregar al borrador
+                    </button>
+                </td>
               </tr>
             )
           })}
@@ -194,7 +228,7 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
               <th>Creditos Necesarios </th>
               <th>Lunes</th>
               <th>Martes</th>
-              <th>Miercoles</th>
+              <th>Miércoles</th>
               <th>Jueves</th>
               <th>Viernes</th>
               <th>Es valido</th>
@@ -218,7 +252,7 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
                   <td>{dato.horas_jue || " "}</td>
                   <td>{dato.horas_vie || " "}</td>
                   <td>{dato.valido === 1 ? "Es valido" : " No es valido"}</td>
-                  <td><button type="button" className="submit-btn" onClick={() => handleClickDel(dato.id_grupo)}>
+                  <td><button type="button" className="btn azul" onClick={() => handleClickDel(dato.id_grupo)}>
                     Retirar del borrador</button></td>
                 </tr>
               ))
@@ -234,15 +268,19 @@ const handleEvaluacion = () => {navigate(`/alumno/evaluacion/${id}`);};
      
         
         <div className="download-button">
-          <button type="button" className="submit-btn" onClick={() => setModalOpen(true)}>
+          <div>
+          <button type="button" className="btn azul" onClick={() => setModalOpen(true)}>
         <FiEye style={{ marginRight: "8px" }} />
         Ver borrador
         </button>
-        
-          <button type="button" className="submit-btn" >
+        </div>
+        <div> 
+          
+          <button type="button" className="btn azul" >
         <FiDownload style={{ marginRight: "8px" }} />
         Descargar Horario
         </button>
+        </div>
         </div>
 
       </section>

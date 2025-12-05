@@ -166,7 +166,7 @@ export function DatosPersonales() {
 
               <div className="form-actions">
                 
-                <button type="button" className="submit-btn" onClick={handleEdit}>
+                <button type="button" className="btn azul" onClick={handleEdit}>
                   <FiEdit2 style={{ marginRight: "8px" }} />
                     Editar
                 </button>

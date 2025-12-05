@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import "./Profesor.css";
 import { ClasesImpartidas } from "./ClasesImpartidas";
 import { ProfeSideBar } from "./ProfeSidebar";
+import { VerAvisos } from "../shared/VerAvisos";
+
 
 export function Profesor() {
   const { id } = useParams();
@@ -65,7 +67,7 @@ export function Profesor() {
     const hoy = dias[new Date().getDay()];
     return cursos.reduce((acc, c) => {
       const d = Array.isArray(c?.Distribucion) ? c.Distribucion : [];
-      const n = d.filter(x => x?.dia === hoy || (hoy === "Miércoles" && x?.dia === "Miercoles")).length;
+      const n = d.filter(x => x?.dia === hoy || (hoy === "Miércoles" && x?.dia === "Miércoles")).length;
       return acc + n;
     }, 0);
   }, [cursos]);
@@ -80,10 +82,20 @@ export function Profesor() {
       <main className="main-content">
         {!isClases ? (
           <>
-            <header className="prof-header">
-              <h2 className="title">¡Bienvenido, Juan Manuel!</h2>
+            <header className="chat-header">
+              <div className="encabezado-section">
+                <div>
+              <h1>
+                {profesor 
+                  ? `¡Bienvenido(a), ${profesor.nombre} ${profesor.ape_paterno}!`
+                  : "Cargando..."}
+              </h1>
+              </div>
+              </div>
               <img className="escom-logo" src="/escom.png" alt="ESCOM" />
+                  
             </header>
+
 
             <section className="kpi-row">
               <div className="kpi-card">
@@ -130,7 +142,14 @@ export function Profesor() {
         ) : (
           <ClasesImpartidas profesorId={id} />
         )}
+
+         <section className="avisos-section">
+                  <VerAvisos objetivo="profesor" />
+                </section>
       </main>
+
     </div>
+
+    
   );
 }

@@ -1,15 +1,25 @@
 // src/pages/Unidades.jsx
 import { useEffect, useState } from 'react';
+import { AdminSidebar } from "../components/admin/AdminSidebar";
+import "./ModalStyle.css";
+
 
     const API = 'http://localhost:4000';
 
 export function Unidades() {
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // cuántas filas quieres por página
+
   const [list, setList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editUA, setEditUA] = useState(null); // objeto UA (tiene id interno)
-  const [form, setForm] = useState({ nombre: '', credito: '', carrera: '', semestre: '' });
+  const [form, setForm] = useState({ nombre: '', credito: '', carrera: '', semestre: '', tipo: 'OBLIGATORIA' });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
+
+  // NUEVO: lista de carreras para el select
+  const [carreras, setCarreras] = useState([]);
 
   const load = async () => {
     setLoading(true);
@@ -23,11 +33,22 @@ export function Unidades() {
     }
   };
 
+  // Carga de UAs
   useEffect(() => { load(); }, []);
+
+  // NUEVO: carga de carreras desde el backend (igual que en RegistrarCurso)
+  useEffect(() => {
+    fetch('http://localhost:4000/ObtenerCarreras', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        setCarreras(data.carreras || []);
+      })
+      .catch((err) => console.error('Error al obtener las carreras:', err));
+  }, []);
 
   const openCreate = () => {
     setEditUA(null);
-    setForm({ nombre: '', credito: '', carrera: '', semestre: '' });
+    setForm({ nombre: '', credito: '', carrera: '', semestre: '', tipo: 'OBLIGATORIA' });
     setModalOpen(true);
   };
 
@@ -37,7 +58,8 @@ export function Unidades() {
       nombre: ua.nombre ?? '',
       credito: ua.credito ?? '',
       carrera: ua.carrera ?? '',
-      semestre: ua.semestre ?? ''
+      semestre: ua.semestre ?? '',
+      tipo: ua.tipo ?? 'OBLIGATORIA'
     });
     setModalOpen(true);
   };
@@ -57,7 +79,8 @@ export function Unidades() {
         nombre: form.nombre,
         credito: Number(form.credito),
         carrera: form.carrera,
-        semestre: Number(form.semestre)
+        semestre: Number(form.semestre),
+        tipo: form.tipo
       };
 
       let res;
@@ -88,19 +111,44 @@ export function Unidades() {
     }
   };
 
-  return (
-    <div style={{ padding: 16 }}>
-      <h2>Unidades de Aprendizaje</h2>
-      {msg && <p>{msg}</p>}
+  const totalPages = Math.ceil(list.length / itemsPerPage);
 
-      <button onClick={openCreate}>Nueva UA</button>
+const startIndex = (currentPage - 1) * itemsPerPage;
+const visibleItems = list.slice(startIndex, startIndex + itemsPerPage);
+
+const nextPage = () => {
+  if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+};
+
+const prevPage = () => {
+  if (currentPage > 1) setCurrentPage(currentPage - 1);
+};
+
+  return (
+    <div className='admin-container'>
+      <AdminSidebar />
+      <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+          <h1>Unidades de Aprendizaje</h1>
+            
+          </div>
+          <div><button className='btn azul' onClick={openCreate}>Nueva UA</button></div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
+    <div>
+      
+      {msg && <p>hola{msg}</p>}
+
+      
 
       <hr />
 
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <table border="1" cellPadding="6">
+        <section className="horario-section">
+        <table className='horario-table'>
           <thead>
             <tr>
               {/* id interno ya no se muestra */}
@@ -108,28 +156,53 @@ export function Unidades() {
               <th>Crédito</th>
               <th>Carrera</th>
               <th>Semestre</th>
+              <th>Tipo</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {list.map((ua) => (
-              <tr key={ua.id}>
-                <td>{ua.nombre}</td>
-                <td>{ua.credito}</td>
-                <td>{ua.carrera}</td>
-                <td>{ua.semestre}</td>
-                <td>
-                  <button onClick={() => openEdit(ua)}>Editar</button>
-                  {/* Eliminado: botón Eliminar */}
-                </td>
-              </tr>
-            ))}
-            {list.length === 0 && (
-              <tr><td colSpan="5">Sin registros</td></tr>
-            )}
+             {visibleItems.map((ua) => (
+    <tr key={ua.id}>
+      <td>{ua.nombre}</td>
+      <td>{ua.credito}</td>
+      <td>{ua.carrera}</td>
+      <td>{ua.semestre}</td>
+      <td>
+        <button className='btn azul' onClick={() => openEdit(ua)}>Editar</button>
+      </td>
+    </tr>
+  ))}
+
+  {visibleItems.length === 0 && (
+    <tr><td colSpan="5">Sin registros</td></tr>
+  )}
           </tbody>
         </table>
+        <div className="pagination-container">
+  <button
+    className="pagination-btn"
+    onClick={prevPage}
+    disabled={currentPage === 1}
+  >
+    ◀ Anterior
+  </button>
+
+  <span style={{ margin: "0 15px" }}>
+    Página {currentPage} de {totalPages}
+  </span>
+
+  <button
+    className="pagination-btn"
+    onClick={nextPage}
+    disabled={currentPage === totalPages}
+  >
+    Siguiente ▶
+  </button>
+</div>
+
+        </section>
       )}
+      
 
       {/* MODAL simple sin librerías */}
       {modalOpen && (
@@ -156,13 +229,22 @@ export function Unidades() {
                 onChange={onChange}
                 required
               />
-              <input
+
+              {/* AQUÍ VA EL SELECT DE CARRERA EN VEZ DEL INPUT */}
+              <select
                 name="carrera"
-                placeholder="Carrera (coincide con carrera.nombre)"
                 value={form.carrera}
                 onChange={onChange}
                 required
-              />
+              >
+                <option value="">Seleccione una carrera</option>
+                {carreras.map((c) => (
+                  <option key={c.id || c.nombre} value={c.nombre}>
+                    {c.nombre}
+                  </option>
+                ))}
+              </select>
+
               <input
                 name="semestre"
                 type="number"
@@ -179,8 +261,13 @@ export function Unidades() {
             </form>
           </div>
         </div>
-      )}
+)}
+
+    </div>
+    
+    </main>
     </div>
   );
 }
+
 

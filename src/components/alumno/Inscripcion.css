@@ -120,3 +120,32 @@
   gap: 15px;                /* separa los botones */
   margin: 20px 0;           /* espacio arriba y abajo */
 }
+
+/* Botones principales de acciones */
+.btn-accion {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: bold;
+}
+
+.btn-accion:hover {
+  background-color: #004c99;
+  transform: scale(1.03);
+}
+
+.btn-accion:active {
+  transform: scale(0.97);
+}
+
+/* Contenedor donde van ambos botones */
+.botones-superiores {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}

@@ -3,9 +3,19 @@ const bd = require("../../model/modelo");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { raw } = require("mysql2");
+const { DatosMedicos, Enfermedades } = require("../../model/modelo");
 
 module.exports = (passport) => {
   const router = express.Router();
+
+  function ensureLoggedIn(req, res, next) {
+    if (req.isAuthenticated && req.isAuthenticated()) return next();
+    return res.status(401).json({ error: "No autenticado" });
+  }
+  function genId(prefix = "DM") {
+    const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return `${prefix}_${Date.now()}_${rand}`;
+  }
 
   // Nueva ruta: devuelve JSON para que el frontend realice la navegación al Chat
   // Se normaliza la ruta para usar la misma convención de capitalización que el resto
@@ -49,7 +59,6 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
-
       return res.json({
         success: true,
         calificaciones: cal.map((c) => ({
@@ -70,6 +79,177 @@ module.exports = (passport) => {
       });
     }
   });
+
+  // GET: obtener datos médicos + enfermedades del alumno logueado
+  router.get("/alumno/datosMedicos", ensureLoggedIn, async (req, res) => {
+    try {
+      const id_usuario = req.user.id;
+
+      const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+      let enfermedades = [];
+
+      if (datos) {
+        enfermedades = await Enfermedades.findAll({
+          where: { id_dat_med: datos.id },
+          order: [["id", "ASC"]],
+        });
+      }
+
+      res.json({ datos, enfermedades });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Error al obtener datos médicos" });
+    }
+  });
+
+  // POST: crear o actualizar datos médicos del alumno logueado (upsert)
+  router.post("/alumno/datosMedicos", ensureLoggedIn, async (req, res) => {
+    try {
+      const id_usuario = req.user.id;
+      const { peso, altura, tipo_sangre, nss } = req.body;
+
+      if (peso == null || altura == null || !tipo_sangre || !nss) {
+        return res.status(400).json({ error: "Faltan campos requeridos" });
+      }
+
+      let datos = await DatosMedicos.findOne({ where: { id_usuario } });
+
+      if (!datos) {
+        // crear
+        datos = await DatosMedicos.create({
+          id: genId("DM").slice(0, 15),
+          id_usuario,
+          peso: Number(peso),
+          altura: Number(altura),
+          tipo_sangre,
+          nss,
+        });
+      } else {
+        // actualizar
+        await DatosMedicos.update(
+          {
+            peso: Number(peso),
+            altura: Number(altura),
+            tipo_sangre,
+            nss,
+          },
+          { where: { id: datos.id } }
+        );
+        datos = await DatosMedicos.findByPk(datos.id);
+      }
+
+      res.json(datos);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Error al guardar datos médicos" });
+    }
+  });
+
+  // POST: crear enfermedad asociada al alumno logueado
+  router.post(
+    "/alumno/datosMedicos/enfermedades",
+    ensureLoggedIn,
+    async (req, res) => {
+      try {
+        const id_usuario = req.user.id;
+        const { descripcion } = req.body;
+
+        if (!descripcion) {
+          return res.status(400).json({ error: "Falta la descripción" });
+        }
+
+        let datos = await DatosMedicos.findOne({ where: { id_usuario } });
+        if (!datos) {
+          return res
+            .status(400)
+            .json({ error: "Primero debes registrar tus datos médicos" });
+        }
+
+        const enf = await Enfermedades.create({
+          id: genId("ENF").slice(0, 15),
+          id_dat_med: datos.id,
+          descri: descripcion,
+        });
+
+        res.status(201).json(enf);
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error al crear enfermedad" });
+      }
+    }
+  );
+
+  // PUT: editar enfermedad del alumno logueado
+  router.put(
+    "/alumno/datosMedicos/enfermedades/:idEnf",
+    ensureLoggedIn,
+    async (req, res) => {
+      try {
+        const id_usuario = req.user.id;
+        const { idEnf } = req.params;
+        const { descripcion } = req.body;
+
+        if (!descripcion) {
+          return res.status(400).json({ error: "Falta la descripción" });
+        }
+
+        const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+        if (!datos) {
+          return res
+            .status(404)
+            .json({ error: "Datos médicos no encontrados" });
+        }
+
+        const [rows] = await Enfermedades.update(
+          { descri: descripcion },
+          { where: { id: idEnf, id_dat_med: datos.id } }
+        );
+
+        if (!rows) {
+          return res.status(404).json({ error: "Enfermedad no encontrada" });
+        }
+
+        const enf = await Enfermedades.findByPk(idEnf);
+        res.json(enf);
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error al actualizar enfermedad" });
+      }
+    }
+  );
+
+  // DELETE: eliminar enfermedad del alumno logueado
+  router.delete(
+    "/alumno/datosMedicos/enfermedades/:idEnf",
+    ensureLoggedIn,
+    async (req, res) => {
+      try {
+        const id_usuario = req.user.id;
+        const { idEnf } = req.params;
+
+        const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+        if (!datos) {
+          return res
+            .status(404)
+            .json({ error: "Datos médicos no encontrados" });
+        }
+
+        const rows = await Enfermedades.destroy({
+          where: { id: idEnf, id_dat_med: datos.id },
+        });
+
+        if (!rows) {
+          return res.status(404).json({ error: "Enfermedad no encontrada" });
+        }
+
+        res.json({ ok: true });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error al eliminar enfermedad" });
+      }
+    }
+  );
+
   router.get("/ObtenerHorario/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -174,18 +354,36 @@ module.exports = (passport) => {
     }
 
     try {
-      const carr = await bd.DatosPersonales.findOne({
-        where: { id: id },
-      });
+      const carr = await bd.DatosPersonales.findOne({ where: { id } });
 
-      // Obtener los grupos con includes
+      // Aprobadas
+      const kardex = await bd.Kardex.findOne({ where: { id_alumno: us } });
+      let nombresAprobadas = [];
+      if (kardex) {
+        const aprobadas = await bd.UA_Aprobada.findAll({
+          where: { id_kardex: kardex.id },
+        });
+        nombresAprobadas = aprobadas.map((a) => a.unidad_aprendizaje);
+      }
+
+      // Obtener grupos con UA + profesor
       const grupos = await bd.Grupo.findAll({
         attributes: ["id", "nombre", "turno", "cupo"],
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["id", "nombre", "credito", "semestre", "carrera"],
-            where: { carrera: carr.carrera },
+            attributes: [
+              "id",
+              "nombre",
+              "credito",
+              "semestre",
+              "carrera",
+              "tipo",
+            ],
+            where: {
+              carrera: carr.carrera,
+              nombre: { [Op.notIn]: nombresAprobadas },
+            },
           },
           {
             model: bd.DatosPersonales,
@@ -196,7 +394,28 @@ module.exports = (passport) => {
         nest: true,
       });
 
-      return res.json({ grupos, creditos: req.session.creditos });
+      if (!grupos || grupos.length === 0)
+        return res.json({ grupos: [], creditos: req.session.creditos });
+
+      // Obtener distribuciones
+      const ids = grupos.map((g) => g.id);
+
+      const distribuciones = await bd.Distribucion.findAll({
+        where: { id_grupo: ids },
+        attributes: ["id", "id_grupo", "dia", "hora_ini", "hora_fin"],
+        raw: true,
+      });
+
+      // adjuntar distribuciones igual que ObtenerGrupo
+      const gruposConDistrib = grupos.map((g) => {
+        const d = distribuciones.filter((x) => x.id_grupo === g.id);
+        return { ...g, Distribucion: d };
+      });
+
+      return res.json({
+        grupos: gruposConDistrib,
+        creditos: req.session.creditos,
+      });
     } catch (error) {
       console.error("Error al obtener los grupos:", error);
       res.status(500).json({ error: "Error interno" });
@@ -227,7 +446,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["nombre", "carrera"],
+            attributes: ["nombre", "carrera", "tipo"],
           },
         ],
         raw: true,
@@ -268,7 +487,7 @@ module.exports = (passport) => {
         include: [
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["id", "nombre"],
+            attributes: ["id", "nombre", "tipo"],
           },
           {
             model: bd.DatosPersonales,
@@ -304,14 +523,14 @@ module.exports = (passport) => {
         const dias = {
           Lunes: [],
           Martes: [],
-          Miercoles: [],
+          Miércoles: [],
           Jueves: [],
           Viernes: [],
         };
         distribuciones.forEach((d) => {
           const diaKey =
-            d.dia === "Miércoles" || d.dia === "Miercoles"
-              ? "Miercoles"
+            d.dia === "Miércoles" || d.dia === "Miércoles"
+              ? "Miércoles"
               : d.dia;
           if (dias[diaKey] !== undefined)
             dias[diaKey].push(`${d.hora_ini}-${d.hora_fin}`);
@@ -320,6 +539,7 @@ module.exports = (passport) => {
         const datosProf = g.DatosPersonale || g.DatosPersonales || {};
         resultado.push({
           id_grupo: g.id,
+          tipo: g.tipo,
           id_ua:
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.id || g.Unidad_Aprendizaje.ID)) ||
@@ -357,16 +577,78 @@ module.exports = (passport) => {
       include: [
         {
           model: bd.Unidad_Aprendizaje,
-          attributes: ["credito"],
+          attributes: ["credito", "tipo", "semestre"],
         },
       ],
       raw: true,
       nest: true,
     });
 
+    // --- VALIDACIÓN DE SEMESTRE ---
+    try {
+      const alumno = await bd.DatosPersonales.findOne({ where: { id: us } });
+      const carrera = alumno.carrera;
+
+      const kardex = await bd.Kardex.findOne({ where: { id_alumno: us } });
+      // Si no tiene kardex, asumimos semestre 1
+      let nombresAprobadas = [];
+      if (kardex) {
+        const aprobadas = await bd.UA_Aprobada.findAll({
+          where: { id_kardex: kardex.id },
+        });
+        nombresAprobadas = aprobadas.map((a) => a.unidad_aprendizaje);
+      }
+
+      const obligatorias = await bd.Unidad_Aprendizaje.findAll({
+        where: { carrera: carrera, tipo: "OBLIGATORIA" },
+        order: [["semestre", "ASC"]],
+      });
+
+      let semestreActual = 1;
+      const maxSemestre =
+        obligatorias.length > 0
+          ? Math.max(...obligatorias.map((o) => o.semestre))
+          : 1;
+
+      for (let i = 1; i <= maxSemestre; i++) {
+        const obliSemestre = obligatorias.filter((o) => o.semestre === i);
+        // Si no hay obligatorias en este semestre, pasamos al siguiente (aunque raro)
+        if (obliSemestre.length === 0) continue;
+
+        const todasAprobadas = obliSemestre.every((o) =>
+          nombresAprobadas.includes(o.nombre)
+        );
+        if (!todasAprobadas) {
+          semestreActual = i;
+          break;
+        }
+        // Si llegamos al final y todas están aprobadas, el alumno "está" en el último semestre o egresado
+        if (i === maxSemestre) semestreActual = maxSemestre;
+      }
+
+      const targetSemestre = cuesta.Unidad_Aprendizaje.semestre;
+      const maxPermitido = semestreActual + 3;
+
+      if (targetSemestre > maxPermitido) {
+        return res.json({
+          success: false,
+          err: `No puedes inscribir materias de más de 3 semestres adelante. Tu semestre actual es ${semestreActual}, máximo permitido: ${maxPermitido} (Materia es de ${targetSemestre})`,
+          tempGrupo: req.session.tempGrupos || [],
+          creditos: req.session.creditos || 0,
+        });
+      }
+    } catch (error) {
+      console.error("Error validando semestre:", error);
+      return res.json({
+        success: false,
+        err: "Error al validar requisitos de semestre",
+      });
+    }
+
     if (!req.session.tempGrupos) {
       req.session.tempGrupos = [];
       req.session.creditos = parseInt(cre.creditos_disponibles, 10);
+      req.session.horarios = [[[]]];
     }
     if (!req.session.tempGrupos.includes(id)) {
       const gruposActuales = req.session.tempGrupos || [];
@@ -421,13 +703,28 @@ module.exports = (passport) => {
         req.session.creditos =
           parseInt(req.session.creditos, 10) -
           parseInt(cuesta.Unidad_Aprendizaje.credito, 10);
+
+        if (!req.session.horarios) {
+          req.session.horarios = [];
+        }
+
+        const distribsDelGrupo = distriNuevo.map((d) => ({
+          dia: d.dia,
+          hora_ini: d.hora_ini,
+          hora_fin: d.hora_fin,
+        }));
+        const index = req.session.tempGrupos.length;
+        req.session.horarios[index] = distribsDelGrupo;
+
         req.session.tempGrupos.push(id);
-        console.log("Grupo guardado: ", req.session.tempGrupos);
-        console.log("Creditos:", req.session.creditos);
+
+        console.log("Horarios:", JSON.stringify(req.session.horarios, null, 2));
+
         return res.json({
           success: true,
           tempGrupo: req.session.tempGrupos,
           creditos: req.session.creditos,
+          horarios: req.session.horarios, // <-- LO ENVÍAS AL FRONT
         });
       }
     }
@@ -445,14 +742,19 @@ module.exports = (passport) => {
     const cre = await bd.Estudiante.findOne({
       where: { id_usuario: us },
     });
+
+    // Inicializar sesión si está vacía
     if (!req.session.tempGrupos) {
       req.session.tempGrupos = [];
       req.session.creditos = parseInt(cre.creditos_disponibles, 10);
+      req.session.horarios = []; // <--- Inicialización de horarios
     }
+
     return res.json({
       success: true,
       tempGrupo: req.session.tempGrupos,
       creditos: req.session.creditos,
+      horarios: req.session.horarios, // <---- ENVIAMOS HORARIOS
     });
   });
 
@@ -656,6 +958,9 @@ module.exports = (passport) => {
           );
         }
 
+        await bd.Inscripcion.destroy({
+          where: { id_alumno: id },
+        });
         return res.json({ success: true });
       } catch (err) {
         console.log(err);
@@ -864,7 +1169,7 @@ module.exports = (passport) => {
         const horas = `${g.hora_ini} - ${g.hora_fin}`;
         if (g.dia === "Lunes") lun = horas;
         else if (g.dia === "Martes") mar = horas;
-        else if (g.dia === "Miercoles") mier = horas;
+        else if (g.dia === "Miércoles") mier = horas;
         else if (g.dia === "Jueves") jue = horas;
         else if (g.dia === "Viernes") vie = horas;
       }
@@ -923,10 +1228,17 @@ module.exports = (passport) => {
         raw: true,
         nest: true,
       });
+      const car = await bd.DatosPersonales.findOne({
+        where: { id: us },
+      });
 
       const semestres = [...new Set(sems.map((s) => s.semestre))];
 
-      return res.json({ historial: sems, semestres: semestres });
+      return res.json({
+        historial: sems,
+        semestres: semestres,
+        carrera: car.carrera,
+      });
     } catch (err) {
       console.error("Error en /ObtenerHistorial:", err);
       return res.status(500).json({
@@ -1489,29 +1801,22 @@ module.exports = (passport) => {
         });
       }
 
-      // IMPORTANTE: convertir a fecha local correctamente
       const fechaEvaluacion = new Date(fechas.evalu_profe);
+      const hoy = new Date();
 
-      // Tomar solo día/mes/año usando LOCAL
-      const fechaEvalLocal = new Date(
+      // normalizar fechas para comparar solo dia/mes/año
+      const fechaEvalNorm = new Date(
         fechaEvaluacion.getFullYear(),
         fechaEvaluacion.getMonth(),
         fechaEvaluacion.getDate()
       );
-
-      const hoy = new Date();
-      const hoyLocal = new Date(
+      const hoyNorm = new Date(
         hoy.getFullYear(),
         hoy.getMonth(),
         hoy.getDate()
       );
 
-      console.log("Fecha evaluación LOCAL:", fechaEvalLocal);
-      console.log("Fecha hoy LOCAL:", hoyLocal);
-
-      const mismoDia = hoyLocal.getTime() === fechaEvalLocal.getTime();
-      console.log(mismoDia);
-      if (mismoDia) {
+      if (hoyNorm.getTime() === fechaEvalNorm.getTime()) {
         return res.json({
           valido: true,
           mensaje: "Es momento de evaluar a tus profesores",
@@ -1520,7 +1825,7 @@ module.exports = (passport) => {
         return res.json({
           valido: false,
           mensaje: "Aún no es tiempo de evaluar a tus profesores",
-          fechaEvaluacion: fechaEvalLocal.toLocaleDateString("es-MX"),
+          fechaEvaluacion: fechaEvaluacion.toLocaleDateString("es-MX"),
         });
       }
     } catch (err) {
@@ -1550,8 +1855,125 @@ module.exports = (passport) => {
     }
   });
 
+  router.get("/TiempoReinscripcion", async (req, res) => {
+    const us = req.user.id;
+
+    const tiempo = await bd.Inscripcion.findOne({ where: { id_alumno: us } });
+    const alumno = await bd.DatosPersonales.findOne({ where: { id: us } });
+    const pro = await bd.Estudiante.findOne({ where: { id_usuario: us } });
+
+    if (!tiempo) {
+      return res.status(404).json({
+        error: "No tiene cita generada.",
+        promedio: pro.promedio,
+        edo: pro.estado_academico,
+        nombre:
+          alumno.ape_paterno + " " + alumno.ape_materno + " " + alumno.nombre,
+        carrera: alumno.carrera,
+      });
+    }
+
+    // === FECHAS PARA COMPARACIÓN (estas sí en UTC-6) ===
+    const hoy = toCDMX(new Date());
+    const fechaInicio = toCDMX(new Date(tiempo.fecha_hora_in));
+    const fechaFin = toCDMX(new Date(tiempo.fecha_hora_cad));
+
+    const estaEnRango = hoy >= fechaInicio && hoy <= fechaFin;
+
+    // === STRINGS PARA MOSTRAR (SIN convertir a UTC-6) ===
+    const inicioStr = new Date(tiempo.fecha_hora_in).toLocaleString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const finStr = new Date(tiempo.fecha_hora_cad).toLocaleString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const yareinscrito = await bd.Mat_Inscritos.count({
+      include: [
+        {
+          model: bd.Horario,
+          where: {
+            id_alumno: us,
+          },
+          required: true,
+        },
+      ],
+    });
+    console.log(yareinscrito);
+
+    if (yareinscrito > 0) {
+      return res.json({
+        tiempo: false,
+        cita: false,
+        promedio: pro.promedio,
+        edo: pro.estado_academico,
+        nombre:
+          alumno.ape_paterno + " " + alumno.ape_materno + " " + alumno.nombre,
+        carrera: alumno.carrera,
+      });
+    }
+
+    return res.json({
+      tiempo: estaEnRango,
+      cita: true,
+      citas: `${inicioStr} - ${finStr}`,
+      promedio: pro.promedio,
+      edo: pro.estado_academico,
+      nombre:
+        alumno.ape_paterno + " " + alumno.ape_materno + " " + alumno.nombre,
+      carrera: alumno.carrera,
+    });
+  });
+
+  router.get("/TiempoInscripcionETS", async (req, res) => {
+    const tiempo = await bd.FechasRelevantes.findOne();
+    const hoy = toCDMX(new Date());
+    const fechaInicio = new Date(tiempo.inscribir_ets);
+    const fechaFin = new Date(tiempo.fin_inscribir_ets);
+
+    const estaEnRango = hoy >= fechaInicio && hoy <= fechaFin;
+
+    return res.json({ success: estaEnRango });
+  });
+  router.get("/TiempoSubirComprobante", async (req, res) => {
+    const tiempo = await bd.FechasRelevantes.findOne();
+    const hoy = toCDMX(new Date());
+    const fechaInicio = new Date(tiempo.subir_doc_ets);
+    const fechaFin = new Date(tiempo.fin_subir_doc_ets);
+
+    const estaEnRango = hoy >= fechaInicio && hoy <= fechaFin;
+
+    return res.json({ success: estaEnRango });
+  });
   return router;
 };
+
+function isNowInRange(now, start, end) {
+  return now >= start && now <= end;
+}
+
+function nowCDMX() {
+  const nowUTC = new Date();
+  // restamos 6 horas para convertir UTC → UTC-6 (CDMX)
+  nowUTC.setHours(nowUTC.getHours() - 6);
+  return nowUTC;
+}
+
+function toCDMX(date) {
+  // offset de CDMX en horas
+  const offset = -6; // UTC-6
+  return new Date(date.getTime() + offset * 60 * 60 * 1000);
+}
+
 function seTraslapan(d1, d2) {
   // Solo comparar si es el mismo día
   if (d1.dia !== d2.dia) return false;

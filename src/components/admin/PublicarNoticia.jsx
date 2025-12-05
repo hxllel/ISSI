@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./PublicarNoticia.css";
+import { AdminSidebar } from "../admin/AdminSidebar.jsx";
 
 export function PublicarNoticia() {
   const navigate = useNavigate();
   const API = "http://localhost:4000";
+
   const [formData, setFormData] = useState({
     titulo: "",
     descripcion: "",
@@ -46,7 +48,7 @@ export function PublicarNoticia() {
       }
 
       setImagen(file);
-      
+
       // Crear preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -63,7 +65,11 @@ export function PublicarNoticia() {
 
     try {
       // Validaciones
-      if (!formData.titulo || !formData.descripcion || !formData.fecha_vencimiento) {
+      if (
+        !formData.titulo ||
+        !formData.descripcion ||
+        !formData.fecha_vencimiento
+      ) {
         setMensaje({
           tipo: "error",
           texto: "Por favor completa todos los campos obligatorios",
@@ -138,133 +144,155 @@ export function PublicarNoticia() {
     }
   };
 
+  const handleCancelar = () => {
+    navigate("/administrador");
+  };
+
   return (
-    <div className="publicar-noticia-container">
-      <div className="publicar-noticia-header">
-        <button onClick={() => navigate("/administrador")} className="btn-volver">
-          ← Volver
-        </button>
-        <h1>Publicar Noticia</h1>
-      </div>
+    <div className="admin-container">
+      {/* Menú lateral fijo */}
+      <AdminSidebar />
 
-      <div className="publicar-noticia-content">
-        <form onSubmit={handleSubmit} className="form-noticia">
-          {mensaje.texto && (
-            <div className={`mensaje ${mensaje.tipo}`}>
-              {mensaje.texto}
+      {/* Contenido principal con el mismo layout que Administrador */}
+      <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <div> 
+            <h1>Publicar Noticia</h1>
             </div>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="titulo">
-              Título <span className="requerido">*</span>
-            </label>
-            <input
-              type="text"
-              id="titulo"
-              name="titulo"
-              value={formData.titulo}
-              onChange={handleInputChange}
-              placeholder="Ingrese el título de la noticia"
-              maxLength="200"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="descripcion">
-              Descripción/Comentario <span className="requerido">*</span>
-            </label>
-            <textarea
-              id="descripcion"
-              name="descripcion"
-              value={formData.descripcion}
-              onChange={handleInputChange}
-              placeholder="Ingrese la descripción o comentario de la noticia"
-              rows="6"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="imagen">Imagen (opcional)</label>
-            <input
-              type="file"
-              id="imagen"
-              name="imagen"
-              accept="image/*"
-              onChange={handleImagenChange}
-            />
-            <small>Tamaño máximo: 5MB. Formatos: JPG, PNG, GIF</small>
             
-            {previewImagen && (
-              <div className="preview-imagen">
-                <img src={previewImagen} alt="Preview" />
+          </div>
+          <div> 
+            <p className="subtitulo-carreras">
+              Sube una noticia dirigida a la comunidad politécnica.
+            </p>
+            </div>
+          <img src="/escom.png" alt="Logo ESCOM" className="header-logo" />
+        </header>
+
+        <section className="publicar-noticia-section">
+          <div className="publicar-noticia-card">
+            {mensaje.texto && (
+              <div className={`mensaje ${mensaje.tipo}`}>{mensaje.texto}</div>
+            )}
+
+            <form onSubmit={handleSubmit} className="form-noticia">
+              <div className="form-group">
+                <label htmlFor="titulo">
+                  Título <span className="requerido">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="titulo"
+                  name="titulo"
+                  value={formData.titulo}
+                  onChange={handleInputChange}
+                  placeholder="Ingrese el título de la noticia"
+                  maxLength="200"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="descripcion">
+                  Descripción/Comentario <span className="requerido">*</span>
+                </label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  value={formData.descripcion}
+                  onChange={handleInputChange}
+                  placeholder="Ingrese la descripción o comentario de la noticia"
+                  rows="6"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="imagen">Imagen (opcional)</label>
+                <input
+                  type="file"
+                  id="imagen"
+                  name="imagen"
+                  accept="image/*"
+                  onChange={handleImagenChange}
+                />
+                <small>Tamaño máximo: 5MB. Formatos: JPG, PNG, GIF</small>
+
+                {previewImagen && (
+                  <div className="preview-imagen">
+                    <img src={previewImagen} alt="Preview" />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImagen(null);
+                        setPreviewImagen(null);
+                      }}
+                      className="btn-eliminar-preview"
+                    >
+                      ✕ Eliminar imagen
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="objetivo">
+                  Dirigido a <span className="requerido">*</span>
+                </label>
+                <select
+                  id="objetivo"
+                  name="objetivo"
+                  value={formData.objetivo}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="todos">
+                    Todos (Profesores y Alumnos)
+                  </option>
+                  <option value="profesor">Solo Profesores</option>
+                  <option value="alumno">Solo Alumnos</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="fecha_vencimiento">
+                  Fecha de vencimiento <span className="requerido">*</span>
+                </label>
+                <input
+                  type="datetime-local"
+                  id="fecha_vencimiento"
+                  name="fecha_vencimiento"
+                  value={formData.fecha_vencimiento}
+                  onChange={handleInputChange}
+                  required
+                />
+                <small>
+                  La noticia dejará de mostrarse después de esta fecha
+                </small>
+              </div>
+
+              <div className="form-actions">
                 <button
                   type="button"
-                  onClick={() => {
-                    setImagen(null);
-                    setPreviewImagen(null);
-                  }}
-                  className="btn-eliminar-preview"
+                  onClick={handleCancelar}
+                  className="btn blanco"
+                  disabled={loading}
                 >
-                  ✕ Eliminar imagen
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="btn azul"
+                  disabled={loading}
+                >
+                  {loading ? "Publicando..." : "Publicar"}
                 </button>
               </div>
-            )}
+            </form>
           </div>
-
-          <div className="form-group">
-            <label htmlFor="objetivo">
-              Dirigido a <span className="requerido">*</span>
-            </label>
-            <select
-              id="objetivo"
-              name="objetivo"
-              value={formData.objetivo}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="todos">Todos (Profesores y Alumnos)</option>
-              <option value="profesor">Solo Profesores</option>
-              <option value="alumno">Solo Alumnos</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="fecha_vencimiento">
-              Fecha de vencimiento <span className="requerido">*</span>
-            </label>
-            <input
-              type="datetime-local"
-              id="fecha_vencimiento"
-              name="fecha_vencimiento"
-              value={formData.fecha_vencimiento}
-              onChange={handleInputChange}
-              required
-            />
-            <small>La noticia dejará de mostrarse después de esta fecha</small>
-          </div>
-
-          <div className="form-actions">
-            <button
-              type="button"
-              onClick={() => navigate("/administrador")}
-              className="btn-cancelar"
-              disabled={loading}
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="btn-publicar"
-              disabled={loading}
-            >
-              {loading ? "Publicando..." : "Publicar Noticia"}
-            </button>
-          </div>
-        </form>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

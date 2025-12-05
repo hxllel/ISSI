@@ -4,6 +4,7 @@ import "./SideBar.css";
 
 export function AdminSidebar() {
   const navigate = useNavigate();
+  const API = "http://localhost:4000"
 
   // Handlers de navegación - ADMIN
   const handleGestionarAlumnos = () => navigate("/administrador/gestionarAlumnos");
@@ -14,7 +15,9 @@ export function AdminSidebar() {
   const handleCarreras = () => navigate("/administrador/carreras");
   const handleUnidades = () => navigate("/administrador/unidades");
   const handleDatosMedicos = () => navigate("/administrador/datosMedicos");
-  const handleLogout = () => navigate("/");
+  const handleGenerarCitas = () => navigate("/administrador/Fechas");
+  const handleSituacionesEspeciales = () => navigate("/administrador/SituacionesEspeciales");
+  const handleLogout = () => navigate(`/`);
 
   // Aquí agrego un objeto state común que quieras mandar
   const sharedState = { fromSidebar: true };
@@ -105,6 +108,23 @@ export function AdminSidebar() {
           }}
         >
           Unidades
+        </button>
+        <button
+          className="menu-item"
+          onClick={() => {
+            handleGenerarCitas();
+            navigate("/administrador/Fechas", { state: sharedState });
+          }}
+        >
+          Configuración de Fechas 
+        </button>
+        <button 
+          className="menu-item" 
+          onClick={() =>{
+          navigate("/administrador/SituacionesEspeciales", { state: sharedState })
+        }}
+        >
+          Situaciones Especiales
         </button>
       </nav>
 

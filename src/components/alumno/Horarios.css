@@ -11,6 +11,7 @@
   margin-bottom: 5px; /* separación inferior */
   margin-left: 15px;
   letter-spacing: 2px; /* espacio entre letras */
+  gap: 20px;
   
 }
 
@@ -18,6 +19,7 @@
   background-color: #ffffff;
   padding: 10px;
   border-radius: 10px;
+  gap: 20px;
   
 }
 
@@ -69,3 +71,6 @@
   gap: 15px;               /* 👈 espacio entre los botones */
   margin-top: 20px;        /* opcional: separa del contenido superior */
 }
+
+
+
