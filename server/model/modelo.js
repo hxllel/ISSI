@@ -294,6 +294,7 @@ const Resena = sequelize.define(
     calificacion: { type: DataTypes.FLOAT, allowNull: false },
     comentarios: { type: DataTypes.TEXT, allowNull: true },
     fecha: { type: DataTypes.DATE, allowNull: false },
+    periodo: { type: DataTypes.TEXT, allowNull: true },
   },
   { tableName: "resena", timestamps: false }
 );
