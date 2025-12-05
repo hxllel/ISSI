@@ -9,7 +9,9 @@ export function EvaluacionProfesores() {
   const { id } = useParams();
   const API = 'http://localhost:4000';
 
+  // Guardar objetos con id y nombre
   const [profesores, setProfesores] = useState([]);
+  const [profesoresEvaluados, setProfesoresEvaluados] = useState([]);
   const [profesorSeleccionado, setProfesorSeleccionado] = useState(null);
   const [mostrarCuestionario, setMostrarCuestionario] = useState(false);
   const [respuestas, setRespuestas] = useState({});
@@ -20,6 +22,7 @@ export function EvaluacionProfesores() {
   const [mensajeFecha, setMensajeFecha] = useState("Cargando...");
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaFin, setFechaFin] = useState(null);
+  const [comentario, setComentario] = useState("");
 
   // ---- PREGUNTAS ----
   const preguntas = [
@@ -157,7 +160,6 @@ export function EvaluacionProfesores() {
     fetch(`${API}/ValidarFechaEvaluacionProfe`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Respuesta validación fechas:", data);
         if (data.success) {
           setFechaValida(data.valida);
           setMensajeFecha(data.mensaje);
@@ -169,20 +171,41 @@ export function EvaluacionProfesores() {
         }
       })
       .catch((err) => {
-        console.error("Error al validar fechas:", err);
         setFechaValida(false);
         setMensajeFecha("Error al verificar periodo de evaluación");
       });
 
+    // Obtener profesores del horario
     fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.horario && Array.isArray(data.horario)) {
-          const profUnicos = [...new Set(data.horario.map((h) => h.profesor))];
+          // Extraer id y nombre del profesor
+          const profUnicos = [];
+          const idsSet = new Set();
+          data.horario.forEach((h) => {
+            if (h.id_profesor && !idsSet.has(h.id_profesor)) {
+              profUnicos.push({
+                id: h.id_profesor,
+                nombre: h.profesor
+              });
+              idsSet.add(h.id_profesor);
+            }
+          });
           setProfesores(profUnicos);
         }
       })
-      .catch((err) => console.error("Error al obtener profesores:", err));
+      .catch((err) => {});
+
+    // Obtener profesores ya evaluados por el alumno
+    fetch(`${API}/api/profesor/evaluados/${id}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.evaluados)) {
+          setProfesoresEvaluados(data.evaluados);
+        }
+      })
+      .catch((err) => {});
   }, [id]);
 
   const handleRespuesta = (preguntaId, peso) => {
@@ -209,7 +232,8 @@ export function EvaluacionProfesores() {
       const resp = await axios.post(
         `${API}/ActualizarContadorProfesor`,
         {
-          profesor: profesorSeleccionado,
+          id_profesor: profesorSeleccionado.id,
+          profesor: profesorSeleccionado.nombre,
           alumnoId: id,
           suma: total,
         },
@@ -221,6 +245,18 @@ export function EvaluacionProfesores() {
       if (registroCount !== null) setRegistroCount(registrado);
 
       setMostrarResultado(true);
+      // Enviar reseña de texto al endpoint de reseñas (sin bloquear UX)
+      try {
+        const calPromedio = total / preguntas.length; // promedio entre 1 y 5
+        await axios.post(`${API}/api/profesor/${profesorSeleccionado.id}/evaluaciones`, {
+          id_alumno: id,
+          calificacion: calPromedio,
+          comentario: comentario ? comentario.trim() : null,
+        }, { withCredentials: true });
+      } catch (errPost) {
+        console.error('Error al enviar reseña textual:', errPost);
+        // No mostramos error al usuario para no romper flujo; lo registramos en consola.
+      }
     } catch (err) {
       console.error("Error al enviar evaluación:", err);
       alert("No se pudo enviar la evaluación. Intenta más tarde.");
@@ -237,14 +273,14 @@ export function EvaluacionProfesores() {
   };
 
   // ---- SELECCIONAR PROFESOR PARA EVALUAR ----
-  const handleEvaluarProfesor = (profesor) => {
+  const handleEvaluarProfesor = (profesorObj) => {
     if (!fechaValida) {
       const inicio = fechaInicio ? new Date(fechaInicio).toLocaleDateString() : 'N/A';
       const fin = fechaFin ? new Date(fechaFin).toLocaleDateString() : 'N/A';
       alert(`No se puede evaluar fuera del periodo de evaluación.\n\nPeriodo: ${inicio} - ${fin}`);
       return;
     }
-    setProfesorSeleccionado(profesor);
+    setProfesorSeleccionado(profesorObj);
     setMostrarCuestionario(true);
     setRespuestas({});
   };
@@ -306,15 +342,15 @@ export function EvaluacionProfesores() {
                     </thead>
 
                     <tbody>
-                      {profesores.length > 0 ? (
-                        profesores.map((profesor, index) => (
+                      {profesores.filter(p => !profesoresEvaluados.includes(p.id)).length > 0 ? (
+                        profesores.filter(p => !profesoresEvaluados.includes(p.id)).map((profesorObj, index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{profesor}</td>
+                            <td className="nombre-profesor">{profesorObj.nombre}</td>
                             <td>
                               <button
                                 className="btn-evaluar"
-                                onClick={() => handleEvaluarProfesor(profesor)}
+                                onClick={() => handleEvaluarProfesor(profesorObj)}
                               >
                                 Evaluar
                               </button>
@@ -340,7 +376,7 @@ export function EvaluacionProfesores() {
             ) : (
               <section className="formulario-evaluacion">
                 <div className="profesor-evaluando">
-                  <h2>Evaluando a: {profesorSeleccionado}</h2>
+                  <h2>Evaluando a: {profesorSeleccionado?.nombre}</h2>
                   <button className="btn-volver-lista" onClick={volverALista}>
                     ← Volver a la lista
                   </button>
@@ -372,6 +408,19 @@ export function EvaluacionProfesores() {
                     </div>
                   ))}
 
+                  <div className="comentario-section">
+                    <label htmlFor="comentario" className="comentario-label">Comentario (opcional):</label>
+                    <textarea
+                      id="comentario"
+                      className="comentario-input"
+                      value={comentario}
+                      onChange={(e) => setComentario(e.target.value)}
+                      placeholder="Escribe aquí tu reseña para el profesor (sin revelar tu identidad)."
+                      maxLength={1000}
+                      rows={4}
+                    />
+                  </div>
+
                   <div className="botones-container">
                     <button type="submit" className="btn-enviar">
                       Enviar Evaluación
@@ -393,6 +442,16 @@ export function EvaluacionProfesores() {
           <section className="resultado-evaluacion">
             <div className="resultado-card">
               <h2>¡Evaluación Completada!</h2>
+              <div className="resultado-info">
+                <p><strong>Profesor evaluado:</strong> {profesorSeleccionado?.nombre}</p>
+
+                <div className="puntuacion-box">
+                  <p className="puntuacion-label">Puntuación Total enviada:</p>
+                  <p className="puntuacion-valor">{puntuacionTotal} / {preguntas.length * 5}</p>
+                  {registroCount !== null && (
+                    <p className="registro-count">Veces evaluado: {registroCount}</p>
+                  )}
+                </div>
 
               <p><strong>Profesor:</strong> {profesorSeleccionado}</p>
               <p>Puntuación total: {puntuacionTotal}</p>
