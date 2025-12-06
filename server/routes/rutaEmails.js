@@ -3,6 +3,8 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const { DatosPersonales } = require("../model/modelo");
+const bd = require("../model/modelo");
+
 require("dotenv").config();
 
 module.exports = function (passport) {
@@ -64,7 +66,12 @@ module.exports = function (passport) {
         expiry: tokenExpiry,
       });
 
-      console.log("Token guardado - Corto:", tokenShort, "Completo:", tokenFull);
+      console.log(
+        "Token guardado - Corto:",
+        tokenShort,
+        "Completo:",
+        tokenFull
+      );
 
       // Enviar correo con el token
       const mailOptions = {
@@ -87,7 +94,9 @@ module.exports = function (passport) {
                       
                       <!-- Content -->
                       <div style="padding: 40px 30px;">
-                        <p style="color: #333; font-size: 16px; margin-bottom: 10px;">Hola <strong>${usuario.nombre}</strong>,</p>
+                        <p style="color: #333; font-size: 16px; margin-bottom: 10px;">Hola <strong>${
+                          usuario.nombre
+                        }</strong>,</p>
                         <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">
                           Recibimos una solicitud para recuperar tu contraseña. Usa el código de verificación a continuación para continuar con el proceso.
                         </p>
@@ -184,7 +193,10 @@ module.exports = function (passport) {
       }
 
       // Token válido - generar token para cambio de contraseña
-      const changePasswordToken = crypto.randomBytes(32).toString("hex").toLowerCase();
+      const changePasswordToken = crypto
+        .randomBytes(32)
+        .toString("hex")
+        .toLowerCase();
       console.log("Generated changePasswordToken:", changePasswordToken);
 
       tokenStore.set(changePasswordToken, {
@@ -262,6 +274,14 @@ module.exports = function (passport) {
           success: false,
           message: "Usuario no encontrado",
         });
+      }
+      if (usuario.primera_vez == 1) {
+        if (usuario.primera_vez == 1) {
+          await bd.DatosPersonales.update(
+            { primera_vez: 0 },
+            { where: { id: tokenData.boleta } }
+          );
+        }
       }
 
       const salt = await bcrypt.genSalt(10);

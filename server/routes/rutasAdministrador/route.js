@@ -82,6 +82,7 @@ module.exports = (passport) => {
         foto: fotoBuffer,
         carrera: carr.nombre,
         situacion: "activo",
+        primera_vez: 1,
       });
       const id_es = uuidv4().replace(/-/g, "").substring(0, 15);
       const crearEstudiante = await bd.Estudiante.create({
@@ -239,6 +240,7 @@ module.exports = (passport) => {
         foto: fotoBuffer,
         grado: grado,
         situacion: "activo",
+        primera_vez: 1,
       });
       console.log("Profesor creado: ");
       return res.json({ success: true });

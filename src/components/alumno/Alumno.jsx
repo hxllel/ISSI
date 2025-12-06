@@ -1,9 +1,11 @@
+// ...existing code...
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Alumno.css";
 import { VerAvisos } from "../shared/VerAvisos";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
+import RecuperarContra from "../formulario/RecuperarContra.jsx"
 
 export function Alumno() {
   const navigate = useNavigate();
@@ -12,6 +14,7 @@ export function Alumno() {
 
   const [alumno, setAlumno] = useState(null);
   const [horario, setHorario] = useState([]);
+  const [primera_vez, setPrimeraVez] = useState(null);
 
   useEffect(() => {
     fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
@@ -20,6 +23,15 @@ export function Alumno() {
         setAlumno(data.alumno || null);
       })
       .catch(() => setAlumno(null));
+  }, [id]);
+
+  useEffect(() => {
+    fetch(`${API}/PrimeraVez/${id}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        setPrimeraVez(data.primera_vez);
+      })
+      .catch(() => setPrimeraVez(null));
   }, [id]);
 
   /** ============================
@@ -36,7 +48,6 @@ export function Alumno() {
 
   /** ============================
    *  Descargar comprobante horario
-   *  (del primer código)
    *  ============================ */
   const handleDescargarComprobante = () => {
     try {
@@ -146,90 +157,96 @@ export function Alumno() {
    *  ============================ */
   return (
     <div className="alumno-container">
-      <SidebarAlumno />
+      { primera_vez === true ? (
+        <main className="centrar">
+            <RecuperarContra />
+        </main>
+      ) : (
+        <>
+          <SidebarAlumno />
 
-      {/* Contenido principal */}
-      <main className="main-content">
-        <header className="chat-header">
-          <div>
-            {alumno ? (
-              <>
-                <div className="encabezado-section">
-                  <h1>¡Bienvenido {alumno.nombre} {alumno.ape_paterno} {alumno.ape_materno}!</h1>
-                </div>
-                <div className="subheader-section">
-                  <p>Boleta: {alumno.id}</p>
-                </div>
-              </>
-            ) : (
-              <p>Cargando alumno...</p>
-            )}
-          </div>
+          {/* Contenido principal */}
+          <main className="main-content">
+            <header className="chat-header">
+              <div>
+                {alumno ? (
+                  <>
+                    <div className="encabezado-section">
+                      <h1>¡Bienvenido {alumno.nombre} {alumno.ape_paterno} {alumno.ape_materno}!</h1>
+                    </div>
+                    <div className="subheader-section">
+                      <p>Boleta: {alumno.id}</p>
+                    </div>
+                  </>
+                ) : (
+                  <p>Cargando alumno...</p>
+                )}
+              </div>
 
-          <img src="/escom.png" alt="Logo ESCOM" className="header-logo" />
-        </header>
+              <img src="/escom.png" alt="Logo ESCOM" className="header-logo" />
+            </header>
 
-        {/* Horario */}
-        <section className="horario-section">
-          <h2>Horario Semanal</h2>
+            {/* Horario */}
+            <section className="horario-section">
+              <h2>Horario Semanal</h2>
 
-          <table className="horario-table">
-            <thead>
-              <tr>
-                <th>Grupo</th>
-                <th>Salon</th>
-                <th>Profesor</th>
-                <th>Materia</th>
-                <th>Lunes</th>
-                <th>Martes</th>
-                <th>Miércoles</th>
-                <th>Jueves</th>
-                <th>Viernes</th>
-              </tr>
-            </thead>
+              <table className="horario-table">
+                <thead>
+                  <tr>
+                    <th>Grupo</th>
+                    <th>Salon</th>
+                    <th>Profesor</th>
+                    <th>Materia</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                  </tr>
+                </thead>
 
-            <tbody>
-              {horario.map((h, index) => (
-                <tr key={index}>
-                  <td>{h.grupo}</td>
-                  <td>{h.salon}</td>
-                  <td>{h.profesor}</td>
-                  <td>{h.materia}</td>
+                <tbody>
+                  {horario.map((h, index) => (
+                    <tr key={index}>
+                      <td>{h.grupo}</td>
+                      <td>{h.salon}</td>
+                      <td>{h.profesor}</td>
+                      <td>{h.materia}</td>
 
-                  {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dia) => {
-                    const distrib = h.distribuciones.filter((d) => d.dia === dia);
-                    return (
-                      <td key={dia}>
-                        {distrib.length > 0
-                          ? distrib.map((d, i) => (
-                              <div key={i} className="horario">
-                                {d.hora_ini} - {d.hora_fin}
-                              </div>
-                            ))
-                          : ""}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dia) => {
+                        const distrib = h.distribuciones.filter((d) => d.dia === dia);
+                        return (
+                          <td key={dia}>
+                            {distrib.length > 0
+                              ? distrib.map((d, i) => (
+                                  <div key={i} className="horario">
+                                    {d.hora_ini} - {d.hora_fin}
+                                  </div>
+                                ))
+                              : ""}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-          <div className="boton-container">
-            <button className="comprobante-btn" onClick={handleDescargarComprobante}>
-              Descargar comprobante de horario
-            </button>
-          </div>
-        </section>
+              <div className="boton-container">
+                <button className="comprobante-btn" onClick={handleDescargarComprobante}>
+                  Descargar comprobante de horario
+                </button>
+              </div>
+            </section>
 
-        {/* Avisos del primer código */}
-        <section className="avisos-section">
-          <VerAvisos objetivo="alumno" />
-        </section>
-
-       
-
-      </main>
+            {/* Avisos del primer código */}
+            <section className="avisos-section">
+              <VerAvisos objetivo="alumno" />
+            </section>
+          </main>
+        </>
+      )}
     </div>
   );
 }
+// ...existing code...

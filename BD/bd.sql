@@ -80,6 +80,7 @@ CREATE TABLE datos_personales (
     carrera TEXT,
     situacion TEXT,
     calificacion FLOAT,
+    primera_vez INT,
     CONSTRAINT PK_USUARIOS PRIMARY KEY (id)
 );
 
@@ -138,6 +139,7 @@ CREATE TABLE grupo (
     id_prof VARCHAR(15) NOT NULL,
     turno TEXT NOT NULL,
     cupo INT NOT NULL,
+    salon TEXT,
     reg_final INT,
     reg_extra INT,
     CONSTRAINT PK_GRU PRIMARY KEY (id),
@@ -192,6 +194,7 @@ CREATE TABLE resena (
     calificacion FLOAT NOT NULL,
     comentarios TEXT,
     fecha DATE NOT NULL,
+    periodo TEXT,
     CONSTRAINT PK_RE PRIMARY KEY (id),
     CONSTRAINT FK_RE_PRO FOREIGN KEY (id_profesor) REFERENCES datos_personales (id),
     CONSTRAINT FK_RE_ALU FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
@@ -2674,8 +2677,8 @@ VALUES (
     (
         'K2021630309',
         '2021630309',
-        8.3,
-        'Regular',
+        8.5,
+        'Irregular',
         1,
         142.5
     ),
@@ -6358,8 +6361,8 @@ VALUES (
         '2025-05-07 23:59:59', -- fin_registro_tercer_parcial
         '2025-06-10 00:00:00', -- registro_extra
         '2025-06-12 23:59:59', -- fin_registro_extra
-        '2025-06-01 00:00:00', -- evalu_profe
-        '2025-06-15 23:59:59', -- fin_evalu_profe
+        '2025-12-01 00:00:00', -- evalu_profe
+        '2025-12-15 23:59:59', -- fin_evalu_profe
         '2025-12-01 00:00:00', -- inscribir_ets
         '2025-12-30 23:59:59', -- fin_inscribir_ets
         '2025-12-01 00:00:00', -- subir_doc_ets
