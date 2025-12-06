@@ -277,3 +277,11 @@
   font-size: 0.95rem; /* Tamaño ligeramente más pequeño */
   margin: 0; /* Quita márgenes por defecto */
 }
+
+.centrar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;   /* Ocupa toda la pantalla */
+  width: 100%;
+}

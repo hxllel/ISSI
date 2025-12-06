@@ -52,7 +52,8 @@ const DatosPersonales = sequelize.define(
     grado: { type: DataTypes.TEXT },
     carrera: { type: DataTypes.TEXT },
     situacion: { type: DataTypes.TEXT },
-    calificacion: { type: DataTypes.INTEGER },
+    calificacion: { type: DataTypes.FLOAT },
+    primera_vez: { type: DataTypes.INTEGER },
   },
   { tableName: "datos_personales", timestamps: false }
 );

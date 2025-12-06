@@ -2015,6 +2015,22 @@ module.exports = (passport) => {
       console.log(err);
     }
   });
+
+  router.get("/PrimeraVez/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const a = await bd.DatosPersonales.findOne({
+        where: { id: id },
+      });
+      if (a.primera_vez == null || a.primera_vez == 0) {
+        return res.json({ primera_vez: false });
+      } else if (a.primera_vez == 1) {
+        return res.json({ primera_vez: true });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
   return router;
 };
 

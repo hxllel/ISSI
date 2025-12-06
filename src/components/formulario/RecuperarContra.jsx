@@ -189,16 +189,16 @@ export default function RecuperarContra() {
   return (
     <div className="recuperar-contra-container">
       <div className="recuperar-contra-card">
-        <h1>Recuperar Contraseña</h1>
+        <h1>Cambiar Contraseña</h1>
 
         {step === 1 && (
           <form onSubmit={handleSendEmail}>
             <div className="form-group">
-              <label htmlFor="boleta">Boleta</label>
+              <label htmlFor="boleta">Id</label>
               <input
                 type="text"
                 id="boleta"
-                placeholder="Ingresa tu número de boleta"
+                placeholder="Ingresa tu id"
                 value={boleta}
                 onChange={(e) => setBoleta(e.target.value)}
                 disabled={loading}
