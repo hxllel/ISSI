@@ -1229,7 +1229,7 @@ module.exports = (passport) => {
     }
   });
 
-  router.get("/ObtenerHistorial", async (req, res) => {
+  router.get("/ObtenerHistorial/:id", async (req, res) => {
     // Validar que el usuario esté autenticado
     if (!req.user || !req.user.id) {
       return res.status(401).json({
@@ -1238,7 +1238,7 @@ module.exports = (passport) => {
       });
     }
 
-    const us = req.user.id;
+    const us = req.params.id;
     try {
       const k = await bd.Kardex.findOne({ where: { id_alumno: us } });
 
