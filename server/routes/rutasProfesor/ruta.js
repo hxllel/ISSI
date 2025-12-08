@@ -1063,9 +1063,9 @@ module.exports = (passport) => {
     try {
       const { id } = req.params; // ID del profesor
       console.log("Buscando grupos ETS para profesor:", id);
-
+      const periodo = await bd.FechasRelevantes.findOne();
       const gruposETS = await bd.ETS_grupo.findAll({
-        where: { id_aplicante: id },
+        where: { id_aplicante: id, periodo: periodo.periodo },
         include: [
           {
             model: bd.Unidad_Aprendizaje,
