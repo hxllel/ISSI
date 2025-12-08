@@ -6,6 +6,7 @@ const { Op, INTEGER } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { raw } = require("mysql2");
 const { truncates } = require("bcryptjs");
+
 module.exports = (passport) => {
   const router = express.Router();
 
@@ -170,6 +171,7 @@ module.exports = (passport) => {
       console.error("Error al actualizar el grupo: ", error);
     }
   });
+
   router.post("/RegistrarProfesor", async (req, res) => {
     const {
       grado,
@@ -513,6 +515,7 @@ module.exports = (passport) => {
       console.error("Error al eliminar la distribucion: ", error);
     }
   });
+
   router.put("/EditarProfesor/:id", async (req, res) => {
     const { id } = req.params;
     const {
@@ -583,6 +586,7 @@ module.exports = (passport) => {
         .json({ success: false, error: "Error al actualizar el profesor" });
     }
   });
+
   router.get("/ObtenerCursos", async (req, res) => {
     try {
       const cursos = await bd.Grupo.findAll({
@@ -593,7 +597,7 @@ module.exports = (passport) => {
           },
           {
             model: bd.Unidad_Aprendizaje,
-            attributes: ["id" ,"nombre", "carrera", "tipo", "credito", "semestre"],
+            attributes: ["id", "nombre", "carrera", "tipo", "credito", "semestre"],
           },
         ],
         raw: true,
@@ -606,6 +610,7 @@ module.exports = (passport) => {
       return res.status(500).json({ error: "Error interno al obtener cursos" });
     }
   });
+
   router.get("/ObtenerCursos/Prof/:id", async (req, res) => {
     const us = req.user.id;
     try {
@@ -709,6 +714,7 @@ module.exports = (passport) => {
       console.error("Error al eliminar el profesor: ", error);
     }
   });
+
   router.get("/ObtenerCarreras", async (req, res) => {
     try {
       const carreras = await bd.Carrera.findAll();
@@ -717,6 +723,7 @@ module.exports = (passport) => {
       console.error("Error al obtener las carreras: ", error);
     }
   });
+
   router.get("/ObtenerAlumnos", async (req, res) => {
     try {
       const alumnos = await bd.DatosPersonales.findAll({
@@ -985,6 +992,9 @@ module.exports = (passport) => {
     }
   });
 
+  // ============================
+  //  VALIDAR / DENEGAR ETS
+  // ============================
   router.post("/Validar/:id", async (req, res) => {
     const { id } = req.params;
     try {
@@ -1035,7 +1045,7 @@ module.exports = (passport) => {
   });
 
   // ============================
-  //  OBTENER UNIDADES DE APRENDIZAJE PARA ETS
+  //  OBTENER UNIDADES PARA ETS
   // ============================
   router.get("/ObtenerUnidadesETS", async (req, res) => {
     try {
@@ -1103,7 +1113,9 @@ module.exports = (passport) => {
     }
   });
 
-  // POST /GenerarCitas
+  // ============================
+  //  GENERAR CITAS
+  // ============================
   router.post("/GenerarCitas/:edo", async (req, res) => {
     const { fecha_ini, fecha_fin } = req.body;
     const { edo } = req.params;
@@ -1136,7 +1148,6 @@ module.exports = (passport) => {
       return res.json({ success: false });
     }
     // VALIDACIÓN DE FECHAS
-    // Convertimos a Date solo para comparar validez y orden, pero usaremos los strings para la lógica
     const inicioCheck = new Date(fecha_ini);
     const finCheck = new Date(fecha_fin);
 
@@ -1269,10 +1280,43 @@ module.exports = (passport) => {
             },
             { transaction: t }
           );
-         
-          //  ADMIN: DATOS DE ALUMNO PARA INSCRIPCIÓN
- 
-          router.get("/AdminAlumnoDatos/:idAlumno", async (req, res) => {
+
+          // Manejo de concurrencia
+          alumnosEnEsteSlot++;
+          if (alumnosEnEsteSlot >= concurrencia) {
+            // Llenamos este slot, avanzamos al siguiente intervalo de tiempo
+            alumnosEnEsteSlot = 0;
+            currentSlotIndex++;
+          }
+        }
+
+        await t.commit();
+      } catch (err) {
+        await t.rollback();
+        throw err;
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: "Citas generadas correctamente",
+        totalAlumnos: nAlumnos,
+        dias: numDias,
+        intervaloMinutos,
+        concurrencia,
+      });
+    } catch (error) {
+      console.error("Error GenerarCitas:", error);
+      return res.status(500).json({
+        error: "Error interno al generar citas",
+        details: error.message,
+      });
+    }
+  });
+
+  // ============================
+  //  ADMIN: DATOS ALUMNO INSCRIPCIÓN
+  // ============================
+  router.get("/AdminAlumnoDatos/:idAlumno", async (req, res) => {
     const { idAlumno } = req.params;
     try {
       const alumno = await bd.DatosPersonales.findOne({
@@ -1320,9 +1364,9 @@ module.exports = (passport) => {
     }
   });
 
- 
+  // ============================
   //  ADMIN: MATERIAS INSCRITAS DEL ALUMNO
-  
+  // ============================
   router.get("/AdminAlumnoInscripciones/:idAlumno", async (req, res) => {
     const { idAlumno } = req.params;
     try {
@@ -1392,9 +1436,9 @@ module.exports = (passport) => {
     }
   });
 
- 
+  // ============================
   //  ADMIN: INSCRIBIR GRUPO A ALUMNO
-
+  // ============================
   router.post("/AdminAlumnoInscribirGrupo/:idAlumno", async (req, res) => {
     const { idAlumno } = req.params;
     const { idGrupo } = req.body;
@@ -1603,9 +1647,9 @@ module.exports = (passport) => {
     }
   });
 
-  
+  // ============================
   //  ADMIN: DAR DE BAJA GRUPO A ALUMNO
-
+  // ============================
   router.delete(
     "/AdminAlumnoBajaGrupo/:idAlumno/:idGrupo",
     async (req, res) => {
@@ -1705,38 +1749,9 @@ module.exports = (passport) => {
     }
   );
 
-          // Manejo de concurrencia
-          alumnosEnEsteSlot++;
-          if (alumnosEnEsteSlot >= concurrencia) {
-            // Llenamos este slot, avanzamos al siguiente intervalo de tiempo
-            alumnosEnEsteSlot = 0;
-            currentSlotIndex++;
-          }
-        }
-
-        await t.commit();
-      } catch (err) {
-        await t.rollback();
-        throw err;
-      }
-
-      return res.status(201).json({
-        success: true,
-        message: "Citas generadas correctamente",
-        totalAlumnos: nAlumnos,
-        dias: numDias,
-        intervaloMinutos,
-        concurrencia,
-      });
-    } catch (error) {
-      console.error("Error GenerarCitas:", error);
-      return res.status(500).json({
-        error: "Error interno al generar citas",
-        details: error.message,
-      });
-    }
-  });
-
+  // ============================
+  //  SITUACIONES ESPECIALES
+  // ============================
   router.get("/SituacionesEspeciales", async (req, res) => {
     try {
       const alumnos = await bd.DatosPersonales.findAll({
@@ -1847,6 +1862,7 @@ module.exports = (passport) => {
       console.log(err);
     }
   });
+
   router.post("/AutorizarCambiosSS", async (req, res) => {
     const { periodosExtra, id } = req.body;
 
@@ -1892,6 +1908,7 @@ function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.redirect("/");
 }
+
 function seTraslapan(d1, d2) {
   if (!d1 || !d2) return false;
   if (d1.dia !== d2.dia) return false;

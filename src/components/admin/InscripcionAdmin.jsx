@@ -1,149 +1,220 @@
 // src/components/admin/InscripcionAdmin.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AdminSidebar } from "./AdminSidebar";
 import Modal from "../Modal.jsx";
-import "../alumno/Inscripcion.css"; // reutilizamos estilos de inscripción alumno
+import "../alumno/Inscripcion.css";
 
 const API = "http://localhost:4000";
 
 export function InscripcionAdmin() {
-  const { id } = useParams(); // id del alumno (boleta)
+  const { id } = useParams(); // boleta del alumno
 
+  // Datos del alumno
   const [alumnoInfo, setAlumnoInfo] = useState(null);
   const [creditos, setCreditos] = useState(0);
 
-  const [gruposDisponibles, setGruposDisponibles] = useState([]);
-  const [gruposInscritos, setGruposInscritos] = useState([]);
+  // Grupos
+  const [cursos, setCursos] = useState([]); // todos los cursos del sistema
+  const [gruposInscritos, setGruposInscritos] = useState([]); // grupos del alumno
 
-  // filtros (igual que en Inscripcion.jsx)
-  const [filtroTurno, setFiltroTurno] = useState("");
-  const [filtroTipo, setFiltroTipo] = useState("");
-  const [filtroGrupo, setFiltroGrupo] = useState("");
-  const [filtroSemestre, setFiltroSemestre] = useState("");
+  // Filtros / búsqueda
+  const [busquedaGrupo, setBusquedaGrupo] = useState("");
+  const [filtroSemestre, setFiltroSemestre] = useState("todos");
+  const [filtroCarreraGrupo, setFiltroCarreraGrupo] = useState("todas");
+  const [filtroTurno, setFiltroTurno] = useState("todos");
 
-  // modal horario
-  const [modalOpen, setModalOpen] = useState(false);
-  const [distri, setDistri] = useState([]);
-  const [idGrupoHorario, setIdGrupoHorario] = useState(null);
+  // Modal confirmación
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [modalContenido, setModalContenido] = useState("");
+  const [modalAccion, setModalAccion] = useState(null);
 
-  const safeArray = (v) => (Array.isArray(v) ? v : []);
+  const norm = (x) => (x ?? "").toString().toLowerCase();
 
-  // =========================
-  //  CARGAR DATOS DEL ALUMNO
-  // =========================
-  const loadAlumno = async () => {
+  // ============================
+  //  CARGA DE DATOS DESDE BD
+  // ============================
+  const cargarDatosAlumno = async () => {
     try {
       const res = await fetch(`${API}/AdminAlumnoDatos/${id}`, {
         credentials: "include",
       });
-      const data = await res.json();
-      if (!data.success) {
-        console.error(data.error || "Error obteniendo alumno");
+      console.log("GET AdminAlumnoDatos status:", res.status);
+      const json = await res.json();
+      console.log("AdminAlumnoDatos respuesta:", json);
+
+      if (!json.success) {
+        console.error("Error AdminAlumnoDatos:", json.error);
         return;
       }
-      setAlumnoInfo(data.alumno);
-      setCreditos(data.estudiante?.creditos_disponibles ?? 0);
-    } catch (e) {
-      console.error("Error loadAlumno:", e);
+
+      setAlumnoInfo({
+        id: json.alumno.id,
+        nombre: json.alumno.nombre,
+        ape_paterno: json.alumno.ape_paterno,
+        ape_materno: json.alumno.ape_materno,
+        carrera: json.alumno.carrera,
+      });
+      setCreditos(json.estudiante.creditos_disponibles ?? 0);
+    } catch (err) {
+      console.error("Error al cargar AdminAlumnoDatos:", err);
     }
   };
 
-  // =========================
-  //  CARGAR INSCRIPCIONES
-  // =========================
-  const loadInscritos = async () => {
+  const cargarGruposInscritos = async () => {
     try {
       const res = await fetch(`${API}/AdminAlumnoInscripciones/${id}`, {
         credentials: "include",
       });
-      const data = await res.json();
-      if (!data.success) {
-        console.error(data.error || "Error obteniendo inscripciones");
+      console.log("GET AdminAlumnoInscripciones status:", res.status);
+      const json = await res.json();
+      console.log("AdminAlumnoInscripciones respuesta:", json);
+
+      if (!json.success) {
+        console.error("Error AdminAlumnoInscripciones:", json.error);
         setGruposInscritos([]);
         return;
       }
-      setGruposInscritos(safeArray(data.grupos));
-    } catch (e) {
-      console.error("Error loadInscritos:", e);
-      setGruposInscritos([]);
+      setGruposInscritos(json.grupos || []);
+    } catch (err) {
+      console.error("Error al cargar AdminAlumnoInscripciones:", err);
     }
   };
 
-  // =========================
-  //  CARGAR GRUPOS DISPONIBLES
-  // =========================
-  const loadGruposDisponibles = async () => {
+  const cargarCursos = async () => {
     try {
       const res = await fetch(`${API}/ObtenerCursos`, {
         credentials: "include",
       });
-      const data = await res.json();
-      setGruposDisponibles(safeArray(data.cursos));
-    } catch (e) {
-      console.error("Error loadGruposDisponibles:", e);
-      setGruposDisponibles([]);
+      console.log("GET ObtenerCursos status:", res.status);
+      const json = await res.json();
+      console.log("ObtenerCursos respuesta cruda:", json);
+
+      const cursosBD = Array.isArray(json.cursos) ? json.cursos : [];
+      console.log("Número de cursos recibidos:", cursosBD.length);
+
+      const cursosNormalizados = cursosBD.map((c) => {
+        const ua = c.Unidad_Aprendizaje || {};
+        const prof = c.DatosPersonale || c.DatosPersonales || {};
+
+        return {
+          idGrupo: c.id,
+          grupo: c.nombre,
+          turno: c.turno, // "Matutino" / "Vespertino"
+          cupo: c.cupo,
+          ua: ua.nombre,
+          tipo: ua.tipo,
+          creditos: ua.credito,
+          carrera: ua.carrera,
+          semestre: ua.semestre,
+          profesor: `${prof.nombre || ""} ${prof.ape_paterno || ""} ${
+            prof.ape_materno || ""
+          }`.trim(),
+        };
+      });
+
+      console.log("Cursos normalizados:", cursosNormalizados);
+      setCursos(cursosNormalizados);
+    } catch (err) {
+      console.error("Error al cargar ObtenerCursos:", err);
     }
   };
 
+  const recargarTodo = async () => {
+    await Promise.all([
+      cargarDatosAlumno(),
+      cargarGruposInscritos(),
+      cargarCursos(),
+    ]);
+  };
+
   useEffect(() => {
-    loadAlumno();
-    loadInscritos();
-    loadGruposDisponibles();
+    if (!id) return;
+    recargarTodo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // =========================
-  //  MODAL HORARIO DE GRUPO
-  // =========================
-  const handleVerHorario = (idGrupo) => {
-    setIdGrupoHorario(idGrupo);
-    setModalOpen(true);
+  // ============================
+  //  FILTROS / DISPONIBLES
+  // ============================
+
+  // IDs de grupos ya inscritos
+  const idsGruposInscritos = useMemo(
+    () => new Set(gruposInscritos.map((g) => g.id_grupo)),
+    [gruposInscritos]
+  );
+
+  // 🔴 Para depurar: filtro súper simple, SOLO por texto
+  const gruposDisponiblesFiltrados = useMemo(() => {
+    if (!Array.isArray(cursos)) return [];
+    return cursos.filter((g) => {
+      const texto = norm(`${g.grupo} ${g.ua}`);
+      return texto.includes(norm(busquedaGrupo));
+    });
+  }, [cursos, busquedaGrupo]);
+
+  // ============================
+  //  ACCIONES (+ / -)
+  // ============================
+  const abrirModalConfirmacion = (mensaje, accion) => {
+    setModalContenido(mensaje);
+    setModalAccion(() => accion);
+    setModalAbierto(true);
   };
 
-  useEffect(() => {
-    if (!modalOpen || !idGrupoHorario) return;
+  const confirmarModal = () => {
+    if (modalAccion) modalAccion();
+    setModalAbierto(false);
+    setModalAccion(null);
+  };
 
-    fetch(`${API}/ObtenerDist/${idGrupoHorario}`, {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setDistri(safeArray(data.Distri));
-      })
-      .catch(() => setDistri([]));
-  }, [modalOpen, idGrupoHorario]);
+  const cancelarModal = () => {
+    setModalAbierto(false);
+    setModalAccion(null);
+  };
 
-  // =========================
-  //  INSCRIBIR GRUPO (ADMIN)
-  // =========================
-  const handleInscribirGrupo = async (idGrupo) => {
+  const intentarInscribir = (grupo) => {
+    abrirModalConfirmacion(
+      `¿Deseas inscribir al alumno al grupo ${grupo.grupo}?`,
+      () => inscribirGrupo(grupo.idGrupo)
+    );
+  };
+
+  const intentarBaja = (grupo) => {
+    abrirModalConfirmacion(
+      `¿Deseas dar de baja al alumno del grupo ${grupo.grupo}?`,
+      () => darBajaGrupo(grupo.id_grupo)
+    );
+  };
+
+  const inscribirGrupo = async (idGrupo) => {
     try {
-      const res = await fetch(`${API}/AdminAlumnoInscribirGrupo/${id}`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idGrupo }),
-      });
+      const res = await fetch(
+        `${API}/AdminAlumnoInscribirGrupo/${id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ idGrupo }),
+        }
+      );
       const data = await res.json();
+      console.log("Respuesta AdminAlumnoInscribirGrupo:", data);
+
       if (!data.success) {
         alert(data.error || "No se pudo inscribir el grupo");
-        return;
+      } else {
+        alert("Grupo inscrito correctamente");
       }
-      alert("Grupo inscrito correctamente");
-      await loadAlumno();
-      await loadInscritos();
-    } catch (e) {
-      console.error("Error handleInscribirGrupo:", e);
-      alert("Error al inscribir el grupo");
+
+      await recargarTodo();
+    } catch (err) {
+      console.error("Error al inscribir grupo:", err);
+      alert("Error al inscribir grupo");
     }
   };
 
-  // =========================
-  //  DAR DE BAJA GRUPO (ADMIN)
-  // =========================
-  const handleBajaGrupo = async (idGrupo) => {
-    if (!window.confirm("¿Dar de baja este grupo para el alumno?")) return;
-
+  const darBajaGrupo = async (idGrupo) => {
     try {
       const res = await fetch(
         `${API}/AdminAlumnoBajaGrupo/${id}/${idGrupo}`,
@@ -153,280 +224,266 @@ export function InscripcionAdmin() {
         }
       );
       const data = await res.json();
+      console.log("Respuesta AdminAlumnoBajaGrupo:", data);
+
       if (!data.success) {
         alert(data.error || "No se pudo dar de baja el grupo");
-        return;
+      } else {
+        alert("Grupo dado de baja correctamente");
       }
-      alert("Grupo dado de baja correctamente");
-      await loadAlumno();
-      await loadInscritos();
-    } catch (e) {
-      console.error("Error handleBajaGrupo:", e);
-      alert("Error al dar de baja el grupo");
+
+      await recargarTodo();
+    } catch (err) {
+      console.error("Error al dar de baja grupo:", err);
+      alert("Error al dar de baja grupo");
     }
   };
 
-  // =========================
-  //  HELPERS PARA RENDER
-  // =========================
-  const gruposInscritosIds = new Set(
-    gruposInscritos.map((g) => g.id_grupo)
-  );
-
-  const gruposFiltrados = gruposDisponibles.filter((grupo) => {
-    const matchTurno = !filtroTurno || grupo.turno === filtroTurno;
-    const ua = grupo.Unidad_Aprendizaje || {};
-    const matchTipo = !filtroTipo || ua.tipo === filtroTipo;
-    const matchGrupo =
-      !filtroGrupo ||
-      (grupo.nombre || "")
-        .toLowerCase()
-        .includes(filtroGrupo.toLowerCase());
-    const matchSemestre =
-      !filtroSemestre ||
-      String(ua.semestre || "").toString() === filtroSemestre;
-    return matchTurno && matchTipo && matchGrupo && matchSemestre;
-  });
-
-  const nombreCompletoAlumno = alumnoInfo
-    ? `${alumnoInfo.ape_paterno} ${alumnoInfo.ape_materno} ${alumnoInfo.nombre}`
-    : "";
-
+  // ============================
+  //  RENDER
+  // ============================
   return (
-    <div className="inscripcion-container">
+    <div className="layout">
       <AdminSidebar />
 
-      <main className="main-content">
-        <header className="chat-header">
-          <div className="encabezado-section">
-            <h1 className="titulo">Inscripción de materias (Administrador)</h1>
+      <main
+        className="contenido inscripcion-admin-main"
+        style={{ marginLeft: "260px", padding: "20px" }}
+      >
+        {/* ENCABEZADO */}
+        <section className="inscripcion-header">
+          <div>
+            <h1>INSCRIPCIÓN DE MATERIAS (ADMINISTRADOR)</h1>
+            <p>
+              Administra la inscripción de materias para el alumno seleccionado.
+            </p>
           </div>
-          <p className="descripcion">
-            Administra la inscripción de materias para el alumno seleccionado.
-          </p>
-          <img src="/escom.png" alt="Logo ESCOM" className="header-logo" />
-        </header>
+          <div className="inscripcion-logo-escom">
+            <img src="/escom.png" alt="ESCOM" />
+          </div>
+        </section>
 
-        {/* RESUMEN DEL ALUMNO */}
-        <section className="tabla-contenedor" style={{ marginBottom: "1rem" }}>
-          <h2 className="titulo">Datos del alumno</h2>
+        {/* DATOS DEL ALUMNO */}
+        <section className="inscripcion-card">
+          <h2>Datos del alumno</h2>
           {alumnoInfo ? (
-            <table className="tabla-cursos">
-              <thead>
-                <tr>
-                  <th>Boleta</th>
-                  <th>Nombre</th>
-                  <th>Carrera</th>
-                  <th>Créditos disponibles</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{alumnoInfo.id}</td>
-                  <td>{nombreCompletoAlumno}</td>
-                  <td>{alumnoInfo.carrera}</td>
-                  <td>{creditos}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="datos-alumno-resumen">
+              <p>
+                <strong>Boleta:</strong> {alumnoInfo.id}
+              </p>
+              <p>
+                <strong>Nombre:</strong>{" "}
+                {alumnoInfo.nombre} {alumnoInfo.ape_paterno}{" "}
+                {alumnoInfo.ape_materno}
+              </p>
+              <p>
+                <strong>Carrera:</strong> {alumnoInfo.carrera}
+              </p>
+              <p>
+                <strong>Créditos disponibles:</strong> {creditos}
+              </p>
+            </div>
           ) : (
-            <p>Cargando datos del alumno...</p>
+            <p style={{ textAlign: "center" }}>
+              No se pudieron cargar los datos del alumno.
+            </p>
           )}
         </section>
 
-        {/* GRUPOS DISPONIBLES */}
-        <section className="tabla-contenedor">
-          <h2 className="titulo">Grupos disponibles</h2>
+        {/* OFERTA DE GRUPOS */}
+        <section className="inscripcion-card">
+          <h2>Oferta de grupos (proceso de inscripción)</h2>
 
-          <div
-            className="button-gap"
-            style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}
-          >
+          {/* Para depurar: muestra cuántos cursos hay realmente */}
+          <p style={{ fontSize: "0.9rem", color: "#555" }}>
+            Cursos cargados desde BD: <strong>{cursos.length}</strong>
+          </p>
+
+          {/* Filtros (por ahora solo afecta la búsqueda de texto) */}
+          <div className="filtros-inscripcion">
             <input
               type="text"
-              placeholder="Buscar por grupo..."
-              value={filtroGrupo}
-              onChange={(e) => setFiltroGrupo(e.target.value)}
-              className="btn-ver"
-              style={{ padding: "0.5rem" }}
+              placeholder="Buscar por grupo o materia..."
+              value={busquedaGrupo}
+              onChange={(e) => setBusquedaGrupo(e.target.value)}
             />
-            <select
-              value={filtroTurno}
-              onChange={(e) => setFiltroTurno(e.target.value)}
-              className="btn-ver"
-              style={{ padding: "0.5rem" }}
-            >
-              <option value="">Todos los turnos</option>
-              <option value="Matutino">Matutino</option>
-              <option value="Vespertino">Vespertino</option>
-            </select>
-            <select
-              value={filtroTipo}
-              onChange={(e) => setFiltroTipo(e.target.value)}
-              className="btn-ver"
-              style={{ padding: "0.5rem" }}
-            >
-              <option value="">Todos los tipos</option>
-              <option value="OBLIGATORIA">OBLIGATORIA</option>
-              <option value="OPTATIVA">OPTATIVA</option>
-            </select>
+
             <select
               value={filtroSemestre}
               onChange={(e) => setFiltroSemestre(e.target.value)}
-              className="btn-ver"
-              style={{ padding: "0.5rem" }}
             >
-              <option value="">Todos los semestres</option>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-                <option key={sem} value={String(sem)}>
-                  {sem}° Semestre
-                </option>
-              ))}
+              <option value="todos">Todos los semestres</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+
+            <select
+              value={filtroCarreraGrupo}
+              onChange={(e) => setFiltroCarreraGrupo(e.target.value)}
+            >
+              <option value="todas">Todas las carreras</option>
+              <option value="ingenieria en inteligencia artificial">
+                Ingeniería en Inteligencia Artificial
+              </option>
+              <option value="ingenieria en ciencia de datos">
+                Ingeniería en Ciencia de Datos
+              </option>
+              <option value="ingenieria en sistemas computacionales">
+                Ingeniería en Sistemas Computacionales
+              </option>
+            </select>
+
+            <select
+              value={filtroTurno}
+              onChange={(e) => setFiltroTurno(e.target.value)}
+            >
+              <option value="todos">Todos los turnos</option>
+              <option value="matutino">Matutino</option>
+              <option value="vespertino">Vespertino</option>
             </select>
           </div>
 
-          <table className="tabla-cursos">
-            <thead>
-              <tr>
-                <th>Grupo</th>
-                <th>Unidad de Aprendizaje</th>
-                <th>Tipo</th>
-                <th>Créditos</th>
-                <th>Profesor</th>
-                <th>Cupo</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {gruposFiltrados.length > 0 ? (
-                gruposFiltrados.map((grupo) => {
-                  const ua = grupo.Unidad_Aprendizaje || {};
-                  const prof =
-                    grupo.DatosPersonale || grupo.DatosPersonales || {};
-                  const nombreProf = `${prof.nombre || ""} ${
-                    prof.ape_paterno || ""
-                  } ${prof.ape_materno || ""}`.trim();
-
-                  return (
-                    <tr key={grupo.id}>
-                      <td>{grupo.nombre}</td>
-                      <td>{ua.nombre}</td>
-                      <td>{ua.tipo}</td>
-                      <td>{ua.credito}</td>
-                      <td>{nombreProf || "Sin profesor"}</td>
-                      <td>{grupo.cupo}</td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn-inscribir"
-                          onClick={() => handleInscribirGrupo(grupo.id)}
-                          disabled={
-                            grupo.cupo <= 0 || gruposInscritosIds.has(grupo.id)
-                          }
-                        >
-                          Inscribir
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-ver"
-                          style={{ marginLeft: "8px" }}
-                          onClick={() => handleVerHorario(grupo.id)}
-                        >
-                          Ver horario
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan="7">No hay grupos disponibles</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </section>
-
-        {/* GRUPOS INSCRITOS */}
-        <section className="tabla-contenedor" style={{ marginTop: "1.5rem" }}>
-          <h2 className="titulo">Grupos inscritos del alumno</h2>
-
-          <table className="tabla-cursos">
-            <thead>
-              <tr>
-                <th>Grupo</th>
-                <th>Unidad de Aprendizaje</th>
-                <th>Tipo</th>
-                <th>Créditos</th>
-                <th>Profesor</th>
-                <th>Cupo</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {gruposInscritos.length > 0 ? (
-                gruposInscritos.map((g) => (
-                  <tr key={g.id_grupo}>
-                    <td>{g.grupo}</td>
-                    <td>{g.ua}</td>
-                    <td>{g.tipo}</td>
-                    <td>{g.creditos}</td>
-                    <td>{g.profesor}</td>
-                    <td>{g.cupo}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn-ver"
-                        onClick={() => handleBajaGrupo(g.id_grupo)}
-                      >
-                        Dar de baja
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="7">El alumno no tiene grupos inscritos</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </section>
-
-        {/* MODAL: HORARIO DE GRUPO */}
-        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+          {/* Tabla de oferta */}
           <div className="tabla-contenedor">
-            <h2 className="titulo">Horario del grupo</h2>
-            <table className="tabla-horario">
+            <table className="tabla">
               <thead>
                 <tr>
-                  <th>Lunes</th>
-                  <th>Martes</th>
-                  <th>Miércoles</th>
-                  <th>Jueves</th>
-                  <th>Viernes</th>
+                  <th>Grupo</th>
+                  <th>Unidad de Aprendizaje</th>
+                  <th>Tipo</th>
+                  <th>Créditos</th>
+                  <th>Carrera</th>
+                  <th>Semestre</th>
+                  <th>Profesor</th>
+                  <th>Turno</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map(
-                    (dia) => (
-                      <td key={dia}>
-                        {distri
-                          .filter((d) => d.dia === dia)
-                          .map((d, i) => (
-                            <div key={i}>
-                              {d.hora_ini} - {d.hora_fin}
-                            </div>
-                          ))}
-                      </td>
-                    )
-                  )}
-                </tr>
+                {gruposDisponiblesFiltrados.length === 0 ? (
+                  <tr>
+                    <td colSpan="9" style={{ textAlign: "center" }}>
+                      No hay grupos disponibles con los filtros actuales.
+                    </td>
+                  </tr>
+                ) : (
+                  gruposDisponiblesFiltrados.map((g) => {
+                    const yaInscrito = idsGruposInscritos.has(g.idGrupo);
+
+                    return (
+                      <tr key={g.idGrupo}>
+                        <td>{g.grupo}</td>
+                        <td>{g.ua}</td>
+                        <td>{g.tipo}</td>
+                        <td>{g.creditos}</td>
+                        <td>{g.carrera}</td>
+                        <td>{g.semestre}</td>
+                        <td>{g.profesor}</td>
+                        <td>{g.turno}</td>
+                        <td style={{ textAlign: "center" }}>
+                          {yaInscrito ? (
+                            <button
+                              className="btn-secundario"
+                              onClick={() =>
+                                intentarBaja(
+                                  gruposInscritos.find(
+                                    (gi) => gi.id_grupo === g.idGrupo
+                                  ) || {
+                                    id_grupo: g.idGrupo,
+                                    grupo: g.grupo,
+                                  }
+                                )
+                              }
+                            >
+                              -
+                            </button>
+                          ) : (
+                            <button
+                              className="btn-primario"
+                              onClick={() => intentarInscribir(g)}
+                            >
+                              +
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
-        </Modal>
+        </section>
+
+        {/* HORARIO ACTUAL DEL ALUMNO */}
+        <section className="inscripcion-card">
+          <h2>Horario actual del alumno</h2>
+
+          <div className="tabla-contenedor">
+            <table className="tabla">
+              <thead>
+                <tr>
+                  <th>Grupo</th>
+                  <th>Unidad de Aprendizaje</th>
+                  <th>Tipo</th>
+                  <th>Créditos</th>
+                  <th>Profesor</th>
+                  <th>Turno</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {gruposInscritos.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" style={{ textAlign: "center" }}>
+                      El alumno aún no tiene grupos inscritos.
+                    </td>
+                  </tr>
+                ) : (
+                  gruposInscritos.map((g) => (
+                    <tr key={g.id_mat_inscrito}>
+                      <td>{g.grupo}</td>
+                      <td>{g.ua}</td>
+                      <td>{g.tipo}</td>
+                      <td>{g.creditos}</td>
+                      <td>{g.profesor}</td>
+                      <td>{g.turno}</td>
+                      <td style={{ textAlign: "center" }}>
+                        <button
+                          className="btn-secundario"
+                          onClick={() => intentarBaja(g)}
+                        >
+                          -
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* MODAL CONFIRMACIÓN */}
+        {modalAbierto && (
+          <Modal onClose={cancelarModal}>
+            <p>{modalContenido}</p>
+            <div className="modal-actions">
+              <button className="btn-secundario" onClick={cancelarModal}>
+                Cancelar
+              </button>
+              <button className="btn-primario" onClick={confirmarModal}>
+                Aceptar
+              </button>
+            </div>
+          </Modal>
+        )}
       </main>
     </div>
   );

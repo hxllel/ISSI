@@ -4,7 +4,6 @@ import "./GestionarAlumnos.css";
 import { AdminSidebar } from "./AdminSidebar";
 
 export function GestionarAlumnos() {
-
   const [carreras, setCarreras] = useState([]);
   const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
   const [datos, setDatos] = useState([]);
@@ -21,18 +20,25 @@ export function GestionarAlumnos() {
   const [paginaActual, setPaginaActual] = useState(1);
   const alumnosPorPagina = 8;
 
-  
-  // NUEVO: ir a la vista de inscripción admin para un alumno
-  const handleClickInscribir = (id) =>
-    navigate(`/administrador/gestionarAlumnos/inscripcion/${id}`);
-  const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
-  const handleClickProf = () => navigate("../administrador/gestionarProfesores");
-  const handleClickCursos = () => navigate("../administrador/gestionarCursos");
-  const handleRegistrar = () => navigate("registrarAlumno");
+  // ================================
+  // Navegar a inscripción admin para un alumno
+  // a.id = boleta del alumno (según tus columnas)
+  // También mandamos todo el objeto alumno en state
+  // para que InscripcionAdmin pueda usarlo si quiere.
+  // ================================
+  const handleClickInscribir = (alumno) =>
+    navigate(
+      `/administrador/gestionarAlumnos/inscripcion/${alumno.id}`,
+      {
+        state: { alumno },
+      }
+    );
 
-  const handleClickEdit = (id) => { 
-    navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
-  };
+  const handleRegistrar = () =>
+    navigate("/administrador/gestionarAlumnos/registrarAlumno");
+
+  const handleClickEdit = (id) =>
+    navigate(`/administrador/gestionarAlumnos/editarAlumnos/${id}`);
 
   const handleAbrirModal = (id) => {
     setMostrarModal(true);
@@ -43,12 +49,14 @@ export function GestionarAlumnos() {
 
   const handleEliminar = () => setDelete(true);
 
-  // NUEVO → Navegar a Datos Médicos y Enfermedades
+  // Navegar a Datos Médicos y Enfermedades
   const handleVerDatosMedicos = (idAlumno) => {
     navigate(`/administrador/datosMedicos/${idAlumno}`);
   };
 
+  // ================================
   // Obtener alumnos
+  // ================================
   useEffect(() => {
     fetch(`${API}/ObtenerAlumnos`, { credentials: "include" })
       .then((res) => res.json())
@@ -56,7 +64,9 @@ export function GestionarAlumnos() {
       .catch(() => setDatos([]));
   }, []);
 
+  // ================================
   // Cargar carreras
+  // ================================
   useEffect(() => {
     fetch(`${API}/ObtenerCarreras`, { credentials: "include" })
       .then((res) => res.json())
@@ -64,9 +74,11 @@ export function GestionarAlumnos() {
       .catch((err) => console.error("Error al obtener las carreras:", err));
   }, []);
 
+  // ================================
   // Eliminar alumno (ponerlo inactivo)
+  // ================================
   useEffect(() => {
-    if (del) {
+    if (del && idAlumno) {
       fetch(`${API}/EliminarAlumno/${idAlumno}`, {
         method: "DELETE",
         credentials: "include",
@@ -80,13 +92,20 @@ export function GestionarAlumnos() {
             alert("Error al eliminar el alumno");
           }
           setMostrarModal(false);
+        })
+        .catch(() => {
+          alert("Error al eliminar el alumno");
+          setMostrarModal(false);
+        })
+        .finally(() => {
+          setDelete(false);
         });
-
-      setDelete(false);
     }
-  }, [del, idAlumno]);
+  }, [del, idAlumno]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ================================
   // Filtrado y búsqueda
+  // ================================
   const alumnosFiltrados = datos.filter((a) => {
     const nombreCompleto = `${a.nombre || ""} ${a.ape_paterno || ""} ${
       a.ape_materno || ""
@@ -105,7 +124,9 @@ export function GestionarAlumnos() {
     return coincideCarrera && coincideBusqueda;
   });
 
-  // Paginación
+  // ================================
+  // Paginación calculada
+  // ================================
   const totalPaginas = Math.max(
     1,
     Math.ceil(alumnosFiltrados.length / alumnosPorPagina)
@@ -124,6 +145,7 @@ export function GestionarAlumnos() {
     if (paginaActual > 1) setPaginaActual(paginaActual - 1);
   };
 
+  // Cuando cambia filtro o búsqueda, regresar a pág 1
   useEffect(() => {
     setPaginaActual(1);
   }, [busqueda, carreraSeleccionada]);
@@ -143,7 +165,7 @@ export function GestionarAlumnos() {
               + Registrar nuevo estudiante
             </button>
           </div>
-          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+          <img src="/escom.png" alt="Logo ESCOM" className="header-logo" />
         </header>
 
         {/* FILTROS */}
@@ -204,11 +226,11 @@ export function GestionarAlumnos() {
                     <td>{a.carrera}</td>
                     <td>{a.email}</td>
                     <td className="acciones">
-
                       {/* Editar */}
                       <button
                         className="icono editar"
                         onClick={() => handleClickEdit(a.id)}
+                        title="Editar estudiante"
                       >
                         ✎
                       </button>
@@ -217,26 +239,28 @@ export function GestionarAlumnos() {
                       <button
                         className="icono eliminar"
                         onClick={() => handleAbrirModal(a.id)}
+                        title="Eliminar estudiante"
                       >
                         🗑
                       </button>
-                      {/* NUEVO: botón para inscripción admin */}
+
+                      {/* Inscripción admin */}
                       <button
                         className="icono inscribir"
                         title="Inscribir / dar de baja materias"
-                        onClick={() => handleClickInscribir(a.id)}
+                        onClick={() => handleClickInscribir(a)}
                       >
                         📚
                       </button>
 
-                      {/* NUEVO → Datos Médicos */}
+                      {/* Datos Médicos */}
                       <button
                         className="icono medico"
+                        title="Ver datos médicos"
                         onClick={() => handleVerDatosMedicos(a.id)}
                       >
                         DM
                       </button>
-
                     </td>
                   </tr>
                 ))
@@ -246,7 +270,6 @@ export function GestionarAlumnos() {
                 </tr>
               )}
             </tbody>
-
           </table>
 
           <div className="tabla-footer">
@@ -289,11 +312,7 @@ export function GestionarAlumnos() {
             </div>
           </div>
         )}
-
       </main>
-
     </div>
   );
 }
-
-

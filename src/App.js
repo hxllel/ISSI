@@ -7,7 +7,6 @@ import { Formulario } from "./components/formulario/Formulario";
 import RecuperarContra from "./components/formulario/RecuperarContra";
 
 // ALUMNO
-
 import { ConocenosAlumno } from "./components/alumno/ConocenosAlumno";
 import { Alumno } from "./components/alumno/Alumno";
 import { ChatbotAsistente } from "./components/alumno/Chat";
@@ -22,6 +21,7 @@ import { ConsultarCalificaciones } from "./components/alumno/ConsultarCalificaci
 import ResenarProfesores from "./components/alumno/ResenarProfesores";
 import DetalleProfesorResenas from "./components/alumno/DetalleProfesorResenas";
 import MapasCurriculares from "./components/alumno/MapasCurriculares";
+
 // PROFESOR
 import { Profesor } from "./components/profesor/Profesor";
 import { ChatbotProfesor } from "./components/profesor/Chat";
@@ -32,8 +32,6 @@ import { InformacionPersonal } from "./components/profesor/InformacionPersonal";
 import { EditarDatosPersonales } from "./components/profesor/EditarDatosPersonales";
 import { ETS as ETSProfesor } from "./components/profesor/ETS";
 import { Reglamentos } from "./pages/Reglamentos";
-
-// PROFESOR
 
 // ADMIN
 import { Administrador } from "./components/admin/Administrador";
@@ -51,9 +49,9 @@ import { ETS } from "./components/admin/ETS";
 import { PublicarNoticia } from "./components/admin/PublicarNoticia";
 import { GenerarCitas } from "./components/admin/GenerarCitas";
 import { InscripcionAdmin } from "./components/admin/InscripcionAdmin";
-
 import { SituacionesEspeciales } from "./components/admin/SituacionesEspeciales";
-// PAGINAS INDIVIDUALES
+
+// PÁGINAS INDIVIDUALES
 import { Carreras } from "./pages/Carreras";
 import { Unidades } from "./pages/Unidades";
 import { DatosMedicos } from "./pages/DatosMedicos";
@@ -122,6 +120,7 @@ function App() {
             path="/alumno/MapasCurriculares"
             element={<MapasCurriculares />}
           />
+
           {/* PROFESOR */}
           <Route path="/profesor/:id" element={<Profesor />} />
           <Route path="/profesor/Chat" element={<ChatbotProfesor />} />
@@ -145,6 +144,7 @@ function App() {
             element={<EditarDatosPersonales />}
           />
 
+          {/* ADMINISTRADOR - PANEL PRINCIPAL */}
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/ETS" element={<ETS />} />
           <Route
@@ -152,7 +152,7 @@ function App() {
             element={<PublicarNoticia />}
           />
 
-          {/* ADMINISTRADOR - CRUD */}
+          {/* ADMINISTRADOR - CRUD ALUMNOS */}
           <Route
             path="/administrador/gestionarAlumnos"
             element={<GestionarAlumnos />}
@@ -165,6 +165,13 @@ function App() {
             path="/administrador/gestionarAlumnos/editarAlumnos/:id"
             element={<EditarAlumnos />}
           />
+          {/* Inscripción admin por alumno */}
+          <Route
+            path="/administrador/gestionarAlumnos/inscripcion/:id"
+            element={<InscripcionAdmin />}
+          />
+
+          {/* ADMINISTRADOR - CRUD PROFESORES */}
           <Route
             path="/administrador/gestionarProfesores"
             element={<GestionarProfesores />}
@@ -177,6 +184,8 @@ function App() {
             path="/administrador/gestionarProfesores/editarProfesor/:id"
             element={<EditarProfesores />}
           />
+
+          {/* ADMINISTRADOR - CRUD CURSOS */}
           <Route
             path="/administrador/gestionarCursos"
             element={<GestionarCursos />}
@@ -193,16 +202,8 @@ function App() {
             path="/administrador/gestionarCursos/distribucionHorarios/:id"
             element={<Distribucion />}
           />
-          <Route
-            path="/administrador/gestionarAlumnos/inscripcion/:id"
-            element={<InscripcionAdmin />}
-          />
-          <Route
-            path="administrador/datosMedicos/:id"
-            element={<DatosMedicos />}
-          />
 
-          {/* ADMIN PÁGINAS */}
+          {/* ADMIN - Páginas extra */}
           <Route path="/administrador/carreras" element={<Carreras />} />
           <Route path="/administrador/unidades" element={<Unidades />} />
           <Route path="/administrador/Fechas" element={<GenerarCitas />} />
@@ -210,9 +211,17 @@ function App() {
             path="/administrador/SituacionesEspeciales"
             element={<SituacionesEspeciales />}
           />
+          <Route
+            path="/administrador/datosMedicos/:id"
+            element={<DatosMedicos />}
+          />
+
+          {/* REGLAMENTOS (página general) */}
+          <Route path="/reglamentos" element={<Reglamentos />} />
+
+          {/* ERRORES / 404 */}
           <Route path="/error" element={<ErrorView />} />
           <Route path="*" element={<ErrorView />} />
-          <Route path="/reglamentos" element={<Reglamentos />} />
         </Routes>
       </BrowserRouter>
     </div>
@@ -220,3 +229,4 @@ function App() {
 }
 
 export default App;
+
