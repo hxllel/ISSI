@@ -1282,450 +1282,6 @@ module.exports = (passport) => {
             { transaction: t }
           );
 
-          //  ADMIN: DATOS DE ALUMNO PARA INSCRIPCIÓN
-
-          router.get("/AdminAlumnoDatos/:idAlumno", async (req, res) => {
-            const { idAlumno } = req.params;
-            try {
-              const alumno = await bd.DatosPersonales.findOne({
-                where: { id: idAlumno, tipo_usuario: "alumno" },
-              });
-
-              if (!alumno) {
-                return res
-                  .status(404)
-                  .json({ success: false, error: "Alumno no encontrado" });
-              }
-
-              const estudiante = await bd.Estudiante.findOne({
-                where: { id_usuario: idAlumno },
-              });
-
-              if (!estudiante) {
-                return res.status(404).json({
-                  success: false,
-                  error: "Registro de estudiante no encontrado para el alumno",
-                });
-              }
-
-              return res.json({
-                success: true,
-                alumno: {
-                  id: alumno.id,
-                  nombre: alumno.nombre,
-                  ape_paterno: alumno.ape_paterno,
-                  ape_materno: alumno.ape_materno,
-                  carrera: alumno.carrera,
-                },
-                estudiante: {
-                  creditos_disponibles: estudiante.creditos_disponibles,
-                  promedio: estudiante.promedio,
-                  estado_academico: estudiante.estado_academico,
-                },
-              });
-            } catch (error) {
-              console.error("Error en /AdminAlumnoDatos:", error);
-              return res.status(500).json({
-                success: false,
-                error: "Error al obtener datos del alumno",
-              });
-            }
-          });
-
-          //  ADMIN: MATERIAS INSCRITAS DEL ALUMNO
-
-          router.get(
-            "/AdminAlumnoInscripciones/:idAlumno",
-            async (req, res) => {
-              const { idAlumno } = req.params;
-              try {
-                const horario = await bd.Horario.findOne({
-                  where: { id_alumno: idAlumno },
-                });
-
-                if (!horario) {
-                  return res.json({ success: true, grupos: [] });
-                }
-
-                const mats = await bd.Mat_Inscritos.findAll({
-                  where: { id_horario: horario.id },
-                  include: [
-                    {
-                      model: bd.Grupo,
-                      attributes: ["id", "nombre", "turno", "cupo"],
-                      include: [
-                        {
-                          model: bd.Unidad_Aprendizaje,
-                          attributes: [
-                            "id",
-                            "nombre",
-                            "credito",
-                            "semestre",
-                            "carrera",
-                            "tipo",
-                          ],
-                        },
-                        {
-                          model: bd.DatosPersonales,
-                          attributes: ["nombre", "ape_paterno", "ape_materno"],
-                        },
-                      ],
-                    },
-                  ],
-                  raw: true,
-                  nest: true,
-                });
-
-                const grupos = mats.map((m) => {
-                  const g = m.Grupo || {};
-                  const ua = g.Unidad_Aprendizaje || {};
-                  const prof = g.DatosPersonale || g.DatosPersonales || {};
-                  return {
-                    id_mat_inscrito: m.id,
-                    id_grupo: g.id,
-                    grupo: g.nombre,
-                    turno: g.turno,
-                    ua: ua.nombre,
-                    tipo: ua.tipo,
-                    creditos: ua.credito,
-                    profesor: `${prof.nombre || ""} ${prof.ape_paterno || ""} ${
-                      prof.ape_materno || ""
-                    }`.trim(),
-                    cupo: g.cupo,
-                  };
-                });
-
-                return res.json({ success: true, grupos });
-              } catch (error) {
-                console.error("Error en /AdminAlumnoInscripciones:", error);
-                return res.status(500).json({
-                  success: false,
-                  error: "Error al obtener inscripciones del alumno",
-                });
-              }
-            }
-          );
-
-          //  ADMIN: INSCRIBIR GRUPO A ALUMNO
-
-          router.post(
-            "/AdminAlumnoInscribirGrupo/:idAlumno",
-            async (req, res) => {
-              const { idAlumno } = req.params;
-              const { idGrupo } = req.body;
-
-              if (!idGrupo) {
-                return res.status(400).json({
-                  success: false,
-                  error: "Falta idGrupo en el cuerpo",
-                });
-              }
-
-              try {
-                const alumno = await bd.DatosPersonales.findOne({
-                  where: { id: idAlumno, tipo_usuario: "alumno" },
-                });
-
-                if (!alumno) {
-                  return res
-                    .status(404)
-                    .json({ success: false, error: "Alumno no encontrado" });
-                }
-
-                const estudiante = await bd.Estudiante.findOne({
-                  where: { id_usuario: idAlumno },
-                });
-
-                if (!estudiante) {
-                  return res.status(404).json({
-                    success: false,
-                    error: "Registro de estudiante no encontrado",
-                  });
-                }
-
-                const horario = await bd.Horario.findOne({
-                  where: { id_alumno: idAlumno },
-                });
-
-                if (!horario) {
-                  return res.status(404).json({
-                    success: false,
-                    error: "Horario no encontrado para el alumno",
-                  });
-                }
-
-                const grupo = await bd.Grupo.findOne({
-                  where: { id: idGrupo },
-                  include: [
-                    {
-                      model: bd.Unidad_Aprendizaje,
-                      attributes: [
-                        "id",
-                        "nombre",
-                        "credito",
-                        "semestre",
-                        "carrera",
-                        "tipo",
-                      ],
-                    },
-                    {
-                      model: bd.Distribucion,
-                      attributes: ["dia", "hora_ini", "hora_fin"],
-                    },
-                  ],
-                });
-
-                if (!grupo) {
-                  return res
-                    .status(404)
-                    .json({ success: false, error: "Grupo no encontrado" });
-                }
-
-                if (grupo.cupo <= 0) {
-                  return res.json({
-                    success: false,
-                    error: "El grupo no tiene cupo disponible",
-                  });
-                }
-
-                const creditosNecesarios = parseInt(
-                  grupo.Unidad_Aprendizaje.credito,
-                  10
-                );
-                const creditosDisponibles = parseInt(
-                  estudiante.creditos_disponibles,
-                  10
-                );
-
-                if (creditosDisponibles < creditosNecesarios) {
-                  return res.json({
-                    success: false,
-                    error: "El alumno no tiene créditos suficientes",
-                  });
-                }
-
-                // Materias ya inscritas
-                const mats = await bd.Mat_Inscritos.findAll({
-                  where: { id_horario: horario.id },
-                  include: [
-                    {
-                      model: bd.Grupo,
-                      attributes: ["id", "id_ua"],
-                      include: [
-                        {
-                          model: bd.Unidad_Aprendizaje,
-                          attributes: ["id", "nombre"],
-                        },
-                      ],
-                    },
-                  ],
-                  raw: true,
-                  nest: true,
-                });
-
-                // Validar que no tenga ya esa UA
-                const yaTieneUA = mats.some(
-                  (m) =>
-                    m.Grupo &&
-                    (m.Grupo.id_ua === grupo.id_ua ||
-                      (m.Grupo.Unidad_Aprendizaje &&
-                        m.Grupo.Unidad_Aprendizaje.id ===
-                          grupo.Unidad_Aprendizaje.id))
-                );
-
-                if (yaTieneUA) {
-                  return res.json({
-                    success: false,
-                    error:
-                      "El alumno ya tiene inscrita esta unidad de aprendizaje",
-                  });
-                }
-
-                // Validar traslapes con distribución
-                const idsGruposActuales = mats.map((m) => m.Grupo.id);
-                let distribucionesExistentes = [];
-                if (idsGruposActuales.length > 0) {
-                  distribucionesExistentes = await bd.Distribucion.findAll({
-                    where: { id_grupo: idsGruposActuales },
-                    raw: true,
-                  });
-                }
-
-                const distribNuevo = (grupo.Distribucions || []).map((d) =>
-                  d.toJSON ? d.toJSON() : d
-                );
-
-                for (const dNuevo of distribNuevo) {
-                  for (const dExist of distribucionesExistentes) {
-                    if (seTraslapan(dNuevo, dExist)) {
-                      return res.json({
-                        success: false,
-                        error:
-                          "El horario del grupo se traslapa con otra materia ya inscrita",
-                      });
-                    }
-                  }
-                }
-
-                // Transacción: crear Mat_Inscritos, actualizar cupo y créditos
-                const t = await bd.sequelize.transaction();
-
-                try {
-                  const idMat = uuidv4().replace(/-/g, "").substring(0, 15);
-
-                  await bd.Mat_Inscritos.create(
-                    {
-                      id: idMat,
-                      id_horario: horario.id,
-                      id_grupo: idGrupo,
-                    },
-                    { transaction: t }
-                  );
-
-                  await bd.Grupo.update(
-                    { cupo: grupo.cupo - 1 },
-                    { where: { id: idGrupo }, transaction: t }
-                  );
-
-                  await bd.Estudiante.update(
-                    {
-                      creditos_disponibles:
-                        creditosDisponibles - creditosNecesarios,
-                    },
-                    { where: { id_usuario: idAlumno }, transaction: t }
-                  );
-
-                  await t.commit();
-
-                  return res.json({
-                    success: true,
-                    message: "Grupo inscrito correctamente",
-                  });
-                } catch (err) {
-                  await t.rollback();
-                  console.error(
-                    "Error en transacción AdminAlumnoInscribirGrupo:",
-                    err
-                  );
-                  return res.status(500).json({
-                    success: false,
-                    error: "Error al inscribir grupo",
-                  });
-                }
-              } catch (error) {
-                console.error("Error en /AdminAlumnoInscribirGrupo:", error);
-                return res.status(500).json({
-                  success: false,
-                  error: "Error al inscribir grupo",
-                });
-              }
-            }
-          );
-
-          //  ADMIN: DAR DE BAJA GRUPO A ALUMNO
-
-          router.delete(
-            "/AdminAlumnoBajaGrupo/:idAlumno/:idGrupo",
-            async (req, res) => {
-              const { idAlumno, idGrupo } = req.params;
-
-              try {
-                const estudiante = await bd.Estudiante.findOne({
-                  where: { id_usuario: idAlumno },
-                });
-
-                const horario = await bd.Horario.findOne({
-                  where: { id_alumno: idAlumno },
-                });
-
-                if (!estudiante || !horario) {
-                  return res.status(404).json({
-                    success: false,
-                    error: "No se encontró estudiante u horario para el alumno",
-                  });
-                }
-
-                const grupo = await bd.Grupo.findOne({
-                  where: { id: idGrupo },
-                  include: [
-                    {
-                      model: bd.Unidad_Aprendizaje,
-                      attributes: ["credito"],
-                    },
-                  ],
-                });
-
-                if (!grupo) {
-                  return res.status(404).json({
-                    success: false,
-                    error: "Grupo no encontrado",
-                  });
-                }
-
-                const t = await bd.sequelize.transaction();
-
-                try {
-                  const deleted = await bd.Mat_Inscritos.destroy({
-                    where: { id_horario: horario.id, id_grupo: idGrupo },
-                    transaction: t,
-                  });
-
-                  if (!deleted) {
-                    await t.rollback();
-                    return res.json({
-                      success: false,
-                      error: "El alumno no tenía inscrito ese grupo",
-                    });
-                  }
-
-                  await bd.Grupo.update(
-                    { cupo: grupo.cupo + 1 },
-                    { where: { id: idGrupo }, transaction: t }
-                  );
-
-                  const creditosActuales = parseInt(
-                    estudiante.creditos_disponibles,
-                    10
-                  );
-                  const creditosUA = parseInt(
-                    grupo.Unidad_Aprendizaje.credito,
-                    10
-                  );
-
-                  await bd.Estudiante.update(
-                    {
-                      creditos_disponibles: creditosActuales + creditosUA,
-                    },
-                    { where: { id_usuario: idAlumno }, transaction: t }
-                  );
-
-                  await t.commit();
-
-                  return res.json({
-                    success: true,
-                    message: "Grupo dado de baja correctamente",
-                  });
-                } catch (err) {
-                  await t.rollback();
-                  console.error(
-                    "Error en transacción AdminAlumnoBajaGrupo:",
-                    err
-                  );
-                  return res.status(500).json({
-                    success: false,
-                    error: "Error al dar de baja grupo",
-                  });
-                }
-              } catch (error) {
-                console.error("Error en /AdminAlumnoBajaGrupo:", error);
-                return res.status(500).json({
-                  success: false,
-                  error: "Error al dar de baja grupo",
-                });
-              }
-            }
-          );
-
           // Manejo de concurrencia
           alumnosEnEsteSlot++;
           if (alumnosEnEsteSlot >= concurrencia) {
@@ -1757,6 +1313,425 @@ module.exports = (passport) => {
       });
     }
   });
+  //  ADMIN: DATOS DE ALUMNO PARA INSCRIPCIÓN
+
+  router.get("/AdminAlumnoDatos/:idAlumno", async (req, res) => {
+    const { idAlumno } = req.params;
+    try {
+      const alumno = await bd.DatosPersonales.findOne({
+        where: { id: idAlumno, tipo_usuario: "alumno" },
+      });
+
+      if (!alumno) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Alumno no encontrado" });
+      }
+
+      const estudiante = await bd.Estudiante.findOne({
+        where: { id_usuario: idAlumno },
+      });
+
+      if (!estudiante) {
+        return res.status(404).json({
+          success: false,
+          error: "Registro de estudiante no encontrado para el alumno",
+        });
+      }
+
+      return res.json({
+        success: true,
+        alumno: {
+          id: alumno.id,
+          nombre: alumno.nombre,
+          ape_paterno: alumno.ape_paterno,
+          ape_materno: alumno.ape_materno,
+          carrera: alumno.carrera,
+        },
+        estudiante: {
+          creditos_disponibles: estudiante.creditos_disponibles,
+          promedio: estudiante.promedio,
+          estado_academico: estudiante.estado_academico,
+        },
+      });
+    } catch (error) {
+      console.error("Error en /AdminAlumnoDatos:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Error al obtener datos del alumno",
+      });
+    }
+  });
+
+  //  ADMIN: MATERIAS INSCRITAS DEL ALUMNO
+
+  router.get("/AdminAlumnoInscripciones/:idAlumno", async (req, res) => {
+    const { idAlumno } = req.params;
+    try {
+      const horario = await bd.Horario.findOne({
+        where: { id_alumno: idAlumno },
+      });
+
+      if (!horario) {
+        return res.json({ success: true, grupos: [] });
+      }
+
+      const mats = await bd.Mat_Inscritos.findAll({
+        where: { id_horario: horario.id },
+        include: [
+          {
+            model: bd.Grupo,
+            attributes: ["id", "nombre", "turno", "cupo"],
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+                attributes: [
+                  "id",
+                  "nombre",
+                  "credito",
+                  "semestre",
+                  "carrera",
+                  "tipo",
+                ],
+              },
+              {
+                model: bd.DatosPersonales,
+                attributes: ["nombre", "ape_paterno", "ape_materno"],
+              },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      const grupos = mats.map((m) => {
+        const g = m.Grupo || {};
+        const ua = g.Unidad_Aprendizaje || {};
+        const prof = g.DatosPersonale || g.DatosPersonales || {};
+        return {
+          id_mat_inscrito: m.id,
+          id_grupo: g.id,
+          grupo: g.nombre,
+          turno: g.turno,
+          ua: ua.nombre,
+          tipo: ua.tipo,
+          creditos: ua.credito,
+          profesor: `${prof.nombre || ""} ${prof.ape_paterno || ""} ${
+            prof.ape_materno || ""
+          }`.trim(),
+          cupo: g.cupo,
+        };
+      });
+
+      return res.json({ success: true, grupos });
+    } catch (error) {
+      console.error("Error en /AdminAlumnoInscripciones:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Error al obtener inscripciones del alumno",
+      });
+    }
+  });
+
+  //  ADMIN: INSCRIBIR GRUPO A ALUMNO
+
+  router.post("/AdminAlumnoInscribirGrupo/:idAlumno", async (req, res) => {
+    const { idAlumno } = req.params;
+    const { idGrupo } = req.body;
+
+    if (!idGrupo) {
+      return res.status(400).json({
+        success: false,
+        error: "Falta idGrupo en el cuerpo",
+      });
+    }
+
+    try {
+      const alumno = await bd.DatosPersonales.findOne({
+        where: { id: idAlumno, tipo_usuario: "alumno" },
+      });
+
+      if (!alumno) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Alumno no encontrado" });
+      }
+
+      const estudiante = await bd.Estudiante.findOne({
+        where: { id_usuario: idAlumno },
+      });
+
+      if (!estudiante) {
+        return res.status(404).json({
+          success: false,
+          error: "Registro de estudiante no encontrado",
+        });
+      }
+
+      const horario = await bd.Horario.findOne({
+        where: { id_alumno: idAlumno },
+      });
+
+      if (!horario) {
+        return res.status(404).json({
+          success: false,
+          error: "Horario no encontrado para el alumno",
+        });
+      }
+
+      const grupo = await bd.Grupo.findOne({
+        where: { id: idGrupo },
+        include: [
+          {
+            model: bd.Unidad_Aprendizaje,
+            attributes: [
+              "id",
+              "nombre",
+              "credito",
+              "semestre",
+              "carrera",
+              "tipo",
+            ],
+          },
+          {
+            model: bd.Distribucion,
+            attributes: ["dia", "hora_ini", "hora_fin"],
+          },
+        ],
+      });
+
+      if (!grupo) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Grupo no encontrado" });
+      }
+
+      if (grupo.cupo <= 0) {
+        return res.json({
+          success: false,
+          error: "El grupo no tiene cupo disponible",
+        });
+      }
+
+      const creditosNecesarios = parseInt(grupo.Unidad_Aprendizaje.credito, 10);
+      const creditosDisponibles = parseInt(estudiante.creditos_disponibles, 10);
+
+      if (creditosDisponibles < creditosNecesarios) {
+        return res.json({
+          success: false,
+          error: "El alumno no tiene créditos suficientes",
+        });
+      }
+
+      // Materias ya inscritas
+      const mats = await bd.Mat_Inscritos.findAll({
+        where: { id_horario: horario.id },
+        include: [
+          {
+            model: bd.Grupo,
+            attributes: ["id", "id_ua"],
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+                attributes: ["id", "nombre"],
+              },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      // Validar que no tenga ya esa UA
+      const yaTieneUA = mats.some(
+        (m) =>
+          m.Grupo &&
+          (m.Grupo.id_ua === grupo.id_ua ||
+            (m.Grupo.Unidad_Aprendizaje &&
+              m.Grupo.Unidad_Aprendizaje.id === grupo.Unidad_Aprendizaje.id))
+      );
+
+      if (yaTieneUA) {
+        return res.json({
+          success: false,
+          error: "El alumno ya tiene inscrita esta unidad de aprendizaje",
+        });
+      }
+
+      // Validar traslapes con distribución
+      const idsGruposActuales = mats.map((m) => m.Grupo.id);
+      let distribucionesExistentes = [];
+      if (idsGruposActuales.length > 0) {
+        distribucionesExistentes = await bd.Distribucion.findAll({
+          where: { id_grupo: idsGruposActuales },
+          raw: true,
+        });
+      }
+
+      const distribNuevo = (grupo.Distribucions || []).map((d) =>
+        d.toJSON ? d.toJSON() : d
+      );
+
+      for (const dNuevo of distribNuevo) {
+        for (const dExist of distribucionesExistentes) {
+          if (seTraslapan(dNuevo, dExist)) {
+            return res.json({
+              success: false,
+              error:
+                "El horario del grupo se traslapa con otra materia ya inscrita",
+            });
+          }
+        }
+      }
+
+      // Transacción: crear Mat_Inscritos, actualizar cupo y créditos
+      const t = await bd.sequelize.transaction();
+
+      try {
+        const idMat = uuidv4().replace(/-/g, "").substring(0, 15);
+
+        await bd.Mat_Inscritos.create(
+          {
+            id: idMat,
+            id_horario: horario.id,
+            id_grupo: idGrupo,
+          },
+          { transaction: t }
+        );
+
+        await bd.Grupo.update(
+          { cupo: grupo.cupo - 1 },
+          { where: { id: idGrupo }, transaction: t }
+        );
+
+        await bd.Estudiante.update(
+          {
+            creditos_disponibles: creditosDisponibles - creditosNecesarios,
+          },
+          { where: { id_usuario: idAlumno }, transaction: t }
+        );
+
+        await t.commit();
+
+        return res.json({
+          success: true,
+          message: "Grupo inscrito correctamente",
+        });
+      } catch (err) {
+        await t.rollback();
+        console.error("Error en transacción AdminAlumnoInscribirGrupo:", err);
+        return res.status(500).json({
+          success: false,
+          error: "Error al inscribir grupo",
+        });
+      }
+    } catch (error) {
+      console.error("Error en /AdminAlumnoInscribirGrupo:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Error al inscribir grupo",
+      });
+    }
+  });
+
+  //  ADMIN: DAR DE BAJA GRUPO A ALUMNO
+
+  router.delete(
+    "/AdminAlumnoBajaGrupo/:idAlumno/:idGrupo",
+    async (req, res) => {
+      const { idAlumno, idGrupo } = req.params;
+
+      try {
+        const estudiante = await bd.Estudiante.findOne({
+          where: { id_usuario: idAlumno },
+        });
+
+        const horario = await bd.Horario.findOne({
+          where: { id_alumno: idAlumno },
+        });
+
+        if (!estudiante || !horario) {
+          return res.status(404).json({
+            success: false,
+            error: "No se encontró estudiante u horario para el alumno",
+          });
+        }
+
+        const grupo = await bd.Grupo.findOne({
+          where: { id: idGrupo },
+          include: [
+            {
+              model: bd.Unidad_Aprendizaje,
+              attributes: ["credito"],
+            },
+          ],
+        });
+
+        if (!grupo) {
+          return res.status(404).json({
+            success: false,
+            error: "Grupo no encontrado",
+          });
+        }
+
+        const t = await bd.sequelize.transaction();
+
+        try {
+          const deleted = await bd.Mat_Inscritos.destroy({
+            where: { id_horario: horario.id, id_grupo: idGrupo },
+            transaction: t,
+          });
+
+          if (!deleted) {
+            await t.rollback();
+            return res.json({
+              success: false,
+              error: "El alumno no tenía inscrito ese grupo",
+            });
+          }
+
+          await bd.Grupo.update(
+            { cupo: grupo.cupo + 1 },
+            { where: { id: idGrupo }, transaction: t }
+          );
+
+          const creditosActuales = parseInt(
+            estudiante.creditos_disponibles,
+            10
+          );
+          const creditosUA = parseInt(grupo.Unidad_Aprendizaje.credito, 10);
+
+          await bd.Estudiante.update(
+            {
+              creditos_disponibles: creditosActuales + creditosUA,
+            },
+            { where: { id_usuario: idAlumno }, transaction: t }
+          );
+
+          await t.commit();
+
+          return res.json({
+            success: true,
+            message: "Grupo dado de baja correctamente",
+          });
+        } catch (err) {
+          await t.rollback();
+          console.error("Error en transacción AdminAlumnoBajaGrupo:", err);
+          return res.status(500).json({
+            success: false,
+            error: "Error al dar de baja grupo",
+          });
+        }
+      } catch (error) {
+        console.error("Error en /AdminAlumnoBajaGrupo:", error);
+        return res.status(500).json({
+          success: false,
+          error: "Error al dar de baja grupo",
+        });
+      }
+    }
+  );
 
   router.get("/SituacionesEspeciales", async (req, res) => {
     try {
