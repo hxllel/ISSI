@@ -1313,8 +1313,10 @@ module.exports = (passport) => {
       });
     }
   });
-  //  ADMIN: DATOS DE ALUMNO PARA INSCRIPCIÓN
 
+  // ============================
+  //  ADMIN: DATOS ALUMNO INSCRIPCIÓN
+  // ============================
   router.get("/AdminAlumnoDatos/:idAlumno", async (req, res) => {
     const { idAlumno } = req.params;
     try {
@@ -1363,8 +1365,9 @@ module.exports = (passport) => {
     }
   });
 
+  // ============================
   //  ADMIN: MATERIAS INSCRITAS DEL ALUMNO
-
+  // ============================
   router.get("/AdminAlumnoInscripciones/:idAlumno", async (req, res) => {
     const { idAlumno } = req.params;
     try {
@@ -1434,17 +1437,17 @@ module.exports = (passport) => {
     }
   });
 
+  // ============================
   //  ADMIN: INSCRIBIR GRUPO A ALUMNO
-
+  // ============================
   router.post("/AdminAlumnoInscribirGrupo/:idAlumno", async (req, res) => {
     const { idAlumno } = req.params;
     const { idGrupo } = req.body;
 
     if (!idGrupo) {
-      return res.status(400).json({
-        success: false,
-        error: "Falta idGrupo en el cuerpo",
-      });
+      return res
+        .status(400)
+        .json({ success: false, error: "Falta idGrupo en el cuerpo" });
     }
 
     try {
@@ -1635,8 +1638,9 @@ module.exports = (passport) => {
     }
   });
 
+  // ============================
   //  ADMIN: DAR DE BAJA GRUPO A ALUMNO
-
+  // ============================
   router.delete(
     "/AdminAlumnoBajaGrupo/:idAlumno/:idGrupo",
     async (req, res) => {
