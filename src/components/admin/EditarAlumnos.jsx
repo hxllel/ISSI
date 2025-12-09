@@ -86,8 +86,17 @@ export function EditarAlumnos() {
     };
 
     return (
+        <div className="admin-container">
+            <AdminSidebar />
+             <main className="main-content">
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <h1>Editar alumnO</h1>
+          </div>
+          <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
+        </header>
         <section className="ea-wrap">
-            <h1 className="ea-title">Editar Alumno</h1>
+            
 
             <form className="formulario ea-card" onSubmit={handleSubmit}>
                 <label>Nombre:</label>
@@ -156,11 +165,14 @@ export function EditarAlumnos() {
                         <img src={fotoBase64} alt="Previsualización" />
                     </div>
                 )}
-
-                <button className="ea-btn primary" type="submit">
+                <div>   
+                <button className="btn azul" type="submit">
                     Guardar cambios
                 </button>
+                </div>
             </form>
         </section>
+        </main>
+        </div>
     );
 }

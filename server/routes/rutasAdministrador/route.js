@@ -442,7 +442,7 @@ module.exports = (passport) => {
         try {
           const base64Data =
             typeof req.body.fotoBase64 === "string" &&
-            req.body.fotoBase64.includes(",")
+              req.body.fotoBase64.includes(",")
               ? req.body.fotoBase64.split(",")[1]
               : req.body.fotoBase64;
           fields.foto = Buffer.from(base64Data, "base64");
@@ -1000,15 +1000,104 @@ module.exports = (passport) => {
   router.post("/Validar/:id", async (req, res) => {
     const { id } = req.params;
     try {
-      await bd.ETS.update(
-        {
-          validado: 1,
+      const ets = await bd.ETS.findOne({
+        where: { id: id },
+        include: [
+          {
+            model: bd.Materia_Reprobada,
+            include: [
+              {
+                model: bd.Estudiante,
+                include: [bd.DatosPersonales],
+              },
+            ],
+          },
+          {
+            model: bd.Grupo,
+            include: [bd.Unidad_Aprendizaje],
+          },
+        ],
+      });
+
+      if (!ets) {
+        return res.status(404).json({ success: false, message: "ETS no encontrado" });
+      }
+
+      await bd.ETS.update({ validado: 1 }, { where: { id: id } });
+
+      // Enviar correo de validación
+      const alumno = ets.Materia_Reprobada.Estudiante.DatosPersonales;
+      const unidad = ets.Grupo.Unidad_Aprendizaje;
+
+      const transporter = require("nodemailer").createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
         },
-        { where: { id: id } }
-      );
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: alumno.email,
+        subject: "Comprobante de Pago ETS Validado - SAES-R",
+        html: `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: white; margin: 0; padding: 20px;">
+          <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #7d0024 0%, #5a001a 100%); padding: 40px 20px; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">Comprobante ETS Validado</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 40px 30px;">
+              <p style="color: #333; font-size: 16px; margin-bottom: 10px;">Hola <strong>${alumno.nombre} ${alumno.ape_paterno}</strong>,</p>
+              <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">
+                Tu comprobante de pago para el Examen a Título de Suficiencia (ETS) ha sido validado exitosamente.
+              </p>
+              
+              <!-- Success Box -->
+              <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 20px; border-radius: 5px; margin: 30px 0;">
+                <p style="color: #2e7d32; font-size: 14px; margin: 0 0 10px 0;">
+                  <strong>Unidad de Aprendizaje:</strong> ${unidad.nombre}
+                </p>
+                <p style="color: #2e7d32; font-size: 14px; margin: 0;">
+                  Tu inscripción al ETS ha sido confirmada.
+                </p>
+              </div>
+              
+              <!-- Info -->
+              <div style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="color: #1565c0; font-size: 13px; margin: 0;">
+                  <strong>Nota:</strong> Recuerda revisar la fecha, hora y lugar del examen en el sistema SAES-R.
+                </p>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+              <p style="color: #999; font-size: 12px; margin: 0;">
+                Sistema SAES-R<br>
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      };
+
+      await transporter.sendMail(mailOptions);
+
       return res.json({ success: true });
     } catch (err) {
-      console.log(err);
+      console.error("Error al validar ETS:", err);
+      return res.status(500).json({ success: false, message: "Error al validar el ETS" });
     }
   });
 
@@ -1016,15 +1105,111 @@ module.exports = (passport) => {
     const { id } = req.params;
 
     try {
-      await bd.ETS.update(
-        {
-          comprobante: null,
+      const ets = await bd.ETS.findOne({
+        where: { id: id },
+        include: [
+          {
+            model: bd.Materia_Reprobada,
+            include: [
+              {
+                model: bd.Estudiante,
+                include: [bd.DatosPersonales],
+              },
+            ],
+          },
+          {
+            model: bd.Grupo,
+            include: [bd.Unidad_Aprendizaje],
+          },
+        ],
+      });
+
+      if (!ets) {
+        return res.status(404).json({ success: false, message: "ETS no encontrado" });
+      }
+
+      await bd.ETS.update({ validado: -1 }, { where: { id: id } });
+
+      // Enviar correo de denegación
+      const alumno = ets.Materia_Reprobada.Estudiante.DatosPersonale;
+      const unidad = ets.Grupo.Unidad_Aprendizaje;
+
+      const transporter = require("nodemailer").createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
         },
-        { where: { id: id } }
-      );
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: alumno.email,
+        subject: "Comprobante de Pago ETS Rechazado - SAES-R",
+        html: `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: white; margin: 0; padding: 20px;">
+          <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #7d0024 0%, #5a001a 100%); padding: 40px 20px; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">Comprobante ETS Rechazado</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 40px 30px;">
+              <p style="color: #333; font-size: 16px; margin-bottom: 10px;">Hola <strong>${alumno.nombre} ${alumno.ape_paterno}</strong>,</p>
+              <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">
+                Tu comprobante de pago para el Examen a Título de Suficiencia (ETS) ha sido rechazado.
+              </p>
+              
+              <!-- Warning Box -->
+              <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 20px; border-radius: 5px; margin: 30px 0;">
+                <p style="color: #c62828; font-size: 14px; margin: 0 0 10px 0;">
+                  <strong>Unidad de Aprendizaje:</strong> ${unidad.nombre}
+                </p>
+                <p style="color: #c62828; font-size: 14px; margin: 0;">
+                  El comprobante proporcionado no cumple con los requisitos necesarios.
+                </p>
+              </div>
+              
+              <!-- Info -->
+              <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="color: #856404; font-size: 13px; margin: 0;">
+                  <strong>Acción requerida:</strong> Por favor, sube un nuevo comprobante de pago válido a través del sistema SAES-R. Verifica que el documento sea legible y corresponda al pago correcto.
+                </p>
+              </div>
+              
+              <!-- Tips -->
+              <div style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="color: #1565c0; font-size: 13px; margin: 0;">
+                  <strong>Consejos:</strong> Asegúrate de que el comprobante incluya todos los datos requeridos y que la imagen sea clara. Si tienes dudas, contacta a administración.
+                </p>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+              <p style="color: #999; font-size: 12px; margin: 0;">
+                Sistema SAES-R<br>
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      };
+
+      await transporter.sendMail(mailOptions);
+
       return res.json({ success: true });
     } catch (err) {
-      console.log(err);
+      console.error("Error al denegar ETS:", err);
+      return res.status(500).json({ success: false, message: "Error al denegar el ETS" });
     }
   });
 
@@ -1420,9 +1605,8 @@ module.exports = (passport) => {
           ua: ua.nombre,
           tipo: ua.tipo,
           creditos: ua.credito,
-          profesor: `${prof.nombre || ""} ${prof.ape_paterno || ""} ${
-            prof.ape_materno || ""
-          }`.trim(),
+          profesor: `${prof.nombre || ""} ${prof.ape_paterno || ""} ${prof.ape_materno || ""
+            }`.trim(),
           cupo: g.cupo,
         };
       });
