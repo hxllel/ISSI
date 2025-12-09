@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AdminSidebar } from "./AdminSidebar";
 import Modal from "../Modal";
-import "../alumno/Inscripcion.css";
+import "./InscripcionAdmin.css";
 
 const API = "http://localhost:4000";
 
