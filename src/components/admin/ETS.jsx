@@ -112,7 +112,7 @@ export function ETS() {
     .then((res) => res.json())
     .then((data) => {
       setAlumnos(data.comprobantes);
-      setModalOpen(true);  // ✅ AHORA SÍ abre después de tener los datos
+      setModalOpen(true);  
     })
     .catch((err) => console.error("Error", err));
 };
