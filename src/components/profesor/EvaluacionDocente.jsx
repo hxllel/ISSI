@@ -52,13 +52,16 @@ export default function EvaluacionDocente({ profesorId: propProfesorId }) {
   ).toFixed(2);
 
   return (
-    <div className="evaluacion-page">
+    <div className="admin-container">
       <ProfeSideBar />
 
       <main className="profesor-main">
         <div className="profesor-main-inner">
-          <div className="prof-page-header">
-            <h2 className="prof-page-title">Evaluación docente</h2>
+          <header className="chat-header">
+          <div className="encabezado-section">
+            <h1>Evaluaciones del Profesor</h1>
+          </div>
+            
             <div className="prof-page-header-right">
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: "0.9rem", color: "#666" }}>Promedio</div>
@@ -66,7 +69,8 @@ export default function EvaluacionDocente({ profesorId: propProfesorId }) {
               </div>
               <div style={{ fontWeight: 600, color: "#444" }}>{loading ? "—" : `${evaluaciones.length} reseñas`}</div>
             </div>
-          </div>
+            <img src="/escom.png" alt="Logo ESCOM" className="header-logo" />
+          </header>
 
           {loading && <div className="loading">Cargando evaluaciones...</div>}
 

@@ -16,9 +16,9 @@
 ======================================= */
 .profesor-layout {
   display: flex;
-  min-height: 100vh;
-  font-family: "Poppins", sans-serif;
-  background-color: var(--prof-bg);
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5; /* opcional */
 }
 
 /* Sidebar (igual estilo que el alumno) */
@@ -113,17 +113,18 @@
    Contenido principal
 ======================================= */
 .profesor-main {
-  margin-left: 240px;
-  padding: 2rem 3rem;
-  min-height: 100vh;
-  box-sizing: border-box;
-  width: calc(100% - 240px);
-  overflow-y: auto;
+  flex: 1 !important;                /* QUE TOME TODO EL ESPACIO DISPONIBLE */
+  width: 100% !important;            /* EVITA RECORTES */
+  padding: 2rem;                     /* opcional */
+  box-sizing: border-box;            /* IMPORTANTÍSIMO */
+  overflow-x: visible !important;    /* evita cortes horizontales */
 }
 
+
 .profesor-main-inner {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100% !important;            /* SIN ESTO SE HACEN RECORTES */
+  max-width: 100% !important;        /* EVITA QUE SE ENCOJA */
+  overflow-x: visible !important;
 }
 
 /* =======================================

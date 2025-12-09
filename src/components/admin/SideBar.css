@@ -9,21 +9,29 @@
 }
 
 /* Sidebar */
+/* Sidebar */
 .sidebar {
-  position: fixed;
+  position: fixed;      /* <-- LO MÁS IMPORTANTE */
   top: 0;
   left: 0;
-  width: 240px;
   height: 100vh;
+  width: 240px !important;
+  max-width: 240px !important;
+  min-width: 240px !important;
   background: #fff;
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
-  z-index: 10;
+  z-index: 1000;        /* <-- MUY IMPORTANTE */
   overflow-y: auto;
+  overflow-x: hidden;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
 }
+
+
 
 .logo {
   display: flex;
@@ -82,12 +90,80 @@
   padding-top: 1rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
-    box-shadow: none;
-  }
+/* Sidebar abierto/cerrado */
+.sidebar {
+  transform: translateX(0);
+  transition: transform 0.3s ease;
 }
+
+.sidebar.is-closed {
+  transform: translateX(-100%);
+}
+
+/* FAB para abrir el sidebar */
+.sidebar-fab {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  background: #7d0024;
+  color: #fff;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Botón de cerrar (✕) */
+.sidebar-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #7d0024;
+  margin-left: auto;
+}
+
+/* Overlay oscuro cuando está abierto (móvil) */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* =============== FIX DEL BOTÓN ✕ MUY IMPORTANTE =============== */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  
+}
+
+.sidebar-close {
+  margin-left: auto;
+  position: absolute;
+  top: 10px;      /* <-- SUBE EL BOTÓN */
+  right: 10px;    /* <-- LO PEGA A LA ORILLA DERECHA */
+}
+
+
+.sidebar {
+  overflow-x: hidden; /* <-- elimina cualquier scroll horizontal inútil */
+}
+

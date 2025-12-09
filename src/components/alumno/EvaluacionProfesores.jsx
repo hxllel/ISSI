@@ -357,7 +357,7 @@ export function EvaluacionProfesores() {
                   </table>
                 </div>
 
-                <button className="btn-cancelar" onClick={() => navigate(`/alumno/${id}`)}>
+                <button className="btn blanco" onClick={() => navigate(`/alumno/${id}`)}>
                   Volver al inicio
                 </button>
               </section>

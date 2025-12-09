@@ -354,12 +354,14 @@ export function ChatbotProfesor() {
   }, [])
 
   return (
-    <div className="chatbot-container">
+    <div className="admin-container">
       <ProfeSideBar />
 
       <main className="main-content">
         <header className="chat-header">
+          <div className="encabezado-section">
           <h1>Asistente de Chat de IA</h1>
+          </div>
           {profesorId && (
             <div style={{ fontSize: 12, color: "#666" }}>
               Profesor: {profesorId} | Tipo: {tipoUsuario}

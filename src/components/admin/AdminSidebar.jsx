@@ -1,136 +1,107 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SideBar.css";
 
 export function AdminSidebar() {
   const navigate = useNavigate();
-  const API = "http://localhost:4000"
 
-  // Handlers de navegación - ADMIN
-  const handleGestionarAlumnos = () => navigate("/administrador/gestionarAlumnos");
-  const handleGestionarProfesores = () => navigate("/administrador/gestionarProfesores");
-  const handleGestionarCursos = () => navigate("/administrador/gestionarCursos");
-  const handleETS = () => navigate("/administrador/ETS");
-  const handlePublicarNoticia = () => navigate("/administrador/publicarNoticia");
-  const handleCarreras = () => navigate("/administrador/carreras");
-  const handleUnidades = () => navigate("/administrador/unidades");
-  const handleDatosMedicos = () => navigate("/administrador/datosMedicos");
-  const handleGenerarCitas = () => navigate("/administrador/Fechas");
-  const handleSituacionesEspeciales = () => navigate("/administrador/SituacionesEspeciales");
-  const handleLogout = () => navigate(`/`);
+  const STORAGE_KEY = "saesr_sidebar_admin_open";
+  const [open, setOpen] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved === null ? true : saved === "1";
+  });
 
-  // Aquí agrego un objeto state común que quieras mandar
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, open ? "1" : "0");
+  }, [open]);
+
+  const closeIfMobile = useCallback(() => {
+    if (window.innerWidth <= 768) setOpen(false);
+  }, []);
+
+  const go = (path, state) => {
+    closeIfMobile();
+    navigate(path, state ? { state } : undefined);
+  };
+
   const sharedState = { fromSidebar: true };
 
+  const handleLogout = () => {
+    setOpen(false);
+    navigate(`/`);
+  };
+
   return (
-    <aside className="sidebar">
-      <div className="logo">
-        <img src="/ipn.png" alt="Logo" className="logo-img" />
-        <span>SAES-R</span>
-      </div>
-
-      <nav className="menu">
-
-        {/* Inicio */}
-        <button
-          onClick={() => navigate("/administrador", { state: sharedState })}
-          className="menu-item"
-        >
-          Inicio
+    <>
+      {!open && (
+        <button className="sidebar-fab" onClick={() => setOpen(true)}>
+          ☰
         </button>
+      )}
 
-        {/* Mantengo los handlers pero paso state desde el botón */}
-        <button
-          className="menu-item"
-          onClick={() => {
-            handleGestionarAlumnos();
-            navigate("/administrador/gestionarAlumnos", { state: sharedState });
-          }}
-        >
-          Gestionar Alumnos
-        </button>
+      <aside className={`sidebar ${open ? "is-open" : "is-closed"}`}>
+        <div className="sidebar-header">
+          <div className="logo">
+            <img src="/ipn.png" alt="Logo" className="logo-img" />
+            <span>SAES-R</span>
+            <div>
+            <button className="sidebar-close" onClick={() => setOpen(false)}>
+            ✕
+          </button>
+          </div>
+          </div>
 
-        <button
-          className="menu-item"
-          onClick={() => {
-            handleGestionarProfesores();
-            navigate("/administrador/gestionarProfesores", { state: sharedState });
-          }}
-        >
-          Gestionar Profesores
-        </button>
+          
+        </div>
 
-        <button
-          className="menu-item"
-          onClick={() => {
-            handleGestionarCursos();
-            navigate("/administrador/gestionarCursos", { state: sharedState });
-          }}
-        >
-          Gestionar Cursos
-        </button>
+        <nav className="menu">
+          <button className="menu-item" onClick={() => go("/administrador", sharedState)}>
+            Inicio
+          </button>
 
-        <button
-          className="menu-item"
-          onClick={() => {
-            handleETS();
-            navigate("/administrador/ETS", { state: sharedState });
-          }}
-        >
-          ETS
-        </button>
+          <button className="menu-item" onClick={() => go("/administrador/gestionarAlumnos", sharedState)}>
+            Gestionar Alumnos
+          </button>
 
-        <button
-          className="menu-item"
-          onClick={() => {
-            handlePublicarNoticia();
-            navigate("/administrador/publicarNoticia", { state: sharedState });
-          }}
-        >
-          Publicar Noticia
-        </button>
+          <button className="menu-item" onClick={() => go("/administrador/gestionarProfesores", sharedState)}>
+            Gestionar Profesores
+          </button>
 
-        <button
-          className="menu-item"
-          onClick={() => {
-            handleCarreras();
-            navigate("/administrador/carreras", { state: sharedState });
-          }}
-        >
-          Carreras
-        </button>
+          <button className="menu-item" onClick={() => go("/administrador/gestionarCursos", sharedState)}>
+            Gestionar Cursos
+          </button>
 
-        <button
-          className="menu-item"
-          onClick={() => {
-            handleUnidades();
-            navigate("/administrador/unidades", { state: sharedState });
-          }}
-        >
-          Unidades
-        </button>
-        <button
-          className="menu-item"
-          onClick={() => {
-            handleGenerarCitas();
-            navigate("/administrador/Fechas", { state: sharedState });
-          }}
-        >
-          Configuración de Fechas 
-        </button>
-        <button 
-          className="menu-item" 
-          onClick={() =>{
-          navigate("/administrador/SituacionesEspeciales", { state: sharedState })
-        }}
-        >
-          Situaciones Especiales
-        </button>
-      </nav>
+          <button className="menu-item" onClick={() => go("/administrador/ETS", sharedState)}>
+            ETS
+          </button>
 
-      <button className="logout" onClick={handleLogout}>
-        Cerrar sesión
-      </button>
-    </aside>
+          <button className="menu-item" onClick={() => go("/administrador/publicarNoticia", sharedState)}>
+            Publicar Noticia
+          </button>
+
+          <button className="menu-item" onClick={() => go("/administrador/carreras", sharedState)}>
+            Carreras
+          </button>
+
+          <button className="menu-item" onClick={() => go("/administrador/unidades", sharedState)}>
+            Unidades
+          </button>
+
+          <button className="menu-item" onClick={() => go("/administrador/Fechas", sharedState)}>
+            Configuración de Fechas
+          </button>
+
+          <button className="menu-item" onClick={() => go("/administrador/SituacionesEspeciales", sharedState)}>
+            Situaciones Especiales
+          </button>
+        </nav>
+
+        <button className="logout" onClick={handleLogout}>
+          Cerrar sesión
+        </button>
+      </aside>
+
+      <button className={`sidebar-overlay ${open ? "show" : ""}`} onClick={() => setOpen(false)} />
+    </>
   );
 }
