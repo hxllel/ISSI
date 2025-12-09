@@ -79,7 +79,7 @@ export function HistorialAcademico() {
         </header>
 
         <section className="horario-section">
-          <h2>Historial Académico</h2>
+          
 
           {semestres.length > 0 ? (
             semestres.map((s) => renderSeccion(s))

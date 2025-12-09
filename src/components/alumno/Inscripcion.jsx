@@ -73,7 +73,7 @@ export function Inscripcion() {
 
   // ========== HISTORIAL CURSADAS ==========
   useEffect(() => {
-    fetch(`${API}/ObtenerHistorial`, { credentials: "include" })
+    fetch(`${API}/ObtenerHistorial/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         const nombres = safeArray(data?.historial).map(

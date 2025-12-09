@@ -460,4 +460,3 @@ const modal = {
   width: "100%",
   borderRadius: 8,
 };
-

@@ -1229,6 +1229,47 @@ module.exports = (passport) => {
     }
   });
 
+  router.get("/ObtenerHistorial", async (req, res) => {
+    // Validar que el usuario esté autenticado
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        error: "Usuario no autenticado. Por favor inicia sesión.",
+      });
+    }
+
+    const us = req.user.id;
+    try {
+      const k = await bd.Kardex.findOne({ where: { id_alumno: us } });
+
+      if (!k) {
+        return res.json({ historial: [], semestres: [] });
+      }
+
+      const sems = await bd.UA_Aprobada.findAll({
+        where: { id_kardex: k.id },
+        raw: true,
+        nest: true,
+      });
+      const car = await bd.DatosPersonales.findOne({
+        where: { id: us },
+      });
+
+      const semestres = [...new Set(sems.map((s) => s.semestre))];
+
+      return res.json({
+        historial: sems,
+        semestres: semestres,
+        carrera: car.carrera,
+      });
+    } catch (err) {
+      console.error("Error en /ObtenerHistorial:", err);
+      return res.status(500).json({
+        success: false,
+        error: "Error al obtener el historial académico",
+      });
+    }
+  });
   router.get("/ObtenerHistorial/:id", async (req, res) => {
     // Validar que el usuario esté autenticado
     if (!req.user || !req.user.id) {
