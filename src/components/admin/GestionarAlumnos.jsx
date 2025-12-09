@@ -31,7 +31,7 @@ export function GestionarAlumnos() {
   const handleRegistrar = () => navigate("registrarAlumno");
 
   const handleClickEdit = (id) => { 
-    navigate(`/admin/gestionarAlumnos/editarAlumnos/${id}`);
+    navigate(`/administrador/gestionarAlumnos/editarAlumnos/${id}`);
   };
 
   const handleAbrirModal = (id) => {
