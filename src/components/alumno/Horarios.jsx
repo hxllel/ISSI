@@ -135,7 +135,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
           }
         })
         .catch((err) => console.error("Error al eliminar borrador:", err))
-        .finally(() => setAdd(false));
+        .finally(() => del(false));
 
     }
   }, [del]);
@@ -217,7 +217,7 @@ useEffect(() => {
 
             const estaCursada = cursadas.includes(dato.Unidad_Aprendizaje.nombre);
             let carreraValida = false;
-            if(dato.Unidad_Aprendizaje.carrera != carrera){
+            if(dato.Unidad_Aprendizaje.carrera == carrera){
               carreraValida = true;
             }
             return (
@@ -246,7 +246,7 @@ useEffect(() => {
                       disabled={
                         borr.some(b => b.id_grupo === dato.id) ||
                         estaCursada || 
-                        carreraValida
+                        !carreraValida
                       }
                     >
                       <FiPlus style={{ marginRight: "8px" }} />
