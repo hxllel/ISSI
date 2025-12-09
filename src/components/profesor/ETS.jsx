@@ -203,13 +203,15 @@ export function ETS() {
             )}
 
             <div className="botones-container">
+              <div>
               <button
                 type="button"
-                className="btn-volver"
+                className="btn blanco"
                 onClick={() => navigate(`/profesor/${id}`)}
               >
                 Volver al inicio
               </button>
+              </div> 
             </div>
           </section>
         ) : (

@@ -178,23 +178,21 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   };
 
   return (
-    <ProfesorLayout profesorId={profesorId}>
-      <div className="prof-page-header">
-        <h1 className="prof-page-title">Horarios de clase</h1>
-        <div className="prof-page-header-right">
-          {onClose && (
-            <button className="clases-close" onClick={onClose}>
-              Cerrar
-            </button>
-          )}
-          <img src="/escom.png" alt="ESCOM" className="prof-page-escom-logo" />
-        </div>
-      </div>
+    <div className="admin-container">
 
-      <section className="section-card">
+    <ProfesorLayout profesorId={profesorId}>
+      
+      <header className="chat-header">
+              <div className="encabezado-section">
+                <h1>HORARIOS</h1>
+              </div>
+              <img src="/escom.png" alt="ESCOM" className="escom-logo" />
+            </header>
+    
+      <section className="gestion-alumnos">
         <h3 className="section-title">Listado de horarios</h3>
 
-        <div className="table-wrap">
+        <div className="horario-table">
           <table className="table">
             <thead>
               <tr>
@@ -275,21 +273,22 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         </div>
 
         {/* ===== PAGINACIÓN ===== */}
-        <div className="pagination">
+        <div className="paginacion">
           <button onClick={() => irAPagina(paginaActual - 1)} disabled={paginaActual === 1}>
-            «
+            Anterior
           </button>
-          <span>
-            Página {paginaActual} de {totalPaginas}
+          <span div className="pagina-activa">
+             {paginaActual} / {totalPaginas}
           </span>
           <button
             onClick={() => irAPagina(paginaActual + 1)}
             disabled={paginaActual === totalPaginas}
           >
-            »
+            Siguiente
           </button>
         </div>
       </section>
     </ProfesorLayout>
+    </div>
   );
 }

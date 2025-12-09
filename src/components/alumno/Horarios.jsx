@@ -16,6 +16,8 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   const [modalResenas, setModalResenas] = useState(false);
   const alumnoId = propAlumnoId || params.id;
   const [resenas, setResenas] = useState([]);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const resultadosPorPagina = 10;
 
   const [add, setAdd] = useState(null);
   const [idgru, setIdgru] = useState("");
@@ -138,7 +140,25 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
     }
   }, [del]);
 
+// Datos paginados
+const totalPaginas = Math.max(1, Math.ceil(datos.length / resultadosPorPagina));
 
+const indiceInicio = (paginaActual - 1) * resultadosPorPagina;
+const datosPagina = datos.slice(indiceInicio, indiceInicio + resultadosPorPagina);
+
+// Cambiar página
+const siguientePagina = () => {
+  if (paginaActual < totalPaginas) setPaginaActual(paginaActual + 1);
+};
+
+const anteriorPagina = () => {
+  if (paginaActual > 1) setPaginaActual(paginaActual - 1);
+};
+
+// Si cambian los datos, regresar a página 1
+useEffect(() => {
+  setPaginaActual(1);
+}, [datos]);
 
   return (
     <div className="alumno-container">
@@ -177,7 +197,7 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
           </tr>
         </thead>
         <tbody>
-          {(Array.isArray(datos) ? datos : []).map((dato) => {
+          {datosPagina.map((dato) => {
             // Distribuciones pueden venir como array o como objeto único
             const distribsRaw = dato.Distribucion || [];
             const distribs = Array.isArray(distribsRaw) ? distribsRaw : [distribsRaw];
@@ -238,6 +258,28 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
           })}
         </tbody>
       </table>
+      <div className="paginacion">
+  <button
+    
+    onClick={anteriorPagina}
+    disabled={paginaActual === 1}
+  >
+     Anterior
+  </button>
+
+  <span className="pagina-activa">
+     {paginaActual} / {totalPaginas}
+  </span>
+
+  <button
+    
+    onClick={siguientePagina}
+    disabled={paginaActual === totalPaginas}
+  >
+    Siguiente 
+  </button>
+</div>
+
 
 
 

@@ -2219,7 +2219,7 @@ BEGIN
     CLOSE ua_cursor;
 END $$
 
-DELIMITER;
+DELIMITER ;
 
 CALL generate_groups_and_schedules ();
 
