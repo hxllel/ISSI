@@ -333,11 +333,18 @@ export function MateriasReprobadas() {
                           {grupoMatutinoActual.DatosPersonale?.ape_paterno}{" "}
                           {grupoMatutinoActual.DatosPersonale?.ape_materno}
                         </p>
+
+                        <p>
+                          <strong>Cupo:</strong>{" "}
+                          {grupoMatutinoActual.cupo}
+                        </p>
                       </div>
+                      
 
                       <button
                         onClick={() => handleI(grupoMatutinoActual.id)}
                         className="ets-btn-inscribir"
+                        disabled = {Number(grupoMatutinoActual.cupo) <= 0}
                       >
                         Inscribir
                       </button>
@@ -370,10 +377,15 @@ export function MateriasReprobadas() {
                           {grupoVespertinoActual.DatosPersonale?.ape_paterno}{" "}
                           {grupoVespertinoActual.DatosPersonale?.ape_materno}
                         </p>
+                        <p>
+                          <strong>Cupo:</strong>{" "}
+                          {grupoVespertinoActual.cupo}
+                        </p>
                       </div>
 
                       <button
                         onClick={() => handleI(grupoVespertinoActual.id)}
+                        disabled={Number(grupoVespertinoActual.cupo) <= 0}
                         className="ets-btn-inscribir"
                       >
                         Inscribir

@@ -480,6 +480,7 @@ const ETS_grupo = sequelize.define(
     hora_final: { type: DataTypes.TEXT, allowNull: false },
     fecha: { type: DataTypes.DATEONLY, allowNull: false },
     periodo: { type: DataTypes.TEXT, allowNull: false },
+    cupo: { type: DataTypes.INTEGER, allowNull: false },
   },
   { tableName: "ets_grupo", timestamps: false }
 );

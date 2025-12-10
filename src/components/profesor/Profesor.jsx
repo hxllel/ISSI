@@ -31,7 +31,7 @@ export function Profesor() {
     if (isClases) return;
     (async () => {
       try {
-        const r = await fetch(`${API}/ObtenerCursos/`, { credentials: "include" });
+        const r = await fetch(`${API}/ObtenerCursos/Prof/${id}`, { credentials: "include" });
         const j = await r.json();
         const base = Array.isArray(j?.cursos) ? j.cursos : [];
 
