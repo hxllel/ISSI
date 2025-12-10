@@ -768,3 +768,42 @@
     font-size: 1.2rem;
   }
 }
+
+/* ================================
+   ESTILOS PARA TEXTO BLANCO
+   ================================ */
+
+.resultado-evaluacion,
+.resultado-evaluacion * {
+    color: #ffffff !important;   /* Texto blanco */
+}
+
+/* Si el card tiene fondo claro, ponemos guinda oscuro */
+.resultado-card {
+    background-color: #7a0b28 !important; /* Guinda más oscuro para contraste */
+    color: #ffffff !important;
+}
+
+/* Asegurar que labels, valores y botones tengan buen contraste */
+.puntuacion-label,
+.puntuacion-valor,
+.registro-count {
+    color: #ffffff !important;
+}
+
+.resultado-card h2 {
+    color: #ffffff !important;
+}
+
+/* Botones */
+.btn-nueva,
+.btn-volver {
+    color: #ffffff !important;
+    border: 1px solid #ffffff;
+}
+
+.btn-nueva:hover,
+.btn-volver:hover {
+    background-color: #ffffff !important;
+    color: #7a0b28 !important;
+}

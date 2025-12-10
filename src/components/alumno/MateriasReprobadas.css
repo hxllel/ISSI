@@ -480,3 +480,8 @@
   font-weight: bold;
   font-size: 14px;
 }
+.ets-btn-inscribir[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none; /* opcional: asegura que no reciba eventos */
+}

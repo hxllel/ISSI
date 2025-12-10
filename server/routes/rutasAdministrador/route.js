@@ -1100,6 +1100,7 @@ module.exports = (passport) => {
         hora_final,
         fecha,
         periodo: p.periodo,
+        cupo: 30,
       });
 
       return res.json({

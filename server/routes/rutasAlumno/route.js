@@ -1473,6 +1473,16 @@ module.exports = (passport) => {
         { where: { id: id_mr } }
       );
 
+      const ge = await bd.ETS_grupo.findOne({
+        where: { id: id_grupo },
+      });
+      await bd.ETS_grupo.update(
+        {
+          cupo: parseInt(ge.cupo) - 1,
+        },
+        { where: { id: id_grupo } }
+      );
+
       return res.json({ success: true });
     } catch (err) {
       console.log(err);

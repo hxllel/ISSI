@@ -5131,8 +5131,6 @@ VALUES (
 
 -- DISTRIBUCIÓN DE HORARIOS PARA GRUPOS OPTATIVAS
 -- Horario estándar: Lunes, Miércoles, Viernes 10:30-12:00 (Matutino) o 6:30-8:00 (Vespertino)
-
--- ISC Semestre 6 - Matutino
 INSERT INTO
     distribucion (
         id,
@@ -5165,21 +5163,21 @@ VALUES (
     (
         'D_OPT_004',
         'G_OPT_002',
-        '8:30',
+        '08:30',
         '10:00',
         'Lunes'
     ),
     (
         'D_OPT_005',
         'G_OPT_002',
-        '8:30',
+        '08:30',
         '10:00',
         'Miércoles'
     ),
     (
         'D_OPT_006',
         'G_OPT_002',
-        '8:30',
+        '08:30',
         '10:00',
         'Viernes'
     ),
@@ -5187,63 +5185,63 @@ VALUES (
         'D_OPT_007',
         'G_OPT_005',
         '12:00',
-        '1:30',
+        '13:30',
         'Lunes'
     ),
     (
         'D_OPT_008',
         'G_OPT_005',
         '12:00',
-        '1:30',
+        '13:30',
         'Miércoles'
     ),
     (
         'D_OPT_009',
         'G_OPT_005',
         '12:00',
-        '1:30',
+        '13:30',
         'Viernes'
     ),
     (
         'D_OPT_010',
         'G_OPT_007',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Martes'
     ),
     (
         'D_OPT_011',
         'G_OPT_007',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Jueves'
     ),
     (
         'D_OPT_012',
         'G_OPT_007',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Viernes'
     ),
     (
         'D_OPT_013',
         'G_OPT_009',
-        '1:30',
-        '3:00',
+        '13:30',
+        '15:00',
         'Lunes'
     ),
     (
         'D_OPT_014',
         'G_OPT_009',
-        '1:30',
-        '3:00',
+        '13:30',
+        '15:00',
         'Miércoles'
     ),
     (
         'D_OPT_015',
         'G_OPT_009',
-        '1:30',
-        '3:00',
+        '13:30',
+        '15:00',
         'Viernes'
     ),
     (
@@ -5270,21 +5268,21 @@ VALUES (
     (
         'D_OPT_019',
         'G_OPT_013',
-        '8:30',
+        '08:30',
         '10:00',
         'Martes'
     ),
     (
         'D_OPT_020',
         'G_OPT_013',
-        '8:30',
+        '08:30',
         '10:00',
         'Jueves'
     ),
     (
         'D_OPT_021',
         'G_OPT_013',
-        '8:30',
+        '08:30',
         '10:00',
         'Viernes'
     );
@@ -5301,148 +5299,148 @@ INSERT INTO
 VALUES (
         'D_OPT_022',
         'G_OPT_003',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Lunes'
     ),
     (
         'D_OPT_023',
         'G_OPT_003',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Miércoles'
     ),
     (
         'D_OPT_024',
         'G_OPT_003',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Viernes'
     ),
     (
         'D_OPT_025',
         'G_OPT_004',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Lunes'
     ),
     (
         'D_OPT_026',
         'G_OPT_004',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Miércoles'
     ),
     (
         'D_OPT_027',
         'G_OPT_004',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Viernes'
     ),
     (
         'D_OPT_028',
         'G_OPT_006',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Lunes'
     ),
     (
         'D_OPT_029',
         'G_OPT_006',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Miércoles'
     ),
     (
         'D_OPT_030',
         'G_OPT_006',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Viernes'
     ),
     (
         'D_OPT_031',
         'G_OPT_008',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Martes'
     ),
     (
         'D_OPT_032',
         'G_OPT_008',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Jueves'
     ),
     (
         'D_OPT_033',
         'G_OPT_008',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Viernes'
     ),
     (
         'D_OPT_034',
         'G_OPT_010',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Martes'
     ),
     (
         'D_OPT_035',
         'G_OPT_010',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Jueves'
     ),
     (
         'D_OPT_036',
         'G_OPT_010',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Viernes'
     ),
     (
         'D_OPT_037',
         'G_OPT_012',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Martes'
     ),
     (
         'D_OPT_038',
         'G_OPT_012',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Jueves'
     ),
     (
         'D_OPT_039',
         'G_OPT_012',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Viernes'
     ),
     (
         'D_OPT_040',
         'G_OPT_014',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Martes'
     ),
     (
         'D_OPT_041',
         'G_OPT_014',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Jueves'
     ),
     (
         'D_OPT_042',
         'G_OPT_014',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Viernes'
     );
 
@@ -5479,21 +5477,21 @@ VALUES (
     (
         'D_OPT_046',
         'G_OPT_017',
-        '8:30',
+        '08:30',
         '10:00',
         'Lunes'
     ),
     (
         'D_OPT_047',
         'G_OPT_017',
-        '8:30',
+        '08:30',
         '10:00',
         'Miércoles'
     ),
     (
         'D_OPT_048',
         'G_OPT_017',
-        '8:30',
+        '08:30',
         '10:00',
         'Viernes'
     ),
@@ -5501,63 +5499,63 @@ VALUES (
         'D_OPT_049',
         'G_OPT_019',
         '12:00',
-        '1:30',
+        '13:30',
         'Lunes'
     ),
     (
         'D_OPT_050',
         'G_OPT_019',
         '12:00',
-        '1:30',
+        '13:30',
         'Miércoles'
     ),
     (
         'D_OPT_051',
         'G_OPT_019',
         '12:00',
-        '1:30',
+        '13:30',
         'Viernes'
     ),
     (
         'D_OPT_052',
         'G_OPT_021',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Martes'
     ),
     (
         'D_OPT_053',
         'G_OPT_021',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Jueves'
     ),
     (
         'D_OPT_054',
         'G_OPT_021',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Viernes'
     ),
     (
         'D_OPT_055',
         'G_OPT_023',
-        '1:30',
-        '3:00',
+        '13:30',
+        '15:00',
         'Lunes'
     ),
     (
         'D_OPT_056',
         'G_OPT_023',
-        '1:30',
-        '3:00',
+        '13:30',
+        '15:00',
         'Miércoles'
     ),
     (
         'D_OPT_057',
         'G_OPT_023',
-        '1:30',
-        '3:00',
+        '13:30',
+        '15:00',
         'Viernes'
     );
 
@@ -5573,106 +5571,106 @@ INSERT INTO
 VALUES (
         'D_OPT_058',
         'G_OPT_016',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Lunes'
     ),
     (
         'D_OPT_059',
         'G_OPT_016',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Miércoles'
     ),
     (
         'D_OPT_060',
         'G_OPT_016',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Viernes'
     ),
     (
         'D_OPT_061',
         'G_OPT_018',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Lunes'
     ),
     (
         'D_OPT_062',
         'G_OPT_018',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Miércoles'
     ),
     (
         'D_OPT_063',
         'G_OPT_018',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Viernes'
     ),
     (
         'D_OPT_064',
         'G_OPT_020',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Lunes'
     ),
     (
         'D_OPT_065',
         'G_OPT_020',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Miércoles'
     ),
     (
         'D_OPT_066',
         'G_OPT_020',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Viernes'
     ),
     (
         'D_OPT_067',
         'G_OPT_022',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Martes'
     ),
     (
         'D_OPT_068',
         'G_OPT_022',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Jueves'
     ),
     (
         'D_OPT_069',
         'G_OPT_022',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Viernes'
     ),
     (
         'D_OPT_070',
         'G_OPT_024',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Martes'
     ),
     (
         'D_OPT_071',
         'G_OPT_024',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Jueves'
     ),
     (
         'D_OPT_072',
         'G_OPT_024',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Viernes'
     );
 
@@ -5709,21 +5707,21 @@ VALUES (
     (
         'D_OPT_076',
         'G_OPT_027',
-        '8:30',
+        '08:30',
         '10:00',
         'Lunes'
     ),
     (
         'D_OPT_077',
         'G_OPT_027',
-        '8:30',
+        '08:30',
         '10:00',
         'Miércoles'
     ),
     (
         'D_OPT_078',
         'G_OPT_027',
-        '8:30',
+        '08:30',
         '10:00',
         'Viernes'
     ),
@@ -5731,42 +5729,42 @@ VALUES (
         'D_OPT_079',
         'G_OPT_029',
         '12:00',
-        '1:30',
+        '13:30',
         'Lunes'
     ),
     (
         'D_OPT_080',
         'G_OPT_029',
         '12:00',
-        '1:30',
+        '13:30',
         'Miércoles'
     ),
     (
         'D_OPT_081',
         'G_OPT_029',
         '12:00',
-        '1:30',
+        '13:30',
         'Viernes'
     ),
     (
         'D_OPT_082',
         'G_OPT_031',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Martes'
     ),
     (
         'D_OPT_083',
         'G_OPT_031',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Jueves'
     ),
     (
         'D_OPT_084',
         'G_OPT_031',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Viernes'
     );
 
@@ -5782,64 +5780,64 @@ INSERT INTO
 VALUES (
         'D_OPT_085',
         'G_OPT_026',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Lunes'
     ),
     (
         'D_OPT_086',
         'G_OPT_026',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Miércoles'
     ),
     (
         'D_OPT_087',
         'G_OPT_026',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Viernes'
     ),
     (
         'D_OPT_088',
         'G_OPT_028',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Lunes'
     ),
     (
         'D_OPT_089',
         'G_OPT_028',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Miércoles'
     ),
     (
         'D_OPT_090',
         'G_OPT_028',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Viernes'
     ),
     (
         'D_OPT_091',
         'G_OPT_030',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Lunes'
     ),
     (
         'D_OPT_092',
         'G_OPT_030',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Miércoles'
     ),
     (
         'D_OPT_093',
         'G_OPT_030',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Viernes'
     );
 
@@ -5876,21 +5874,21 @@ VALUES (
     (
         'D_OPT_097',
         'G_OPT_035',
-        '8:30',
+        '08:30',
         '10:00',
         'Lunes'
     ),
     (
         'D_OPT_098',
         'G_OPT_035',
-        '8:30',
+        '08:30',
         '10:00',
         'Miércoles'
     ),
     (
         'D_OPT_099',
         'G_OPT_035',
-        '8:30',
+        '08:30',
         '10:00',
         'Viernes'
     ),
@@ -5898,21 +5896,21 @@ VALUES (
         'D_OPT_100',
         'G_OPT_037',
         '12:00',
-        '1:30',
+        '13:30',
         'Lunes'
     ),
     (
         'D_OPT_101',
         'G_OPT_037',
         '12:00',
-        '1:30',
+        '13:30',
         'Miércoles'
     ),
     (
         'D_OPT_102',
         'G_OPT_037',
         '12:00',
-        '1:30',
+        '13:30',
         'Viernes'
     );
 
@@ -5928,85 +5926,85 @@ INSERT INTO
 VALUES (
         'D_OPT_103',
         'G_OPT_032',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Lunes'
     ),
     (
         'D_OPT_104',
         'G_OPT_032',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Miércoles'
     ),
     (
         'D_OPT_105',
         'G_OPT_032',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Viernes'
     ),
     (
         'D_OPT_106',
         'G_OPT_034',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Lunes'
     ),
     (
         'D_OPT_107',
         'G_OPT_034',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Miércoles'
     ),
     (
         'D_OPT_108',
         'G_OPT_034',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Viernes'
     ),
     (
         'D_OPT_109',
         'G_OPT_036',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Lunes'
     ),
     (
         'D_OPT_110',
         'G_OPT_036',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Miércoles'
     ),
     (
         'D_OPT_111',
         'G_OPT_036',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Viernes'
     ),
     (
         'D_OPT_112',
         'G_OPT_038',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Martes'
     ),
     (
         'D_OPT_113',
         'G_OPT_038',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Jueves'
     ),
     (
         'D_OPT_114',
         'G_OPT_038',
-        '8:00',
-        '9:30',
+        '20:00',
+        '21:30',
         'Viernes'
     );
 
@@ -6043,21 +6041,21 @@ VALUES (
     (
         'D_OPT_118',
         'G_OPT_041',
-        '8:30',
+        '08:30',
         '10:00',
         'Lunes'
     ),
     (
         'D_OPT_119',
         'G_OPT_041',
-        '8:30',
+        '08:30',
         '10:00',
         'Miércoles'
     ),
     (
         'D_OPT_120',
         'G_OPT_041',
-        '8:30',
+        '08:30',
         '10:00',
         'Viernes'
     ),
@@ -6065,21 +6063,21 @@ VALUES (
         'D_OPT_121',
         'G_OPT_043',
         '12:00',
-        '1:30',
+        '13:30',
         'Lunes'
     ),
     (
         'D_OPT_122',
         'G_OPT_043',
         '12:00',
-        '1:30',
+        '13:30',
         'Miércoles'
     ),
     (
         'D_OPT_123',
         'G_OPT_043',
         '12:00',
-        '1:30',
+        '13:30',
         'Viernes'
     );
 
@@ -6095,64 +6093,64 @@ INSERT INTO
 VALUES (
         'D_OPT_124',
         'G_OPT_040',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Lunes'
     ),
     (
         'D_OPT_125',
         'G_OPT_040',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Miércoles'
     ),
     (
         'D_OPT_126',
         'G_OPT_040',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Viernes'
     ),
     (
         'D_OPT_127',
         'G_OPT_042',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Lunes'
     ),
     (
         'D_OPT_128',
         'G_OPT_042',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Miércoles'
     ),
     (
         'D_OPT_129',
         'G_OPT_042',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Viernes'
     ),
     (
         'D_OPT_130',
         'G_OPT_044',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Lunes'
     ),
     (
         'D_OPT_131',
         'G_OPT_044',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Miércoles'
     ),
     (
         'D_OPT_132',
         'G_OPT_044',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Viernes'
     );
 
@@ -6189,21 +6187,21 @@ VALUES (
     (
         'D_OPT_136',
         'G_OPT_047',
-        '8:30',
+        '08:30',
         '10:00',
         'Lunes'
     ),
     (
         'D_OPT_137',
         'G_OPT_047',
-        '8:30',
+        '08:30',
         '10:00',
         'Miércoles'
     ),
     (
         'D_OPT_138',
         'G_OPT_047',
-        '8:30',
+        '08:30',
         '10:00',
         'Viernes'
     ),
@@ -6211,42 +6209,42 @@ VALUES (
         'D_OPT_139',
         'G_OPT_049',
         '12:00',
-        '1:30',
+        '13:30',
         'Lunes'
     ),
     (
         'D_OPT_140',
         'G_OPT_049',
         '12:00',
-        '1:30',
+        '13:30',
         'Miércoles'
     ),
     (
         'D_OPT_141',
         'G_OPT_049',
         '12:00',
-        '1:30',
+        '13:30',
         'Viernes'
     ),
     (
         'D_OPT_142',
         'G_OPT_051',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Martes'
     ),
     (
         'D_OPT_143',
         'G_OPT_051',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Jueves'
     ),
     (
         'D_OPT_144',
         'G_OPT_051',
-        '7:00',
-        '8:30',
+        '07:00',
+        '08:30',
         'Viernes'
     );
 
@@ -6262,64 +6260,64 @@ INSERT INTO
 VALUES (
         'D_OPT_145',
         'G_OPT_046',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Lunes'
     ),
     (
         'D_OPT_146',
         'G_OPT_046',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Miércoles'
     ),
     (
         'D_OPT_147',
         'G_OPT_046',
-        '6:30',
-        '8:00',
+        '18:30',
+        '20:00',
         'Viernes'
     ),
     (
         'D_OPT_148',
         'G_OPT_048',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Lunes'
     ),
     (
         'D_OPT_149',
         'G_OPT_048',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Miércoles'
     ),
     (
         'D_OPT_150',
         'G_OPT_048',
-        '5:00',
-        '6:30',
+        '17:00',
+        '18:30',
         'Viernes'
     ),
     (
         'D_OPT_151',
         'G_OPT_050',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Lunes'
     ),
     (
         'D_OPT_152',
         'G_OPT_050',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Miércoles'
     ),
     (
         'D_OPT_153',
         'G_OPT_050',
-        '3:00',
-        '4:30',
+        '15:00',
+        '16:30',
         'Viernes'
     );
 
@@ -6392,7 +6390,25 @@ INSERT INTO
 VALUES (
         '457',
         'EST2021630309',
-        'UA0008',
+        'UA0015',
+        '1',
+        '0',
+        'Reprobada'
+    );
+
+INSERT INTO
+    materia_reprobada (
+        id,
+        id_estudiante,
+        id_ua,
+        periodos_restantes,
+        recurse,
+        estado_actual
+    )
+VALUES (
+        '8910',
+        'EST2021630309',
+        'UA0016',
         '1',
         '0',
         'Reprobada'
@@ -6720,6 +6736,231 @@ SET
     calificacion_final = 8.9
 WHERE
     id = 'M0030';
+-- =============================
+-- Alumno 2023630107 (3BM1)
+-- =============================
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.6,
+    extra = NULL
+WHERE
+    id = 'M0031';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.0,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.2,
+    extra = NULL
+WHERE
+    id = 'M0032';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.5,
+    calificacion_segundo = 9.0,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.9,
+    extra = NULL
+WHERE
+    id = 'M0033';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 7.5,
+    calificacion_segundo = 8.0,
+    calificacion_tercer = 8.5,
+    calificacion_final = 8.1,
+    extra = NULL
+WHERE
+    id = 'M0034';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.5,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.7,
+    extra = NULL
+WHERE
+    id = 'M0035';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.4,
+    extra = NULL
+WHERE
+    id = 'M0036';
+
+-- =============================
+-- Alumno 2022630208 (5AM1)
+-- =============================
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.0,
+    calificacion_tercer = 8.5,
+    calificacion_final = 8.1,
+    extra = NULL
+WHERE
+    id = 'M0037';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 9.0,
+    calificacion_segundo = 9.0,
+    calificacion_tercer = 9.5,
+    calificacion_final = 9.2,
+    extra = NULL
+WHERE
+    id = 'M0038';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0039';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 7.0,
+    calificacion_segundo = 7.5,
+    calificacion_tercer = 8.0,
+    calificacion_final = 7.8,
+    extra = NULL
+WHERE
+    id = 'M0040';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.5,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.7,
+    extra = NULL
+WHERE
+    id = 'M0041';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 8.5,
+    calificacion_final = 8.3,
+    extra = NULL
+WHERE
+    id = 'M0042';
+
+-- =============================
+-- Alumno 2021630309 (7CM1)
+-- =============================
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0043';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.0,
+    calificacion_tercer = 8.5,
+    calificacion_final = 8.2,
+    extra = NULL
+WHERE
+    id = 'M0044';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.5,
+    calificacion_segundo = 9.0,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.8,
+    extra = NULL
+WHERE
+    id = 'M0045';
+
+-- =============================
+-- Alumno 2021630310 (8CM1)
+-- =============================
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.5,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.7,
+    extra = NULL
+WHERE
+    id = 'M0046';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 9.0,
+    calificacion_segundo = 9.0,
+    calificacion_tercer = 9.5,
+    calificacion_final = 9.1,
+    extra = NULL
+WHERE
+    id = 'M0047';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.4,
+    extra = NULL
+WHERE
+    id = 'M0048';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.5,
+    calificacion_segundo = 9.0,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.9,
+    extra = NULL
+WHERE
+    id = 'M0049';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.0,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.0,
+    calificacion_final = 8.5,
+    extra = NULL
+WHERE
+    id = 'M0050';
+
+UPDATE mat_inscritos
+SET
+    calificacion_primer = 8.5,
+    calificacion_segundo = 8.5,
+    calificacion_tercer = 9.5,
+    calificacion_final = 8.8,
+    extra = NULL
+WHERE
+    id = 'M0051';
 
 -- Alumno 2021630310 - Sin reprobaciones (alumno excelente)
 -- Se mantienen todas sus calificaciones sin cambios

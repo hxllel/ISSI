@@ -424,31 +424,34 @@ export function EvaluacionProfesores() {
           </>
         ) : (
           <section className="resultado-evaluacion">
-            <div className="resultado-card">
-              <h2>¡Evaluación Completada!</h2>
-              <div className="resultado-info">
-                <p>
-                  <strong>Profesor evaluado:</strong> {profesorSeleccionado?.nombre}
-                </p>
+  <div className="resultado-card">
+    <h2>¡Evaluación Completada!</h2>
+    <div className="resultado-info">
+      <p>
+        <strong>Profesor evaluado:</strong> {profesorSeleccionado?.nombre}
+      </p>
 
-                <div className="puntuacion-box">
-                  <p className="puntuacion-label">Puntuación Total enviada:</p>
-                  <p className="puntuacion-valor">
-                    {puntuacionTotal} / {preguntas.length * 5}
-                  </p>
-                  {registroCount !== null && <p className="registro-count">Veces evaluado: {registroCount}</p>}
-                </div>
+      <div className="puntuacion-box">
+        <p className="puntuacion-label">Puntuación Total enviada:</p>
+        <p className="puntuacion-valor">
+          {puntuacionTotal} / {preguntas.length * 5}
+        </p>
+        {registroCount !== null && (
+          <p className="registro-count">Veces evaluado: {registroCount}</p>
+        )}
+      </div>
 
-                <button className="btn-nueva" onClick={resetEvaluacion}>
-                  Evaluar otro profesor
-                </button>
+      <button className="btn-nueva" onClick={resetEvaluacion}>
+        Evaluar otro profesor
+      </button>
 
-                <button className="btn-volver" onClick={() => navigate(`/alumno/${id}`)}>
-                  Volver al inicio
-                </button>
-              </div>
-            </div>
-          </section>
+      <button className="btn-volver" onClick={() => navigate(`/alumno/${id}`)}>
+        Volver al inicio
+      </button>
+    </div>
+  </div>
+</section>
+
         )}
       </main>
     </div>
