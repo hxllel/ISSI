@@ -145,4 +145,4 @@ INSERT INTO datos_personales (
 INSERT INTO carrera (nombre, creditos_iniciales, prefijo_grupo, duracion_max) VALUES
 ('Ingenieria en Sistemas Computacionales', 25, 'A', 12),
 ('Ingenieria en Inteligencia Artificial', 25, 'B', 12),
-('Ingenieria en Ciencia de Datos', 25, 'C', 12);
+('Licenciatura en Ciencia de Datos', 25, 'C', 12);

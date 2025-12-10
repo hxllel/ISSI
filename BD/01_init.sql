@@ -112,6 +112,7 @@ CREATE TABLE unidad_de_aprendizaje (
     credito FLOAT NOT NULL,
     carrera VARCHAR(40),
     semestre INT NOT NULL,
+    tipo TEXT NOT NULL,
     CONSTRAINT PK_UA PRIMARY KEY (id),
     CONSTRAINT FK_UA_CAR FOREIGN KEY (carrera) REFERENCES carrera (nombre)
 );
@@ -216,6 +217,7 @@ CREATE TABLE kardex (
     promedio FLOAT NOT NULL,
     situacion_academica TEXT NOT NULL,
     semestres_restantes INT NOT NULL,
+    creditos_obtenidos FLOAT NOT NULL,
     CONSTRAINT PK_KAR PRIMARY KEY (id),
     CONSTRAINT FK_KAR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );

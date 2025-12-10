@@ -104,7 +104,89 @@ module.exports = (passport) => {
         semestres_restantes: carr.duracion_max,
         creditos_obtenidos: 0,
       });
+
       console.log("Alumno creado: ");
+
+      // 🔵 NUEVO: Enviar correo con credenciales
+      try {
+        const transporter = require("nodemailer").createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: correo,
+          subject: "Bienvenido al Sistema SAES-R - Credenciales de Acceso",
+          html: `
+          <!DOCTYPE html>
+          <html lang="es">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: white; margin: 0; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+              <!-- Header -->
+              <div style="background: linear-gradient(135deg, #7d0024 0%, #5a001a 100%); padding: 40px 20px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">¡Bienvenido a SAES-R!</h1>
+              </div>
+              
+              <!-- Content -->
+              <div style="padding: 40px 30px;">
+                <p style="color: #333; font-size: 16px; margin-bottom: 10px;">Hola <strong>${nombre} ${apellido_p} ${apellido_m}</strong>,</p>
+                <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">
+                  Tu cuenta de alumno ha sido creada exitosamente en el Sistema SAES-R. A continuación encontrarás tus credenciales de acceso:
+                </p>
+                
+                <!-- Credentials Box -->
+                <div style="background: #f5f5f5; border-left: 4px solid #7d0024; padding: 20px; border-radius: 5px; margin: 30px 0;">
+                  <p style="color: #333; font-size: 14px; margin: 0 0 15px 0;">
+                    <strong>Número de Boleta:</strong> <span style="color: #7d0024; font-size: 16px; font-weight: bold;">${id}</span>
+                  </p>
+                  <p style="color: #333; font-size: 14px; margin: 0;">
+                    <strong>Contraseña temporal:</strong> <span style="color: #7d0024; font-size: 16px; font-weight: bold;">${contra}</span>
+                  </p>
+                </div>
+
+                <!-- Info Box -->
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                  <p style="color: #856404; font-size: 13px; margin: 0;">
+                    <strong>Importante:</strong> Por seguridad, se te solicitara cambiar de contraseña en tu primer inicio de sesión.
+                  </p>
+                </div>
+
+                <!-- Info -->
+                <div style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                  <p style="color: #1565c0; font-size: 13px; margin: 0;">
+                    <strong>Carrera:</strong> ${carr.nombre}
+                  </p>
+                </div>
+              </div>
+              
+              <!-- Footer -->
+              <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="color: #999; font-size: 12px; margin: 0;">
+                  Sistema Automatizado de Administración Escolar Renovado<br>
+                  ESCOM - IPN
+                </p>
+              </div>
+            </div>
+          </body>
+          </html>
+          `,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log("Correo de credenciales enviado a:", correo);
+      } catch (emailError) {
+        console.error("Error al enviar correo de credenciales:", emailError);
+        // No detener el registro si falla el envío del correo
+      }
+
       return res.json({ success: true });
     } catch (error) {
       console.error("Error al crear el alumno: ", error);
@@ -242,7 +324,89 @@ module.exports = (passport) => {
         situacion: "activo",
         primera_vez: 1,
       });
+
       console.log("Profesor creado: ");
+
+      // 🔵 NUEVO: Enviar correo con credenciales
+      try {
+        const transporter = require("nodemailer").createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: correo,
+          subject: "Bienvenido al Sistema SAES-R - Credenciales de Acceso",
+          html: `
+          <!DOCTYPE html>
+          <html lang="es">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: white; margin: 0; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+              <!-- Header -->
+              <div style="background: linear-gradient(135deg, #7d0024 0%, #5a001a 100%); padding: 40px 20px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">¡Bienvenido a SAES-R!</h1>
+              </div>
+              
+              <!-- Content -->
+              <div style="padding: 40px 30px;">
+                <p style="color: #333; font-size: 16px; margin-bottom: 10px;">Hola <strong>${grado} ${nombre} ${apellido_p} ${apellido_m}</strong>,</p>
+                <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">
+                  Tu cuenta de profesor ha sido creada exitosamente en el Sistema SAES-R. A continuación encontrarás tus credenciales de acceso:
+                </p>
+                
+                <!-- Credentials Box -->
+                <div style="background: #f5f5f5; border-left: 4px solid #7d0024; padding: 20px; border-radius: 5px; margin: 30px 0;">
+                  <p style="color: #333; font-size: 14px; margin: 0 0 15px 0;">
+                    <strong>RFC:</strong> <span style="color: #7d0024; font-size: 16px; font-weight: bold;">${RFC}</span>
+                  </p>
+                  <p style="color: #333; font-size: 14px; margin: 0;">
+                    <strong>Contraseña temporal:</strong> <span style="color: #7d0024; font-size: 16px; font-weight: bold;">${contra}</span>
+                  </p>
+                </div>
+
+                <!-- Info Box -->
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                  <p style="color: #856404; font-size: 13px; margin: 0;">
+                    <strong>Importante:</strong> Por seguridad, se te solicitara cambiar de contraseña en tu primer inicio de sesión.
+                  </p>
+                </div>
+
+                <!-- Access Info -->
+                <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                  <p style="color: #2e7d32; font-size: 13px; margin: 0;">
+                    Ya puedes acceder al sistema SAES-R con tus credenciales y comenzar a gestionar tus grupos y calificaciones.
+                  </p>
+                </div>
+              </div>
+              
+              <!-- Footer -->
+              <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="color: #999; font-size: 12px; margin: 0;">
+                  Sistema Automatizado de Administración Escolar Renovado<br>
+                  ESCOM - IPN
+                </p>
+              </div>
+            </div>
+          </body>
+          </html>
+          `,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log("Correo de credenciales enviado a:", correo);
+      } catch (emailError) {
+        console.error("Error al enviar correo de credenciales:", emailError);
+        // No detener el registro si falla el envío del correo
+      }
+
       return res.json({ success: true });
     } catch (error) {
       console.error("Error al crear el profesor: ", error);
@@ -1013,7 +1177,7 @@ module.exports = (passport) => {
             ],
           },
           {
-            model: bd.Grupo,
+            model: bd.ETS_grupo,
             include: [bd.Unidad_Aprendizaje],
           },
         ],
@@ -1023,11 +1187,34 @@ module.exports = (passport) => {
         return res.status(404).json({ success: false, message: "ETS no encontrado" });
       }
 
+      const etsJSON = ets.toJSON();
       await bd.ETS.update({ validado: 1 }, { where: { id: id } });
 
-      // Enviar correo de validación
-      const alumno = ets.Materia_Reprobada.Estudiante.DatosPersonales;
-      const unidad = ets.Grupo.Unidad_Aprendizaje;
+      // FIX: Usar DatosPersonale (sin 's')
+      if (!etsJSON.Materia_Reprobada ||
+        !etsJSON.Materia_Reprobada.Estudiante ||
+        !etsJSON.Materia_Reprobada.Estudiante.DatosPersonale) {
+        console.error("Error: No se pudo acceder a los datos del alumno");
+        console.log("Materia_Reprobada:", etsJSON.Materia_Reprobada);
+        return res.status(500).json({
+          success: false,
+          message: "Error al obtener datos del alumno"
+        });
+      }
+
+      const grupoETS = etsJSON.ETS_grupo || etsJSON.ETS_Grupo;
+
+      if (!grupoETS || !grupoETS.Unidad_Aprendizaje) {
+        console.error("Error: No se pudo acceder a los datos del grupo ETS");
+        return res.status(500).json({
+          success: false,
+          message: "Error al obtener datos del grupo ETS"
+        });
+      }
+
+      // FIX: Usar DatosPersonale (sin 's')
+      const alumno = etsJSON.Materia_Reprobada.Estudiante.DatosPersonale;
+      const unidad = grupoETS.Unidad_Aprendizaje;
 
       const transporter = require("nodemailer").createTransport({
         service: "gmail",
@@ -1092,11 +1279,14 @@ module.exports = (passport) => {
       `,
       };
 
+      console.log("Enviando correo a:", mailOptions.to);
       await transporter.sendMail(mailOptions);
+      console.log("Correo enviado exitosamente");
 
       return res.json({ success: true });
     } catch (err) {
       console.error("Error al validar ETS:", err);
+      console.error("Stack trace:", err.stack);
       return res.status(500).json({ success: false, message: "Error al validar el ETS" });
     }
   });
@@ -1118,7 +1308,7 @@ module.exports = (passport) => {
             ],
           },
           {
-            model: bd.Grupo,
+            model: bd.ETS_grupo,
             include: [bd.Unidad_Aprendizaje],
           },
         ],
@@ -1128,12 +1318,41 @@ module.exports = (passport) => {
         return res.status(404).json({ success: false, message: "ETS no encontrado" });
       }
 
-      await bd.ETS.update({ validado: -1 }, { where: { id: id } });
+      const etsJSON = ets.toJSON();
+      await bd.ETS.update(
+        {
+          validado: 0,
+          comprobante: null
+        },
+        { where: { id: id } }
+      );
 
-      // Enviar correo de denegación
-      const alumno = ets.Materia_Reprobada.Estudiante.DatosPersonale;
-      const unidad = ets.Grupo.Unidad_Aprendizaje;
+      if (!etsJSON.Materia_Reprobada ||
+        !etsJSON.Materia_Reprobada.Estudiante ||
+        !etsJSON.Materia_Reprobada.Estudiante.DatosPersonale) {
+        console.error("Error: No se pudo acceder a los datos del alumno");
+        console.log("Materia_Reprobada:", etsJSON.Materia_Reprobada);
+        return res.status(500).json({
+          success: false,
+          message: "Error al obtener datos del alumno"
+        });
+      }
 
+      const grupoETS = etsJSON.ETS_grupo || etsJSON.ETS_Grupo;
+
+      if (!grupoETS || !grupoETS.Unidad_Aprendizaje) {
+        console.error("Error: No se pudo acceder a los datos del grupo ETS");
+        console.log("Valor de ETS_grupo:", etsJSON.ETS_grupo);
+        console.log("Valor de ETS_Grupo:", etsJSON.ETS_Grupo);
+        console.log("grupoETS completo:", grupoETS);
+        return res.status(500).json({
+          success: false,
+          message: "Error al obtener datos del grupo ETS"
+        });
+      }
+
+      const alumno = etsJSON.Materia_Reprobada.Estudiante.DatosPersonale;
+      const unidad = grupoETS.Unidad_Aprendizaje;
       const transporter = require("nodemailer").createTransport({
         service: "gmail",
         auth: {
@@ -1204,11 +1423,13 @@ module.exports = (passport) => {
       `,
       };
 
+      console.log("Enviando correo a:", mailOptions.to);
       await transporter.sendMail(mailOptions);
 
       return res.json({ success: true });
     } catch (err) {
       console.error("Error al denegar ETS:", err);
+      console.error("Stack trace:", err.stack);
       return res.status(500).json({ success: false, message: "Error al denegar el ETS" });
     }
   });
@@ -1299,7 +1520,6 @@ module.exports = (passport) => {
       });
     }
   });
-
   // POST /GenerarCitas
   router.post("/GenerarCitas/:edo", async (req, res) => {
     const { fecha_ini, fecha_fin } = req.body;

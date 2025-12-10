@@ -15,29 +15,31 @@ DELETE FROM distribucion;
 -- Crear 9 grupos manualmente (3 profesores x 3 carreras)
 -- 1 grupo por profesor para cada carrera (IIA, LCD, ISC)
 
--- Grupos para HIJKLMNO
-INSERT INTO grupo (id, nombre, id_ua, id_prof, turno, cupo, reg_final, reg_extra)
-VALUES 
-    ('G0001', '1BM1', 'UA0051', 'HIJKLMNO', 'Matutino', 35, NULL, NULL), -- IIA - Fundamentos de Programación
-    ('G0002', '1AM1', 'UA0096', 'HIJKLMNO', 'Matutino', 35, NULL, NULL), -- LCD - Fundamentos de Programación  
-    ('G0003', '1CM1', 'UA0001', 'HIJKLMNO', 'Matutino', 35, NULL, NULL); -- ISC - Fundamentos de Programación
+DELETE FROM grupo;
 
--- Grupos para PROF0001
-INSERT INTO grupo (id, nombre, id_ua, id_prof, turno, cupo, reg_final, reg_extra)
-VALUES 
-    ('G0004', '1BM2', 'UA0052', 'PROF0001', 'Matutino', 35, NULL, NULL), -- IIA - Matemáticas Discretas
-    ('G0005', '1AM2', 'UA0097', 'PROF0001', 'Matutino', 35, NULL, NULL), -- LCD - Matemáticas Discretas
-    ('G0006', '1CM2', 'UA0002', 'PROF0001', 'Matutino', 35, NULL, NULL); -- ISC - Matemáticas Discretas
+-- GRUPOS IIA (Todos bajo el nombre 1BM1 para que coincida con la inscripción)
+INSERT INTO grupo (id, nombre, id_ua, id_prof, turno, cupo) VALUES 
+('G0001', '1BM1', 'UA0051', 'HIJKLMNO', 'Matutino', 35), -- Fundamentos
+('G0004', '1BM1', 'UA0052', 'PROF0001', 'Matutino', 35), -- Mat. Discretas (Corregido nombre a 1BM1)
+('G0007', '1BM1', 'UA0053', 'PROF0002', 'Matutino', 35), -- Calculo (Corregido nombre a 1BM1)
+('G0010', '1BM1', 'UA0054', 'HIJKLMNO', 'Matutino', 35), -- Com. Oral (AGREGADO)
+('G0011', '1BM1', 'UA0055', 'PROF0001', 'Matutino', 35); -- Fund. Económicos (AGREGADO)
 
--- Grupos para PROF0002
-INSERT INTO grupo (id, nombre, id_ua, id_prof, turno, cupo, reg_final, reg_extra)
-VALUES 
-    ('G0007', '1BM3', 'UA0053', 'PROF0002', 'Matutino', 35, NULL, NULL), -- IIA - Cálculo
-    ('G0008', '1AM3', 'UA0098', 'PROF0002', 'Matutino', 35, NULL, NULL), -- LCD - Cálculo
-    ('G0009', '1CM3', 'UA0003', 'PROF0002', 'Matutino', 35, NULL, NULL); -- ISC - Cálculo
+-- GRUPOS LCD (Todos bajo el nombre 1AM1)
+INSERT INTO grupo (id, nombre, id_ua, id_prof, turno, cupo) VALUES 
+('G0002', '1AM1', 'UA0096', 'HIJKLMNO', 'Matutino', 35),
+('G0005', '1AM1', 'UA0097', 'PROF0001', 'Matutino', 35), -- Corregido a 1AM1
+('G0008', '1AM1', 'UA0098', 'PROF0002', 'Matutino', 35), -- Corregido a 1AM1
+('G0012', '1AM1', 'UA0099', 'PROF0002', 'Matutino', 35), -- AGREGADO
+('G0013', '1AM1', 'UA0100', 'HIJKLMNO', 'Matutino', 35); -- AGREGADO
 
--- Distribución de horarios para los grupos
--- Patrón de horario: Lunes, Martes, Miércoles (7:00-8:30, 8:30-10:00, 10:30-12:00)
+-- GRUPOS ISC (Todos bajo el nombre 1CM1)
+INSERT INTO grupo (id, nombre, id_ua, id_prof, turno, cupo) VALUES 
+('G0003', '1CM1', 'UA0001', 'HIJKLMNO', 'Matutino', 35),
+('G0006', '1CM1', 'UA0002', 'PROF0001', 'Matutino', 35), -- Corregido a 1CM1
+('G0009', '1CM1', 'UA0003', 'PROF0002', 'Matutino', 35), -- Corregido a 1CM1
+('G0014', '1CM1', 'UA0004', 'PROF0001', 'Matutino', 35), -- AGREGADO
+('G0015', '1CM1', 'UA0005', 'PROF0002', 'Matutino', 35); -- AGREGADO
 
 -- HIJKLMNO - Grupos de Fundamentos de Programación (3 sesiones por semana)
 INSERT INTO distribucion (id, id_grupo, hora_ini, hora_fin, dia)
