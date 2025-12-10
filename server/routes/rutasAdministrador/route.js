@@ -1520,8 +1520,774 @@ module.exports = (passport) => {
       });
     }
   });
+  // POST /GenerarCitas
+  router.post("/GenerarCitas/:edo", async (req, res) => {
+    const { fecha_ini, fecha_fin } = req.body;
+    const { edo } = req.params;
 
-  // ...existing code (POST /GenerarCitas, etc.)...
+    if (!fecha_ini || !fecha_fin) {
+      return res
+        .status(400)
+        .json({ error: "fecha_ini y fecha_fin son requeridos" });
+    }
+
+    const val = await bd.Inscripcion.count({
+      include: [
+        {
+          model: bd.DatosPersonales,
+          required: true,
+          include: [
+            {
+              model: bd.Estudiante,
+              required: true,
+              where: { estado_academico: edo },
+            },
+          ],
+        },
+      ],
+    });
+
+    console.log(val);
+    console.log(edo);
+    if (val != 0) {
+      return res.json({ success: false });
+    }
+    // VALIDACIÓN DE FECHAS
+    // Convertimos a Date solo para comparar validez y orden, pero usaremos los strings para la lógica
+    const inicioCheck = new Date(fecha_ini);
+    const finCheck = new Date(fecha_fin);
+
+    if (isNaN(inicioCheck) || isNaN(finCheck)) {
+      return res.status(400).json({ error: "Formato de fecha inválido" });
+    }
+    if (inicioCheck > finCheck) {
+      return res
+        .status(400)
+        .json({ error: "fecha_ini debe ser anterior o igual a fecha_fin" });
+    }
+
+    try {
+      // 1. OBTENER ALUMNOS
+      const alumnos = await bd.Estudiante.findAll({
+        where: { estado_academico: edo.toLowerCase() },
+        order: [["promedio", "DESC"]], // Prioridad por promedio
+        raw: true,
+      });
+
+      if (!alumnos || alumnos.length === 0) {
+        return res
+          .status(200)
+          .json({ message: "No hay alumnos regulares para generar citas" });
+      }
+
+      const nAlumnos = alumnos.length;
+
+      const strIni = new Date(fecha_ini).toISOString().split("T")[0];
+      const strFin = new Date(fecha_fin).toISOString().split("T")[0];
+
+      const oneDayMs = 24 * 60 * 60 * 1000;
+      // Usamos UTC para calcular la diferencia exacta de días calendario
+      const diffTime = new Date(strFin).getTime() - new Date(strIni).getTime();
+      const numDias = Math.round(diffTime / oneDayMs) + 1; // +1 porque es inclusivo
+
+      const horasDisponiblesDia = 15; // 07:00 a 22:00
+      const minutosDisponiblesDia = horasDisponiblesDia * 60; // 900 minutos
+      const minutosTotalesGlobales = numDias * minutosDisponiblesDia;
+
+      // LÓGICA DE DISTRIBUCIÓN
+      let intervaloMinutos = minutosTotalesGlobales / nAlumnos;
+      let concurrencia = 1; // Alumnos por turno
+
+      // Regla: Si el intervalo es menor a 10 minutos, forzamos 10 min y aumentamos concurrencia
+      if (intervaloMinutos < 10) {
+        intervaloMinutos = 10;
+        // ¿Cuántos slots de 10 minutos caben en todo el periodo?
+        const slotsTotalesPosibles = Math.floor(minutosTotalesGlobales / 10);
+        // ¿Cuántos alumnos debemos meter en cada slot para que quepan todos?
+        concurrencia = Math.ceil(nAlumnos / slotsTotalesPosibles);
+      }
+
+      console.log(
+        `Configuración: Días: ${numDias}, Alumnos: ${nAlumnos}, Intervalo: ${intervaloMinutos.toFixed(
+          2
+        )}m, Concurrencia: ${concurrencia}`
+      );
+
+      // Función auxiliar para construir fechas sin cambios de zona horaria extraños
+      // Toma el string base "YYYY-MM-DD", suma días y establece la hora
+      function construirFechaCita(fechaBaseStr, diasASumar, minutosDesdeLas7) {
+        const base = new Date(fechaBaseStr);
+        // Ajustamos la fecha base sumando los días (en UTC para no perder info)
+        base.setUTCDate(base.getUTCDate() + diasASumar);
+
+        // Calculamos hora y minuto
+        // Hora inicio es 7 AM.
+        const horasExtra = Math.floor(minutosDesdeLas7 / 60);
+        const minutosRestantes = Math.floor(minutosDesdeLas7 % 60);
+
+        const horaFinal = 7 + horasExtra;
+
+        // Establecemos la hora. IMPORTANTE: Usamos métodos UTC o Locales consistentemente.
+        // Para asegurar que coincida con el backend, asumiremos que queremos guardar la hora local
+        // tal cual se leería en el calendario.
+        const fechaFinal = new Date(
+          base.getUTCFullYear(),
+          base.getUTCMonth(),
+          base.getUTCDate(),
+          horaFinal,
+          minutosRestantes,
+          0
+        );
+        return fechaFinal;
+      }
+
+      const t = await bd.sequelize.transaction();
+
+      try {
+        let currentSlotIndex = 0;
+        let alumnosEnEsteSlot = 0;
+
+        for (let i = 0; i < nAlumnos; i++) {
+          const alumno = alumnos[i];
+
+          // Calcular en qué minuto global inicia este slot
+          const minutosGlobalesInicio = currentSlotIndex * intervaloMinutos;
+
+          // Determinar qué día es (0 es el primer día, 1 el segundo...)
+          const diaIndex = Math.floor(
+            minutosGlobalesInicio / minutosDisponiblesDia
+          );
+
+          // Determinar minutos dentro de ese día (desde las 07:00)
+          const minutosEnElDia = minutosGlobalesInicio % minutosDisponiblesDia;
+
+          // Construir fechas
+          // Nota: Si nos pasamos de días por redondeo (raro), el Math.floor lo manejará,
+          // pero asegúrate de que strIni sea la fecha base correcta.
+          const fechaHoraInicio = construirFechaCita(
+            strIni,
+            diaIndex,
+            minutosEnElDia
+          );
+
+          // Timespan de 1 hora
+          const fechaHoraFin = new Date(
+            fechaHoraInicio.getTime() + 60 * 60 * 1000
+          );
+
+          let id = uuidv4().replace(/-/g, "").substring(0, 15);
+
+          await bd.Inscripcion.create(
+            {
+              id,
+              id_alumno: alumno.id_usuario,
+              fecha_hora_in: fechaHoraInicio,
+              fecha_hora_cad: fechaHoraFin,
+            },
+            { transaction: t }
+          );
+
+          // Manejo de concurrencia
+          alumnosEnEsteSlot++;
+          if (alumnosEnEsteSlot >= concurrencia) {
+            // Llenamos este slot, avanzamos al siguiente intervalo de tiempo
+            alumnosEnEsteSlot = 0;
+            currentSlotIndex++;
+          }
+        }
+
+        await t.commit();
+      } catch (err) {
+        await t.rollback();
+        throw err;
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: "Citas generadas correctamente",
+        totalAlumnos: nAlumnos,
+        dias: numDias,
+        intervaloMinutos,
+        concurrencia,
+      });
+    } catch (error) {
+      console.error("Error GenerarCitas:", error);
+      return res.status(500).json({
+        error: "Error interno al generar citas",
+        details: error.message,
+      });
+    }
+  });
+
+  // ============================
+  //  ADMIN: DATOS ALUMNO INSCRIPCIÓN
+  // ============================
+  router.get("/AdminAlumnoDatos/:idAlumno", async (req, res) => {
+    const { idAlumno } = req.params;
+    try {
+      const alumno = await bd.DatosPersonales.findOne({
+        where: { id: idAlumno, tipo_usuario: "alumno" },
+      });
+
+      if (!alumno) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Alumno no encontrado" });
+      }
+
+      const estudiante = await bd.Estudiante.findOne({
+        where: { id_usuario: idAlumno },
+      });
+
+      if (!estudiante) {
+        return res.status(404).json({
+          success: false,
+          error: "Registro de estudiante no encontrado para el alumno",
+        });
+      }
+
+      return res.json({
+        success: true,
+        alumno: {
+          id: alumno.id,
+          nombre: alumno.nombre,
+          ape_paterno: alumno.ape_paterno,
+          ape_materno: alumno.ape_materno,
+          carrera: alumno.carrera,
+        },
+        estudiante: {
+          creditos_disponibles: estudiante.creditos_disponibles,
+          promedio: estudiante.promedio,
+          estado_academico: estudiante.estado_academico,
+        },
+      });
+    } catch (error) {
+      console.error("Error en /AdminAlumnoDatos:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Error al obtener datos del alumno",
+      });
+    }
+  });
+
+  // ============================
+  //  ADMIN: MATERIAS INSCRITAS DEL ALUMNO
+  // ============================
+  router.get("/AdminAlumnoInscripciones/:idAlumno", async (req, res) => {
+    const { idAlumno } = req.params;
+    try {
+      const horario = await bd.Horario.findOne({
+        where: { id_alumno: idAlumno },
+      });
+
+      if (!horario) {
+        return res.json({ success: true, grupos: [] });
+      }
+
+      const mats = await bd.Mat_Inscritos.findAll({
+        where: { id_horario: horario.id },
+        include: [
+          {
+            model: bd.Grupo,
+            attributes: ["id", "nombre", "turno", "cupo"],
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+                attributes: [
+                  "id",
+                  "nombre",
+                  "credito",
+                  "semestre",
+                  "carrera",
+                  "tipo",
+                ],
+              },
+              {
+                model: bd.DatosPersonales,
+                attributes: ["nombre", "ape_paterno", "ape_materno"],
+              },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      const grupos = mats.map((m) => {
+        const g = m.Grupo || {};
+        const ua = g.Unidad_Aprendizaje || {};
+        const prof = g.DatosPersonale || g.DatosPersonales || {};
+        return {
+          id_mat_inscrito: m.id,
+          id_grupo: g.id,
+          grupo: g.nombre,
+          turno: g.turno,
+          ua: ua.nombre,
+          tipo: ua.tipo,
+          creditos: ua.credito,
+          profesor: `${prof.nombre || ""} ${prof.ape_paterno || ""} ${prof.ape_materno || ""
+            }`.trim(),
+          cupo: g.cupo,
+        };
+      });
+
+      return res.json({ success: true, grupos });
+    } catch (error) {
+      console.error("Error en /AdminAlumnoInscripciones:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Error al obtener inscripciones del alumno",
+      });
+    }
+  });
+
+  // ============================
+  //  ADMIN: INSCRIBIR GRUPO A ALUMNO
+  // ============================
+  router.post("/AdminAlumnoInscribirGrupo/:idAlumno", async (req, res) => {
+    const { idAlumno } = req.params;
+    const { idGrupo } = req.body;
+
+    if (!idGrupo) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Falta idGrupo en el cuerpo" });
+    }
+
+    try {
+      const alumno = await bd.DatosPersonales.findOne({
+        where: { id: idAlumno, tipo_usuario: "alumno" },
+      });
+
+      if (!alumno) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Alumno no encontrado" });
+      }
+
+      const estudiante = await bd.Estudiante.findOne({
+        where: { id_usuario: idAlumno },
+      });
+
+      if (!estudiante) {
+        return res.status(404).json({
+          success: false,
+          error: "Registro de estudiante no encontrado",
+        });
+      }
+
+      const horario = await bd.Horario.findOne({
+        where: { id_alumno: idAlumno },
+      });
+
+      if (!horario) {
+        return res.status(404).json({
+          success: false,
+          error: "Horario no encontrado para el alumno",
+        });
+      }
+
+      const grupo = await bd.Grupo.findOne({
+        where: { id: idGrupo },
+        include: [
+          {
+            model: bd.Unidad_Aprendizaje,
+            attributes: [
+              "id",
+              "nombre",
+              "credito",
+              "semestre",
+              "carrera",
+              "tipo",
+            ],
+          },
+          {
+            model: bd.Distribucion,
+            attributes: ["dia", "hora_ini", "hora_fin"],
+          },
+        ],
+      });
+
+      if (!grupo) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Grupo no encontrado" });
+      }
+
+      if (grupo.cupo <= 0) {
+        return res.json({
+          success: false,
+          error: "El grupo no tiene cupo disponible",
+        });
+      }
+
+      const creditosNecesarios = parseInt(grupo.Unidad_Aprendizaje.credito, 10);
+      const creditosDisponibles = parseInt(estudiante.creditos_disponibles, 10);
+
+      if (creditosDisponibles < creditosNecesarios) {
+        return res.json({
+          success: false,
+          error: "El alumno no tiene créditos suficientes",
+        });
+      }
+
+      // Materias ya inscritas
+      const mats = await bd.Mat_Inscritos.findAll({
+        where: { id_horario: horario.id },
+        include: [
+          {
+            model: bd.Grupo,
+            attributes: ["id", "id_ua"],
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+                attributes: ["id", "nombre"],
+              },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+
+      // Validar que no tenga ya esa UA
+      const yaTieneUA = mats.some(
+        (m) =>
+          m.Grupo &&
+          (m.Grupo.id_ua === grupo.id_ua ||
+            (m.Grupo.Unidad_Aprendizaje &&
+              m.Grupo.Unidad_Aprendizaje.id === grupo.Unidad_Aprendizaje.id))
+      );
+
+      if (yaTieneUA) {
+        return res.json({
+          success: false,
+          error: "El alumno ya tiene inscrita esta unidad de aprendizaje",
+        });
+      }
+
+      // Validar traslapes con distribución
+      const idsGruposActuales = mats.map((m) => m.Grupo.id);
+      let distribucionesExistentes = [];
+      if (idsGruposActuales.length > 0) {
+        distribucionesExistentes = await bd.Distribucion.findAll({
+          where: { id_grupo: idsGruposActuales },
+          raw: true,
+        });
+      }
+
+      const distribNuevo = (grupo.Distribucions || []).map((d) =>
+        d.toJSON ? d.toJSON() : d
+      );
+
+      for (const dNuevo of distribNuevo) {
+        for (const dExist of distribucionesExistentes) {
+          if (seTraslapan(dNuevo, dExist)) {
+            return res.json({
+              success: false,
+              error:
+                "El horario del grupo se traslapa con otra materia ya inscrita",
+            });
+          }
+        }
+      }
+
+      // Transacción: crear Mat_Inscritos, actualizar cupo y créditos
+      const t = await bd.sequelize.transaction();
+
+      try {
+        const idMat = uuidv4().replace(/-/g, "").substring(0, 15);
+
+        await bd.Mat_Inscritos.create(
+          {
+            id: idMat,
+            id_horario: horario.id,
+            id_grupo: idGrupo,
+          },
+          { transaction: t }
+        );
+
+        await bd.Grupo.update(
+          { cupo: grupo.cupo - 1 },
+          { where: { id: idGrupo }, transaction: t }
+        );
+
+        await bd.Estudiante.update(
+          {
+            creditos_disponibles: creditosDisponibles - creditosNecesarios,
+          },
+          { where: { id_usuario: idAlumno }, transaction: t }
+        );
+
+        await t.commit();
+
+        return res.json({
+          success: true,
+          message: "Grupo inscrito correctamente",
+        });
+      } catch (err) {
+        await t.rollback();
+        console.error("Error en transacción AdminAlumnoInscribirGrupo:", err);
+        return res.status(500).json({
+          success: false,
+          error: "Error al inscribir grupo",
+        });
+      }
+    } catch (error) {
+      console.error("Error en /AdminAlumnoInscribirGrupo:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Error al inscribir grupo",
+      });
+    }
+  });
+
+  // ============================
+  //  ADMIN: DAR DE BAJA GRUPO A ALUMNO
+  // ============================
+  router.delete(
+    "/AdminAlumnoBajaGrupo/:idAlumno/:idGrupo",
+    async (req, res) => {
+      const { idAlumno, idGrupo } = req.params;
+
+      try {
+        const estudiante = await bd.Estudiante.findOne({
+          where: { id_usuario: idAlumno },
+        });
+
+        const horario = await bd.Horario.findOne({
+          where: { id_alumno: idAlumno },
+        });
+
+        if (!estudiante || !horario) {
+          return res.status(404).json({
+            success: false,
+            error: "No se encontró estudiante u horario para el alumno",
+          });
+        }
+
+        const grupo = await bd.Grupo.findOne({
+          where: { id: idGrupo },
+          include: [
+            {
+              model: bd.Unidad_Aprendizaje,
+              attributes: ["credito"],
+            },
+          ],
+        });
+
+        if (!grupo) {
+          return res.status(404).json({
+            success: false,
+            error: "Grupo no encontrado",
+          });
+        }
+
+        const t = await bd.sequelize.transaction();
+
+        try {
+          const deleted = await bd.Mat_Inscritos.destroy({
+            where: { id_horario: horario.id, id_grupo: idGrupo },
+            transaction: t,
+          });
+
+          if (!deleted) {
+            await t.rollback();
+            return res.json({
+              success: false,
+              error: "El alumno no tenía inscrito ese grupo",
+            });
+          }
+
+          await bd.Grupo.update(
+            { cupo: grupo.cupo + 1 },
+            { where: { id: idGrupo }, transaction: t }
+          );
+
+          const creditosActuales = parseInt(
+            estudiante.creditos_disponibles,
+            10
+          );
+          const creditosUA = parseInt(grupo.Unidad_Aprendizaje.credito, 10);
+
+          await bd.Estudiante.update(
+            {
+              creditos_disponibles: creditosActuales + creditosUA,
+            },
+            { where: { id_usuario: idAlumno }, transaction: t }
+          );
+
+          await t.commit();
+
+          return res.json({
+            success: true,
+            message: "Grupo dado de baja correctamente",
+          });
+        } catch (err) {
+          await t.rollback();
+          console.error("Error en transacción AdminAlumnoBajaGrupo:", err);
+          return res.status(500).json({
+            success: false,
+            error: "Error al dar de baja grupo",
+          });
+        }
+      } catch (error) {
+        console.error("Error en /AdminAlumnoBajaGrupo:", error);
+        return res.status(500).json({
+          success: false,
+          error: "Error al dar de baja grupo",
+        });
+      }
+    }
+  );
+
+  router.get("/SituacionesEspeciales", async (req, res) => {
+    try {
+      const alumnos = await bd.DatosPersonales.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: {
+              estado_academico: { [Op.notIn]: ["Regular", "Irregular"] },
+            },
+            required: true,
+          },
+          {
+            model: bd.Kardex,
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      const alDes = await bd.DatosPersonales.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            include: [
+              {
+                model: bd.Materia_Reprobada,
+                where: { estado_actual: "Desfasada" },
+                required: true,
+              },
+            ],
+            required: true,
+          },
+          {
+            model: bd.Kardex,
+          },
+        ],
+      });
+
+      return res.json({
+        alumnosSinSemestres: alumnos,
+        alumnosDesfasados: alDes,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.get("/DesfasadasAl/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const mr = await bd.Materia_Reprobada.findAll({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+            required: true,
+          },
+          {
+            model: bd.Unidad_Aprendizaje,
+          },
+        ],
+        where: { estado_actual: "Desfasada" },
+        required: true,
+      });
+
+      return res.json({ materiasDes: mr });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.post("/AutorizarCambiosDesfase", async (req, res) => {
+    const { materias, id } = req.body;
+    console.log(materias);
+    try {
+      for (const m of materias) {
+        let reinscripcion = 0;
+
+        if (m.reinscripcion == true) {
+          reinscripcion = 1;
+        }
+
+        await bd.Materia_Reprobada.update(
+          {
+            periodos_restantes: m.semestresExtra,
+            recurse: m.reinscripcion,
+            estado_actual: "Reprobada",
+          },
+          {
+            where: { id: m.id },
+          }
+        );
+        await bd.Estudiante.update(
+          {
+            creditos_disponibles: m.creditosExtra,
+            estado_academico: "Irregular",
+          },
+          { where: { id_usuario: id } }
+        );
+        await bd.Kardex.update(
+          {
+            situacion_academica: "Irregular",
+          },
+          { where: { id_alumno: id } }
+        );
+      }
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  router.post("/AutorizarCambiosSS", async (req, res) => {
+    const { periodosExtra, id } = req.body;
+
+    try {
+      const c = await bd.Materia_Reprobada.count({
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+            required: true,
+          },
+        ],
+      });
+      let tipo;
+      if (c > 0) {
+        tipo = "Irregular";
+      } else {
+        tipo = "Regular";
+      }
+      await bd.Kardex.update(
+        {
+          semestres_restantes: periodosExtra,
+          situacion_academica: tipo,
+        },
+        { where: { id_alumno: id } }
+      );
+      await bd.Estudiante.update(
+        {
+          estado_academico: tipo,
+        },
+        { where: { id_usuario: id } }
+      );
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+  });
 
   return router;
 };
