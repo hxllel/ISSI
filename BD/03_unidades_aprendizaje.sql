@@ -18,7 +18,6 @@ INSERT INTO
         tipo
     )
 VALUES
-    --=======ISC (Ingenieria en Sistemas Computacionales) - OBLIGATORIAS=========
     (
         'UA0001',
         'Fundamentos de Programación',
@@ -387,7 +386,6 @@ VALUES
         8,
         'OBLIGATORIA'
     ),
-    --=======IIA (Ingenieria en Inteligencia Artificial) - OBLIGATORIAS=========
     (
         'UA0051',
         'Fundamentos de Programación',
@@ -716,7 +714,6 @@ VALUES
         8,
         'OBLIGATORIA'
     ),
-    --=======LCD (Licenciatura en Ciencia de Datos) - OBLIGATORIAS=========
     (
         'UA0096',
         'Fundamentos de Programación',

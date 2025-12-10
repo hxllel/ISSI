@@ -349,7 +349,6 @@ VALUES (
         9.0,
         'Licenciatura en Ciencia de Datos'
     ),
-    --=====Alumnos adicionales IIA (11)=====
     (
         '2024630103',
         '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
