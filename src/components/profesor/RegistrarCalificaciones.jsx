@@ -45,51 +45,80 @@ export function RegistrarCalificaciones() {
   }
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    // Validar que todos los alumnos con asistencia suficiente tengan calificación
+  // 🟦 1. Si el periodo NO es extra → validar asistencia
+  if (periodo !== "extra") {
     const alumnosSinAsistencia = alumnos.filter(al => !al.tieneAsistenciaSuficiente);
-    
+
     if (alumnosSinAsistencia.length > 0) {
       const nombres = alumnosSinAsistencia
         .map(al => `${al.ape_paterno} ${al.ape_materno} ${al.nombre}`)
         .join(', ');
-      
+
       const confirmar = window.confirm(
         `Los siguientes alumnos no tienen el 80% de asistencia requerido y no se les podrá registrar calificación:\n\n${nombres}\n\n¿Deseas continuar?`
       );
-      
+
       if (!confirmar) return;
     }
+  }
 
-    const dataEnviar = Object.entries(calificaciones)
-      .filter(([id_alumno]) => {
-        const alumno = alumnos.find(al => al.id === id_alumno);
-        return alumno && alumno.tieneAsistenciaSuficiente;
-      })
-      .map(([id_alumno, calificacion]) => ({
-        id_alumno,
-        calificacion
-      }));
+  // 🟦 2. Construcción de datos a enviar
+  let dataEnviar = [];
 
-      fetch(`${API}/RegistrarCalificaciones/${id}/${periodo}/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },  
-        
-        credentials: "include",
-        body: JSON.stringify({calificaciones: dataEnviar}),
-      }).then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Calificaciones guardadas correctamente");
-          navigate(`/profesor/${data.profe}`);
-        } else {
-          alert("Error al registrar calificaciones");
-        }
-      })
-      .catch((err) => console.error("Error al registrar calificaciones", err));
-  };
+  // 🟨 CASO NORMAL (no extra)
+  if (periodo !== "extra") {
+    dataEnviar = [
+      // Alumnos con asistencia suficiente → calificación normal
+      ...Object.entries(calificaciones)
+        .filter(([id_alumno]) => {
+          const alumno = alumnos.find(al => al.id === id_alumno);
+          return alumno && alumno.tieneAsistenciaSuficiente;
+        })
+        .map(([id_alumno, calificacion]) => ({
+          id_alumno,
+          calificacion
+        })),
+
+      // Alumnos sin asistencia → calificación = 0
+      ...alumnos
+        .filter(al => !al.tieneAsistenciaSuficiente)
+        .map(al => ({
+          id_alumno: al.id,
+          calificacion: 0
+        }))
+    ];
+  }
+
+  // 🟩 CASO EXTRA (ignorar asistencia, todo se puede registrar)
+  else {
+    dataEnviar = alumnos.map(al => ({
+      id_alumno: al.id,
+      calificacion: calificaciones[al.id] !== "" ? calificaciones[al.id] : 0
+    }));
+  }
+
+  // 🟦 3. Enviar datos al backend
+  fetch(`${API}/RegistrarCalificaciones/${id}/${periodo}/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ calificaciones: dataEnviar }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        alert("Calificaciones guardadas correctamente");
+        navigate(`/profesor/${data.profe}`);
+      } else {
+        alert("Error al registrar calificaciones");
+      }
+    })
+    .catch((err) => console.error("Error al registrar calificaciones", err));
+};
+
 
   const handleChange = (id_alumno, calificacion) =>{
     setCalificaciones((prev) =>({
@@ -152,13 +181,21 @@ export function RegistrarCalificaciones() {
                     onChange={(e) =>
                       handleChange(alumno.id, e.target.value)
                     }
-                    disabled={!alumno.tieneAsistenciaSuficiente}
-                    title={!alumno.tieneAsistenciaSuficiente ? 
-                      'No se puede registrar calificación sin el 80% de asistencia' : ''}
-                    style={{
-                      backgroundColor: !alumno.tieneAsistenciaSuficiente ? '#f5f5f5' : 'white',
-                      cursor: !alumno.tieneAsistenciaSuficiente ? 'not-allowed' : 'text'
-                    }}
+                    disabled={periodo !== "extra" ? !alumno.tieneAsistenciaSuficiente : ""}
+                    title={periodo !== "extra" ? !alumno.tieneAsistenciaSuficiente ? 
+                      'No se puede registrar calificación sin el 80% de asistencia' : '' : ""}
+                    style={
+  periodo !== "extra"
+    ? {
+        backgroundColor: !alumno.tieneAsistenciaSuficiente ? "#f5f5f5" : "white",
+        cursor: !alumno.tieneAsistenciaSuficiente ? "not-allowed" : "text",
+      }
+    : {
+        backgroundColor: "white",
+        cursor: "text",
+      }
+}
+
                   />
                 </td>
               </tr>

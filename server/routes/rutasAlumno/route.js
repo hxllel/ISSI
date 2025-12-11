@@ -262,7 +262,7 @@ module.exports = (passport) => {
             include: [
               {
                 model: bd.Grupo,
-                attributes: ["nombre", "turno", "id_prof"],
+                attributes: ["nombre", "turno", "id_prof", "salon"],
                 include: [
                   {
                     model: bd.Distribucion,
@@ -725,9 +725,7 @@ module.exports = (passport) => {
         req.session.horarios[index] = distribsDelGrupo;
 
         req.session.tempGrupos.push(id);
-
-        console.log("Horarios:", JSON.stringify(req.session.horarios, null, 2));
-
+        console.log(req.session.tempGrupos);
         return res.json({
           success: true,
           tempGrupo: req.session.tempGrupos,
@@ -900,7 +898,10 @@ module.exports = (passport) => {
       try {
         const ids = req.session.tempGrupos;
         const creditos_restantes = req.session.creditos;
+
         const id = req.user.id;
+        console.log(req.session.tempGrupos);
+        console.log(req.user.id);
         const creditos = await bd.Estudiante.findOne({
           where: { id_usuario: id },
         });

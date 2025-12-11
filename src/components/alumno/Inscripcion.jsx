@@ -60,7 +60,7 @@ export function Inscripcion() {
           setCita(true);
           setCitas(data.citas);
         } else {
-          setTiempo(false);
+          setTiempo(true);
         }
 
         setPromedio(data.promedio);

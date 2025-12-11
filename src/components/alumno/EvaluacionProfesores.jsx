@@ -164,26 +164,22 @@ export function EvaluacionProfesores() {
     if (!id) return;
 
     fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.horario && Array.isArray(data.horario)) {
-          const profUnicos = [];
-          const idsSet = new Set();
-          data.horario.forEach((h) => {
-            if (h.id_profesor && !idsSet.has(h.id_profesor)) {
-              profUnicos.push({
-                id: h.id_profesor,
-                nombre: h.profesor,
-              });
-              idsSet.add(h.id_profesor);
-            }
-          });
-          setProfesores(profUnicos);
-        }
-      })
-      .catch((err) => {
-        console.error("Error al obtener horario:", err);
-      });
+  .then((res) => res.json())
+  .then((data) => {
+    if (data.horario && Array.isArray(data.horario)) {
+      const profList = data.horario.map((h) => ({
+        id: h.id_profesor,
+        nombre: h.profesor,
+        materia : h.materia
+      }));
+
+      setProfesores(profList);
+    }
+  })
+  .catch((err) => {
+    console.error("Error al obtener horario:", err);
+  });
+
 
     fetch(`${API}/api/profesor/evaluados/${id}`, { credentials: "include" })
       .then((res) => res.json())
@@ -329,6 +325,7 @@ export function EvaluacionProfesores() {
                       <tr>
                         <th>#</th>
                         <th>Profesor</th>
+                        <th>Unidad de Aprendizaje</th>
                         <th>Acción</th>
                       </tr>
                     </thead>
@@ -341,6 +338,7 @@ export function EvaluacionProfesores() {
                             <tr key={profesorObj.id}>
                               <td>{index + 1}</td>
                               <td className="nombre-profesor">{profesorObj.nombre}</td>
+                              <td className = "nombre-profesor">{profesorObj.materia}</td>
                               <td>
                                 <button className="btn-evaluar" onClick={() => handleEvaluarProfesor(profesorObj)}>
                                   Evaluar
