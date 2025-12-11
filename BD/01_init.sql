@@ -54,14 +54,15 @@ CREATE TABLE datos_personales (
     codigo_postal TEXT NOT NULL,
     colonia TEXT NOT NULL,
     delegacion TEXT NOT NULL,
-    telefono TEXT NOT NULL,
     ciudad TEXT NOT NULL,
+    telefono TEXT NOT NULL,
     email TEXT NOT NULL,
     foto BLOB,
     grado TEXT,
     carrera TEXT,
     situacion TEXT,
     calificacion FLOAT,
+    primera_vez INT,
     CONSTRAINT PK_USUARIOS PRIMARY KEY (id)
 );
 
@@ -84,18 +85,6 @@ CREATE TABLE enfermedades (
     CONSTRAINT FK_E_DM FOREIGN KEY (id_dat_med) REFERENCES datos_medicos (id)
 );
 
--- ==================================================
--- TABLAS ACADÉMICAS
--- ==================================================
-
-CREATE TABLE carrera (
-    nombre VARCHAR(40) NOT NULL,
-    creditos_iniciales INT NOT NULL,
-    prefijo_grupo TEXT NOT NULL,
-    duracion_max INT NOT NULL,
-    CONSTRAINT PK_CAR PRIMARY KEY (nombre)
-);
-
 CREATE TABLE estudiante (
     id VARCHAR(15) NOT NULL,
     id_usuario VARCHAR(15) NOT NULL,
@@ -104,6 +93,14 @@ CREATE TABLE estudiante (
     estado_academico TEXT NOT NULL,
     CONSTRAINT PK_ES PRIMARY KEY (id),
     CONSTRAINT FK_ES_DP FOREIGN KEY (id_usuario) REFERENCES datos_personales (id)
+);
+
+CREATE TABLE carrera (
+    nombre VARCHAR(40) NOT NULL,
+    creditos_iniciales INT NOT NULL,
+    prefijo_grupo TEXT NOT NULL,
+    duracion_max INT NOT NULL,
+    CONSTRAINT PK_CAR PRIMARY KEY (nombre)
 );
 
 CREATE TABLE unidad_de_aprendizaje (
@@ -124,6 +121,7 @@ CREATE TABLE grupo (
     id_prof VARCHAR(15) NOT NULL,
     turno TEXT NOT NULL,
     cupo INT NOT NULL,
+    salon TEXT,
     reg_final INT,
     reg_extra INT,
     CONSTRAINT PK_GRU PRIMARY KEY (id),
@@ -140,10 +138,6 @@ CREATE TABLE distribucion (
     CONSTRAINT PK_DIS PRIMARY KEY (id),
     CONSTRAINT FK_DIS_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
 );
-
--- ==================================================
--- TABLAS DE INSCRIPCIÓN Y HORARIOS
--- ==================================================
 
 CREATE TABLE horario (
     id VARCHAR(15) NOT NULL,
@@ -175,30 +169,6 @@ CREATE TABLE inscripcion (
     CONSTRAINT FK_INS_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
 );
 
-CREATE TABLE borrador_horario (
-    id VARCHAR(15) NOT NULL,
-    id_grupo VARCHAR(15) NOT NULL,
-    id_alumno VARCHAR(15) NOT NULL,
-    id_profesor VARCHAR(15) NOT NULL,
-    calificacion TEXT NOT NULL,
-    materia TEXT NOT NULL,
-    horas_lun TEXT,
-    horas_mar TEXT,
-    horas_mie TEXT,
-    horas_jue TEXT,
-    horas_vie TEXT,
-    creditos_necesarios FLOAT NOT NULL,
-    valido TINYINT(1),
-    CONSTRAINT PK_BOR PRIMARY KEY (id),
-    CONSTRAINT FK_BOR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id),
-    CONSTRAINT FK_BOR_PRO FOREIGN KEY (id_profesor) REFERENCES datos_personales (id),
-    CONSTRAINT FK_BOR_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
-);
-
--- ==================================================
--- TABLAS DE EVALUACIÓN Y KARDEX
--- ==================================================
-
 CREATE TABLE resena (
     id VARCHAR(15) NOT NULL,
     id_profesor VARCHAR(15) NOT NULL,
@@ -206,6 +176,7 @@ CREATE TABLE resena (
     calificacion FLOAT NOT NULL,
     comentarios TEXT,
     fecha DATE NOT NULL,
+    periodo TEXT,
     CONSTRAINT PK_RE PRIMARY KEY (id),
     CONSTRAINT FK_RE_PRO FOREIGN KEY (id_profesor) REFERENCES datos_personales (id),
     CONSTRAINT FK_RE_ALU FOREIGN KEY (id_alumno) REFERENCES datos_personales (id)
@@ -235,6 +206,26 @@ CREATE TABLE ua_aprobada (
     CONSTRAINT FK_UAA_KAR FOREIGN KEY (id_kardex) REFERENCES kardex (id)
 );
 
+CREATE TABLE borrador_horario (
+    id VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    id_alumno VARCHAR(15) NOT NULL,
+    id_profesor VARCHAR(15) NOT NULL,
+    calificacion TEXT NOT NULL,
+    materia TEXT NOT NULL,
+    horas_lun TEXT,
+    horas_mar TEXT,
+    horas_mie TEXT,
+    horas_jue TEXT,
+    horas_vie TEXT,
+    creditos_necesarios FLOAT NOT NULL,
+    valido TINYINT(1),
+    CONSTRAINT PK_BOR PRIMARY KEY (id),
+    CONSTRAINT FK_BOR_DP FOREIGN KEY (id_alumno) REFERENCES datos_personales (id),
+    CONSTRAINT FK_BOR_PRO FOREIGN KEY (id_profesor) REFERENCES datos_personales (id),
+    CONSTRAINT FK_BOR_GRU FOREIGN KEY (id_grupo) REFERENCES grupo (id)
+);
+
 CREATE TABLE lista (
     id VARCHAR(15) NOT NULL,
     id_inscrito VARCHAR(15) NOT NULL,
@@ -244,58 +235,6 @@ CREATE TABLE lista (
     CONSTRAINT FK_LIS_MAI FOREIGN KEY (id_inscrito) REFERENCES mat_inscritos (id)
 );
 
-CREATE TABLE contador (
-    id_profesor VARCHAR(15) NOT NULL,
-    suma INTEGER NOT NULL,
-    registrados INTEGER NOT NULL,
-    CONSTRAINT FK_CON_DP FOREIGN KEY (id_profesor) REFERENCES datos_personales (id)
-);
-
--- ==================================================
--- TABLAS DE MATERIAS REPROBADAS Y ETS
--- ==================================================
-
-CREATE TABLE materia_reprobada (
-    id VARCHAR(15) NOT NULL,
-    id_estudiante VARCHAR(15) NOT NULL,
-    id_ua VARCHAR(15) NOT NULL,
-    periodos_restantes INTEGER NOT NULL,
-    recurse INTEGER NOT NULL,
-    estado_actual TEXT NOT NULL,
-    CONSTRAINT PK_MR PRIMARY KEY (id),
-    CONSTRAINT FK_MR_ES FOREIGN KEY (id_estudiante) REFERENCES estudiante (id),
-    CONSTRAINT FK_MR_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id)
-);
-
-CREATE TABLE ets_grupo (
-    id VARCHAR(15) NOT NULL,
-    id_ua VARCHAR(15) NOT NULL,
-    id_aplicante VARCHAR(15) NOT NULL,
-    turno TEXT NOT NULL,
-    hora_inicio TEXT NOT NULL,
-    hora_final TEXT NOT NULL,
-    fecha DATE NOT NULL,
-    CONSTRAINT PK_ETS_G PRIMARY KEY (id),
-    CONSTRAINT FK_ETSG_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id),
-    CONSTRAINT FK_ETSG_DP FOREIGN KEY (id_aplicante) REFERENCES datos_personales (id)
-);
-
-CREATE TABLE ets (
-    id VARCHAR(15) NOT NULL,
-    id_mr VARCHAR(15) NOT NULL,
-    id_grupo VARCHAR(15) NOT NULL,
-    comprobante LONGBLOB,
-    validado INTEGER NOT NULL,
-    calificado FLOAT NOT NULL,
-    CONSTRAINT PK_ETS PRIMARY KEY (id),
-    CONSTRAINT FK_ETS_MR FOREIGN KEY (id_mr) REFERENCES materia_reprobada (id),
-    CONSTRAINT FK_ETS_AP FOREIGN KEY (id_grupo) REFERENCES ets_grupo (id)
-);
-
--- ==================================================
--- TABLAS DE MENSAJERÍA Y AVISOS
--- ==================================================
-
 CREATE TABLE mensaje_chat (
     id VARCHAR(15) NOT NULL,
     id_usuario VARCHAR(15) NOT NULL,
@@ -304,6 +243,59 @@ CREATE TABLE mensaje_chat (
     respuesta_obtenida TEXT,
     CONSTRAINT PK_MEN PRIMARY KEY (id),
     CONSTRAINT FK_MEN_DP FOREIGN KEY (id_usuario) REFERENCES datos_personales (id)
+);
+
+CREATE TABLE contador (
+    id_profesor VARCHAR(15) NOT NULL,
+    suma INTEGER NOT NULL,
+    registrados INTEGER NOT NULL,
+    CONSTRAINT FK_CON_DP FOREIGN KEY (id_profesor) REFERENCES datos_personales (id)
+);
+
+create table materia_reprobada (
+    id VARCHAR(15) NOT NULL,
+    id_estudiante VARCHAR(15) NOT NULL,
+    id_ua VARCHAR(15) NOT NULL,
+    periodos_restantes integer not null,
+    recurse integer not null,
+    estado_actual TEXT NOT NULL,
+    CONSTRAINT PK_MR PRIMARY KEY (id),
+    CONSTRAINT FK_MR_ES FOREIGN KEY (id_estudiante) REFERENCES estudiante (id),
+    CONSTRAINT FK_MR_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id)
+);
+
+create table ets_grupo (
+    id VARCHAR(15) NOT NULL,
+    id_ua VARCHAR(15) NOT NULL,
+    id_aplicante VARCHAR(15) NOT NULL,
+    turno TEXT NOT NULL,
+    hora_inicio TEXT NOT NULL,
+    hora_final TEXT NOT NULL,
+    fecha DATE NOT NULL,
+    periodo TEXT NOT NULL,
+    cupo int not null,
+    CONSTRAINT PK_ETS_G PRIMARY KEY (id),
+    CONSTRAINT FK_ETSG_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id),
+    CONSTRAINT FK_ETSG_DP FOREIGN KEY (id_aplicante) REFERENCES datos_personales (id)
+);
+
+create table ets (
+    id VARCHAR(15) NOT NULL,
+    id_mr VARCHAR(15) NOT NULL,
+    id_grupo VARCHAR(15) NOT NULL,
+    comprobante LONGBLOB,
+    validado INTEGER NOT NULL,
+    calificado FLOAT NOT NULL,
+    CONSTRAINT PK_ETS PRIMARY KEY (id),
+
+-- CASCADE para borrar ETS cuando se elimine la materia reprobada
+CONSTRAINT FK_ETS_MR FOREIGN KEY (id_mr) REFERENCES materia_reprobada (id) ON DELETE CASCADE,
+
+-- CASCADE para borrar ETS cuando se elimine el grupo del ETS
+CONSTRAINT FK_ETS_AP 
+        FOREIGN KEY (id_grupo) 
+        REFERENCES ets_grupo (id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE avisos (
@@ -329,10 +321,11 @@ CREATE TABLE fechas_relevantes (
     fin_registro_extra DATETIME NOT NULL,
     evalu_profe DATETIME NOT NULL,
     fin_evalu_profe DATETIME NOT NULL,
+    inscribir_ets DATETIME NOT NULL,
+    fin_inscribir_ets DATETIME NOT NULL,
     subir_doc_ets DATETIME NOT NULL,
     fin_subir_doc_ets DATETIME NOT NULL,
     eval_ets DATETIME NOT NULL,
     fin_evalu_ets DATETIME NOT NULL,
-    cal_ets DATETIME NOT NULL,
     periodo TEXT NOT NULL
 );

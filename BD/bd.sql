@@ -1,57 +1,32 @@
 DROP DATABASE IF EXISTS SAES;
-
 CREATE DATABASE SAES;
-
 USE SAES;
 
 -- ==================================================================
 -- 1. DEFINICIÓN DE TABLAS (DDL)
 -- ==================================================================
-
 DROP TABLE IF EXISTS fechas_relevantes;
-
 DROP TABLE IF EXISTS avisos;
-
 DROP TABLE IF EXISTS ets;
-
 DROP TABLE IF EXISTS ets_grupo;
-
 DROP TABLE IF EXISTS materia_reprobada;
-
 DROP TABLE IF EXISTS contador;
-
 DROP TABLE IF EXISTS mensaje_chat;
-
 DROP TABLE IF EXISTS lista;
-
 DROP TABLE IF EXISTS borrador_horario;
-
 DROP TABLE IF EXISTS ua_aprobada;
-
 DROP TABLE IF EXISTS kardex;
-
 DROP TABLE IF EXISTS resena;
-
 DROP TABLE IF EXISTS inscripcion;
-
 DROP TABLE IF EXISTS mat_inscritos;
-
 DROP TABLE IF EXISTS horario;
-
 DROP TABLE IF EXISTS distribucion;
-
 DROP TABLE IF EXISTS grupo;
-
 DROP TABLE IF EXISTS unidad_de_aprendizaje;
-
 DROP TABLE IF EXISTS carrera;
-
 DROP TABLE IF EXISTS estudiante;
-
 DROP TABLE IF EXISTS enfermedades;
-
 DROP TABLE IF EXISTS datos_medicos;
-
 DROP TABLE IF EXISTS datos_personales;
 
 CREATE TABLE datos_personales (
@@ -291,6 +266,7 @@ create table ets_grupo (
     hora_final TEXT NOT NULL,
     fecha DATE NOT NULL,
     periodo TEXT NOT NULL,
+    cupo int not null,
     CONSTRAINT PK_ETS_G PRIMARY KEY (id),
     CONSTRAINT FK_ETSG_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id),
     CONSTRAINT FK_ETSG_DP FOREIGN KEY (id_aplicante) REFERENCES datos_personales (id)
@@ -1984,11 +1960,10 @@ VALUES
     );
 
 -- ==================================================================
--- 3. INSERCIÓN DE GRUPOS Y DISTRIBUCIÓN DE HORARIOS
+-- 4. INSERCIÓN DE GRUPOS Y DISTRIBUCIÓN DE HORARIOS
 -- Se crean grupos Matutinos (M1) y Vespertinos (V1) para todas las UAs OBLIGATORIAS.
 -- ==================================================================
 DELETE FROM grupo;
-
 DELETE FROM distribucion;
 
 -- Definición de Patrones de Horario (1.5 horas por sesión)

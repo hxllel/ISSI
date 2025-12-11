@@ -1,13 +1,6 @@
--- ==================================================
--- Catálogo de Unidades de Aprendizaje (Materias)
--- ==================================================
--- Descripción: Inserta las materias disponibles por carrera y semestre
--- Orden de ejecución: 3
--- Prerequisito: Ejecutar 03_usuarios_carreras.sql
--- ==================================================
-
-USE SAES;
-
+-- ==================================================================
+-- 3. INSERCIÓN DE UNIDADES DE APRENDIZAJE (MANDATORIAS Y OPTATIVAS)
+-- ==================================================================
 INSERT INTO
     unidad_de_aprendizaje (
         id,
@@ -18,6 +11,7 @@ INSERT INTO
         tipo
     )
 VALUES
+    -- ISC (Ingenieria en Sistemas Computacionales) - OBLIGATORIAS
     (
         'UA0001',
         'Fundamentos de Programación',
@@ -386,6 +380,7 @@ VALUES
         8,
         'OBLIGATORIA'
     ),
+    -- IIA (Ingenieria en Inteligencia Artificial) - OBLIGATORIAS
     (
         'UA0051',
         'Fundamentos de Programación',
@@ -714,6 +709,7 @@ VALUES
         8,
         'OBLIGATORIA'
     ),
+    -- LCD (Licenciatura en Ciencia de Datos) - OBLIGATORIAS
     (
         'UA0096',
         'Fundamentos de Programación',
@@ -1443,3 +1439,4 @@ VALUES
         7,
         'OPTATIVA'
     );
+
