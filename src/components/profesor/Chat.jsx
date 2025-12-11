@@ -378,7 +378,7 @@ export function ChatbotProfesor() {
           )}
           {messages.map((message) => (
             <div key={message.id} className={`message ${message.sender === "user" ? "message-user" : "message-bot"}`}>
-              <div className="message-content">
+              <div className="message-content" style={{ whiteSpace: 'pre-wrap' }}>
                 <p>{message.text}</p>
                 <span className="message-time">{message.time}</span>
               </div>

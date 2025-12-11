@@ -18,6 +18,7 @@ export function SidebarAlumno() {
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, open ? "1" : "0");
+    // IMPORTANTE: ya no movemos el layout con body.sidebar-open (drawer overlay)
   }, [open]);
 
   const closeIfMobile = useCallback(() => {
@@ -77,12 +78,24 @@ export function SidebarAlumno() {
   return (
     <>
       {!open && (
-        <button className="sidebar-fab" onClick={() => setOpen(true)}>
-          ☰
-        </button>
+        <div className="sidebar-topbar">
+          <button
+            className="sidebar-topbar-btn"
+            onClick={() => setOpen(true)}
+            aria-label="Abrir menú"
+            aria-controls="saesr-alumno-sidebar"
+            aria-expanded={open}
+            type="button"
+          >
+            ☰
+          </button>
+        </div>
       )}
 
-      <aside className={`sidebar ${open ? "is-open" : "is-closed"}`}>
+      <aside
+        id="saesr-alumno-sidebar"
+        className={`sidebar ${open ? "is-open" : "is-closed"}`}
+      >
         <div className="sidebar-header">
           <div className="logo">
             <img src="/ipn.png" alt="Logo" className="logo-img" />

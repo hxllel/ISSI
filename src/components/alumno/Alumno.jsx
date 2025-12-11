@@ -159,14 +159,23 @@ export function Alumno() {
     <div className="alumno-container">
       { primera_vez === true ? (
         <main className="centrar">
-            <RecuperarContra />
+          <RecuperarContra />
         </main>
       ) : (
         <>
           <SidebarAlumno />
 
           {/* Contenido principal */}
-          <main className="main-content">
+          <main
+            className="main-content"
+            style={{
+              marginLeft: 0,
+              paddingLeft: 12,   // antes: 0
+              paddingRight: 12,  // añade simetría
+              width: "100%",
+              maxWidth: "100%",
+            }}
+          >
             <header className="chat-header">
               <div>
                 {alumno ? (

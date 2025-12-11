@@ -9,6 +9,43 @@ const { truncates } = require("bcryptjs");
 module.exports = (passport) => {
   const router = express.Router();
 
+  // ============================
+  //  ADMIN: ESTADÍSTICAS GENERALES
+  // ============================
+  router.get("/EstadisticasGenerales", async (req, res) => {
+    try {
+      const now = new Date();
+
+      const [alumnos, profesores, administradores, cursos, proximosEventos] =
+        await Promise.all([
+          bd.DatosPersonales.count({ where: { tipo_usuario: "alumno" } }),
+          bd.DatosPersonales.count({ where: { tipo_usuario: "profesor" } }),
+          bd.DatosPersonales.count({ where: { tipo_usuario: "administrador" } }),
+          bd.Grupo.count(),
+          bd.Avisos.count({
+            where: {
+              fecha_vencimiento: {
+                [Op.gte]: now,
+              },
+            },
+          }),
+        ]);
+
+      return res.json({
+        alumnos,
+        profesores,
+        administradores,
+        cursos,
+        proximosEventos,
+      });
+    } catch (error) {
+      console.error("Error al obtener estadísticas generales: ", error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al obtener estadísticas" });
+    }
+  });
+
   router.post("/RegistrarAlumno", async (req, res) => {
     const {
       id,

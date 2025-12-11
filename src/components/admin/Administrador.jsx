@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Administrador.css";
@@ -19,6 +19,15 @@ import { AdminSidebar } from "../admin/AdminSidebar.jsx";
 
 export function Administrador() {
   const navigate = useNavigate();
+  const API = "http://localhost:4000";
+
+  const [stats, setStats] = useState({
+    alumnos: null,
+    profesores: null,
+    cursos: null,
+    proximosEventos: null,
+  });
+  const [statsError, setStatsError] = useState("");
 
   const handleClickAlu = () => navigate("gestionarAlumnos");
   const handleClickProf = () => navigate("gestionarProfesores");
@@ -33,6 +42,43 @@ export function Administrador() {
   const handleUnidades = () => navigate("/administrador/unidades");
   const handleDatosMedicos = () => navigate("/administrador/datosMedicos");
   const handleGenerarCitas = () => navigate("/administrador/GenerarCitas");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadStats = async () => {
+      try {
+        setStatsError("");
+        const res = await fetch(`${API}/EstadisticasGenerales`, {
+          credentials: "include",
+        });
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        const data = await res.json();
+
+        if (cancelled) return;
+        setStats({
+          alumnos: typeof data.alumnos === "number" ? data.alumnos : 0,
+          profesores: typeof data.profesores === "number" ? data.profesores : 0,
+          cursos: typeof data.cursos === "number" ? data.cursos : 0,
+          proximosEventos:
+            typeof data.proximosEventos === "number" ? data.proximosEventos : 0,
+        });
+      } catch (e) {
+        if (cancelled) return;
+        console.error("Error al cargar estadísticas:", e);
+        setStatsError("No se pudieron cargar las estadísticas.");
+      }
+    };
+
+    loadStats();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const formatStat = (value) => (typeof value === "number" ? value.toLocaleString() : "—");
 
   return (
     <div className="admin-container">
@@ -112,25 +158,28 @@ export function Administrador() {
         {/* Estadísticas con diseño del segundo */}
         <section className="estadisticas">
           <h2>Estadísticas Generales</h2>
+          {statsError ? (
+            <p>{statsError}</p>
+          ) : null}
           <div className="stats-grid">
             <div className="stat-card">
               <p>Total de Estudiantes</p>
-              <h3>1,250</h3>
+              <h3>{formatStat(stats.alumnos)}</h3>
             </div>
 
             <div className="stat-card">
               <p>Total de Profesores</p>
-              <h3>85</h3>
+              <h3>{formatStat(stats.profesores)}</h3>
             </div>
 
             <div className="stat-card">
               <p>Cursos Activos</p>
-              <h3>32</h3>
+              <h3>{formatStat(stats.cursos)}</h3>
             </div>
 
             <div className="stat-card">
               <p>Próximos Eventos</p>
-              <h3>5</h3>
+              <h3>{formatStat(stats.proximosEventos)}</h3>
             </div>
           </div>
         </section>

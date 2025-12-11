@@ -305,12 +305,12 @@ module.exports = (passport) => {
               hora_ini: d.hora_ini,
               hora_fin: d.hora_fin,
             })) || [
-              {
-                dia: "Sin día",
-                hora_ini: "",
-                hora_fin: "",
-              },
-            ],
+                {
+                  dia: "Sin día",
+                  hora_ini: "",
+                  hora_fin: "",
+                },
+              ],
           };
 
           materias.push(base);
@@ -556,9 +556,8 @@ module.exports = (passport) => {
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.nombre || g.Unidad_Aprendizaje.Nombre)) ||
             "",
-          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${
-            datosProf.ape_materno || ""
-          }`.trim(),
+          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${datosProf.ape_materno || ""
+            }`.trim(),
           calificacion_profesor: datosProf.calificacion || null,
           cupo: g.cupo,
           dias,
@@ -644,6 +643,80 @@ module.exports = (passport) => {
           tempGrupo: req.session.tempGrupos || [],
           creditos: req.session.creditos || 0,
         });
+      }
+
+      // --- NUEVA VALIDACIÓN DE OPTATIVAS ---
+      if (cuesta.Unidad_Aprendizaje.tipo === "OPTATIVA") {
+        const semestreMateria = cuesta.Unidad_Aprendizaje.semestre;
+
+        // Contar optativas ya aprobadas del kardex
+        let optativasAprobadas6to = 0;
+        let optativasAprobadas7mo = 0;
+
+        if (kardex) {
+          const aprobadas = await bd.UA_Aprobada.findAll({
+            where: { id_kardex: kardex.id },
+          });
+
+          for (const ap of aprobadas) {
+            const ua = await bd.Unidad_Aprendizaje.findOne({
+              where: { nombre: ap.unidad_aprendizaje, carrera: carrera }
+            });
+
+            if (ua && ua.tipo === "OPTATIVA") {
+              if (ua.semestre === 6) optativasAprobadas6to++;
+              if (ua.semestre === 7) optativasAprobadas7mo++;
+            }
+          }
+        }
+
+        // Contar optativas en la sesión temporal
+        let optativasSesion6to = 0;
+        let optativasSesion7mo = 0;
+
+        if (req.session.tempGrupos && req.session.tempGrupos.length > 0) {
+          for (const idGrupo of req.session.tempGrupos) {
+            const grupoTemp = await bd.Grupo.findOne({
+              where: { id: idGrupo },
+              include: [{
+                model: bd.Unidad_Aprendizaje,
+                attributes: ["tipo", "semestre"]
+              }],
+              raw: true,
+              nest: true
+            });
+
+            if (grupoTemp && grupoTemp.Unidad_Aprendizaje.tipo === "OPTATIVA") {
+              if (grupoTemp.Unidad_Aprendizaje.semestre === 6) optativasSesion6to++;
+              if (grupoTemp.Unidad_Aprendizaje.semestre === 7) optativasSesion7mo++;
+            }
+          }
+        }
+
+        // Calcular totales
+        const totalOptativas6to = optativasAprobadas6to + optativasSesion6to;
+        const totalOptativas7mo = optativasAprobadas7mo + optativasSesion7mo;
+
+        // Validar límites
+        if (semestreMateria === 6) {
+          if (totalOptativas6to >= 2) {
+            return res.json({
+              success: false,
+              err: `Ya tienes 2 materias optativas de 6to semestre (${optativasAprobadas6to} cursadas, ${optativasSesion6to} seleccionadas). No puedes agregar más.`,
+              tempGrupo: req.session.tempGrupos || [],
+              creditos: req.session.creditos || 0,
+            });
+          }
+        } else if (semestreMateria === 7) {
+          if (totalOptativas7mo >= 2) {
+            return res.json({
+              success: false,
+              err: `Ya tienes 2 materias optativas de 7mo semestre (${optativasAprobadas7mo} cursadas, ${optativasSesion7mo} seleccionadas). No puedes agregar más.`,
+              tempGrupo: req.session.tempGrupos || [],
+              creditos: req.session.creditos || 0,
+            });
+          }
+        }
       }
     } catch (error) {
       console.error("Error validando semestre:", error);
@@ -913,6 +986,69 @@ module.exports = (passport) => {
             message: "No cumple con la carga mínima o máxima",
           });
         }
+
+        // --- VALIDACIÓN FINAL DE OPTATIVAS ---
+        const alumno = await bd.DatosPersonales.findOne({ where: { id } });
+        const carrera = alumno.carrera;
+        const kardex = await bd.Kardex.findOne({ where: { id_alumno: id } });
+
+        let optativasAprobadas6to = 0;
+        let optativasAprobadas7mo = 0;
+
+        if (kardex) {
+          const aprobadas = await bd.UA_Aprobada.findAll({
+            where: { id_kardex: kardex.id },
+          });
+
+          for (const ap of aprobadas) {
+            const ua = await bd.Unidad_Aprendizaje.findOne({
+              where: { nombre: ap.unidad_aprendizaje, carrera: carrera }
+            });
+
+            if (ua && ua.tipo === "OPTATIVA") {
+              if (ua.semestre === 6) optativasAprobadas6to++;
+              if (ua.semestre === 7) optativasAprobadas7mo++;
+            }
+          }
+        }
+
+        let optativasSesion6to = 0;
+        let optativasSesion7mo = 0;
+
+        for (const idGrupo of ids) {
+          const grupoTemp = await bd.Grupo.findOne({
+            where: { id: idGrupo },
+            include: [{
+              model: bd.Unidad_Aprendizaje,
+              attributes: ["tipo", "semestre"]
+            }],
+            raw: true,
+            nest: true
+          });
+
+          if (grupoTemp && grupoTemp.Unidad_Aprendizaje.tipo === "OPTATIVA") {
+            if (grupoTemp.Unidad_Aprendizaje.semestre === 6) optativasSesion6to++;
+            if (grupoTemp.Unidad_Aprendizaje.semestre === 7) optativasSesion7mo++;
+          }
+        }
+
+        const totalOptativas6to = optativasAprobadas6to + optativasSesion6to;
+        const totalOptativas7mo = optativasAprobadas7mo + optativasSesion7mo;
+
+        if (totalOptativas6to > 2) {
+          return res.json({
+            success: false,
+            message: `Excedes el límite de 2 optativas de 6to semestre (${optativasAprobadas6to} cursadas, ${optativasSesion6to} seleccionadas)`,
+          });
+        }
+
+        if (totalOptativas7mo > 2) {
+          return res.json({
+            success: false,
+            message: `Excedes el límite de 2 optativas de 7mo semestre (${optativasAprobadas7mo} cursadas, ${optativasSesion7mo} seleccionadas)`,
+          });
+        }
+
         console.log("creditos restantes", creditos_restantes);
         console.log("ID: ", id);
 
@@ -1634,9 +1770,9 @@ module.exports = (passport) => {
         "Fechas encontradas:",
         fechas
           ? {
-              evalu_profe: fechas.evalu_profe,
-              fin_evalu_profe: fechas.fin_evalu_profe,
-            }
+            evalu_profe: fechas.evalu_profe,
+            fin_evalu_profe: fechas.fin_evalu_profe,
+          }
           : "No hay fechas"
       );
 
