@@ -190,6 +190,74 @@
 }
 
 /* =======================================
+   Alertas
+======================================= */
+.alerta-info {
+  display: flex;
+  align-items: center;
+  background-color: #d1e7dd;
+  color: #0f5132;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.alerta-info .icono-info {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.alerta-info .icono-info svg {
+  color: #fff;
+}
+
+/* =======================================
+   Vista Primera Vez - Diseño Mejorado
+======================================= */
+.centrar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: #ffffff;
+}
+
+.alerta-info {
+  background: #7d0024;
+  color: #fff;
+  padding: 1.2rem 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(125, 0, 36, 0.4);
+}
+
+.paso-numero {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #7d0024 0%, #60001c 100%);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(125, 0, 36, 0.3);
+}
+
+.nota-importante strong {
+  color: #7d0024;
+  font-weight: 600;
+}
+
+/* =======================================
    Responsive
 ======================================= */
 @media (max-width: 768px) {
@@ -265,23 +333,4 @@
     font-size: 0.9rem;
     padding: 0.6rem 1.2rem;
   }
-}
-
-.subheader-section {
-  text-align: left; /* Mueve el texto a la derecha */
-  margin-left: 30px; /* Separación del borde derecho (ajusta si quieres más o menos) */
-}
-
-.subheader-section p {
-  color: #6c757d; /* Gris elegante */
-  font-size: 0.95rem; /* Tamaño ligeramente más pequeño */
-  margin: 0; /* Quita márgenes por defecto */
-}
-
-.centrar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;   /* Ocupa toda la pantalla */
-  width: 100%;
 }

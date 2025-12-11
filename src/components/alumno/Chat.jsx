@@ -328,8 +328,8 @@ export function ChatbotAsistente() {
           )}
           {messages.map((message) => (
             <div key={message.id} className={`message ${message.sender === "user" ? "message-user" : "message-bot"}`}>
-              <div className="message-content">
-                <p>{message.text}</p>
+              <div className="message-content" style={{ whiteSpace: 'pre-wrap' }}>
+                {message.text}
                 <span className="message-time">{message.time}</span>
               </div>
             </div>

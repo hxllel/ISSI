@@ -94,7 +94,7 @@ export default function RecuperarContra() {
         body: JSON.stringify({ 
           boleta, 
           email, 
-          token: token.toLowerCase() // Enviar en minúsculas
+          token: token.replace(/\s/g, '').toLowerCase() // Remover espacios y enviar en minúsculas
         }),
       });
 
@@ -186,34 +186,69 @@ export default function RecuperarContra() {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const handleTokenChange = (e) => {
+    let value = e.target.value.replace(/\s/g, '').toUpperCase(); // Remover espacios existentes y convertir a mayúsculas
+    if (value.length > 8) {
+      value = value.substring(0, 8); // Limitar a 8 caracteres
+    }
+    // Agregar espacio después del 4to carácter para mejor visualización
+    if (value.length > 4) {
+      value = value.substring(0, 4) + ' ' + value.substring(4);
+    }
+    setToken(value);
+  };
+
   return (
     <div className="recuperar-contra-container">
       <div className="recuperar-contra-card">
-        <h1>Cambiar Contraseña</h1>
+        <div className="card-header">
+          <div className="header-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h1>Verificación de Identidad</h1>
+          <p className="subtitle">Paso {step} de 3</p>
+        </div>
 
         {step === 1 && (
           <form onSubmit={handleSendEmail}>
+            <div className="step-description">
+              <h3>Envío de Código de Verificación</h3>
+              <p>
+                Ingresa tu boleta/RFC y correo electrónico registrado. Te enviaremos un 
+                código de verificación a tu correo registrado en el sistema para validar tu identidad.
+              </p>
+            </div>
+
             <div className="form-group">
-              <label htmlFor="boleta">Id</label>
+              <label htmlFor="boleta">
+                Boleta/RFC
+              </label>
               <input
                 type="text"
                 id="boleta"
-                placeholder="Ingresa tu id"
+                placeholder="Ingresa tu número de boleta o RFC"
                 value={boleta}
                 onChange={(e) => setBoleta(e.target.value)}
                 disabled={loading}
+                className="input-field"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">Correo Electrónico</label>
+              <label htmlFor="email">
+                Correo Electrónico
+              </label>
               <input
                 type="email"
                 id="email"
-                placeholder="Ingresa tu correo asociado"
+                placeholder="ejemplo@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                className="input-field"
               />
             </div>
 
@@ -225,17 +260,27 @@ export default function RecuperarContra() {
               className="btn btn-primary"
               disabled={loading}
             >
-              {loading ? 'Enviando...' : 'Enviar Correo'}
+              {loading ? (
+                <>
+                  <span className="spinner"></span>
+                  Enviando código...
+                </>
+              ) : (
+                'Enviar Código de Verificación'
+              )}
             </button>
           </form>
         )}
 
         {step === 2 && (
           <form onSubmit={handleValidateToken}>
-            <p className="info-text">
-              Se ha enviado un código de verificación a tu correo electrónico.
-              Por favor ingresa el código para continuar.
-            </p>
+            <div className="step-description">
+              <h3>Validación de Código</h3>
+              <p>
+                Revisa tu bandeja de entrada (y spam si es necesario). 
+                Ingresa el código de 8 caracteres que te enviamos.
+              </p>
+            </div>
 
             <div className="countdown-box">
               <span className="countdown-label">Tiempo restante:</span>
@@ -245,15 +290,19 @@ export default function RecuperarContra() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="token">Código de Verificación</label>
+              <label htmlFor="token">
+                Código de Verificación
+              </label>
               <input
                 type="text"
                 id="token"
-                placeholder="Ingresa el código recibido"
+                placeholder="ABCD 1234"
                 value={token}
-                onChange={(e) => setToken(e.target.value.toUpperCase())}
+                onChange={handleTokenChange}
                 disabled={loading}
+                className="input-field token-input"
               />
+              <small className="helper-text">Código de 8 caracteres • Expira en {formatTime(timeLeft)}</small>
             </div>
 
             {error && <div className="alert error">{error}</div>}
@@ -273,7 +322,14 @@ export default function RecuperarContra() {
                 className="btn btn-primary"
                 disabled={loading}
               >
-                {loading ? 'Validando...' : 'Validar Código'}
+                {loading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Validando...
+                  </>
+                ) : (
+                  'Validar Código'
+                )}
               </button>
             </div>
           </form>
@@ -281,31 +337,41 @@ export default function RecuperarContra() {
 
         {step === 3 && (
           <form onSubmit={handleChangePassword}>
-            <p className="info-text">
-              Ingresa tu nueva contraseña para completar la recuperación.
-            </p>
+            <div className="step-description">
+              <h3>Nueva Contraseña</h3>
+              <p>
+                Crea una contraseña segura con al menos 6 caracteres. 
+                Te recomendamos usar letras, números y símbolos.
+              </p>
+            </div>
 
             <div className="form-group">
-              <label htmlFor="nuevaContrasena">Nueva Contraseña</label>
+              <label htmlFor="nuevaContrasena">
+                Nueva Contraseña
+              </label>
               <input
                 type="password"
                 id="nuevaContrasena"
-                placeholder="Ingresa tu nueva contraseña"
+                placeholder="Mínimo 6 caracteres"
                 value={nuevaContrasena}
                 onChange={(e) => setNuevaContrasena(e.target.value)}
                 disabled={loading}
+                className="input-field"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmarContrasena">Confirmar Contraseña</label>
+              <label htmlFor="confirmarContrasena">
+                Confirmar Contraseña
+              </label>
               <input
                 type="password"
                 id="confirmarContrasena"
-                placeholder="Confirma tu nueva contraseña"
+                placeholder="Repite tu contraseña"
                 value={confirmarContrasena}
                 onChange={(e) => setConfirmarContrasena(e.target.value)}
                 disabled={loading}
+                className="input-field"
               />
             </div>
 
@@ -326,7 +392,14 @@ export default function RecuperarContra() {
                 className="btn btn-primary"
                 disabled={loading}
               >
-                {loading ? 'Cambiando...' : 'Cambiar Contraseña'}
+                {loading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Cambiando...
+                  </>
+                ) : (
+                  'Guardar Nueva Contraseña'
+                )}
               </button>
             </div>
           </form>
