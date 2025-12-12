@@ -287,7 +287,7 @@ module.exports = (passport) => {
             await bd.UA_Aprobada.create({
               id: uuidv4().replace(/-/g, "").substring(0, 15),
               id_kardex: kardex.id,
-              unidad_aprendizaje: id,
+              unidad_aprendizaje: Ua.nombre,
               calificacion_final: promedio,
               semestre: Ua.semestre,
               periodo: f.periodo,
@@ -366,10 +366,10 @@ module.exports = (passport) => {
                 periodos_restantes: 3,
                 recurse: 1,
               });
-              await bd.Estudiante.update({
-                estado_academico: "Irregular",
-                where: { id_usuario: es.id },
-              });
+              await bd.Estudiante.update(
+                { estado_academico: "Irregular" },
+                { where: { id_usuario: es.id } }
+              );
             }
           }
 
@@ -387,7 +387,7 @@ module.exports = (passport) => {
             await bd.UA_Aprobada.create({
               id: uuidv4().replace(/-/g, "").substring(0, 15),
               id_kardex: kardex.id,
-              unidad_aprendizaje: id,
+              unidad_aprendizaje: Ua.nombre,
               calificacion_final: cal,
               semestre: Ua.semestre,
               periodo: f.periodo,
@@ -537,25 +537,42 @@ module.exports = (passport) => {
           calificacion = ins.extra;
         }
 
-        // Calcular porcentaje de asistencia
-        const totalAsistencias = await bd.Lista.count({
-          where: { id_inscrito: ins.id },
+        const totalFechas = await bd.Lista.findOne({
+          attributes: [
+            [
+              bd.sequelize.fn(
+                "COUNT",
+                bd.sequelize.fn("DISTINCT", bd.sequelize.col("fecha"))
+              ),
+              "total_fechas",
+            ],
+          ],
+          include: [
+            {
+              model: bd.Mat_Inscritos,
+              where: { id_grupo: id },
+              attributes: [], // <---- IMPORTANTE: evita que añada columnas no agregadas
+            },
+          ],
+          raw: true,
         });
+
+        // Calcular porcentaje de asistencia
 
         const asistenciasPresentes = await bd.Lista.count({
           where: {
             id_inscrito: ins.id,
-            asistencia: "Presente",
+            asistencia: "Si",
           },
         });
 
         const porcentajeAsistencia =
-          totalAsistencias > 0
-            ? (asistenciasPresentes / totalAsistencias) * 100
+          asistenciasPresentes > 0 && totalFechas.total_fechas > 0
+            ? (asistenciasPresentes / totalFechas.total_fechas) * 100
             : 0;
-
+        console.log("porcentaje", porcentajeAsistencia);
         const tieneAsistenciaSuficiente = porcentajeAsistencia >= 80;
-
+        console.log(tieneAsistenciaSuficiente);
         alumnosConCalificaciones.push({
           id: alumno.id,
           nombre: alumno.nombre,
@@ -1266,8 +1283,6 @@ module.exports = (passport) => {
         } else {
           // Si no aprueba (calificación < 6.0)
           // Reducir un periodo en materia_reprobada
-          const nuevosPeriodos = Math.max(0, materiaRep.periodos_restantes - 1);
-
           await bd.Materia_Reprobada.update(
             {
               periodos_restantes: nuevosPeriodos,

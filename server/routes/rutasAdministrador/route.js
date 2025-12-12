@@ -648,7 +648,7 @@ module.exports = (passport) => {
         try {
           const base64Data =
             typeof req.body.fotoBase64 === "string" &&
-              req.body.fotoBase64.includes(",")
+            req.body.fotoBase64.includes(",")
               ? req.body.fotoBase64.split(",")[1]
               : req.body.fotoBase64;
           fields.foto = Buffer.from(base64Data, "base64");
@@ -1070,11 +1070,7 @@ module.exports = (passport) => {
     } = req.body;
 
     try {
-      const aprobados = await bd.Mat_Inscritos.findAll({
-        where: {
-          calificacion_final: { [Op.gte]: 6 } || { extra: { [Op.gte]: 6 } },
-        },
-      });
+      const aprobados = await bd.Mat_Inscritos.findAll({});
 
       for (const a of aprobados) {
         const grupo = await bd.Grupo.findOne({
@@ -1226,21 +1222,25 @@ module.exports = (passport) => {
       });
 
       if (!ets) {
-        return res.status(404).json({ success: false, message: "ETS no encontrado" });
+        return res
+          .status(404)
+          .json({ success: false, message: "ETS no encontrado" });
       }
 
       const etsJSON = ets.toJSON();
       await bd.ETS.update({ validado: 1 }, { where: { id: id } });
 
       // FIX: Usar DatosPersonale (sin 's')
-      if (!etsJSON.Materia_Reprobada ||
+      if (
+        !etsJSON.Materia_Reprobada ||
         !etsJSON.Materia_Reprobada.Estudiante ||
-        !etsJSON.Materia_Reprobada.Estudiante.DatosPersonale) {
+        !etsJSON.Materia_Reprobada.Estudiante.DatosPersonale
+      ) {
         console.error("Error: No se pudo acceder a los datos del alumno");
         console.log("Materia_Reprobada:", etsJSON.Materia_Reprobada);
         return res.status(500).json({
           success: false,
-          message: "Error al obtener datos del alumno"
+          message: "Error al obtener datos del alumno",
         });
       }
 
@@ -1250,7 +1250,7 @@ module.exports = (passport) => {
         console.error("Error: No se pudo acceder a los datos del grupo ETS");
         return res.status(500).json({
           success: false,
-          message: "Error al obtener datos del grupo ETS"
+          message: "Error al obtener datos del grupo ETS",
         });
       }
 
@@ -1329,7 +1329,9 @@ module.exports = (passport) => {
     } catch (err) {
       console.error("Error al validar ETS:", err);
       console.error("Stack trace:", err.stack);
-      return res.status(500).json({ success: false, message: "Error al validar el ETS" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al validar el ETS" });
     }
   });
 
@@ -1357,26 +1359,30 @@ module.exports = (passport) => {
       });
 
       if (!ets) {
-        return res.status(404).json({ success: false, message: "ETS no encontrado" });
+        return res
+          .status(404)
+          .json({ success: false, message: "ETS no encontrado" });
       }
 
       const etsJSON = ets.toJSON();
       await bd.ETS.update(
         {
           validado: 0,
-          comprobante: null
+          comprobante: null,
         },
         { where: { id: id } }
       );
 
-      if (!etsJSON.Materia_Reprobada ||
+      if (
+        !etsJSON.Materia_Reprobada ||
         !etsJSON.Materia_Reprobada.Estudiante ||
-        !etsJSON.Materia_Reprobada.Estudiante.DatosPersonale) {
+        !etsJSON.Materia_Reprobada.Estudiante.DatosPersonale
+      ) {
         console.error("Error: No se pudo acceder a los datos del alumno");
         console.log("Materia_Reprobada:", etsJSON.Materia_Reprobada);
         return res.status(500).json({
           success: false,
-          message: "Error al obtener datos del alumno"
+          message: "Error al obtener datos del alumno",
         });
       }
 
@@ -1389,7 +1395,7 @@ module.exports = (passport) => {
         console.log("grupoETS completo:", grupoETS);
         return res.status(500).json({
           success: false,
-          message: "Error al obtener datos del grupo ETS"
+          message: "Error al obtener datos del grupo ETS",
         });
       }
 
@@ -1472,7 +1478,9 @@ module.exports = (passport) => {
     } catch (err) {
       console.error("Error al denegar ETS:", err);
       console.error("Stack trace:", err.stack);
-      return res.status(500).json({ success: false, message: "Error al denegar el ETS" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al denegar el ETS" });
     }
   });
 
@@ -1875,8 +1883,9 @@ module.exports = (passport) => {
           ua: ua.nombre,
           tipo: ua.tipo,
           creditos: ua.credito,
-          profesor: `${prof.nombre || ""} ${prof.ape_paterno || ""} ${prof.ape_materno || ""
-            }`.trim(),
+          profesor: `${prof.nombre || ""} ${prof.ape_paterno || ""} ${
+            prof.ape_materno || ""
+          }`.trim(),
           cupo: g.cupo,
         };
       });

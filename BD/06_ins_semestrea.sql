@@ -13,6 +13,7 @@ USE SAES;
 -- Se incluye historial para alumnos de 3er semestre en adelante.
 -- ==================================================================
 DELETE FROM ua_aprobada;
+DELETE FROM distribucion;
 
 INSERT INTO
     ua_aprobada (
@@ -2983,6 +2984,7 @@ VALUES (
 
 --=== DISTRIBUCIÓN DE HORARIOS PARA GRUPOS OPTATIVAS===
 --=== Horario estándar: Lunes, Miércoles, Viernes 10:30-12:00 (Matutino) o 6:30-8:00 (Vespertino)===
+DELETE FROM distribucion;
 
 -- ISC Semestre 6 - Matutino
 INSERT INTO
