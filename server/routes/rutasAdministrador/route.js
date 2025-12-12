@@ -25,7 +25,9 @@ module.exports = (passport) => {
         await Promise.all([
           bd.DatosPersonales.count({ where: { tipo_usuario: "alumno" } }),
           bd.DatosPersonales.count({ where: { tipo_usuario: "profesor" } }),
-          bd.DatosPersonales.count({ where: { tipo_usuario: "administrador" } }),
+          bd.DatosPersonales.count({
+            where: { tipo_usuario: "administrador" },
+          }),
           bd.Grupo.count(),
           bd.Avisos.count({
             where: {
@@ -1549,7 +1551,8 @@ module.exports = (passport) => {
       if (!p) {
         return res.status(400).json({
           success: false,
-          mensaje: "No hay fechas relevantes configuradas. Configure el periodo primero.",
+          mensaje:
+            "No hay fechas relevantes configuradas. Configure el periodo primero.",
         });
       }
 
@@ -2285,7 +2288,7 @@ module.exports = (passport) => {
           {
             periodos_restantes: m.semestresExtra,
             recurse: m.reinscripcion,
-            estado_actual: "Reprobada",
+            estado_actual: "Dictamen",
           },
           {
             where: { id: m.id },
@@ -2294,13 +2297,13 @@ module.exports = (passport) => {
         await bd.Estudiante.update(
           {
             creditos_disponibles: m.creditosExtra,
-            estado_academico: "Irregular",
+            estado_academico: "Dictaminado",
           },
           { where: { id_usuario: id } }
         );
         await bd.Kardex.update(
           {
-            situacion_academica: "Irregular",
+            situacion_academica: "Dictaminado",
           },
           { where: { id_alumno: id } }
         );

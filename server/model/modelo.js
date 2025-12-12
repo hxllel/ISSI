@@ -530,17 +530,17 @@ ETS.belongsTo(ETS_grupo, {
   constraints: true,
 });
 
-ETS_grupo.hasMany(ETS, {
-  foreignKey: "id_grupo",
-  sourceKey: "id",
+ETS.belongsTo(Materia_Reprobada, {
+  foreignKey: "id_mr",
+  targetKey: "id",
   onDelete: "CASCADE",
   hooks: true,
   constraints: true,
 });
 
-ETS.belongsTo(Materia_Reprobada, {
+Materia_Reprobada.hasMany(ETS, {
   foreignKey: "id_mr",
-  targetKey: "id",
+  sourceKey: "id",
   onDelete: "CASCADE",
   hooks: true,
   constraints: true,

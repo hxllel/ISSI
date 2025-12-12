@@ -70,17 +70,17 @@ const handleSubmitDesfase = async (e) => {
   })
     .then((res) => res.json())
     .then((data) => {
+      setModalDesfase(false);
       if (data.success) {
-        showAlert("Se han registrado satisfactoriamente los cambios.", "success");
+        showAlert("Se han registrado satisfactoriamente los cambios.", "success", "", ()=>window.location.reload());
 
       } else {
-        showAlert("Ha ocurrido un error.", "error");
+        showAlert("Ha ocurrido un error.", "error","", ()=>window.location.reload());
 
       }
     });
 
-  setModalDesfase(false);
-                    window.location.reload();
+  
 
 };
 
@@ -92,17 +92,18 @@ const handleSubmitDesfase = async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({id: id, periodosExtra : periodosExtra}),
     }).then((res)=> res.json()).then((data)=>{
+      setModalTiempo(false);
       if(data.success){
-        showAlert("Se han registrado satisfactoriamente los cambios.", "success");
+        showAlert("Se han registrado satisfactoriamente los cambios.", "success", "", ()=>window.location.reload());
 
       }
       else{
-        showAlert("Ha ocurrido un error.", "error");
+        showAlert("Ha ocurrido un error.", "error","", ()=>window.location.reload());
 
       }
     });
-    setModalTiempo(false);
-      window.location.reload();
+    
+      
 
   }
 

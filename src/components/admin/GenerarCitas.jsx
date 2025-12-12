@@ -310,7 +310,7 @@ const [periodo, setPeriodo] = useState("");
       </div>
       <div className="gc-form-group">
         <label htmlFor="ext_fin" className="gc-label">
-          Registro de calificaciones del periodo extraordinario <span className="gc-required">*</span>
+          Fecha límite de calificaciones del periodo extraordinario <span className="gc-required">*</span>
         </label>
         <input
           type="date"

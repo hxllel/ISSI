@@ -384,10 +384,6 @@ useEffect(() => {
         </div>
         <div> 
           
-          <button type="button" className="btn azul" >
-        <FiDownload style={{ marginRight: "8px" }} />
-        Descargar Horario
-        </button>
         </div>
         </div>
 
