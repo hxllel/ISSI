@@ -236,7 +236,7 @@ module.exports = (passport) => {
             (Number(cali.calificacion_primer) +
               Number(cali.calificacion_segundo) +
               Number(cali.calificacion_tercer)) /
-            3
+              3
           );
 
           await bd.Mat_Inscritos.update(
@@ -748,8 +748,9 @@ module.exports = (passport) => {
       });
 
       const profesorNombre = grupo.DatosPersonale
-        ? `${grupo.DatosPersonale.nombre || ""} ${grupo.DatosPersonale.ape_paterno || ""
-        } ${grupo.DatosPersonale.ape_materno || ""}`
+        ? `${grupo.DatosPersonale.nombre || ""} ${
+            grupo.DatosPersonale.ape_paterno || ""
+          } ${grupo.DatosPersonale.ape_materno || ""}`
         : "";
 
       // Construir filas de alumnos (hasta 30 filas)
@@ -758,8 +759,9 @@ module.exports = (passport) => {
         const ins = inscritos[i];
         const nombreEst =
           ins && ins.Horario && ins.Horario.DatosPersonale
-            ? `${ins.Horario.DatosPersonale.nombre || ""} ${ins.Horario.DatosPersonale.ape_paterno || ""
-            } ${ins.Horario.DatosPersonale.ape_materno || ""}`
+            ? `${ins.Horario.DatosPersonale.nombre || ""} ${
+                ins.Horario.DatosPersonale.ape_paterno || ""
+              } ${ins.Horario.DatosPersonale.ape_materno || ""}`
             : "";
         filas.push({ no: i + 1, nombre: nombreEst });
       }
@@ -800,12 +802,13 @@ module.exports = (passport) => {
               </div>
               <div class="right">
                 <div>MES: <strong>${new Date()
-          .toLocaleString("default", { month: "long" })
-          .toUpperCase()}</strong></div>
-                <div>GRADO: <strong>${grupo.Unidad_Aprendizaje
-          ? grupo.Unidad_Aprendizaje.semestre || ""
-          : ""
-        }</strong></div>
+                  .toLocaleString("default", { month: "long" })
+                  .toUpperCase()}</strong></div>
+                <div>GRADO: <strong>${
+                  grupo.Unidad_Aprendizaje
+                    ? grupo.Unidad_Aprendizaje.semestre || ""
+                    : ""
+                }</strong></div>
                 <div>GRUPO: <strong>${grupo.nombre || ""}</strong></div>
               </div>
             </div>
@@ -821,8 +824,8 @@ module.exports = (passport) => {
               </thead>
               <tbody>
                 ${filas
-          .map(
-            (f) => `
+                  .map(
+                    (f) => `
                   <tr>
                     <td style="text-align:center">${f.no}</td>
                     <td>${f.nombre}</td>
@@ -830,8 +833,8 @@ module.exports = (passport) => {
                     <td style="text-align:center">&nbsp;</td>
                   </tr>
                 `
-          )
-          .join("")}
+                  )
+                  .join("")}
               </tbody>
             </table>
 
@@ -840,8 +843,8 @@ module.exports = (passport) => {
                 <tr>
                   <td style="background:#7d0024;color:#fff;padding:8px;font-weight:700;border-radius:4px;">ASISTENCIAS DIARIAS</td>
                   <td style="padding:6px">${dayHeaders
-          .map(() => "0")
-          .join(" ")}</td>
+                    .map(() => "0")
+                    .join(" ")}</td>
                 </tr>
               </table>
             </div>
@@ -925,8 +928,9 @@ module.exports = (passport) => {
       worksheet.addRow([
         "Profesor:",
         grupo.DatosPersonale
-          ? `${grupo.DatosPersonale.nombre || ""} ${grupo.DatosPersonale.ape_paterno || ""
-          } ${grupo.DatosPersonale.ape_materno || ""}`
+          ? `${grupo.DatosPersonale.nombre || ""} ${
+              grupo.DatosPersonale.ape_paterno || ""
+            } ${grupo.DatosPersonale.ape_materno || ""}`
           : "",
       ]);
       worksheet.addRow(["Turno:", grupo.turno]);
@@ -983,8 +987,9 @@ module.exports = (passport) => {
           index + 1,
           estudiante ? estudiante.id : "",
           estudiante
-            ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${estudiante.ape_materno || ""
-            }`
+            ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${
+                estudiante.ape_materno || ""
+              }`
             : "",
           ins.calificacion_final || "",
         ]);
@@ -1005,7 +1010,8 @@ module.exports = (passport) => {
       );
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename=clase_${grupo.nombre}_${new Date().toISOString().split("T")[0]
+        `attachment; filename=clase_${grupo.nombre}_${
+          new Date().toISOString().split("T")[0]
         }.xlsx`
       );
 
@@ -1129,7 +1135,10 @@ module.exports = (passport) => {
       const { idGrupo } = req.params;
 
       const alumnosETS = await bd.ETS.findAll({
-        where: { id_grupo: idGrupo },
+        where: {
+          id_grupo: idGrupo,
+          validado: 1,
+        },
         include: [
           {
             model: bd.Materia_Reprobada,
@@ -1154,7 +1163,6 @@ module.exports = (passport) => {
             ],
           },
         ],
-        where: { validado: 1 },
       });
 
       const alumnos = alumnosETS.map((ets) => ({
@@ -1280,16 +1288,153 @@ module.exports = (passport) => {
           await bd.Materia_Reprobada.destroy({
             where: { id: materiaRep.id },
           });
+
+          const transporter = require("nodemailer").createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASSWORD,
+            },
+          });
+
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: estudiante.DatosPersonale.email,
+            subject: "ETS Aprobado - SAES-R",
+            html: `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: white; margin: 0; padding: 20px;">
+          <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #7d0024 0%, #5a001a 100%); padding: 40px 20px; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">ETS APROBADO</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 40px 30px;">
+              <p style="color: #333; font-size: 16px; margin-bottom: 10px;">Hola <strong>${estudiante.DatosPersonale.nombre} ${estudiante.DatosPersonale.ape_paterno}</strong>,</p>
+              <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">
+                ¡FELICIDADES!, has aprobado tu Examen a Título de Suficiencia (ETS)
+              </p>
+              
+              <!-- Success Box -->
+              <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 20px; border-radius: 5px; margin: 30px 0;">
+                <p style="color: #2e7d32; font-size: 14px; margin: 0 0 10px 0;">
+                  <strong>Unidad de Aprendizaje:</strong> ${ua.nombre}
+                </p>
+                <p style="color: #2e7d32; font-size: 14px; margin: 0;">
+                  Con la calificación de ${calificacion}
+                </p>
+              </div>
+              
+              <!-- Info -->
+              <div style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="color: #1565c0; font-size: 13px; margin: 0;">
+                  <strong>Nota:</strong> Recuerda revisar tu kardex, si tienes alguna duda o cuestión, comunicarse directamente con gestión escolar.
+                </p>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+              <p style="color: #999; font-size: 12px; margin: 0;">
+                Sistema SAES-R<br>
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+          };
+          console.log("Enviando correo a:", mailOptions.to);
+
+          await transporter.sendMail(mailOptions);
+          console.log("Correo enviado exitosamente");
         } else {
           // Si no aprueba (calificación < 6.0)
           // Reducir un periodo en materia_reprobada
           await bd.Materia_Reprobada.update(
             {
-              periodos_restantes: nuevosPeriodos,
               estado_actual: "Reprobada",
             },
             { where: { id: materiaRep.id } }
           );
+
+          const transporter = require("nodemailer").createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASSWORD,
+            },
+          });
+
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: estudiante.DatosPersonale.email,
+            subject: "ETS Reprobado- SAES-R",
+            html: `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: white; margin: 0; padding: 20px;">
+          <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #7d0024 0%, #5a001a 100%); padding: 40px 20px; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">ETS REPROBADO</h1>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 40px 30px;">
+              <p style="color: #333; font-size: 16px; margin-bottom: 10px;">Hola <strong>${estudiante.DatosPersonale.nombre} ${estudiante.DatosPersonale.ape_paterno}</strong>,</p>
+              <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">
+                Has reprobado el Examen a Título de Suficiencia con una calificación de ${calificacion}
+              </p>
+              
+              <!-- Warning Box -->
+              <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 20px; border-radius: 5px; margin: 30px 0;">
+                <p style="color: #c62828; font-size: 14px; margin: 0 0 10px 0;">
+                  <strong>Unidad de Aprendizaje:</strong> ${ua.nombre}
+                </p>
+              </div>
+              
+              <!-- Info -->
+              <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="color: #856404; font-size: 13px; margin: 0;">
+                  <strong>Si crees que se trata de un error, comunícate con gestión escolar</strong>
+                </p>
+              </div>
+              
+              <!-- Tips -->
+              <div style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="color: #1565c0; font-size: 13px; margin: 0;">
+                  <strong>Consejos:</strong> Usa las guías de estudio que se encuentran en la página oficial de la ESCOM
+                </p>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+              <p style="color: #999; font-size: 12px; margin: 0;">
+                Sistema SAES-R<br>
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+          };
+          console.log("Enviando correo a:", mailOptions.to);
+
+          await transporter.sendMail(mailOptions);
+          console.log("Correo enviado exitosamente");
         }
       }
 

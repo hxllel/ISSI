@@ -21,6 +21,7 @@ export function MateriasReprobadas() {
   const [tiempo, setTiempo] = useState(false);
   const [tiempoSubirComprobante , setTiempoSubirComprobante] = useState(false);
   const [paginaActual, setPaginaActual] = useState(0);
+  const [periodo, setPeriodo] = useState("");
   const API = "http://localhost:4000";
 
   // Hook para alertas modales
@@ -125,15 +126,20 @@ export function MateriasReprobadas() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          showAlert("Se ha inscrito satisfactoriamente al ETS", "success");
+            setModalOpenH(false)          
+          showAlert("Se ha inscrito satisfactoriamente al ETS", "success"
+            , ()=>window.location.reload()
+          );
         } else {
+          setModalOpenH(false)          
           showAlert(
             "No se ha podido registrar el ETS debido a que " + data.message,
-            "error"
+            "error",
+             ()=>window.location.reload()
           );
         }
         navigate(`/alumno/MateriasReprobadas`);
-        window.location.reload();
+        
       })
       .catch((err) => console.log("Error", err));
   };
@@ -214,100 +220,125 @@ export function MateriasReprobadas() {
               </tr>
             </thead>
 
-            <tbody>
-              {materias.length > 0 ? (
-                materias.map((materia) => {
-                  const etsDeEstaMateria = compro.find(
-                    (c) => c.id_mr === materia.id && c.calificado === 0
-                  );
-                  const validado = compro.find(
-                    (c) => c.id_mr === materia.id && c.validado === 1
-                  );
+           <tbody>
+  {materias.length > 0 ? (
+    materias.map((materia) => {
+      // ETS de esta materia con calificación 0
+      const etsEnCurso = compro.find(
+        (c) => c.id_mr === materia.id && c.calificado === 0
+      );
 
+      // ETS validado
+      const etsValidado = compro.find(
+        (c) => c.id_mr === materia.id && c.validado === 1
+      );
+
+      // Si existe un ETS (puede tener comprobante o no)
+      const ets = compro.find((c) => c.id_mr === materia.id);
+
+      return (
+        <tr key={materia.id}>
+          <td>{materia.Unidad_Aprendizaje.nombre}</td>
+          <td>{materia.Unidad_Aprendizaje.credito}</td>
+          <td>{materia.periodos_restantes}</td>
+          <td>{materia.recurse === 1 ? "Sí" : "No"}</td>
+          <td>{materia.estado_actual}</td>
+
+          <td>
+            {(() => {
+              // ============================
+              // 1) ETS VALIDADO
+              // ============================
+      
+
+              // ============================
+              // 2) Existe un ETS en curso (calificado = 0)
+              // ============================
+              if (etsEnCurso) {
+                // Tiene comprobante subido
+
+                if (etsValidado) {
+                return (
+                  <button className="btn blanco" disabled>
+                    EL COMPROBANTE ESTÁ VALIDADO
+                  </button>
+                );
+              }
+              
+                if (etsEnCurso.comprobante) {
                   return (
-                    <tr key={materia.id}>
-                      <td>{materia.Unidad_Aprendizaje.nombre}</td>
-                      <td>{materia.Unidad_Aprendizaje.credito}</td>
-                      <td>{materia.periodos_restantes}</td>
-                      <td>{materia.recurse === 1 ? "Sí" : "No"}</td>
-                      <td>{materia.estado_actual}</td>
-                      <td>
-                        {(() => {
-                          if (validado) {
-                            return (
-                              <button className="btn blanco"disabled>
-                                EL COMPROBANTE ESTA VALIDADO
-                              </button>
-                            );
-                          } else {
-                            if (etsDeEstaMateria) {
-                              if (etsDeEstaMateria.comprobante) {
-                                return (
-                                  <button className="btn blanco">
-                                    Comprobante subido
-                                  </button>
-                                );
-                              } else if (materia.estado_actual === "ETS") {
-                                return (
-                                  <button
-                                    onClick={() =>
-                                      handleM(
-                                        etsDeEstaMateria?.id_grupo,
-                                        etsDeEstaMateria?.id_mr
-                                      )
-                                    }
-                                    disabled = {
-                                      !tiempoSubirComprobante
-                                    }
-                                  >
-                                    Subir comprobante de ETS
-                                  </button>
-                                );
-                              }
-                            }
-                          }
-
-                          if (materia.estado_actual === "Recurse" || materia.estado_actual === "Desfasada") {
-                            return " ";
-                          }
-
-                          return (
-                            <button
-                              onClick={() =>
-                                handleClickIns(
-                                  materia.Unidad_Aprendizaje.nombre,
-                                  materia.id
-                                )
-                              }
-                              disabled={
-                                etsDeEstaMateria !== undefined ||
-                                !tiempo
-
-                              }
-                              style={
-                                etsDeEstaMateria
-                                  ? { opacity: 0.5 }
-                                  : undefined
-                              }
-                            >
-                              Inscribir ETS
-                            </button>
-                          );
-                        })()}
-                        <br />
-                        <button className="btn blanco" onClick={() => handleHistor(materia.id)}>
-                          Revisar historial de ets
-                        </button>
-                      </td>
-                    </tr>
+                    <button className="btn blanco" disabled>
+                      Comprobante subido
+                    </button>
                   );
-                })
-              ) : (
-                <tr>
-                  <td colSpan="6">NO TIENES MATERIAS REPROBADAS</td>
-                </tr>
-              )}
-            </tbody>
+                }
+
+                // ETS, sin comprobante aún
+                if (materia.estado_actual === "ETS") {
+                  return (
+                    <button
+                      onClick={() =>
+                        handleM(etsEnCurso.id_grupo, etsEnCurso.id_mr)
+                      }
+                      disabled={!tiempoSubirComprobante}
+                    >
+                      Subir comprobante de ETS
+                    </button>
+                  );
+                }
+                
+              }
+
+              // ============================
+              // 3) NO se puede inscribir (Recurse / Desfasada)
+              // ============================
+              if (
+                materia.estado_actual === "Recurse" ||
+                materia.estado_actual === "Desfasada"
+              ) {
+                return " ";
+              }
+
+              // ============================
+              // 4) NO existe ETS → mostrar Inscribir ETS
+              // ============================
+              const yaTieneETS = etsEnCurso !== undefined;
+
+              return (
+                <button
+                  onClick={() =>
+                    handleClickIns(
+                      materia.Unidad_Aprendizaje.nombre,
+                      materia.id
+                    )
+                  }
+                  disabled={yaTieneETS || !tiempo}
+                  style={yaTieneETS ? { opacity: 0.5 } : undefined}
+                >
+                  Inscribir ETS
+                </button>
+              );
+            })()}
+
+            <br />
+
+            <button
+              className="btn blanco"
+              onClick={() => handleHistor(materia.id)}
+            >
+              Revisar historial de ets
+            </button>
+          </td>
+        </tr>
+      );
+    })
+  ) : (
+    <tr>
+      <td colSpan="6">NO TIENES MATERIAS REPROBADAS</td>
+    </tr>
+  )}
+</tbody>
+
           </table>
         </section>
       </main>

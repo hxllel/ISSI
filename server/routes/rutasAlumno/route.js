@@ -4,7 +4,11 @@ const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { raw } = require("mysql2");
 const { DatosMedicos, Enfermedades } = require("../../model/modelo");
-const { requireAuth, requireRole, requireSelf } = require("../../middleware/auth");
+const {
+  requireAuth,
+  requireRole,
+  requireSelf,
+} = require("../../middleware/auth");
 
 module.exports = (passport) => {
   const router = express.Router();
@@ -20,7 +24,7 @@ module.exports = (passport) => {
 
   // Nueva ruta: devuelve JSON para que el frontend realice la navegación al Chat
   // Se normaliza la ruta para usar la misma convención de capitalización que el resto
-  router.get("/Chat/:id", requireAuth, requireRole(['alumno']), (req, res) => {
+  router.get("/Chat/:id", requireAuth, requireRole(["alumno"]), (req, res) => {
     try {
       const { id } = req.params;
       // Respondemos con JSON en vez de redirigir. El frontend debe usar este JSON para navegar.
@@ -38,119 +42,134 @@ module.exports = (passport) => {
         .json({ success: false, error: "Error al obtener datos para el chat" });
     }
   });
-  router.get("/ConsultarCalificaciones", requireAuth, requireRole(['alumno']), async (req, res) => {
-    const us = req.user.id;
-    try {
-      const h = await bd.Horario.findOne({
-        where: { id_alumno: us },
-      });
-      const cal = await bd.Mat_Inscritos.findAll({
-        where: { id_horario: h.id },
-        include: [
-          {
-            model: bd.Grupo,
-            include: [
-              {
-                model: bd.Unidad_Aprendizaje,
-              },
-              { model: bd.DatosPersonales },
-            ],
-          },
-        ],
-        raw: true,
-        nest: true,
-      });
-      return res.json({
-        success: true,
-        calificaciones: cal.map((c) => ({
-          id_grupo: c.Grupo.nombre,
-          nombre_ua: c.Grupo.Unidad_Aprendizaje.nombre,
-          profesor: `${c.Grupo.DatosPersonale.nombre} ${c.Grupo.DatosPersonale.ape_paterno} ${c.Grupo.DatosPersonale.ape_materno}`,
-          calificacion_primer: c.calificacion_primer,
-          calificacion_segundo: c.calificacion_segundo,
-          calificacion_tercer: c.calificacion_tercer,
-          calificacion_final: c.calificacion_final,
-          extra: c.extra,
-        })),
-      });
-    } catch (err) {
-      return res.json({
-        success: false,
-        error: "Error al obtener las calificaciones",
-      });
+  router.get(
+    "/ConsultarCalificaciones",
+    requireAuth,
+    requireRole(["alumno"]),
+    async (req, res) => {
+      const us = req.user.id;
+      try {
+        const h = await bd.Horario.findOne({
+          where: { id_alumno: us },
+        });
+        const cal = await bd.Mat_Inscritos.findAll({
+          where: { id_horario: h.id },
+          include: [
+            {
+              model: bd.Grupo,
+              include: [
+                {
+                  model: bd.Unidad_Aprendizaje,
+                },
+                { model: bd.DatosPersonales },
+              ],
+            },
+          ],
+          raw: true,
+          nest: true,
+        });
+        return res.json({
+          success: true,
+          calificaciones: cal.map((c) => ({
+            id_grupo: c.Grupo.nombre,
+            nombre_ua: c.Grupo.Unidad_Aprendizaje.nombre,
+            profesor: `${c.Grupo.DatosPersonale.nombre} ${c.Grupo.DatosPersonale.ape_paterno} ${c.Grupo.DatosPersonale.ape_materno}`,
+            calificacion_primer: c.calificacion_primer,
+            calificacion_segundo: c.calificacion_segundo,
+            calificacion_tercer: c.calificacion_tercer,
+            calificacion_final: c.calificacion_final,
+            extra: c.extra,
+          })),
+        });
+      } catch (err) {
+        return res.json({
+          success: false,
+          error: "Error al obtener las calificaciones",
+        });
+      }
     }
-  });
+  );
 
   // GET: obtener datos médicos + enfermedades del alumno logueado
-  router.get("/alumno/datosMedicos", requireAuth, requireRole(['alumno']), async (req, res) => {
-    try {
-      const id_usuario = req.user.id;
+  router.get(
+    "/alumno/datosMedicos",
+    requireAuth,
+    requireRole(["alumno"]),
+    async (req, res) => {
+      try {
+        const id_usuario = req.user.id;
 
-      const datos = await DatosMedicos.findOne({ where: { id_usuario } });
-      let enfermedades = [];
+        const datos = await DatosMedicos.findOne({ where: { id_usuario } });
+        let enfermedades = [];
 
-      if (datos) {
-        enfermedades = await Enfermedades.findAll({
-          where: { id_dat_med: datos.id },
-          order: [["id", "ASC"]],
-        });
+        if (datos) {
+          enfermedades = await Enfermedades.findAll({
+            where: { id_dat_med: datos.id },
+            order: [["id", "ASC"]],
+          });
+        }
+
+        res.json({ datos, enfermedades });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error al obtener datos médicos" });
       }
-
-      res.json({ datos, enfermedades });
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ error: "Error al obtener datos médicos" });
     }
-  });
+  );
 
   // POST: crear o actualizar datos médicos del alumno logueado (upsert)
-  router.post("/alumno/datosMedicos", requireAuth, requireRole(['alumno']), async (req, res) => {
-    try {
-      const id_usuario = req.user.id;
-      const { peso, altura, tipo_sangre, nss } = req.body;
+  router.post(
+    "/alumno/datosMedicos",
+    requireAuth,
+    requireRole(["alumno"]),
+    async (req, res) => {
+      try {
+        const id_usuario = req.user.id;
+        const { peso, altura, tipo_sangre, nss } = req.body;
 
-      if (peso == null || altura == null || !tipo_sangre || !nss) {
-        return res.status(400).json({ error: "Faltan campos requeridos" });
-      }
+        if (peso == null || altura == null || !tipo_sangre || !nss) {
+          return res.status(400).json({ error: "Faltan campos requeridos" });
+        }
 
-      let datos = await DatosMedicos.findOne({ where: { id_usuario } });
+        let datos = await DatosMedicos.findOne({ where: { id_usuario } });
 
-      if (!datos) {
-        // crear
-        datos = await DatosMedicos.create({
-          id: genId("DM").slice(0, 15),
-          id_usuario,
-          peso: Number(peso),
-          altura: Number(altura),
-          tipo_sangre,
-          nss,
-        });
-      } else {
-        // actualizar
-        await DatosMedicos.update(
-          {
+        if (!datos) {
+          // crear
+          datos = await DatosMedicos.create({
+            id: genId("DM").slice(0, 15),
+            id_usuario,
             peso: Number(peso),
             altura: Number(altura),
             tipo_sangre,
             nss,
-          },
-          { where: { id: datos.id } }
-        );
-        datos = await DatosMedicos.findByPk(datos.id);
-      }
+          });
+        } else {
+          // actualizar
+          await DatosMedicos.update(
+            {
+              peso: Number(peso),
+              altura: Number(altura),
+              tipo_sangre,
+              nss,
+            },
+            { where: { id: datos.id } }
+          );
+          datos = await DatosMedicos.findByPk(datos.id);
+        }
 
-      res.json(datos);
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ error: "Error al guardar datos médicos" });
+        res.json(datos);
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error al guardar datos médicos" });
+      }
     }
-  });
+  );
 
   // POST: crear enfermedad asociada al alumno logueado
   router.post(
     "/alumno/datosMedicos/enfermedades",
     requireAuth,
-    requireRole(['alumno']),
+    requireRole(["alumno"]),
     async (req, res) => {
       try {
         const id_usuario = req.user.id;
@@ -185,7 +204,7 @@ module.exports = (passport) => {
   router.put(
     "/alumno/datosMedicos/enfermedades/:idEnf",
     requireAuth,
-    requireRole(['alumno']),
+    requireRole(["alumno"]),
     async (req, res) => {
       try {
         const id_usuario = req.user.id;
@@ -225,7 +244,7 @@ module.exports = (passport) => {
   router.delete(
     "/alumno/datosMedicos/enfermedades/:idEnf",
     requireAuth,
-    requireRole(['alumno']),
+    requireRole(["alumno"]),
     async (req, res) => {
       try {
         const id_usuario = req.user.id;
@@ -254,90 +273,95 @@ module.exports = (passport) => {
     }
   );
 
-  router.get("/ObtenerHorario/:id", requireAuth, requireRole(['alumno']), async (req, res) => {
-    try {
-      const { id } = req.params;
+  router.get(
+    "/ObtenerHorario/:id",
+    requireAuth,
+    requireRole(["alumno"]),
+    async (req, res) => {
+      try {
+        const { id } = req.params;
 
-      const datos = await bd.Horario.findAll({
-        where: { id_alumno: id },
-        include: [
-          {
-            model: bd.Mat_Inscritos,
-            include: [
-              {
-                model: bd.Grupo,
-                attributes: ["nombre", "turno", "id_prof", "salon"],
-                include: [
-                  {
-                    model: bd.Distribucion,
-                    attributes: ["hora_ini", "hora_fin", "dia"],
-                  },
-                  {
-                    model: bd.Unidad_Aprendizaje,
-                    attributes: ["nombre"],
-                  },
-                  {
-                    model: bd.DatosPersonales,
-                    attributes: ["nombre", "ape_paterno", "ape_materno"],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      });
+        const datos = await bd.Horario.findAll({
+          where: { id_alumno: id },
+          include: [
+            {
+              model: bd.Mat_Inscritos,
+              include: [
+                {
+                  model: bd.Grupo,
+                  attributes: ["nombre", "turno", "id_prof", "salon"],
+                  include: [
+                    {
+                      model: bd.Distribucion,
+                      attributes: ["hora_ini", "hora_fin", "dia"],
+                    },
+                    {
+                      model: bd.Unidad_Aprendizaje,
+                      attributes: ["nombre"],
+                    },
+                    {
+                      model: bd.DatosPersonales,
+                      attributes: ["nombre", "ape_paterno", "ape_materno"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
 
-      const materias = [];
+        const materias = [];
 
-      datos.forEach((hor) => {
-        hor.Mat_Inscritos.forEach((ins) => {
-          const grupo = ins.Grupo;
-          const prof = grupo?.DatosPersonale;
-          const materia = grupo?.Unidad_Aprendizaje?.nombre;
+        datos.forEach((hor) => {
+          hor.Mat_Inscritos.forEach((ins) => {
+            const grupo = ins.Grupo;
+            const prof = grupo?.DatosPersonale;
+            const materia = grupo?.Unidad_Aprendizaje?.nombre;
 
-          const base = {
-            salon: grupo?.salon || "Sin salon",
-            materia: materia || "Sin materia",
-            grupo: grupo?.nombre || "Sin grupo",
-            turno: grupo?.turno || "Sin turno",
-            id_profesor: grupo?.id_prof || null,
-            profesor: prof
-              ? `${prof.nombre} ${prof.ape_paterno} ${prof.ape_materno}`
-              : "Sin profesor",
-            distribuciones: grupo?.Distribucions?.map((d) => ({
-              dia: d.dia,
-              hora_ini: d.hora_ini,
-              hora_fin: d.hora_fin,
-            })) || [
+            const base = {
+              salon: grupo?.salon || "Sin salon",
+              materia: materia || "Sin materia",
+              grupo: grupo?.nombre || "Sin grupo",
+              turno: grupo?.turno || "Sin turno",
+              id_profesor: grupo?.id_prof || null,
+              profesor: prof
+                ? `${prof.nombre} ${prof.ape_paterno} ${prof.ape_materno}`
+                : "Sin profesor",
+              distribuciones: grupo?.Distribucions?.map((d) => ({
+                dia: d.dia,
+                hora_ini: d.hora_ini,
+                hora_fin: d.hora_fin,
+              })) || [
                 {
                   dia: "Sin día",
                   hora_ini: "",
                   hora_fin: "",
                 },
               ],
-          };
+            };
 
-          materias.push(base);
+            materias.push(base);
+          });
         });
-      });
 
-      const horarioUnificado = Object.values(
-        materias.reduce((acc, curr) => {
-          const key = `${curr.materia}-${curr.grupo}-${curr.turno}`;
-          if (!acc[key]) {
-            acc[key] = { ...curr, distribuciones: [] };
-          }
-          acc[key].distribuciones.push(...curr.distribuciones);
-          return acc;
-        }, {})
-      );
-      console.log(horarioUnificado);
-      res.json({ horario: horarioUnificado });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Error al obtener el horario" });
+        const horarioUnificado = Object.values(
+          materias.reduce((acc, curr) => {
+            const key = `${curr.materia}-${curr.grupo}-${curr.turno}`;
+            if (!acc[key]) {
+              acc[key] = { ...curr, distribuciones: [] };
+            }
+            acc[key].distribuciones.push(...curr.distribuciones);
+            return acc;
+          }, {})
+        );
+        console.log(horarioUnificado);
+        res.json({ horario: horarioUnificado });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error al obtener el horario" });
+      }
     }
-  });
+  );
 
   router.get("/Grupos/:id", async (req, res) => {
     if (!req.user || !req.user.id) {
@@ -560,8 +584,9 @@ module.exports = (passport) => {
             (g.Unidad_Aprendizaje &&
               (g.Unidad_Aprendizaje.nombre || g.Unidad_Aprendizaje.Nombre)) ||
             "",
-          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${datosProf.ape_materno || ""
-            }`.trim(),
+          profesor: `${datosProf.nombre || ""} ${datosProf.ape_paterno || ""} ${
+            datosProf.ape_materno || ""
+          }`.trim(),
           calificacion_profesor: datosProf.calificacion || null,
           cupo: g.cupo,
           dias,
@@ -664,7 +689,7 @@ module.exports = (passport) => {
 
           for (const ap of aprobadas) {
             const ua = await bd.Unidad_Aprendizaje.findOne({
-              where: { nombre: ap.unidad_aprendizaje, carrera: carrera }
+              where: { nombre: ap.unidad_aprendizaje, carrera: carrera },
             });
 
             if (ua && ua.tipo === "OPTATIVA") {
@@ -682,17 +707,21 @@ module.exports = (passport) => {
           for (const idGrupo of req.session.tempGrupos) {
             const grupoTemp = await bd.Grupo.findOne({
               where: { id: idGrupo },
-              include: [{
-                model: bd.Unidad_Aprendizaje,
-                attributes: ["tipo", "semestre"]
-              }],
+              include: [
+                {
+                  model: bd.Unidad_Aprendizaje,
+                  attributes: ["tipo", "semestre"],
+                },
+              ],
               raw: true,
-              nest: true
+              nest: true,
             });
 
             if (grupoTemp && grupoTemp.Unidad_Aprendizaje.tipo === "OPTATIVA") {
-              if (grupoTemp.Unidad_Aprendizaje.semestre === 6) optativasSesion6to++;
-              if (grupoTemp.Unidad_Aprendizaje.semestre === 7) optativasSesion7mo++;
+              if (grupoTemp.Unidad_Aprendizaje.semestre === 6)
+                optativasSesion6to++;
+              if (grupoTemp.Unidad_Aprendizaje.semestre === 7)
+                optativasSesion7mo++;
             }
           }
         }
@@ -1007,7 +1036,7 @@ module.exports = (passport) => {
 
           for (const ap of aprobadas) {
             const ua = await bd.Unidad_Aprendizaje.findOne({
-              where: { nombre: ap.unidad_aprendizaje, carrera: carrera }
+              where: { nombre: ap.unidad_aprendizaje, carrera: carrera },
             });
 
             if (ua && ua.tipo === "OPTATIVA") {
@@ -1023,17 +1052,21 @@ module.exports = (passport) => {
         for (const idGrupo of ids) {
           const grupoTemp = await bd.Grupo.findOne({
             where: { id: idGrupo },
-            include: [{
-              model: bd.Unidad_Aprendizaje,
-              attributes: ["tipo", "semestre"]
-            }],
+            include: [
+              {
+                model: bd.Unidad_Aprendizaje,
+                attributes: ["tipo", "semestre"],
+              },
+            ],
             raw: true,
-            nest: true
+            nest: true,
           });
 
           if (grupoTemp && grupoTemp.Unidad_Aprendizaje.tipo === "OPTATIVA") {
-            if (grupoTemp.Unidad_Aprendizaje.semestre === 6) optativasSesion6to++;
-            if (grupoTemp.Unidad_Aprendizaje.semestre === 7) optativasSesion7mo++;
+            if (grupoTemp.Unidad_Aprendizaje.semestre === 6)
+              optativasSesion6to++;
+            if (grupoTemp.Unidad_Aprendizaje.semestre === 7)
+              optativasSesion7mo++;
           }
         }
 
@@ -1775,9 +1808,9 @@ module.exports = (passport) => {
         "Fechas encontradas:",
         fechas
           ? {
-            evalu_profe: fechas.evalu_profe,
-            fin_evalu_profe: fechas.fin_evalu_profe,
-          }
+              evalu_profe: fechas.evalu_profe,
+              fin_evalu_profe: fechas.fin_evalu_profe,
+            }
           : "No hay fechas"
       );
 
@@ -2209,37 +2242,47 @@ module.exports = (passport) => {
   });
 
   // Ruta para que el alumno obtenga sus propios datos
-  router.get("/ObtenerAlumno/:id", requireAuth, requireRole(['alumno']), async (req, res) => {
-    const { id } = req.params;
-    try {
-      const alumno = await bd.DatosPersonales.findOne({
-        where: { id: id, tipo_usuario: "alumno" },
-        raw: true,
-        nest: true,
-      });
-      return res.json({ alumno: alumno });
-    } catch (error) {
-      console.error("Error al obtener alumno: ", error);
-      return res.status(500).json({ error: "Error al obtener alumno" });
+  router.get(
+    "/ObtenerAlumno/:id",
+    requireAuth,
+    requireRole(["alumno"]),
+    async (req, res) => {
+      const { id } = req.params;
+      try {
+        const alumno = await bd.DatosPersonales.findOne({
+          where: { id: id, tipo_usuario: "alumno" },
+          raw: true,
+          nest: true,
+        });
+        return res.json({ alumno: alumno });
+      } catch (error) {
+        console.error("Error al obtener alumno: ", error);
+        return res.status(500).json({ error: "Error al obtener alumno" });
+      }
     }
-  });
+  );
 
   // Ruta compartida: tanto alumnos como profesores pueden verificar si es primera vez
-  router.get("/PrimeraVez/:id", requireAuth, requireRole(['alumno', 'profesor']), async (req, res) => {
-    const { id } = req.params;
-    try {
-      const a = await bd.DatosPersonales.findOne({
-        where: { id: id },
-      });
-      if (a.primera_vez == null || a.primera_vez == 0) {
-        return res.json({ primera_vez: false });
-      } else if (a.primera_vez == 1) {
-        return res.json({ primera_vez: true });
+  router.get(
+    "/PrimeraVez/:id",
+    requireAuth,
+    requireRole(["alumno", "profesor"]),
+    async (req, res) => {
+      const { id } = req.params;
+      try {
+        const a = await bd.DatosPersonales.findOne({
+          where: { id: id },
+        });
+        if (a.primera_vez == null || a.primera_vez == 0) {
+          return res.json({ primera_vez: false });
+        } else if (a.primera_vez == 1) {
+          return res.json({ primera_vez: true });
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
-  });
+  );
   return router;
 };
 

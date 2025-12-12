@@ -64,7 +64,7 @@ export function Inscripcion() {
           setCita(true);
           setCitas(data.citas);
         } else {
-          setTiempo(true);
+          setTiempo(false);
         }
 
         setPromedio(data.promedio);
@@ -182,19 +182,31 @@ export function Inscripcion() {
   }, [d, idgru]);
 
   // ========== AGREGAR A HORARIO ==========
-  const handleClickAdd = (id) => {
+const handleClickAdd = (id) => {
     if (!id) return;
 
     fetch(`${API}/Agregar/${id}`, {
-      credentials: "include",
-      method: "POST",
+        credentials: "include",
+        method: "POST",
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.success) showAlert("Se ha agregado la materia", "success");
-        else showAlert(`No se pudo agregar: ${safe(data?.err, "")}`, "error");
-      });
-  };
+    .then((res) => res.json())
+    .then((data) => {
+        if (data?.success) {
+            showAlert(
+                "Se ha agregado la materia",
+                "success",
+                "",
+                () => window.location.reload() // se ejecuta solo después de Aceptar
+            );
+        } else {
+            showAlert(
+                `No se pudo agregar: ${safe(data?.err, "")}`,
+                "error"
+            );
+        }
+    });
+};
+
 
   // ========== ELIMINAR DEL HORARIO ==========
   const handleClickEl = (id) => {
@@ -205,11 +217,14 @@ export function Inscripcion() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          showAlert("Se ha eliminado la materia de tu horario", "success");
+          showAlert("Se ha eliminado la materia de tu horario", "success", "", () => window.location.reload());
+
         } else {
           showAlert("No se ha podido eliminar", "error");
         }
       });
+
+
   };
 
   // ========== IMPORTAR BORRADOR ==========
@@ -221,7 +236,9 @@ export function Inscripcion() {
       .then((res) => res.json())
       .then((data) => {
         if (data?.fatal) showAlert(`NO SE AGREGÓ NADA: ${data.msg}`, "error");
-        else if (data?.success) showAlert("Se importó correctamente", "success");
+        else if (data?.success){
+          showAlert("Se importó correctamente", "success", "", () => window.location.reload());
+        } 
         else showAlert(`Importado parcial: ${safe(data?.msg, "")}`, "warning");
       });
   };
@@ -237,12 +254,14 @@ export function Inscripcion() {
       .then((res) => res.json())
       .then((data) => {
         if (data?.success) {
-          showAlert("Se ha eliminado la materia del borrador", "success");
+          showAlert("Se ha eliminado la materia del borrador", "success" , "", () => window.location.reload());
         } else {
-          showAlert("No se ha podido eliminar", "error");
+          showAlert("No se ha podido eliminar", "error", "", () => window.location.reload());
         }
       })
       .finally(() => setdel(false));
+      window.location.reload();
+
   }, [del, idgru]);
 
   // ========== INSCRIPCIÓN FINAL ==========
@@ -300,6 +319,7 @@ export function Inscripcion() {
               <p>
                 <strong>Estado académico:</strong> {edo || "—"}
               </p>
+              {edo === "Dictaminado" ? <strong> NO PUEDES INSCRIBIRTE DE MANERA NORMAL, ACUDE A GESTION ESCOLAR </strong> : " "}
               <p>Si crees que hay un error, contacta con la coordinación.</p>
             </div>
           </div>
