@@ -18,7 +18,7 @@
   padding: 1rem;
 }
 
-.eval-card .comentario{ font-size:0.95rem; color:var(--prof-text); line-height:1.4; }
+.eval-card .comentario{ font-size:0.95rem; color:var(--prof-text); line-height:1.4; margin-top: 1.5rem; }
 
 .star-badge{
   position:absolute;

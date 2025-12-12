@@ -107,7 +107,9 @@ INSERT INTO
         turno,
         hora_inicio,
         hora_final,
-        fecha
+        fecha,
+        periodo,
+        cupo
     )
 VALUES (
         'ETSG001',
@@ -116,7 +118,83 @@ VALUES (
         'Matutino',
         '08:00',
         '10:00',
-        '2025-12-15'
+        '2025-12-15',
+        '2025-1',
+        30
+    ),
+    -- Grupos ETS para alumno desfasado (2022630400) - ISC
+    -- Fundamentos de Diseño Digital (3er semestre ISC)
+    (
+        'ETSG002',
+        'UA0014',
+        'PROF0001',
+        'Matutino',
+        '10:00',
+        '12:00',
+        '2025-12-16',
+        '2025-1',
+        25
+    ),
+    -- Bases de Datos (3er semestre ISC)
+    (
+        'ETSG003',
+        'UA0015',
+        'PROF0002',
+        'Vespertino',
+        '14:00',
+        '16:00',
+        '2025-12-17',
+        '2025-1',
+        25
+    ),
+    -- Finanzas Empresariales (3er semestre ISC)
+    (
+        'ETSG004',
+        'UA0016',
+        'HIJKLMNO',
+        'Matutino',
+        '08:00',
+        '10:00',
+        '2025-12-18',
+        '2025-1',
+        30
+    ),
+    -- Grupos ETS para alumno sin semestres (2019630500) - LCD
+    -- Materia de 3er semestre LCD
+    (
+        'ETSG005',
+        'UA0066',
+        'PROF0001',
+        'Vespertino',
+        '16:00',
+        '18:00',
+        '2025-12-16',
+        '2025-1',
+        20
+    ),
+    -- Materia de 4to semestre LCD
+    (
+        'ETSG006',
+        'UA0071',
+        'PROF0002',
+        'Matutino',
+        '10:00',
+        '12:00',
+        '2025-12-19',
+        '2025-1',
+        20
+    ),
+    -- Materia de 5to semestre LCD
+    (
+        'ETSG007',
+        'UA0077',
+        'HIJKLMNO',
+        'Vespertino',
+        '14:00',
+        '16:00',
+        '2025-12-20',
+        '2025-1',
+        25
     );
 
 -- ==================================================
@@ -126,7 +204,21 @@ DELETE FROM ets;
 
 INSERT INTO ets (id, id_mr, id_grupo, comprobante, validado, calificado)
 VALUES 
-    ('ETS001', '457', 'ETSG001', NULL, 1, 0.0);
+    ('ETS001', '457', 'ETSG001', NULL, 1, 0.0),
+    -- Inscripciones ETS del alumno desfasado (2022630400)
+    -- Fundamentos de Diseño Digital
+    ('ETS002', '458', 'ETSG002', NULL, 1, 0.0),
+    -- Bases de Datos
+    ('ETS003', '459', 'ETSG003', NULL, 1, 0.0),
+    -- Finanzas Empresariales
+    ('ETS004', '460', 'ETSG004', NULL, 0, 0.0),
+    -- Inscripciones ETS del alumno sin semestres (2019630500)
+    -- Materia de 3er semestre LCD
+    ('ETS005', '464', 'ETSG005', NULL, 1, 0.0),
+    -- Materia de 4to semestre LCD
+    ('ETS006', '465', 'ETSG006', NULL, 1, 0.0),
+    -- Materia de 5to semestre LCD
+    ('ETS007', '466', 'ETSG007', NULL, 0, 0.0);
 
 SELECT * FROM unidad_de_aprendizaje WHERE tipo = "OBLIGATORIA";
 
@@ -152,6 +244,206 @@ VALUES (
         '2',
         '1',
         'Reprobada'
+    ),
+    -- Materias reprobadas del alumno desfasado (2022630400)
+    -- Solo las materias que AÚN están reprobadas (sin recuperar)
+    -- Materia reprobada de 3er semestre: Fundamentos de Diseño Digital (desfasada - cursándola actualmente)
+    (
+        '458',
+        'EST2022630400',
+        'UA0014',
+        '2',
+        '1',
+        'Desfasada'
+    ),
+    -- Materia reprobada de 3er semestre: Bases de Datos (desfasada - cursándola actualmente)
+    (
+        '459',
+        'EST2022630400',
+        'UA0015',
+        '2',
+        '1',
+        'Desfasada'
+    ),
+    -- Materia reprobada de 3er semestre: Finanzas Empresariales (desfasada - pendiente)
+    (
+        '460',
+        'EST2022630400',
+        'UA0016',
+        '3',
+        '0',
+        'Desfasada'
+    ),
+    -- Materias reprobadas de 4to semestre (desfasadas)
+    (
+        '461',
+        'EST2022630400',
+        'UA0019',
+        '2',
+        '1',
+        'Desfasada'
+    ),
+    (
+        '462',
+        'EST2022630400',
+        'UA0022',
+        '2',
+        '0',
+        'Desfasada'
+    ),
+    (
+        '463',
+        'EST2022630400',
+        'UA0023',
+        '2',
+        '0',
+        'Desfasada'
+    ),
+    -- Materias reprobadas del alumno sin semestres (2019630500)
+    -- Alumno de LCD que ha agotado sus semestres disponibles
+    -- Materias pendientes de 3er semestre
+    (
+        '464',
+        'EST2019630500',
+        'UA0066',
+        '0',
+        '3',
+        'Sin Semestres'
+    ),
+    -- Materias pendientes de 4to semestre
+    (
+        '465',
+        'EST2019630500',
+        'UA0071',
+        '0',
+        '2',
+        'Sin Semestres'
+    ),
+    -- Materias pendientes de 5to semestre
+    (
+        '466',
+        'EST2019630500',
+        'UA0077',
+        '0',
+        '2',
+        'Sin Semestres'
+    ),
+    -- Materias pendientes de 6to semestre
+    (
+        '467',
+        'EST2019630500',
+        'UA0082',
+        '0',
+        '1',
+        'Sin Semestres'
+    ),
+    -- Materias pendientes de 7mo semestre
+    (
+        '468',
+        'EST2019630500',
+        'UA0088',
+        '0',
+        '1',
+        'Sin Semestres'
+    ),
+    (
+        '469',
+        'EST2019630500',
+        'UA0089',
+        '0',
+        '1',
+        'Sin Semestres'
+    ),
+    -- Materias reprobadas del alumno regular 7mo semestre IIA con reprobadas (2022630700)
+    -- Materias de semestres anteriores que aún no ha recuperado
+    -- Materia de 2do semestre - Mecánica y Electromagnetismo (ya recuperada por Extraordinario)
+    -- Materia de 3er semestre - Ecuaciones Diferenciales (ya recuperada por ETS)
+    -- Materias de 4to semestre pendientes
+    (
+        '470',
+        'EST2022630700',
+        'UA0067',
+        '2',
+        '1',
+        'Reprobada'
+    ),
+    (
+        '471',
+        'EST2022630700',
+        'UA0069',
+        '2',
+        '0',
+        'Reprobada'
+    ),
+    -- Materias reprobadas y recuperadas del alumno 4to semestre (2025631000)
+    -- Reprobadas de 1er semestre (ya recuperadas)
+    (
+        '472',
+        'EST2025631000',
+        'UA0065',
+        '0',
+        '1',
+        'Aprobada'
+    ),
+    (
+        '473',
+        'EST2025631000',
+        'UA0067',
+        '0',
+        '1',
+        'Aprobada'
+    ),
+    -- Reprobada de 2do semestre (ya recuperada)
+    (
+        '474',
+        'EST2025631000',
+        'UA0070',
+        '0',
+        '1',
+        'Aprobada'
+    ),
+    -- Reprobadas de 3er semestre (ya recuperadas)
+    (
+        '475',
+        'EST2025631000',
+        'UA0074',
+        '0',
+        '1',
+        'Aprobada'
+    ),
+    (
+        '476',
+        'EST2025631000',
+        'UA0076',
+        '0',
+        '1',
+        'Aprobada'
+    ),
+    -- Materias reprobadas y recuperadas del alumno 2do semestre ISC (2027631200)
+    -- Reprobadas de 1er semestre (ya recuperadas)
+    (
+        '477',
+        'EST2027631200',
+        'UA0001',
+        '0',
+        '1',
+        'Aprobada'
+    ),
+    (
+        '478',
+        'EST2027631200',
+        'UA0003',
+        '0',
+        '1',
+        'Aprobada'
+    ),
+    (
+        '479',
+        'EST2027631200',
+        'UA0004',
+        '0',
+        '1',
+        'Aprobada'
     );
 
 SELECT
@@ -166,6 +458,14 @@ SELECT
 FROM estudiante e
     INNER JOIN inscripcion i ON e.id_usuario = i.id_alumno
 ORDER BY e.promedio DESC;
+
+-- Actualizar fecha de inscripción para alumno desfasado
+UPDATE inscripcion
+set
+    fecha_hora_in = "2025-11-25 09:00:00",
+    fecha_hora_cad = "2025-12-05 23:59:59"
+where
+    id_alumno = "2022630400";
 
 UPDATE inscripcion
 set
