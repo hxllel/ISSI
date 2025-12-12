@@ -5,7 +5,9 @@ import axios from "axios";
 import "./Alumno.css";
 import { VerAvisos } from "../shared/VerAvisos";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
-import RecuperarContra from "../formulario/RecuperarContra.jsx"
+import RecuperarContra from "../formulario/RecuperarContra.jsx";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function Alumno() {
   const navigate = useNavigate();
@@ -15,6 +17,9 @@ export function Alumno() {
   const [alumno, setAlumno] = useState(null);
   const [horario, setHorario] = useState([]);
   const [primera_vez, setPrimeraVez] = useState(null);
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   useEffect(() => {
     fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
@@ -41,9 +46,12 @@ export function Alumno() {
     fetch(`${API}/ObtenerHorario/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        setHorario(data.horario);
+        setHorario(data.horario || []);
       })
-      .catch(() => setAlumno(null));
+      .catch((err) => {
+        console.error("Error al obtener horario:", err);
+        setHorario([]);
+      });
   }, [id]);
 
   /** ============================
@@ -52,7 +60,7 @@ export function Alumno() {
   const handleDescargarComprobante = () => {
     try {
       if (!Array.isArray(horario) || horario.length === 0) {
-        alert("No hay materias inscritas para generar el comprobante.");
+        showAlert("No hay materias inscritas para generar el comprobante.", "warning");
         return;
       }
 
@@ -81,15 +89,18 @@ export function Alumno() {
 
       const estilo = `
         <style>
-          body { font-family: Arial, sans-serif; color:#111; }
-          h1 { margin: 0 0 8px 0; font-size: 18px; }
-          .header-container { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 12px; }
-          .foto-alumno { width: 100px; height: 120px; object-fit: cover; border: 1px solid #333; border-radius: 4px; }
+          body { font-family: 'Arial', sans-serif; color: #333; padding: 20px; }
+          h1 { margin: 0 0 15px 0; font-size: 24px; color: #7d0024; text-transform: uppercase; border-bottom: 2px solid #7d0024; padding-bottom: 10px; }
+          .header-container { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; background-color: #fafafa; }
+          .foto-alumno { width: 100px; height: 120px; object-fit: cover; border: 2px solid #7d0024; border-radius: 4px; }
           .meta-info { flex: 1; }
-          .meta { font-size: 12px; }
-          table { width: 100%; border-collapse: collapse; font-size: 12px; }
-          th, td { border: 1px solid #333; padding: 6px 8px; }
-          th { background: #f0f0f0; text-align: left; }
+          .meta { font-size: 14px; line-height: 1.6; }
+          .meta strong { color: #7d0024; }
+          table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 20px; }
+          th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+          th { background-color: #7d0024; color: white; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+          tr:nth-child(even) { background-color: #f9f9f9; }
+          tr:hover { background-color: #f0f0f0; }
         </style>`;
 
       const fotoUrl =
@@ -141,14 +152,17 @@ export function Alumno() {
         </html>`;
 
       const w = window.open("", "_blank", "width=1024,height=768");
-      if (!w) return alert("Permite ventanas emergentes.");
+      if (!w) {
+        showAlert("Permite ventanas emergentes.", "warning");
+        return;
+      }
 
       w.document.write(html);
       w.document.close();
       setTimeout(() => w.print(), 350);
     } catch (e) {
       console.error("Error al generar comprobante:", e);
-      alert("No se pudo generar el comprobante.");
+      showAlert("No se pudo generar el comprobante.", "error");
     }
   };
 
@@ -255,6 +269,14 @@ export function Alumno() {
           </main>
         </>
       )}
+      
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

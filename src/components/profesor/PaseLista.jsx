@@ -4,12 +4,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./PaseLista.css";
 import "./Profesor.css";
 import { ProfesorLayout } from "./ProfesorLayout";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
+
+import { useAuth } from "../../hooks/useAuth";
 
 export function PaseLista() {
+  const { user } = useAuth();
   const [alumnos, setAlumnos] = useState([]);
   const [asistencias, setAsistencias] = useState({});
-  const [profesorId, setProfesorId] = useState(null);
+  const [profesorId, setProfesorId] = useState(user?.id);
   const ejecutadoRef = useRef(false);
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const API = "http://localhost:4000";
   const { id } = useParams(); // id del grupo
@@ -29,8 +37,14 @@ export function PaseLista() {
           setAlumnos(data.alumnos);
           setProfesorId(data.profe);
         } else {
-          alert("Ya no puede pasar lista del día de hoy");
-          navigate(`/profesor/${data.profe}`);
+          try {
+            showAlert(data.motivo || "Ya no puede pasar lista del día de hoy", "warning");
+            setTimeout(() => {
+              navigate(`/profesor/${data.profe || user?.id}`);
+            }, 3000);
+          } catch (error) {
+             navigate(`/profesor/${user?.id}`);
+          }
         }
       })
       .catch((err) =>
@@ -64,7 +78,7 @@ export function PaseLista() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert(data.msg);
+          showAlert(data.msg, "success");
           navigate(`/profesor/${data.profe}`);
         }
       })
@@ -137,6 +151,14 @@ export function PaseLista() {
           </div>
         </form>
       </section>
+
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </ProfesorLayout>
   );
 }

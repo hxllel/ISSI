@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { Unidad_Aprendizaje, Carrera } = require('../model/modelo');
+const { requireAuth, requireRole } = require('../middleware/auth');
 
 // helper para generar id desde nombre, sin paquetes extras
 function slugFromName(nombre = '') {
@@ -11,8 +12,8 @@ function slugFromName(nombre = '') {
     .replace(/[^A-Z0-9_]/g, '');                      // limpia
 }
 
-// GET: todas las UAs
-router.get('/', async (req, res) => {
+// GET: todas las UAs (requiere autenticación)
+router.get('/', requireAuth, async (req, res) => {
   try {
     const list = await Unidad_Aprendizaje.findAll();
     res.json(list);
@@ -21,8 +22,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET: una UA por id
-router.get('/:id', async (req, res) => {
+// GET: una UA por id (requiere autenticación)
+router.get('/:id', requireAuth, async (req, res) => {
   try {
     const item = await Unidad_Aprendizaje.findByPk(req.params.id);
     if (!item) return res.status(404).json({ error: 'No encontrado' });
@@ -32,8 +33,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST: crear UA (sin id en body)
-router.post('/', async (req, res) => {
+// POST: crear UA (sin id en body) (solo administrador)
+router.post('/', requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const { nombre, credito, carrera, semestre, tipo } = req.body;
 
@@ -66,8 +67,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT: actualizar UA por id (valida duplicado si cambia el nombre)
-router.put('/:id', async (req, res) => {
+// PUT: actualizar UA por id (valida duplicado si cambia el nombre) (solo administrador)
+router.put('/:id', requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const current = await Unidad_Aprendizaje.findByPk(req.params.id);
     if (!current) return res.status(404).json({ error: 'No encontrado' });

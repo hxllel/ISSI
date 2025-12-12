@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./RegistrarCursos.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function RegistrarCursos() {
@@ -17,9 +19,12 @@ export function RegistrarCursos() {
   const [tipoFiltro, setTipoFiltro] = useState("");
   const [salon, setSalon] = useState("");
   const [diasSeleccionados, setDiasSeleccionados] = useState({});
-  const [id_grupo_creado, setId_grupo_creado] = useState(null);
   const [mostrarDistribucion, setMostrarDistribucion] = useState(false);
+  const [id_grupo_creado, setId_grupo_creado] = useState(null);
   const API = "http://localhost:4000";
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const diasSemana = [
     { letra: "L", nombre: "Lunes" },
@@ -80,16 +85,16 @@ export function RegistrarCursos() {
   const validarHoras = () => {
     for (const dia in diasSeleccionados) {
       if (diasSeleccionados[dia] === true) {
-        alert("Por favor, completa las horas para todos los días seleccionados");
+        showAlert("Por favor, completa las horas para todos los días seleccionados", "warning");
         return false;
       }
       if (diasSeleccionados[dia] && diasSeleccionados[dia].hora_ini && diasSeleccionados[dia].hora_fin) {
         if (diasSeleccionados[dia].hora_ini >= diasSeleccionados[dia].hora_fin) {
-          alert("La hora de inicio no puede ser mayor o igual que la hora de fin");
+          showAlert("La hora de inicio no puede ser mayor o igual que la hora de fin", "warning");
           return false;
         }
       } else if (diasSeleccionados[dia] && (diasSeleccionados[dia].hora_ini || diasSeleccionados[dia].hora_fin)) {
-        alert("Por favor, completa las horas para todos los días seleccionados");
+        showAlert("Por favor, completa las horas para todos los días seleccionados", "warning");
         return false;
       }
     }
@@ -100,7 +105,7 @@ export function RegistrarCursos() {
     e.preventDefault();
 
     if (!id_profesor || !id_UA || !turno || !nombre || !carreragru) {
-      alert("Por favor, complete todos los campos.");
+      showAlert("Por favor, complete todos los campos.", "warning");
       return;
     }
 
@@ -130,16 +135,17 @@ export function RegistrarCursos() {
         setMostrarDistribucion(true);
         agregarDistribucion(data.id_grupo);
       } else {
-        alert("Error al crear el grupo");
+        showAlert("Error al crear el grupo", "error");
       }
     } catch (error) {
       console.error("Error al registrar el curso:", error);
-      alert("Ocurrió un error al registrar el curso");
+      showAlert("Ocurrió un error al registrar el curso", "error");
     }
   };
 
   const agregarDistribucion = async (id_grupo) => {
     try {
+      let errors = [];
       for (const dia in diasSeleccionados) {
         const diaConfig = diasSeleccionados[dia];
         if (diaConfig && diaConfig.hora_ini && diaConfig.hora_fin) {
@@ -159,19 +165,27 @@ export function RegistrarCursos() {
 
           const result = await response.json();
           if (!result.success) {
-            alert(`Error al agregar distribución para ${diaNombre}, el grupo si se creó`);
-          }
-          else{
-              alert("Grupo y horarios registrados exitosamente");
-
+            errors.push(`Error en ${diaNombre}`);
           }
         }
       }
 
-      navigate("/administrador/gestionarCursos");
+      if (errors.length > 0) {
+         showAlert(`Grupo creado, pero hubo errores en horarios: ${errors.join(", ")}`, "warning");
+         // Aún así navegamos o esperamos? Mejor esperamos para que lea
+         setTimeout(() => {
+             navigate("/administrador/gestionarCursos");
+         }, 4000);
+      } else {
+         showAlert("Grupo y horarios registrados exitosamente", "success");
+         setTimeout(() => {
+             navigate("/administrador/gestionarCursos");
+         }, 3000);
+      }
+
     } catch (error) {
       console.error("Error al agregar la distribución:", error);
-      alert("Ocurrió un error al registrar los horarios");
+      showAlert("Ocurrió un error al registrar los horarios", "error");
     }
   };
 
@@ -315,6 +329,15 @@ export function RegistrarCursos() {
           </form>
         </section>
       </main>
+
+      
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarCursos.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function GestionarCursos() {
@@ -10,6 +12,9 @@ export function GestionarCursos() {
   const [del, setDelete] = useState(false);
   const [mostrarModal, setmostrarModal] = useState(false);
   const navigate = useNavigate();
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const handleClickCur = () => {
     navigate("registrarCurso");
@@ -70,11 +75,11 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Grupo eliminado correctamente");
+          showAlert("Grupo eliminado correctamente", "success");
           setmostrarModal(false);
           setDatos((prev) => prev.filter((d) => d.id !== id_datos));
         } else {
-          alert("Error al eliminar el grupo");
+          showAlert("Error al eliminar el grupo", "error");
         }
       })
       .catch((err) => console.error("Error al eliminar el grupo:", err));
@@ -185,6 +190,14 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
         </div>
       )}
       </main>
+      
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

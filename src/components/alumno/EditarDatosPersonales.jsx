@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarDatosPersonales.css";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 const API = "http://localhost:4000";
 
@@ -47,6 +49,9 @@ export function EditarDatos() {
   const [editEnf, setEditEnf] = useState(null);
   const [descripcionEnf, setDescripcionEnf] = useState("");
   // ------------------------------------------------------------------------------
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   useEffect(() => {
     fetch(`http://localhost:4000/ObtenerAlumno/${id}`, {
@@ -225,10 +230,10 @@ export function EditarDatos() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Alumno editado con éxito");
+          showAlert("Alumno editado con éxito", "success");
           navigate(`/alumno/${id}`);
         } else {
-          alert("Error al editar el alumno");
+          showAlert("Error al editar el alumno", "error");
         }
       })
       .catch((err) => console.error("Error al editar el alumno:", err));
@@ -637,6 +642,14 @@ export function EditarDatos() {
         </div>
       )}
       {/* ---------------- */}
+
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

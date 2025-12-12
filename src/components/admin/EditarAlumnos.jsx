@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarAlumnos.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function EditarAlumnos() {
     const { id } = useParams();
     const navigate = useNavigate();
+
+    // Hook para alertas modales
+    const { alertState, showAlert, hideAlert } = useAlert();
 
     const [alumno, setAlumno] = useState({
         nombre: "",
@@ -65,10 +70,12 @@ export function EditarAlumnos() {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert("Alumno editado con éxito");
-                    navigate("/administrador/gestionarAlumnos");
+                    showAlert("Alumno editado con éxito", "success");
+                    setTimeout(() => {
+                        navigate("/administrador/gestionarAlumnos");
+                    }, 3000);
                 } else {
-                    alert("Error al editar el alumno");
+                    showAlert("Error al editar el alumno", "error");
                 }
             })
             .catch(err => console.error("Error al editar el alumno:", err));
@@ -173,6 +180,14 @@ export function EditarAlumnos() {
             </form>
         </section>
         </main>
+
+        {/* Modal de alertas */}
+        <AlertModal
+          isOpen={alertState.isOpen}
+          onClose={hideAlert}
+          message={alertState.message}
+          type={alertState.type}
+        />
         </div>
     );
 }

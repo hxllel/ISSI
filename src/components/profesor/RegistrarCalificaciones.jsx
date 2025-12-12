@@ -4,6 +4,8 @@ import "./PaseLista.css";
 import "./Profesor.css";
 import { ProfesorLayout } from "./ProfesorLayout";
 import { ProfeSideBar } from "./ProfeSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function RegistrarCalificaciones() {
   const API = "http://localhost:4000";
@@ -13,6 +15,9 @@ export function RegistrarCalificaciones() {
   const [cal, setCal] = useState([]);
   const { id, periodo } = useParams();
   const navigate = useNavigate();   
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
  useEffect(() => {
   fetch(`${API}/CalificacionesGuardadas/${id}/${periodo}`, {
@@ -129,6 +134,7 @@ const handleSubmit = (e) => {
   };
 
   return (
+  <>
   <ProfesorLayout profesorId={profesorId}>
   <div className="prof-page-header">
     <h1 className="prof-page-title">Registrar Calificaciones</h1>
@@ -216,6 +222,15 @@ const handleSubmit = (e) => {
     </form>
   </section>
 </ProfesorLayout>
+    
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
+    </>
 
   );
 }

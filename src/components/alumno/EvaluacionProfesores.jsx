@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./EvaluacionProfesores.css";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function EvaluacionProfesores() {
   const navigate = useNavigate();
@@ -22,6 +24,9 @@ export function EvaluacionProfesores() {
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaFin, setFechaFin] = useState(null);
   const [comentario, setComentario] = useState("");
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const preguntas = [
     {
@@ -201,12 +206,12 @@ export function EvaluacionProfesores() {
     e.preventDefault();
 
     if (Object.keys(respuestas).length !== preguntas.length) {
-      alert("Por favor responde todas las preguntas antes de enviar la evaluación.");
+      showAlert("Por favor responde todas las preguntas antes de enviar la evaluación.", "warning");
       return;
     }
 
     if (!profesorSeleccionado) {
-      alert("Por favor selecciona un profesor para evaluar.");
+      showAlert("Por favor selecciona un profesor para evaluar.", "warning");
       return;
     }
 
@@ -247,7 +252,7 @@ export function EvaluacionProfesores() {
       }
     } catch (err) {
       console.error("Error al enviar evaluación:", err);
-      alert("No se pudo enviar la evaluación. Intenta más tarde.");
+      showAlert("No se pudo enviar la evaluación. Intenta más tarde.", "error");
     }
   };
 
@@ -265,7 +270,7 @@ export function EvaluacionProfesores() {
     if (!fechaValida) {
       const inicio = fechaInicio ? new Date(fechaInicio).toLocaleDateString() : "N/A";
       const fin = fechaFin ? new Date(fechaFin).toLocaleDateString() : "N/A";
-      alert(`No se puede evaluar fuera del periodo de evaluación.\n\nPeriodo: ${inicio} - ${fin}`);
+      showAlert(`No se puede evaluar fuera del periodo de evaluación.\n\nPeriodo: ${inicio} - ${fin}`, "warning");
       return;
     }
     setProfesorSeleccionado(profesorObj);
@@ -439,19 +444,29 @@ export function EvaluacionProfesores() {
         )}
       </div>
 
-      <button className="btn-nueva" onClick={resetEvaluacion}>
-        Evaluar otro profesor
-      </button>
+      <div className="botones-resultado">
+        <button className="btn-nueva" onClick={resetEvaluacion}>
+          Evaluar otro profesor
+        </button>
 
-      <button className="btn-volver" onClick={() => navigate(`/alumno/${id}`)}>
-        Volver al inicio
-      </button>
+        <button className="btn-volver" onClick={() => navigate(`/alumno/${id}`)}>
+          Volver al inicio
+        </button>
+      </div>
     </div>
   </div>
 </section>
 
         )}
       </main>
+      
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

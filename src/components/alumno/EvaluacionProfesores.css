@@ -322,7 +322,10 @@
 
 .botones-container {
   margin-top: 2rem;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .seccion-botones {
@@ -330,72 +333,60 @@
 }
 
 /* Base para TODOS los botones de acción */
+/* Base para TODOS los botones de acción */
 .btn-enviar,
 .btn-cancelar,
 .btn-nueva,
 .btn-volver {
-  display: inline-block;
-  width: 230px;
-  height: 46px;
-  line-height: 46px;
-  padding: 0;
-  margin: 0 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  width: auto;
+  height: auto;
+  min-height: 48px;
+  line-height: 1.2;
+  padding: 0.8rem 2rem;
+  margin: 0.5rem; /* Better spacing for responsiveness */
 
   border: none;
   border-radius: 999px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
   text-align: center;
   cursor: pointer;
 
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.15s ease;
-  /* 👆 quitamos transform de la transición */
+  transition: all 0.2s ease;
 }
 
 /* Enviar */
 .btn-enviar {
-  background: linear(135deg, #7d0024);
+  background: var(--eval-guinda);
   color: #ffffff;
-  box-shadow: 0 10px 22px rgba(125, 0, 36, 0.35);
+  box-shadow: 0 4px 12px rgba(125, 0, 36, 0.25);
 }
 
 .btn-enviar:hover {
-  background: linear(135deg, #60001c);
+  background: var(--eval-guinda-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(125, 0, 36, 0.35);
 }
 
 /* Cancelar */
 .btn-cancelar {
-  background-color: #6b7280;
+  background-color: #9ca3af;
   color: #ffffff;
-  box-shadow: 0 10px 22px rgba(75, 85, 99, 0.35);
+  box-shadow: 0 4px 12px rgba(156, 163, 175, 0.25);
 }
 
 .btn-cancelar:hover {
-  background-color: #4b5563;
+  background-color: #6b7280;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(107, 114, 128, 0.35);
 }
 
 /* Resultado */
-.btn-nueva {
-  background: linear-gradient(135deg, #7d0024, #b1003a);
-  color: #ffffff;
-  box-shadow: 0 10px 22px rgba(125, 0, 36, 0.35);
-}
-
-.btn-nueva:hover {
-  background: linear-gradient(135deg, #60001c, #980032);
-}
-
-.btn-volver {
-  background-color: #6b7280;
-  color: #ffffff;
-  box-shadow: 0 10px 22px rgba(75, 85, 99, 0.35);
-}
-
-.btn-volver:hover {
-  background-color: #4b5563;
-}
+/* .btn-nueva y .btn-volver estan redefinidos mas abajo en la seccion de Result */
 
 /* =================== RESULTADO =================== */
 
@@ -770,40 +761,120 @@
 }
 
 /* ================================
-   ESTILOS PARA TEXTO BLANCO
+   ESTILOS RESULTADO (Clean & Centered)
    ================================ */
 
-.resultado-evaluacion,
-.resultado-evaluacion * {
-    color: #ffffff !important;   /* Texto blanco */
+.resultado-evaluacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  padding: 2rem;
 }
 
-/* Si el card tiene fondo claro, ponemos guinda oscuro */
 .resultado-card {
-    background-color: #7a0b28 !important; /* Guinda más oscuro para contraste */
-    color: #ffffff !important;
-}
-
-/* Asegurar que labels, valores y botones tengan buen contraste */
-.puntuacion-label,
-.puntuacion-valor,
-.registro-count {
-    color: #ffffff !important;
+  background-color: #ffffff;
+  padding: 3rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Sombra suave y moderna */
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .resultado-card h2 {
-    color: #ffffff !important;
+  color: var(--eval-guinda);
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
 }
 
-/* Botones */
+.resultado-info {
+  margin-top: 1.5rem;
+}
+
+.resultado-info p {
+  color: #4b5563;
+  font-size: 1.1rem;
+   margin: 0.5rem 0;
+}
+
+.puntuacion-box {
+  background: #fdf2f4; /* Fondo rosita muy claro */
+  border: 2px solid var(--eval-guinda);
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+  color: var(--eval-text);
+}
+
+.puntuacion-label {
+  color: var(--eval-guinda);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+.puntuacion-valor {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--eval-guinda);
+  margin: 0.5rem 0;
+  line-height: 1;
+}
+
+.registro-count {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* Botones Resultado */
+.botones-resultado {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
 .btn-nueva,
 .btn-volver {
-    color: #ffffff !important;
-    border: 1px solid #ffffff;
+  width: auto;
+  min-width: 200px;
+  padding: 0 2rem;
+  height: 50px;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-.btn-nueva:hover,
-.btn-volver:hover {
-    background-color: #ffffff !important;
-    color: #7a0b28 !important;
+.btn-nueva {
+  background-color: var(--eval-guinda);
+  color: white;
+  box-shadow: 0 4px 12px rgba(125, 0, 36, 0.2);
 }
+
+.btn-nueva:hover {
+  background-color: var(--eval-guinda-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(125, 0, 36, 0.3);
+}
+
+.btn-volver {
+  background-color: white;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.btn-volver:hover {
+  background-color: #f9fafb;
+  color: #111827;
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+}
+
+

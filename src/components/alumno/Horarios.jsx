@@ -5,6 +5,8 @@ import Modal from "../Modal";
 import  "./Horarios.css";
 import Stars from "../alumno/Stars.jsx";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
@@ -28,6 +30,9 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const API = "http://localhost:4000";
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const safeArray = (value) => (Array.isArray(value) ? value : []);
 
@@ -105,13 +110,11 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert("Se ha agregado exitosamente a tu borrador de horario la materia");
-            window.location.reload();
-
+            showAlert("Se ha agregado exitosamente a tu borrador de horario la materia", "success");
+            setTimeout(() => window.location.reload(), 1500);
           } else {
-            alert("No se ha podido agregar la materia al borrador de horario");
-            window.location.reload();
-
+            showAlert("No se ha podido agregar la materia al borrador de horario", "error");
+            setTimeout(() => window.location.reload(), 1500);
           }
         })
         .catch((err) => console.error("Error al agregar borrador:", err))
@@ -125,17 +128,15 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert("Se ha eliminado la materia de tu borrador de horario");
-            window.location.reload();
-
+            showAlert("Se ha eliminado la materia de tu borrador de horario", "success");
+            setTimeout(() => window.location.reload(), 1500);
           } else {
-            alert("No se ha podido eliminar la materia al borrador de horario");
-            window.location.reload();
-
+            showAlert("No se ha podido eliminar la materia del borrador de horario", "error");
+            setTimeout(() => window.location.reload(), 1500);
           }
         })
         .catch((err) => console.error("Error al eliminar borrador:", err))
-        .finally(() => del(false));
+        .finally(() => setdel(false));
 
     }
   }, [del]);
@@ -172,9 +173,6 @@ useEffect(() => {
           </div>
           <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
         </header>
-      <section className="gestion-alumnos">
-                    
-      
 
       
       <section className="gestion-alumnos">
@@ -394,10 +392,16 @@ useEffect(() => {
         </div>
 
       </section>
-      
-      </section>
       </main>
     </section>
+    
+    {/* Modal de alertas */}
+    <AlertModal
+      isOpen={alertState.isOpen}
+      onClose={hideAlert}
+      message={alertState.message}
+      type={alertState.type}
+    />
     </div>
 
   );

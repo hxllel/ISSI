@@ -1,11 +1,18 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import "./SideBar.css";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function SidebarAlumno() {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
+  const { logout } = useAuth();
+  
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const isActive = (path) => location.pathname.startsWith(path);
 
@@ -44,7 +51,7 @@ export function SidebarAlumno() {
   // Función de seguridad para evitar errores
   const safeNavigate = (path, state = null) => {
     if (!id) {
-      alert("⚠ No se pudo obtener tu ID. Inicia sesión nuevamente.");
+      showAlert("⚠ No se pudo obtener tu ID. Inicia sesión nuevamente.", "warning");
       return navigate("/");
     }
     closeIfMobile();
@@ -69,10 +76,17 @@ export function SidebarAlumno() {
   const handleMapas = () =>
     safeNavigate(`/alumno/MapasCurriculares`, { alumnoId: id });
 
-  const handleLogout = () => {
-    localStorage.removeItem("alumno_id");
-    setOpen(false);
-    navigate(`/`);
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem("alumno_id");
+      setOpen(false);
+      await logout(); // Llamar al logout del hook de autenticación
+      // Usar window.location para forzar una recarga completa y asegurar que el estado se limpie
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -175,6 +189,14 @@ export function SidebarAlumno() {
       </aside>
 
       <button className={`sidebar-overlay ${open ? "show" : ""}`} onClick={() => setOpen(false)} />
+      
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </>
   );
 }

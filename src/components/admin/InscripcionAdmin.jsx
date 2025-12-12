@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { AdminSidebar } from "./AdminSidebar";
 import Modal from "../Modal";
 import "./InscripcionAdmin.css";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 const API = "http://localhost:4000";
 
@@ -30,6 +32,9 @@ export function InscripcionAdmin() {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [modalContenido, setModalContenido] = useState("");
   const [modalAccion, setModalAccion] = useState(null);
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const norm = (x) => (x ?? "").toString().toLowerCase();
 
@@ -215,15 +220,15 @@ export function InscripcionAdmin() {
       console.log("Respuesta AdminAlumnoInscribirGrupo:", data);
 
       if (!data.success) {
-        alert(data.error || "No se pudo inscribir el grupo");
+        showAlert(data.error || "No se pudo inscribir el grupo", "error");
       } else {
-        alert("Grupo inscrito correctamente");
+        showAlert("Grupo inscrito correctamente", "success");
       }
 
       await recargarTodo();
     } catch (err) {
       console.error("Error al inscribir grupo:", err);
-      alert("Error al inscribir grupo");
+      showAlert("Error al inscribir grupo", "error");
     }
   };
 
@@ -240,15 +245,15 @@ export function InscripcionAdmin() {
       console.log("Respuesta AdminAlumnoBajaGrupo:", data);
 
       if (!data.success) {
-        alert(data.error || "No se pudo dar de baja el grupo");
+        showAlert(data.error || "No se pudo dar de baja el grupo", "error");
       } else {
-        alert("Grupo dado de baja correctamente");
+        showAlert("Grupo dado de baja correctamente", "success");
       }
 
       await recargarTodo();
     } catch (err) {
       console.error("Error al dar de baja grupo:", err);
-      alert("Error al dar de baja grupo");
+      showAlert("Error al dar de baja grupo", "error");
     }
   };
 
@@ -514,6 +519,14 @@ export function InscripcionAdmin() {
             </button>
           </div>
         </Modal>
+
+        {/* Modal de alertas */}
+        <AlertModal
+          isOpen={alertState.isOpen}
+          onClose={hideAlert}
+          message={alertState.message}
+          type={alertState.type}
+        />
       </main>
     </div>
   );

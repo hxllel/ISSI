@@ -6,8 +6,13 @@ const { Op, INTEGER } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { raw } = require("mysql2");
 const { truncates } = require("bcryptjs");
+const { requireAuth, requireRole } = require("../../middleware/auth");
+
 module.exports = (passport) => {
   const router = express.Router();
+
+  // NO aplicar middleware global aquí porque algunas rutas son compartidas
+  // En su lugar, aplicar requireAuth y requireRole a cada ruta individualmente según sea necesario
 
   // ============================
   //  ADMIN: ESTADÍSTICAS GENERALES
@@ -1540,6 +1545,13 @@ module.exports = (passport) => {
       // Generar ID único para el grupo ETS
       const id = uuidv4().replace(/-/g, "").substring(0, 15);
       const p = await bd.FechasRelevantes.findOne({});
+
+      if (!p) {
+        return res.status(400).json({
+          success: false,
+          mensaje: "No hay fechas relevantes configuradas. Configure el periodo primero.",
+        });
+      }
 
       // Crear el grupo ETS
       await bd.ETS_grupo.create({

@@ -4,14 +4,15 @@ const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { raw } = require("mysql2");
 const { DatosMedicos, Enfermedades } = require("../../model/modelo");
+const { requireAuth, requireRole, requireSelf } = require("../../middleware/auth");
 
 module.exports = (passport) => {
   const router = express.Router();
 
-  function ensureLoggedIn(req, res, next) {
-    if (req.isAuthenticated && req.isAuthenticated()) return next();
-    return res.status(401).json({ error: "No autenticado" });
-  }
+  // Middleware global: solo requireAuth (requireRole se aplica por ruta para evitar conflictos)
+  // NOTA: No usar requireRole global porque bloquea rutas compartidas con otros tipos de usuario
+  router.use(requireAuth);
+
   function genId(prefix = "DM") {
     const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
     return `${prefix}_${Date.now()}_${rand}`;
@@ -19,7 +20,7 @@ module.exports = (passport) => {
 
   // Nueva ruta: devuelve JSON para que el frontend realice la navegación al Chat
   // Se normaliza la ruta para usar la misma convención de capitalización que el resto
-  router.get("/Chat/:id", (req, res) => {
+  router.get("/Chat/:id", requireAuth, requireRole(['alumno']), (req, res) => {
     try {
       const { id } = req.params;
       // Respondemos con JSON en vez de redirigir. El frontend debe usar este JSON para navegar.
@@ -37,7 +38,7 @@ module.exports = (passport) => {
         .json({ success: false, error: "Error al obtener datos para el chat" });
     }
   });
-  router.get("/ConsultarCalificaciones", async (req, res) => {
+  router.get("/ConsultarCalificaciones", requireAuth, requireRole(['alumno']), async (req, res) => {
     const us = req.user.id;
     try {
       const h = await bd.Horario.findOne({
@@ -81,7 +82,7 @@ module.exports = (passport) => {
   });
 
   // GET: obtener datos médicos + enfermedades del alumno logueado
-  router.get("/alumno/datosMedicos", ensureLoggedIn, async (req, res) => {
+  router.get("/alumno/datosMedicos", requireAuth, requireRole(['alumno']), async (req, res) => {
     try {
       const id_usuario = req.user.id;
 
@@ -103,7 +104,7 @@ module.exports = (passport) => {
   });
 
   // POST: crear o actualizar datos médicos del alumno logueado (upsert)
-  router.post("/alumno/datosMedicos", ensureLoggedIn, async (req, res) => {
+  router.post("/alumno/datosMedicos", requireAuth, requireRole(['alumno']), async (req, res) => {
     try {
       const id_usuario = req.user.id;
       const { peso, altura, tipo_sangre, nss } = req.body;
@@ -148,7 +149,8 @@ module.exports = (passport) => {
   // POST: crear enfermedad asociada al alumno logueado
   router.post(
     "/alumno/datosMedicos/enfermedades",
-    ensureLoggedIn,
+    requireAuth,
+    requireRole(['alumno']),
     async (req, res) => {
       try {
         const id_usuario = req.user.id;
@@ -182,7 +184,8 @@ module.exports = (passport) => {
   // PUT: editar enfermedad del alumno logueado
   router.put(
     "/alumno/datosMedicos/enfermedades/:idEnf",
-    ensureLoggedIn,
+    requireAuth,
+    requireRole(['alumno']),
     async (req, res) => {
       try {
         const id_usuario = req.user.id;
@@ -221,7 +224,8 @@ module.exports = (passport) => {
   // DELETE: eliminar enfermedad del alumno logueado
   router.delete(
     "/alumno/datosMedicos/enfermedades/:idEnf",
-    ensureLoggedIn,
+    requireAuth,
+    requireRole(['alumno']),
     async (req, res) => {
       try {
         const id_usuario = req.user.id;
@@ -250,7 +254,7 @@ module.exports = (passport) => {
     }
   );
 
-  router.get("/ObtenerHorario/:id", async (req, res) => {
+  router.get("/ObtenerHorario/:id", requireAuth, requireRole(['alumno']), async (req, res) => {
     try {
       const { id } = req.params;
 
@@ -2091,7 +2095,7 @@ module.exports = (passport) => {
     }
   });
 
-  router.get("/TiempoReinscripcion", async (req, res) => {
+  router.get("/TiempoReinscripcion", requireAuth, async (req, res) => {
     const us = req.user.id;
 
     const tiempo = await bd.Inscripcion.findOne({ where: { id_alumno: us } });
@@ -2191,7 +2195,7 @@ module.exports = (passport) => {
     return res.json({ success: estaEnRango });
   });
 
-  router.get("/ConsultarResenas/:id", async (req, res) => {
+  router.get("/ConsultarResenas/:id", requireAuth, async (req, res) => {
     const { id } = req.params;
     try {
       const resena = await bd.Resena.findAll({
@@ -2204,7 +2208,24 @@ module.exports = (passport) => {
     }
   });
 
-  router.get("/PrimeraVez/:id", async (req, res) => {
+  // Ruta para que el alumno obtenga sus propios datos
+  router.get("/ObtenerAlumno/:id", requireAuth, requireRole(['alumno']), async (req, res) => {
+    const { id } = req.params;
+    try {
+      const alumno = await bd.DatosPersonales.findOne({
+        where: { id: id, tipo_usuario: "alumno" },
+        raw: true,
+        nest: true,
+      });
+      return res.json({ alumno: alumno });
+    } catch (error) {
+      console.error("Error al obtener alumno: ", error);
+      return res.status(500).json({ error: "Error al obtener alumno" });
+    }
+  });
+
+  // Ruta compartida: tanto alumnos como profesores pueden verificar si es primera vez
+  router.get("/PrimeraVez/:id", requireAuth, requireRole(['alumno', 'profesor']), async (req, res) => {
     const { id } = req.params;
     try {
       const a = await bd.DatosPersonales.findOne({

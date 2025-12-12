@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import "./SideBar.css";
 
 export function AdminSidebar() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const STORAGE_KEY = "saesr_sidebar_admin_open";
   const [open, setOpen] = useState(() => {
@@ -27,9 +29,10 @@ export function AdminSidebar() {
 
   const sharedState = { fromSidebar: true };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logout();
     setOpen(false);
-    navigate(`/`);
+    window.location.href = "/";
   };
 
   return (

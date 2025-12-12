@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarAlumnos.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function GestionarAlumnos() {
 
@@ -13,6 +15,9 @@ export function GestionarAlumnos() {
   const [del, setDelete] = useState(false);
 
   const [busqueda, setBusqueda] = useState("");
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const navigate = useNavigate();
   const API = "http://localhost:4000";
@@ -74,10 +79,10 @@ export function GestionarAlumnos() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert("Alumno eliminado correctamente");
+            showAlert("Alumno eliminado correctamente", "success");
             setDatos((prev) => prev.filter((a) => a.id !== idAlumno));
           } else {
-            alert("Error al eliminar el alumno");
+            showAlert("Error al eliminar el alumno", "error");
           }
           setMostrarModal(false);
         });
@@ -292,6 +297,13 @@ export function GestionarAlumnos() {
 
       </main>
 
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }
