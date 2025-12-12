@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./VerAvisos.css";
 
 export function VerAvisos({ objetivo }) {
@@ -6,15 +6,12 @@ export function VerAvisos({ objetivo }) {
   const [loading, setLoading] = useState(true);
   const API = "http://localhost:4000";
 
-  useEffect(() => {
-    cargarAvisos();
-  }, [objetivo]);
-
-  const cargarAvisos = async () => {
+  const cargarAvisos = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `${API}/api/avisos/por-objetivo/${objetivo}`
+        `${API}/api/avisos/por-objetivo/${objetivo}`,
+        { credentials: 'include' } // Enviar cookies de sesión
       );
       const data = await response.json();
 
@@ -26,7 +23,11 @@ export function VerAvisos({ objetivo }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [objetivo]);
+
+  useEffect(() => {
+    cargarAvisos();
+  }, [cargarAvisos]);
 
   const formatearFecha = (fecha) => {
     return new Date(fecha).toLocaleDateString("es-MX", {

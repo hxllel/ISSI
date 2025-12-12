@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../Modal";
 import "./MateriasReprobadas.css";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function MateriasReprobadas() {
@@ -20,6 +22,9 @@ export function MateriasReprobadas() {
   const [tiempoSubirComprobante , setTiempoSubirComprobante] = useState(false);
   const [paginaActual, setPaginaActual] = useState(0);
   const API = "http://localhost:4000";
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -82,18 +87,26 @@ export function MateriasReprobadas() {
   // ================== LÓGICA DE ETS / COMPROBANTES ==================
 
   // Traer grupos ETS y abrir modal de horarios
+  // Traer grupos ETS y abrir modal de horarios
   const handleClickIns = (idUnidadAprendizaje, idMateriaReprobada) => {
     setIDMR(idMateriaReprobada);
     setPaginaActual(0);
-    fetch(`${API}/ObtenerGruposEts/${idUnidadAprendizaje}`, {
+    // Encode the parameter to handle special characters or spaces
+    fetch(`${API}/ObtenerGruposEts/${encodeURIComponent(idUnidadAprendizaje)}`, {
       credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al obtener grupos");
+        return res.json();
+      })
       .then((data) => {
-        setHorarios(data.horarios);
+        setHorarios(data.horarios || []);
         setModalOpen(true);
       })
-      .catch((err) => console.error("Error", err));
+      .catch((err) => {
+        console.error("Error", err);
+        showAlert("No se pudieron cargar los grupos de ETS.", "error");
+      });
   };
 
   // Inscribir ETS en un grupo (desde el modal)
@@ -112,10 +125,11 @@ export function MateriasReprobadas() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Se ha inscrito satisfactoriamente al ETS");
+          showAlert("Se ha inscrito satisfactoriamente al ETS", "success");
         } else {
-          alert(
-            "No se ha podido registrar el ETS debido a que " + data.message
+          showAlert(
+            "No se ha podido registrar el ETS debido a que " + data.message,
+            "error"
           );
         }
         navigate(`/alumno/MateriasReprobadas`);
@@ -148,7 +162,7 @@ export function MateriasReprobadas() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Se ha subido correctamente el comprobante");
+          showAlert("Se ha subido correctamente el comprobante", "success");
           navigate(`/alumno/MateriasReprobadas`);
           window.location.reload();
         }
@@ -445,7 +459,7 @@ export function MateriasReprobadas() {
                 if (!file) return setDocumento(null);
 
                 if (file.type !== "application/pdf") {
-                  alert("Solo se permiten archivos PDF.");
+                  showAlert("Solo se permiten archivos PDF.", "warning");
                   e.target.value = "";
                   setDocumento(null);
                   return;
@@ -520,8 +534,17 @@ export function MateriasReprobadas() {
               Cerrar
             </button>
           </div>
+
         </div>
       </Modal>
+
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

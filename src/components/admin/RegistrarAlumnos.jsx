@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrarAlumnos.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function RegistrarAlumnos() {
@@ -31,6 +33,9 @@ export function RegistrarAlumnos() {
     const [carreraSeleccionada, setCarreraSeleccionada] = useState("");
     const [estado, setEstado] = useState("Activo");
 
+    // Hook para alertas modales
+    const { alertState, showAlert, hideAlert } = useAlert();
+
     useEffect(() => {
         fetch("http://localhost:4000/ObtenerCarreras", { credentials: "include" })
             .then((res) => res.json())
@@ -50,7 +55,7 @@ export function RegistrarAlumnos() {
             numero_ex === "" || codigo_postal === "" || colonia === "" || delegacion === "" ||
             ciudad === "" || telefono === "" || correo === "" || carreraSeleccionada === ""
         ) {
-            alert("Por favor, complete todos los campos obligatorios.");
+            showAlert("Por favor, complete todos los campos obligatorios.", "warning");
             return;
         }
 
@@ -70,7 +75,7 @@ export function RegistrarAlumnos() {
         try {
             const data = JSON.parse(text);
             if (data.success) {
-                alert("Alumno registrado correctamente");
+                showAlert("Alumno registrado correctamente", "success");
 
                 navigate(`../administrador/gestionarAlumnos`)         
                } else {
@@ -342,6 +347,13 @@ export function RegistrarAlumnos() {
                     </div>
                 </section>
             </main>
+            {/* Modal de alertas */}
+            <AlertModal
+                isOpen={alertState.isOpen}
+                onClose={hideAlert}
+                message={alertState.message}
+                type={alertState.type}
+            />
         </div>
     );
 }

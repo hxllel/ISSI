@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const { DatosMedicos, Enfermedades } = require("../model/modelo");
+const { requireAuth, requireRole } = require("../middleware/auth");
 
 function genId(prefix = "DM") {
   const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
   return `${prefix}_${Date.now()}_${rand}`;
 }
 
-router.get("/:id_usuario", async (req, res) => {
+router.get("/:id_usuario", requireAuth, async (req, res) => {
   try {
     const dm = await DatosMedicos.findOne({
       where: { id_usuario: req.params.id_usuario },
@@ -26,7 +27,7 @@ router.get("/:id_usuario", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const { id_usuario, peso, altura, tipo_sangre, nss } = req.body;
     if (!id_usuario || peso == null || altura == null || !tipo_sangre || !nss) {
@@ -55,7 +56,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id_dm", async (req, res) => {
+router.put("/:id_dm", requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const { peso, altura, tipo_sangre, nss } = req.body;
 
@@ -78,7 +79,7 @@ router.put("/:id_dm", async (req, res) => {
   }
 });
 
-router.post("/:id_dm/enfermedades", async (req, res) => {
+router.post("/:id_dm/enfermedades", requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const { descripcion } = req.body;
     if (!descripcion)
@@ -100,7 +101,7 @@ router.post("/:id_dm/enfermedades", async (req, res) => {
   }
 });
 
-router.put("/:id_dm/enfermedades/:id_enf", async (req, res) => {
+router.put("/:id_dm/enfermedades/:id_enf", requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const { descripcion } = req.body;
     if (!descripcion)
@@ -120,7 +121,7 @@ router.put("/:id_dm/enfermedades/:id_enf", async (req, res) => {
   }
 });
 
-router.delete("/:id_dm/enfermedades/:id_enf", async (req, res) => {
+router.delete("/:id_dm/enfermedades/:id_enf", requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const rows = await Enfermedades.destroy({
       where: { id: req.params.id_enf, id_dat_med: req.params.id_dm },

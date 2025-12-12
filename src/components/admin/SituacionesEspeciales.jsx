@@ -4,6 +4,8 @@ import { AdminSidebar } from "./AdminSidebar";
 import Modal from "../Modal";
 import "./SituacionesEspeciales.css";
 import { data } from "react-router-dom";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function SituacionesEspeciales() {
   const API = "http://localhost:4000";
@@ -16,6 +18,9 @@ export function SituacionesEspeciales() {
   const [materiasForm, setMateriasForm] = useState([]);
   const [materias, setMaterias] = useState([]);
   const [id, setId] = useState("");
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   useEffect(() => {
     fetch(`${API}/SituacionesEspeciales`, { credentials: "include" })
@@ -66,10 +71,10 @@ const handleSubmitDesfase = async (e) => {
     .then((res) => res.json())
     .then((data) => {
       if (data.success) {
-        alert("Se han registrado satisfactoriamente los cambios.");
+        showAlert("Se han registrado satisfactoriamente los cambios.", "success");
 
       } else {
-        alert("Ha ocurrido un error.");
+        showAlert("Ha ocurrido un error.", "error");
 
       }
     });
@@ -88,11 +93,11 @@ const handleSubmitDesfase = async (e) => {
       body: JSON.stringify({id: id, periodosExtra : periodosExtra}),
     }).then((res)=> res.json()).then((data)=>{
       if(data.success){
-        alert("Se han registrado satisfactoriamente los cambios.")
+        showAlert("Se han registrado satisfactoriamente los cambios.", "success");
 
       }
       else{
-        alert("Ha ocurrido un error.")
+        showAlert("Ha ocurrido un error.", "error");
 
       }
     });
@@ -353,6 +358,14 @@ const handleSubmitDesfase = async (e) => {
 </Modal>
 
 
+    
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

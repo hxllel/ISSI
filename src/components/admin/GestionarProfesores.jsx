@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GestionarProfesores.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function GestionarProfesores() {
@@ -11,6 +13,9 @@ export function GestionarProfesores() {
   const [id_profesor, setId_profesor] = useState("");
   const [del, setDelete] = useState(false);
   const [mostrarModal, setmostrarModal] = useState(false);
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
   const handleClickProf = () => navigate("../administrador/gestionarProfesores");
@@ -45,11 +50,11 @@ export function GestionarProfesores() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert("Profesor eliminado correctamente");
+            showAlert("Profesor eliminado correctamente", "success");
             setProfesores((prev) => prev.filter((p) => p.id !== id_profesor));
             setmostrarModal(false);
           } else {
-            alert("Error al eliminar el profesor");
+            showAlert("Error al eliminar el profesor", "error");
           }
         })
         .catch((err) => console.error("Error al eliminar el profesor:", err));
@@ -181,6 +186,14 @@ export function GestionarProfesores() {
           </div>
         )}
       </main>
+      
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

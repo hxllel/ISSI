@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import "./SideBar.css";
 
 export function ProfeSideBar() {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
+  const { logout } = useAuth();
 
   // ===== Toggle sidebar =====
   const STORAGE_KEY = "saesr_sidebar_profe_open";
@@ -62,9 +64,10 @@ export function ProfeSideBar() {
   const handleEvaluacion = () =>
     go(`/profesor/${finalId}/evaluacion`, { profesorId: finalId, fromSidebar: true });
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logout();
     setOpen(false);
-    navigate(`/`);
+    window.location.href = "/";
   };
 
   return (

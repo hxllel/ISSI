@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarGrupo.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function EditarGrupo() {
@@ -14,10 +16,12 @@ export function EditarGrupo() {
         id_profesor: "",
         id_UA: "",
         turno: "",
-        salon: ""
     });
     const navigate = useNavigate();
-      const API = "http://localhost:4000";
+    const API = "http://localhost:4000";
+
+    // Hook para alertas modales
+    const { alertState, showAlert, hideAlert } = useAlert();
 
     useEffect(() => {
         fetch(`${API}/ObtenerProfesores`, { credentials: "include" })
@@ -57,10 +61,12 @@ export function EditarGrupo() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {
-                    alert("Grupo editado correctamente");
-                    navigate("/administrador/gestionarCursos");
+                    showAlert("Grupo editado correctamente", "success");
+                    setTimeout(() => {
+                        navigate("/administrador/gestionarCursos");
+                    }, 3000);
                 } else {
-                    alert("Error al editar el grupo");
+                    showAlert("Error al editar el grupo", "error");
                 }
             })
             .catch((err) => console.error("Error al editar el grupo:", err));
@@ -151,6 +157,14 @@ const handleLogout = () => {navigate(`/`);};
             </form>
         </section>
         </main>
+        
+        {/* Modal de alertas */}
+        <AlertModal
+          isOpen={alertState.isOpen}
+          onClose={hideAlert}
+          message={alertState.message}
+          type={alertState.type}
+        />
         </div>
     );
 }

@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ETS.css";
 import { ProfeSideBar } from "./ProfeSidebar.jsx";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function ETS() {
   const navigate = useNavigate();
@@ -16,6 +18,9 @@ export function ETS() {
   const [fechaValida, setFechaValida] = useState(false);
   const [mensajeFecha, setMensajeFecha] = useState("Cargando...");
   const [loading, setLoading] = useState(true);
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   // Validar fecha de evaluación ETS
   useEffect(() => {
@@ -101,7 +106,7 @@ export function ETS() {
 
       for (const item of calificacionesArray) {
         if (item.calificacion !== null && (item.calificacion < 0 || item.calificacion > 10)) {
-          alert("Las calificaciones deben estar entre 0 y 10");
+          showAlert("Las calificaciones deben estar entre 0 y 10", "warning");
           return;
         }
       }
@@ -113,14 +118,14 @@ export function ETS() {
       );
 
       if (response.data.success) {
-        alert("Calificaciones guardadas exitosamente");
+        showAlert("Calificaciones guardadas exitosamente", "success");
         handleVolverLista();
       } else {
-        alert(response.data.mensaje || "Error al guardar calificaciones");
+        showAlert(response.data.mensaje || "Error al guardar calificaciones", "error");
       }
     } catch (err) {
       console.error("Error al guardar calificaciones ETS:", err);
-      alert("Error al guardar las calificaciones. Intenta nuevamente.");
+      showAlert("Error al guardar las calificaciones. Intenta nuevamente.", "error");
     }
   };
 
@@ -288,6 +293,14 @@ export function ETS() {
           </section>
         )}
       </main>
+
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

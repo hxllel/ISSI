@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrarProfesores.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function RegistrarProfesores() {
@@ -28,6 +30,9 @@ export function RegistrarProfesores() {
     const [grado, setGrado] = useState("")
     const [error2, setError2] = useState(false)
 
+    // Hook para alertas modales
+    const { alertState, showAlert, hideAlert } = useAlert();
+
     const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
     const handleClickProf = () => navigate("../administrador/gestionarProfesores");
     const handleClickCursos = () => navigate("../administrador/gestionarCursos");
@@ -36,7 +41,7 @@ export function RegistrarProfesores() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (nombre === "" || apellido_p === "" || apellido_m === "" || fecha_nacimiento === "" || tipo_sangre === "" || CURP === "" || nacionalidad === "" || calle === "" || numero_ex === "" || numero_in === "" || codigo_postal === "" || colonia === "" || delegacion === "" || ciudad === "" || telefono === "" || correo === "" || RFC === "" || grado === "") {
-            alert("Por favor, complete todos los campos.");
+            showAlert("Por favor, complete todos los campos.", "warning");
             return;
         }
 
@@ -69,11 +74,11 @@ export function RegistrarProfesores() {
             }),
         });
          if (res.ok) {
-            alert("Profesor registrado correctamente");
+            showAlert("Profesor registrado correctamente", "success");
             navigate(`../administrador/gestionarProfesores`)
         } else {
             const error = await res.text();
-            alert("Error: " + error);
+            showAlert("Error: " + error, "error");
     }
 }
 
@@ -323,6 +328,14 @@ export function RegistrarProfesores() {
                     </div>
                 </section>
             </main>
+            
+            {/* Modal de alertas */}
+            <AlertModal
+                isOpen={alertState.isOpen}
+                onClose={hideAlert}
+                message={alertState.message}
+                type={alertState.type}
+            />
         </div>
     );
 }

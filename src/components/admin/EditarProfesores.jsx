@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./EditarProfesores.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function EditarProfesores() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const [profesor, setProfesor] = useState({
     nombre: "",
@@ -69,10 +74,12 @@ export function EditarProfesores() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Profesor editado correctamente");
-          navigate("/administrador/gestionarProfesores");
+          showAlert("Profesor editado correctamente", "success");
+          setTimeout(() => {
+            navigate("/administrador/gestionarProfesores");
+          }, 3000);
         } else {
-          alert("Error al editar el profesor");
+          showAlert("Error al editar el profesor", "error");
         }
       })
       .catch((err) => console.error("Error al editar el profesor:", err));
@@ -169,6 +176,12 @@ export function EditarProfesores() {
           </div>
         </form>
       </main>
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

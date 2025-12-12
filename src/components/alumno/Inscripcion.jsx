@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import Modal from "../Modal.jsx";
 import "./Inscripcion.css";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function Inscripcion() {
   const { id } = useParams();
@@ -40,7 +42,8 @@ export function Inscripcion() {
 
   const [horarios, setHorarios] = useState([]);
 
-
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const API = "http://localhost:4000";
 
@@ -52,8 +55,9 @@ export function Inscripcion() {
   // ========== Tiempo / Cita (código 2) ==========
   useEffect(() => {
     fetch(`${API}/TiempoReinscripcion`, { credentials: "include" })
-      .then((res) => res.json())
+      .then((res) => res.json()) // Parsear JSON incluso si es 404
       .then((data) => {
+        // El endpoint devuelve 404 si no hay cita, pero aún incluye datos del alumno
         if (data.tiempo) {
           setTiempo(true);
         } else if (data.cita) {
@@ -68,7 +72,7 @@ export function Inscripcion() {
         setNombre(data.nombre);
         setCarrera(data.carrera);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("Error en TiempoReinscripcion:", err));
   }, []);
 
   // ========== HISTORIAL CURSADAS ==========
@@ -151,7 +155,7 @@ export function Inscripcion() {
         }
       })
       .catch(() => {});
-  });
+  }, []); // Agregar dependencia vacía para ejecutar solo una vez
 
   const handleClickD = (id) => {
     setd(true);
@@ -167,13 +171,13 @@ export function Inscripcion() {
       credentials: "include",
     })
       .then((res) => res.json())
-      .then((data) =>
-        alert(
-          data?.success
-            ? "Se ha eliminado la materia del borrador"
-            : "No se pudo eliminar"
-        )
-      )
+      .then((data) => {
+        if (data?.success) {
+          showAlert("Se ha eliminado la materia del borrador", "success");
+        } else {
+          showAlert("No se pudo eliminar", "error");
+        }
+      })
       .finally(() => setd(false));
   }, [d, idgru]);
 
@@ -187,8 +191,8 @@ export function Inscripcion() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data?.success) alert("Se ha agregado la materia");
-        else alert(`No se pudo agregar: ${safe(data?.err, "")}`);
+        if (data?.success) showAlert("Se ha agregado la materia", "success");
+        else showAlert(`No se pudo agregar: ${safe(data?.err, "")}`, "error");
       });
   };
 
@@ -199,13 +203,13 @@ export function Inscripcion() {
       method: "POST",
     })
       .then((res) => res.json())
-      .then((data) =>
-        alert(
-          data.success
-            ? "Se ha eliminado la materia a tu horario"
-            : "No se ha podido eliminar"
-        )
-      );
+      .then((data) => {
+        if (data.success) {
+          showAlert("Se ha eliminado la materia de tu horario", "success");
+        } else {
+          showAlert("No se ha podido eliminar", "error");
+        }
+      });
   };
 
   // ========== IMPORTAR BORRADOR ==========
@@ -216,9 +220,9 @@ export function Inscripcion() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data?.fatal) alert(`NO SE AGREGÓ NADA: ${data.msg}`);
-        else if (data?.success) alert("Se importó correctamente");
-        else alert(`Importado parcial: ${safe(data?.msg, "")}`);
+        if (data?.fatal) showAlert(`NO SE AGREGÓ NADA: ${data.msg}`, "error");
+        else if (data?.success) showAlert("Se importó correctamente", "success");
+        else showAlert(`Importado parcial: ${safe(data?.msg, "")}`, "warning");
       });
   };
 
@@ -231,13 +235,13 @@ export function Inscripcion() {
       credentials: "include",
     })
       .then((res) => res.json())
-      .then((data) =>
-        alert(
-          data?.success
-            ? "Se ha eliminado la materia del borrador"
-            : "No se ha podido eliminar"
-        )
-      )
+      .then((data) => {
+        if (data?.success) {
+          showAlert("Se ha eliminado la materia del borrador", "success");
+        } else {
+          showAlert("No se ha podido eliminar", "error");
+        }
+      })
       .finally(() => setdel(false));
   }, [del, idgru]);
 
@@ -253,10 +257,14 @@ export function Inscripcion() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Se ha inscrito satisfactoriamente");
-          navigate(`/alumno/${id}`);
-          window.location.reload();
-        } else alert(`Ha ocurrido un error ${data.message}`);
+          showAlert("Se ha inscrito satisfactoriamente", "success");
+          setTimeout(() => {
+            navigate(`/alumno/${id}`);
+            window.location.reload();
+          }, 1500);
+        } else {
+          showAlert(`Ha ocurrido un error: ${data.message}`, "error");
+        }
       });
   };
 
@@ -741,6 +749,14 @@ export function Inscripcion() {
           </Modal>
         </section>
       </main>
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+        title={alertState.title}
+      />
     </div>
   );
 }

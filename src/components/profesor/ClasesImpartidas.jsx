@@ -5,6 +5,8 @@ import "./ClasesImpartidas.css";
 import "./Profesor.css";
 import { ProfesorLayout } from "./ProfesorLayout";
 import { ProfeSideBar } from "./ProfeSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 const FILAS_POR_PAGINA = 10;
 
 export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
@@ -13,6 +15,9 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
   const [paginaActual, setPaginaActual] = useState(1);
   const [periodo, setPeriodo] = useState("");
   const [tiempo, setTiempo] = useState(false);
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const navigate = useNavigate();
   const API = "http://localhost:4000";
@@ -96,7 +101,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
       })
       .catch((err) => {
         console.error("Error al obtener cursos:", err);
-        alert(`Error al cargar los cursos: ${err.message}\nRevisa la consola para más detalles.`);
+        showAlert(`Error al cargar los cursos: ${err.message}\nRevisa la consola para más detalles.`, "error");
         setDatos([]);
       });
   }, [profesorId]);
@@ -131,8 +136,9 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
       const html = await res.text();
       const printWindow = window.open('', '_blank', 'width=1000,height=800');
       
+      
       if (!printWindow) {
-        alert('No se pudo abrir la ventana de impresión. Por favor permite ventanas emergentes.');
+        showAlert('No se pudo abrir la ventana de impresión. Por favor permite ventanas emergentes.', "warning");
         return;
       }
       
@@ -144,7 +150,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
 
     } catch (error) {
       console.error("Error al generar PDF:", error);
-      alert(`No se pudo generar el PDF: ${error.message}`);
+      showAlert(`No se pudo generar el PDF: ${error.message}`, "error");
     }
   };
 
@@ -173,7 +179,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
 
     } catch (error) {
       console.error("Error al generar Excel:", error);
-      alert(`No se pudo generar el Excel: ${error.message}`);
+      showAlert(`No se pudo generar el Excel: ${error.message}`, "error");
     }
   };
 
@@ -289,6 +295,14 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
         </div>
       </section>
     </ProfesorLayout>
+    
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

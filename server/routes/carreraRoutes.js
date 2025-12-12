@@ -1,12 +1,13 @@
 // server/routes/carreraRoutes.js
 const express = require('express');
 const router = express.Router();
+const { requireAuth, requireRole } = require('../middleware/auth');
 
 // Importa el modelo desde tu modelo.js (ya exporta Carrera)
 const { Carrera } = require('../model/modelo');
 
-// GET: todas las carreras
-router.get('/', async (req, res) => {
+// GET: todas las carreras (requiere autenticación)
+router.get('/', requireAuth, async (req, res) => {
   try {
     const list = await Carrera.findAll();
     res.json(list);
@@ -15,8 +16,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET: una carrera por PK (nombre)
-router.get('/:nombre', async (req, res) => {
+// GET: una carrera por PK (nombre) (requiere autenticación)
+router.get('/:nombre', requireAuth, async (req, res) => {
   try {
     const item = await Carrera.findByPk(req.params.nombre);
     if (!item) return res.status(404).json({ error: 'No encontrado' });
@@ -26,8 +27,8 @@ router.get('/:nombre', async (req, res) => {
   }
 });
 
-// POST: crear carrera
-router.post('/', async (req, res) => {
+// POST: crear carrera (solo administrador)
+router.post('/', requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const { nombre, creditos_iniciales, prefijo_grupo, duracion_max } = req.body;
 
@@ -48,8 +49,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT: actualizar carrera por nombre
-router.put('/:nombre', async (req, res) => {
+// PUT: actualizar carrera por nombre (solo administrador)
+router.put('/:nombre', requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const { creditos_iniciales, prefijo_grupo, duracion_max } = req.body;
 
@@ -71,8 +72,8 @@ router.put('/:nombre', async (req, res) => {
   }
 });
 
-// DELETE: eliminar carrera por nombre
-router.delete('/:nombre', async (req, res) => {
+// DELETE: eliminar carrera por nombre (solo administrador)
+router.delete('/:nombre', requireAuth, requireRole(['administrador']), async (req, res) => {
   try {
     const rows = await Carrera.destroy({ where: { nombre: req.params.nombre } });
     if (!rows) return res.status(404).json({ error: 'No encontrado' });

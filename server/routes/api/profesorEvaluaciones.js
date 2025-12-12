@@ -1,8 +1,12 @@
 const express = require("express");
 const bd = require("../../model/modelo");
 const { v4: uuidv4 } = require("uuid");
+const { requireAuth } = require("../../middleware/auth");
 
 const router = express.Router();
+
+// Middleware global: solo requireAuth
+router.use(requireAuth);
 
 // GET /api/profesor/:id/evaluaciones
 router.get("/:id/evaluaciones", async (req, res) => {

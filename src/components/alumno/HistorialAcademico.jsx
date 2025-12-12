@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SidebarAlumno } from "../alumno/SideBarAlumno.jsx";
 import "./HistorialAcademico.css";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function HistorialAcademico() {
   const navigate = useNavigate();
@@ -10,11 +12,14 @@ export function HistorialAcademico() {
   const [historial, setHistorial] = useState([]);
   const [semestres, setSemestres] = useState([]);
 
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
+
   useEffect(() => {
     fetch("http://localhost:4000/ObtenerHistorial", { credentials: "include" })
       .then((res) => {
         if (res.status === 401) {
-          alert("Sesión expirada. Por favor inicia sesión nuevamente.");
+          showAlert("Sesión expirada. Por favor inicia sesión nuevamente.", "warning");
           navigate("/");
           return null;
         }
@@ -87,7 +92,16 @@ export function HistorialAcademico() {
             <p className="historial-empty">No hay registros disponibles.</p>
           )}
         </section>
+
       </main>
+
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

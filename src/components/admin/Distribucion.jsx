@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import Modal from "../Modal";
 import "./Distribucion.css";
 import { AdminSidebar } from "./AdminSidebar";
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 
 export function Distribucion() {
@@ -18,6 +20,9 @@ export function Distribucion() {
   const [Distri, setDistri] = useState([]);
   const API = 'http://localhost:4000';
 
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
+
   const { id } = useParams();
 
   const handleHoraInicio = (e) => {
@@ -25,7 +30,7 @@ export function Distribucion() {
     setHora_ini(nuevaHoraIni);
 
     if (hora_fin && nuevaHoraIni >= hora_fin) {
-      alert("La hora de inicio no puede ser mayor o igual que la hora de fin");
+      showAlert("La hora de inicio no puede ser mayor o igual que la hora de fin", "warning");
       setHora_ini("");
     }
   };
@@ -35,7 +40,7 @@ export function Distribucion() {
     setHora_fin(nuevaHoraFin);
 
     if (hora_ini && nuevaHoraFin <= hora_ini) {
-      alert("La hora de fin no puede ser menor o igual que la hora de inicio");
+      showAlert("La hora de fin no puede ser menor o igual que la hora de inicio", "warning");
       setHora_fin("");
     }
   };
@@ -99,10 +104,10 @@ export function Distribucion() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Día eliminado correctamente");
+          showAlert("Día eliminado correctamente", "success");
           setModalOpen2(false);
         } else {
-          alert("Error al eliminar el día");
+          showAlert("Error al eliminar el día", "error");
         }
       })
       .catch((err) => console.error("Error al eliminar el día:", err));
@@ -227,6 +232,14 @@ const handleLogout = () => {navigate(`/`);};
       </button>
       </Modal>
     </section>
+    
+    {/* Modal de alertas */}
+    <AlertModal
+      isOpen={alertState.isOpen}
+      onClose={hideAlert}
+      message={alertState.message}
+      type={alertState.type}
+    />
     </main>
     </div>
   );

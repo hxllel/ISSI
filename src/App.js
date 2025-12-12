@@ -1,6 +1,7 @@
 import "./App.css";
-import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
+import { ProtectedRoute } from "./components/common/ProtectedRoute";
 
 // FORMULARIO
 import { Formulario } from "./components/formulario/Formulario";
@@ -60,9 +61,8 @@ import { Unidades } from "./pages/Unidades";
 import { DatosMedicos } from "./pages/DatosMedicos";
 import { ErrorView } from "./pages/Errores";
 
-function App() {
-  const [success, setSuccess] = useState("");
-  const [id2, setId2] = useState("");
+function AppContent() {
+  const { authenticated, user } = useAuth();
 
   return (
     <div className="App">
@@ -72,145 +72,147 @@ function App() {
           <Route
             path="/"
             element={
-              !success ? (
-                <Formulario setSuccess={setSuccess} setId2={setId2} />
-              ) : success === "alumno" ? (
-                <Navigate to={`/alumno/${id2}`} replace />
-              ) : success === "administrador" ? (
-                <Navigate to="/administrador" replace />
-              ) : success === "profesor" ? (
-                <Navigate to={`/profesor/${id2}`} replace />
+              authenticated ? (
+                user.tipo_usuario === "alumno" ? (
+                  <Navigate to={`/alumno/${user.id}`} replace />
+                ) : user.tipo_usuario === "administrador" ? (
+                  <Navigate to="/administrador" replace />
+                ) : user.tipo_usuario === "profesor" ? (
+                  <Navigate to={`/profesor/${user.id}`} replace />
+                ) : (
+                  <Navigate to="/error" replace />
+                )
               ) : (
-                <p>Tipo de usuario no reconocido.</p>
+                <Formulario />
               )
             }
           />
           <Route path="/recuperar-contrasena" element={<RecuperarContra />} />
 
           {/* ALUMNO */}
-          <Route path="/alumno/:id" element={<Alumno />} />
-          <Route path="/alumno/Chat" element={<ChatbotAsistente />} />
-          <Route path="/alumno/horarios/:id" element={<Horarios />} />
+          <Route path="/alumno/:id" element={<ProtectedRoute allowedRoles={['alumno']}><Alumno /></ProtectedRoute>} />
+          <Route path="/alumno/Chat" element={<ProtectedRoute allowedRoles={['alumno']}><ChatbotAsistente /></ProtectedRoute>} />
+          <Route path="/alumno/horarios/:id" element={<ProtectedRoute allowedRoles={['alumno']}><Horarios /></ProtectedRoute>} />
           <Route
             path="/alumno/evaluacion/:id"
-            element={<EvaluacionProfesores />}
+            element={<ProtectedRoute allowedRoles={['alumno']}><EvaluacionProfesores /></ProtectedRoute>}
           />
-          <Route path="/alumno/conocenosAlumno" element={<ConocenosAlumno />} />
-          <Route path="/alumno/inscripcion/:id" element={<Inscripcion />} />
-          <Route path="/alumno/editarDatos/:id" element={<EditarDatos />} />
-          <Route path="/alumno/Kardex" element={<HistorialAcademico />} />
+          <Route path="/alumno/conocenosAlumno" element={<ProtectedRoute allowedRoles={['alumno']}><ConocenosAlumno /></ProtectedRoute>} />
+          <Route path="/alumno/inscripcion/:id" element={<ProtectedRoute allowedRoles={['alumno']}><Inscripcion /></ProtectedRoute>} />
+          <Route path="/alumno/editarDatos/:id" element={<ProtectedRoute allowedRoles={['alumno']}><EditarDatos /></ProtectedRoute>} />
+          <Route path="/alumno/Kardex" element={<ProtectedRoute allowedRoles={['alumno']}><HistorialAcademico /></ProtectedRoute>} />
           <Route
             path="/alumno/MateriasReprobadas"
-            element={<MateriasReprobadas />}
+            element={<ProtectedRoute allowedRoles={['alumno']}><MateriasReprobadas /></ProtectedRoute>}
           />
           <Route
             path="/alumno/datosPersonales/:id"
-            element={<DatosPersonales />}
+            element={<ProtectedRoute allowedRoles={['alumno']}><DatosPersonales /></ProtectedRoute>}
           />
           <Route
             path="/alumno/ConsultarCalificaciones"
-            element={<ConsultarCalificaciones />}
+            element={<ProtectedRoute allowedRoles={['alumno']}><ConsultarCalificaciones /></ProtectedRoute>}
           />
           <Route
             path="/alumno/resenar-profesores"
-            element={<ResenarProfesores />}
+            element={<ProtectedRoute allowedRoles={['alumno']}><ResenarProfesores /></ProtectedRoute>}
           />
           <Route
             path="/alumno/resenas-profesor/:id"
-            element={<DetalleProfesorResenas />}
+            element={<ProtectedRoute allowedRoles={['alumno']}><DetalleProfesorResenas /></ProtectedRoute>}
           />
           <Route
             path="/alumno/MapasCurriculares"
-            element={<MapasCurriculares />}
+            element={<ProtectedRoute allowedRoles={['alumno']}><MapasCurriculares /></ProtectedRoute>}
           />
           {/* PROFESOR */}
-          <Route path="/profesor/:id" element={<Profesor />} />
-          <Route path="/profesor/Chat" element={<ChatbotProfesor />} />
-          <Route path="/profesor/:id/clases" element={<ClasesImpartidas />} />
-          <Route path="/profesor/:id/ets" element={<ETSProfesor />} />
-          <Route path="/profesor/:id/evaluacion" element={<EvaluacionDocente />} />
-          <Route path="/profesor/paseLista/:id" element={<PaseLista />} />
+          <Route path="/profesor/:id" element={<ProtectedRoute allowedRoles={['profesor']}><Profesor /></ProtectedRoute>} />
+          <Route path="/profesor/Chat" element={<ProtectedRoute allowedRoles={['profesor']}><ChatbotProfesor /></ProtectedRoute>} />
+          <Route path="/profesor/:id/clases" element={<ProtectedRoute allowedRoles={['profesor']}><ClasesImpartidas /></ProtectedRoute>} />
+          <Route path="/profesor/:id/ets" element={<ProtectedRoute allowedRoles={['profesor']}><ETSProfesor /></ProtectedRoute>} />
+          <Route path="/profesor/:id/evaluacion" element={<ProtectedRoute allowedRoles={['profesor']}><EvaluacionDocente /></ProtectedRoute>} />
+          < Route path="/profesor/paseLista/:id" element={<ProtectedRoute allowedRoles={['profesor']}><PaseLista /></ProtectedRoute>} />
           <Route
             path="/profesor/RegistrarCalificaciones/:id/:periodo"
-            element={<RegistrarCalificaciones />}
+            element={<ProtectedRoute allowedRoles={['profesor']}><RegistrarCalificaciones /></ProtectedRoute>}
           />
           <Route
             path="/profesor/datosPersonalesProf/:id"
-            element={<DatosPersonales />}
+            element={<ProtectedRoute allowedRoles={['profesor']}><DatosPersonales /></ProtectedRoute>}
           />
           <Route
             path="/profesor/informacionPersonal/:id"
-            element={<InformacionPersonal />}
+            element={<ProtectedRoute allowedRoles={['profesor']}><InformacionPersonal /></ProtectedRoute>}
           />
           <Route
             path="/profesor/editarDatosPersonales/:id"
-            element={<EditarDatosPersonales />}
+            element={<ProtectedRoute allowedRoles={['profesor']}><EditarDatosPersonales /></ProtectedRoute>}
           />
 
-          <Route path="/administrador" element={<Administrador />} />
-          <Route path="/administrador/ETS" element={<ETS />} />
+          <Route path="/administrador" element={<ProtectedRoute allowedRoles={['administrador']}><Administrador /></ProtectedRoute>} />
+          <Route path="/administrador/ETS" element={<ProtectedRoute allowedRoles={['administrador']}><ETS /></ProtectedRoute>} />
           <Route
             path="/administrador/publicarNoticia"
-            element={<PublicarNoticia />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><PublicarNoticia /></ProtectedRoute>}
           />
 
           {/* ADMINISTRADOR - CRUD */}
           <Route
             path="/administrador/gestionarAlumnos"
-            element={<GestionarAlumnos />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><GestionarAlumnos /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarAlumnos/registrarAlumno"
-            element={<RegistrarAlumnos />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><RegistrarAlumnos /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarAlumnos/editarAlumnos/:id"
-            element={<EditarAlumnos />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><EditarAlumnos /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarProfesores"
-            element={<GestionarProfesores />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><GestionarProfesores /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarProfesores/registrarProfesor"
-            element={<RegistrarProfesores />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><RegistrarProfesores /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarProfesores/editarProfesor/:id"
-            element={<EditarProfesores />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><EditarProfesores /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarCursos"
-            element={<GestionarCursos />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><GestionarCursos /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarCursos/registrarCurso"
-            element={<RegistrarCursos />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><RegistrarCursos /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarCursos/editarCurso/:id"
-            element={<EditarGrupo />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><EditarGrupo /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarCursos/distribucionHorarios/:id"
-            element={<Distribucion />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><Distribucion /></ProtectedRoute>}
           />
           <Route
             path="/administrador/gestionarAlumnos/inscripcion/:id"
-            element={<InscripcionAdmin />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><InscripcionAdmin /></ProtectedRoute>}
           />
           <Route
             path="administrador/datosMedicos/:id"
-            element={<DatosMedicos />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><DatosMedicos /></ProtectedRoute>}
           />
 
           {/* ADMIN PÁGINAS */}
-          <Route path="/administrador/carreras" element={<Carreras />} />
-          <Route path="/administrador/unidades" element={<Unidades />} />
-          <Route path="/administrador/Fechas" element={<GenerarCitas />} />
+          <Route path="/administrador/carreras" element={<ProtectedRoute allowedRoles={['administrador']}><Carreras /></ProtectedRoute>} />
+          <Route path="/administrador/unidades" element={<ProtectedRoute allowedRoles={['administrador']}><Unidades /></ProtectedRoute>} />
+          <Route path="/administrador/Fechas" element={<ProtectedRoute allowedRoles={['administrador']}><GenerarCitas /></ProtectedRoute>} />
           <Route
             path="/administrador/SituacionesEspeciales"
-            element={<SituacionesEspeciales />}
+            element={<ProtectedRoute allowedRoles={['administrador']}><SituacionesEspeciales /></ProtectedRoute>}
           />
           <Route path="/error" element={<ErrorView />} />
           <Route path="*" element={<ErrorView />} />
@@ -218,6 +220,15 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
+  );
+}
+
+// App with AuthProvider wrapper
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

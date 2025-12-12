@@ -4,9 +4,14 @@ const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { raw } = require("mysql2");
 const { Sequelize } = require("sequelize");
+const { requireAuth, requireRole } = require("../../middleware/auth");
 
 module.exports = (passport) => {
   const router = express.Router();
+
+  // Middleware global: solo requireAuth (requireRole se aplica por ruta para evitar conflictos)
+  // NOTA: No usar requireRole global porque bloquea rutas compartidas con otros tipos de usuario
+  router.use(requireAuth);
 
   router.get("/AlumnosInscritosPL/:id", async (req, res) => {
     const { id } = req.params;
@@ -34,7 +39,10 @@ module.exports = (passport) => {
         raw: true,
       });
 
+      console.log(`[DEBUG PL] ID: ${id}, Hoy: ${hoy}`);
       const diasClase = distribucion.map((d) => d.dia.toLowerCase().trim());
+      console.log(`[DEBUG PL] DiasClase encontrados: `, diasClase);
+
       const prof = await bd.DatosPersonales.findOne({
         include: [
           {
@@ -228,7 +236,7 @@ module.exports = (passport) => {
             (Number(cali.calificacion_primer) +
               Number(cali.calificacion_segundo) +
               Number(cali.calificacion_tercer)) /
-              3
+            3
           );
 
           await bd.Mat_Inscritos.update(
@@ -723,9 +731,8 @@ module.exports = (passport) => {
       });
 
       const profesorNombre = grupo.DatosPersonale
-        ? `${grupo.DatosPersonale.nombre || ""} ${
-            grupo.DatosPersonale.ape_paterno || ""
-          } ${grupo.DatosPersonale.ape_materno || ""}`
+        ? `${grupo.DatosPersonale.nombre || ""} ${grupo.DatosPersonale.ape_paterno || ""
+        } ${grupo.DatosPersonale.ape_materno || ""}`
         : "";
 
       // Construir filas de alumnos (hasta 30 filas)
@@ -734,9 +741,8 @@ module.exports = (passport) => {
         const ins = inscritos[i];
         const nombreEst =
           ins && ins.Horario && ins.Horario.DatosPersonale
-            ? `${ins.Horario.DatosPersonale.nombre || ""} ${
-                ins.Horario.DatosPersonale.ape_paterno || ""
-              } ${ins.Horario.DatosPersonale.ape_materno || ""}`
+            ? `${ins.Horario.DatosPersonale.nombre || ""} ${ins.Horario.DatosPersonale.ape_paterno || ""
+            } ${ins.Horario.DatosPersonale.ape_materno || ""}`
             : "";
         filas.push({ no: i + 1, nombre: nombreEst });
       }
@@ -750,20 +756,21 @@ module.exports = (passport) => {
             <meta charset="utf-8" />
             <title>Lista de asistencia - ${grupo.nombre}</title>
             <style>
-              body { font-family: Arial, sans-serif; margin: 20px; }
-              .header { display:flex; align-items:center; margin-bottom:10px; }
-              .title { background: #ffd54f; padding: 10px 16px; font-weight:700; color:#000; }
+              body { font-family: 'Arial', sans-serif; margin: 30px; color: #333; }
+              .header { display:flex; align-items:center; margin-bottom:20px; border-bottom: 2px solid #7d0024; padding-bottom: 10px; }
+              .title { background: #7d0024; padding: 10px 16px; font-weight:700; color:#fff; border-radius: 4px; }
               .meta { flex:1; text-align:center; }
-              .meta small { display:block; font-size:12px; }
-              .right { width:260px; text-align:left; }
-              table { border-collapse: collapse; width: 100%; font-size:11px; }
-              table th, table td { border: 1px solid #333; padding:4px; }
-              th.day { background:#00b050; color:#fff; }
-              th.name { background:#2f75b5; color:#fff; }
-              .no-col { width:36px; text-align:center; }
-              .name-col { width:260px; text-align:left; padding-left:6px; }
-              .percent-col { width:46px; text-align:center; }
-              .footer { margin-top:8px; }
+              .meta small { display:block; font-size:12px; color: #666; margin-top: 5px; }
+              .right { width:260px; text-align:right; font-size: 11px; }
+              table { border-collapse: collapse; width: 100%; font-size:11px; margin-top: 15px; }
+              table th, table td { border: 1px solid #ddd; padding:6px; }
+              th.day { background:#7d0024; color:#fff; font-weight: bold; }
+              th.name { background:#5e001b; color:#fff; font-weight: bold; }
+              .no-col { width:30px; text-align:center; }
+              .name-col { width:260px; text-align:left; padding-left:8px; }
+              .percent-col { width:46px; text-align:center; background: #f0f0f0; }
+              .footer { margin-top:20px; }
+              tr:nth-child(even) { background-color: #f9f9f9; }
             </style>
           </head>
           <body>
@@ -776,13 +783,12 @@ module.exports = (passport) => {
               </div>
               <div class="right">
                 <div>MES: <strong>${new Date()
-                  .toLocaleString("default", { month: "long" })
-                  .toUpperCase()}</strong></div>
-                <div>GRADO: <strong>${
-                  grupo.Unidad_Aprendizaje
-                    ? grupo.Unidad_Aprendizaje.semestre || ""
-                    : ""
-                }</strong></div>
+          .toLocaleString("default", { month: "long" })
+          .toUpperCase()}</strong></div>
+                <div>GRADO: <strong>${grupo.Unidad_Aprendizaje
+          ? grupo.Unidad_Aprendizaje.semestre || ""
+          : ""
+        }</strong></div>
                 <div>GRUPO: <strong>${grupo.nombre || ""}</strong></div>
               </div>
             </div>
@@ -798,8 +804,8 @@ module.exports = (passport) => {
               </thead>
               <tbody>
                 ${filas
-                  .map(
-                    (f) => `
+          .map(
+            (f) => `
                   <tr>
                     <td style="text-align:center">${f.no}</td>
                     <td>${f.nombre}</td>
@@ -807,18 +813,18 @@ module.exports = (passport) => {
                     <td style="text-align:center">&nbsp;</td>
                   </tr>
                 `
-                  )
-                  .join("")}
+          )
+          .join("")}
               </tbody>
             </table>
 
             <div class="footer">
               <table style="width:100%">
                 <tr>
-                  <td style="background:#f28b00;color:#fff;padding:6px;font-weight:700;">ASISTENCIAS DIARIAS</td>
+                  <td style="background:#7d0024;color:#fff;padding:8px;font-weight:700;border-radius:4px;">ASISTENCIAS DIARIAS</td>
                   <td style="padding:6px">${dayHeaders
-                    .map(() => "0")
-                    .join(" ")}</td>
+          .map(() => "0")
+          .join(" ")}</td>
                 </tr>
               </table>
             </div>
@@ -902,9 +908,8 @@ module.exports = (passport) => {
       worksheet.addRow([
         "Profesor:",
         grupo.DatosPersonale
-          ? `${grupo.DatosPersonale.nombre || ""} ${
-              grupo.DatosPersonale.ape_paterno || ""
-            } ${grupo.DatosPersonale.ape_materno || ""}`
+          ? `${grupo.DatosPersonale.nombre || ""} ${grupo.DatosPersonale.ape_paterno || ""
+          } ${grupo.DatosPersonale.ape_materno || ""}`
           : "",
       ]);
       worksheet.addRow(["Turno:", grupo.turno]);
@@ -926,7 +931,7 @@ module.exports = (passport) => {
       horariosHeader.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "FF4472C4" },
+        fgColor: { argb: "FF7D0024" },
       };
       horariosHeader.font = { color: { argb: "FFFFFFFF" }, bold: true };
 
@@ -948,7 +953,7 @@ module.exports = (passport) => {
       estudiantesHeader.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "FF70AD47" },
+        fgColor: { argb: "FF7D0024" },
       };
       estudiantesHeader.font = { color: { argb: "FFFFFFFF" }, bold: true };
 
@@ -961,9 +966,8 @@ module.exports = (passport) => {
           index + 1,
           estudiante ? estudiante.id : "",
           estudiante
-            ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${
-                estudiante.ape_materno || ""
-              }`
+            ? `${estudiante.nombre || ""} ${estudiante.ape_paterno || ""} ${estudiante.ape_materno || ""
+            }`
             : "",
           ins.calificacion_final || "",
         ]);
@@ -984,8 +988,7 @@ module.exports = (passport) => {
       );
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename=clase_${grupo.nombre}_${
-          new Date().toISOString().split("T")[0]
+        `attachment; filename=clase_${grupo.nombre}_${new Date().toISOString().split("T")[0]
         }.xlsx`
       );
 
@@ -1285,6 +1288,59 @@ module.exports = (passport) => {
         success: false,
         mensaje: "Error al registrar las calificaciones",
       });
+    }
+  });
+
+  // ========== MENSAJES CHAT PARA PROFESOR ==========
+  router.get("/MensajesChat/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      if (req.user.id !== id && req.user.tipo_usuario !== "administrador") {
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permiso para acceder a estos mensajes",
+        });
+      }
+
+      const mensajes = await bd.MensajesChat.findAll({
+        where: { id_usuario: id },
+        order: [["fecha", "ASC"]],
+      });
+
+      return res.json({
+        success: true,
+        mensajes: mensajes.map((m) => ({
+          id: m.id,
+          rol: m.rol,
+          contenido: m.contenido,
+          fecha: m.fecha,
+        })),
+      });
+    } catch (err) {
+      console.error("Error al obtener MensajesChat:", err);
+      return res.status(500).json({
+        success: false,
+        error: "Error al cargar mensajes",
+      });
+    }
+  });
+
+  // ========== PRIMERA VEZ PARA PROFESOR ==========
+  router.get("/PrimeraVez/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const a = await bd.DatosPersonales.findOne({
+        where: { id: id },
+      });
+      if (a.primera_vez == null || a.primera_vez == 0) {
+        return res.json({ primera_vez: false });
+      } else if (a.primera_vez == 1) {
+        return res.json({ primera_vez: true });
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "Error interno" });
     }
   });
 

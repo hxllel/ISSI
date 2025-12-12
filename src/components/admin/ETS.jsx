@@ -4,10 +4,15 @@ import Modal from "../Modal";
 import ModalPDF from "./ModalPDF";
 import { AdminSidebar } from "./AdminSidebar";
 import "./RevisarComprobante.css"; // estilos ETS
+import { AlertModal } from "../shared/AlertModal";
+import { useAlert } from "../../hooks/useAlert";
 
 export function ETS() {
   const navigate = useNavigate();
   const API = "http://localhost:4000";
+
+  // Hook para alertas modales
+  const { alertState, showAlert, hideAlert } = useAlert();
 
   const [grupos, setGrupos] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -70,7 +75,7 @@ export function ETS() {
       !nuevoGrupo.hora_final ||
       !nuevoGrupo.fecha
     ) {
-      alert("Por favor completa todos los campos");
+      showAlert("Por favor completa todos los campos", "warning");
       return;
     }
 
@@ -85,7 +90,7 @@ export function ETS() {
       const data = await response.json();
 
       if (data.success) {
-        alert("Grupo ETS creado exitosamente");
+        showAlert("Grupo ETS creado exitosamente", "success");
         setModalCrear(false);
 
         setNuevoGrupo({
@@ -97,13 +102,15 @@ export function ETS() {
           fecha: "",
         });
 
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       } else {
-        alert(data.mensaje || "Error al crear el grupo ETS");
+        showAlert(data.mensaje || "Error al crear el grupo ETS", "error");
       }
     } catch (err) {
       console.error("Error al crear grupo ETS:", err);
-      alert("Error al crear el grupo ETS");
+      showAlert("Error al crear el grupo ETS", "error");
     }
   };
 
@@ -129,9 +136,11 @@ export function ETS() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Se ha validado correctamente el ETS");
-          navigate(`/administrador/ETS`);
-          window.location.reload();
+          showAlert("Se ha validado correctamente el ETS", "success");
+          setTimeout(() => {
+            navigate(`/administrador/ETS`);
+            window.location.reload();
+          }, 3000);
         }
       })
       .catch((err) => console.error("Error", err));
@@ -142,9 +151,11 @@ export function ETS() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          alert("Se ha denegado correctamente el ETS");
-          navigate(`/administrador/ETS`);
-          window.location.reload();
+          showAlert("Se ha denegado correctamente el ETS", "success");
+          setTimeout(() => {
+            navigate(`/administrador/ETS`);
+            window.location.reload();
+          }, 3000);
         }
       })
       .catch((err) => console.error("Error", err));
@@ -444,6 +455,14 @@ export function ETS() {
           </Modal>
         </section>
       </main>
+
+      {/* Modal de alertas */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        onClose={hideAlert}
+        message={alertState.message}
+        type={alertState.type}
+      />
     </div>
   );
 }

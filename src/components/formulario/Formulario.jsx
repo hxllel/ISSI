@@ -1,13 +1,15 @@
 import "./Formulario.css";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
-export function Formulario({ setSuccess, setId2 }) {
+export function Formulario() {
     const [id, setId] = useState(""); // Cambiado de 'usuario' a 'id'
     const [contrasena, setContrasena] = useState("");
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState(""); // Para mensajes de error del backend
-    const API = 'http://localhost:4000';
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,30 +23,22 @@ export function Formulario({ setSuccess, setId2 }) {
         setError(false);
         setErrorMessage("");
 
-        try {
-            const res = await fetch(`${API}/IniciarSesion`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id, contrasena, remember: true }), // Enviar 'id' en lugar de 'usuario'
-            });
+        const result = await login(id, contrasena, true);
 
-            const data = await res.json(); // La respuesta ya es JSON
-            console.log("Respuesta del servidor:", data);
-
-            if (data.success) {
-                const tip = data.tipo_usuario;
-                const userId = data.id;
-                setId2(userId);
-                setSuccess(tip);
-            } else {
-                setErrorMessage(data.message || "Usuario o contraseña incorrectos");
+        if (result.success) {
+            // Navegar según el tipo de usuario
+            const tip = result.user.tipo_usuario;
+            const userId = result.user.id;
+            
+            if (tip === "alumno") {
+                navigate(`/alumno/${userId}`);
+            } else if (tip === "profesor") {
+                navigate(`/profesor/${userId}`);
+            } else if (tip === "administrador") {
+                navigate("/administrador");
             }
-        } catch (err) {
-            console.error("Error al conectar con el servidor:", err);
-            setErrorMessage("Error al conectar con el servidor");
+        } else {
+            setErrorMessage(result.message || "Usuario o contraseña incorrectos");
         }
     };
 

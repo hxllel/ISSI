@@ -291,6 +291,7 @@ create table ets_grupo (
     hora_final TEXT NOT NULL,
     fecha DATE NOT NULL,
     periodo TEXT NOT NULL,
+    cupo TEXT NOT NULL,
     CONSTRAINT PK_ETS_G PRIMARY KEY (id),
     CONSTRAINT FK_ETSG_UA FOREIGN KEY (id_ua) REFERENCES unidad_de_aprendizaje (id),
     CONSTRAINT FK_ETSG_DP FOREIGN KEY (id_aplicante) REFERENCES datos_personales (id)
