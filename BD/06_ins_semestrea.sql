@@ -1133,6 +1133,1947 @@ VALUES (
         '2025-1',
         '2025-06-20',
         'Ordinario'
+    ),
+    -- ==================================================================
+    -- HISTORIAL ALUMNO DESFASADO (2022630400) - ISC
+    -- ==================================================================
+    -- Semestre 1 (completo)
+    (
+        'UAA0188',
+        'K2022630400',
+        'Fundamentos de Programación',
+        7.5,
+        1,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0189',
+        'K2022630400',
+        'Matemáticas Discretas',
+        8.0,
+        1,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0190',
+        'K2022630400',
+        'Cálculo',
+        6.5,
+        1,
+        '2023-1',
+        '2023-06-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0191',
+        'K2022630400',
+        'Análisis Vectorial',
+        7.0,
+        1,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0192',
+        'K2022630400',
+        'Comunicación Oral y Escrita',
+        8.5,
+        1,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 2 (completo)
+    (
+        'UAA0193',
+        'K2022630400',
+        'Álgebra Lineal',
+        7.8,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0194',
+        'K2022630400',
+        'Cálculo Aplicado',
+        6.8,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0195',
+        'K2022630400',
+        'Mecánica y Electromagnetismo',
+        7.2,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0196',
+        'K2022630400',
+        'Ingeniería, Ética y Sociedad',
+        8.0,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0197',
+        'K2022630400',
+        'Fundamentos Económicos',
+        7.5,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0198',
+        'K2022630400',
+        'Algoritmos y Estructuras de Datos',
+        8.2,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 3 (parcial - 4 de 7 materias aprobadas)
+    (
+        'UAA0199',
+        'K2022630400',
+        'Ecuaciones Diferenciales',
+        7.0,
+        3,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0200',
+        'K2022630400',
+        'Circuitos Eléctricos',
+        6.0,
+        3,
+        '2024-1',
+        '2024-06-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0201',
+        'K2022630400',
+        'Paradigmas de Programación',
+        7.5,
+        3,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0202',
+        'K2022630400',
+        'Análisis y Diseño de Algoritmos',
+        6.8,
+        3,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 4 (parcial - 3 materias, algunas recuperadas)
+    (
+        'UAA0203',
+        'K2022630400',
+        'Electrónica Analógica',
+        7.2,
+        4,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0204',
+        'K2022630400',
+        'Matemáticas Avanzadas para la Ingeniería',
+        5.8,
+        4,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0205',
+        'K2022630400',
+        'Matemáticas Avanzadas para la Ingeniería',
+        7.0,
+        4,
+        '2025-01-15',
+        '2025-01-15',
+        'Extraordinario'
+    ),
+    (
+        'UAA0206',
+        'K2022630400',
+        'Sistemas Operativos',
+        4.5,
+        4,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0207',
+        'K2022630400',
+        'Sistemas Operativos',
+        7.5,
+        4,
+        '2025-03-10',
+        '2025-03-10',
+        'ETS'
+    ),
+    -- ==================================================================
+    -- HISTORIAL ALUMNO SIN SEMESTRES (2019630500) - LCD
+    -- Inició en 2019, ha cursado 12 semestres pero le faltan materias
+    -- ==================================================================
+    -- Semestre 1 (completo)
+    (
+        'UAA0208',
+        'K2019630500',
+        'Fundamentos de Programación',
+        7.5,
+        1,
+        '2019-1',
+        '2019-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0209',
+        'K2019630500',
+        'Matemáticas Discretas',
+        6.8,
+        1,
+        '2019-1',
+        '2019-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0210',
+        'K2019630500',
+        'Cálculo',
+        6.0,
+        1,
+        '2019-1',
+        '2019-06-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0211',
+        'K2019630500',
+        'Comunicación Oral y Escrita',
+        7.8,
+        1,
+        '2019-1',
+        '2019-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0212',
+        'K2019630500',
+        'Introducción a la Ciencia de Datos',
+        7.2,
+        1,
+        '2019-1',
+        '2019-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 2 (completo)
+    (
+        'UAA0213',
+        'K2019630500',
+        'Algoritmos y Estructuras de Datos',
+        6.5,
+        2,
+        '2019-2',
+        '2019-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0214',
+        'K2019630500',
+        'Álgebra Lineal',
+        6.0,
+        2,
+        '2019-2',
+        '2019-12-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0215',
+        'K2019630500',
+        'Cálculo Multivariable',
+        7.0,
+        2,
+        '2019-2',
+        '2019-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0216',
+        'K2019630500',
+        'Ética y Legalidad',
+        7.5,
+        2,
+        '2019-2',
+        '2019-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0217',
+        'K2019630500',
+        'Fundamentos Económicos',
+        6.8,
+        2,
+        '2019-2',
+        '2019-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 3 (parcial - reprobó 2 materias)
+    (
+        'UAA0218',
+        'K2019630500',
+        'Análisis y Diseño de Algoritmos',
+        7.2,
+        3,
+        '2020-1',
+        '2020-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0219',
+        'K2019630500',
+        'Programación para Ciencia de Datos',
+        6.5,
+        3,
+        '2020-1',
+        '2020-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0220',
+        'K2019630500',
+        'Métodos Numéricos',
+        6.0,
+        3,
+        '2020-1',
+        '2020-06-20',
+        'Extraordinario'
+    ),
+    -- Semestre 4 (cursó pero reprobó 3 materias)
+    (
+        'UAA0221',
+        'K2019630500',
+        'Desarrollo de Aplicaciones Web',
+        7.0,
+        4,
+        '2020-2',
+        '2020-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0222',
+        'K2019630500',
+        'Estadística',
+        5.8,
+        4,
+        '2020-2',
+        '2020-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0223',
+        'K2019630500',
+        'Estadística',
+        6.5,
+        4,
+        '2021-01-20',
+        '2021-01-20',
+        'Extraordinario'
+    ),
+    -- Semestres 5-8 (cursó materias pero con muchas reprobadas y recursadas)
+    (
+        'UAA0224',
+        'K2019630500',
+        'Minería de Datos',
+        7.0,
+        5,
+        '2021-1',
+        '2021-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0225',
+        'K2019630500',
+        'Matemáticas Avanzadas para Ciencia de Datos',
+        6.0,
+        5,
+        '2021-1',
+        '2021-06-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0226',
+        'K2019630500',
+        'Procesos Estocásticos',
+        5.5,
+        6,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0227',
+        'K2019630500',
+        'Procesos Estocásticos',
+        6.5,
+        6,
+        '2022-07-15',
+        '2022-07-15',
+        'ETS'
+    ),
+    (
+        'UAA0228',
+        'K2019630500',
+        'Aprendizaje de Máquina e Inteligencia Artificial',
+        7.5,
+        7,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0229',
+        'K2019630500',
+        'Analítica y Visualización de Datos',
+        7.0,
+        8,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    -- Historial académico del alumno regular de 8vo semestre IIA (2021630600)
+    -- Semestre 1 - 5 materias aprobadas
+    (
+        'UAA0230',
+        'K2021630600',
+        'Fundamentos de Programación',
+        8.5,
+        1,
+        '2021-1',
+        '2021-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0231',
+        'K2021630600',
+        'Matemáticas Discretas',
+        9.0,
+        1,
+        '2021-1',
+        '2021-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0232',
+        'K2021630600',
+        'Cálculo',
+        8.0,
+        1,
+        '2021-1',
+        '2021-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0233',
+        'K2021630600',
+        'Comunicación Oral y Escrita',
+        8.5,
+        1,
+        '2021-1',
+        '2021-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0234',
+        'K2021630600',
+        'Fundamentos Económicos',
+        8.0,
+        1,
+        '2021-1',
+        '2021-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 2 - 5 materias aprobadas
+    (
+        'UAA0235',
+        'K2021630600',
+        'Algoritmos y Estructuras de Datos',
+        9.0,
+        2,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0236',
+        'K2021630600',
+        'Álgebra Lineal',
+        8.5,
+        2,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0237',
+        'K2021630600',
+        'Mecánica y Electromagnetismo',
+        8.0,
+        2,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0238',
+        'K2021630600',
+        'Ingeniería, Ética y Sociedad',
+        9.0,
+        2,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0239',
+        'K2021630600',
+        'Liderazgo Personal',
+        8.5,
+        2,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 3 - 6 materias aprobadas
+    (
+        'UAA0240',
+        'K2021630600',
+        'Análisis y Diseño de Algoritmos',
+        8.5,
+        3,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0241',
+        'K2021630600',
+        'Cálculo Aplicado',
+        8.0,
+        3,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0242',
+        'K2021630600',
+        'Ecuaciones Diferenciales',
+        8.5,
+        3,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0243',
+        'K2021630600',
+        'Fundamentos de Diseño Digital',
+        9.0,
+        3,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0244',
+        'K2021630600',
+        'Bases de Datos',
+        8.5,
+        3,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0245',
+        'K2021630600',
+        'Finanzas Empresariales',
+        8.0,
+        3,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 4 - 6 materias aprobadas
+    (
+        'UAA0246',
+        'K2021630600',
+        'Teoría de la Computación',
+        8.5,
+        4,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0247',
+        'K2021630600',
+        'Probabilidad y Estadística',
+        9.0,
+        4,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0248',
+        'K2021630600',
+        'Matemáticas Avanzadas para la Ingeniería',
+        8.5,
+        4,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0249',
+        'K2021630600',
+        'Fundamentos de Inteligencia Artificial',
+        9.0,
+        4,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0250',
+        'K2021630600',
+        'Diseño de Sistemas Digitales',
+        8.0,
+        4,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0251',
+        'K2021630600',
+        'Análisis y Diseño de Sistemas',
+        8.5,
+        4,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 5 - 5 materias aprobadas
+    (
+        'UAA0252',
+        'K2021630600',
+        'Procesamiento de Señales',
+        8.5,
+        5,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0253',
+        'K2021630600',
+        'Paradigmas de Programación',
+        9.0,
+        5,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0254',
+        'K2021630600',
+        'Tecnologías para el Desarrollo de Aplicaciones Web',
+        8.5,
+        5,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0255',
+        'K2021630600',
+        'Procesamiento Digital de Señales',
+        8.0,
+        5,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0256',
+        'K2021630600',
+        'Gestión Empresarial',
+        8.5,
+        5,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 6 - 5 materias aprobadas
+    (
+        'UAA0257',
+        'K2021630600',
+        'Aprendizaje de Máquina',
+        9.0,
+        6,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0258',
+        'K2021630600',
+        'Tecnologías de Lenguaje Natural',
+        8.5,
+        6,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0259',
+        'K2021630600',
+        'Cómputo Paralelo',
+        8.5,
+        6,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0260',
+        'K2021630600',
+        'Ingeniería de Software para Sistemas Inteligentes',
+        9.0,
+        6,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0261',
+        'K2021630600',
+        'Metodología de la Investigación y Divulgación Científica',
+        8.5,
+        6,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 7 - 4 materias aprobadas
+    (
+        'UAA0262',
+        'K2021630600',
+        'Visión Artificial',
+        9.0,
+        7,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0263',
+        'K2021630600',
+        'Reconocimiento de Voz',
+        8.5,
+        7,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0264',
+        'K2021630600',
+        'Algoritmos Bioinspirados',
+        8.5,
+        7,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0265',
+        'K2021630600',
+        'Redes Neuronales y Aprendizaje Profundo',
+        9.0,
+        7,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    -- Historial académico del alumno regular de 7mo semestre IIA con reprobadas (2022630700)
+    -- Semestre 1 - 5 materias aprobadas (algunas por extraordinario)
+    (
+        'UAA0266',
+        'K2022630700',
+        'Fundamentos de Programación',
+        7.5,
+        1,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0267',
+        'K2022630700',
+        'Matemáticas Discretas',
+        6.0,
+        1,
+        '2022-07-15',
+        '2022-07-15',
+        'Extraordinario'
+    ),
+    (
+        'UAA0268',
+        'K2022630700',
+        'Cálculo',
+        8.0,
+        1,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0269',
+        'K2022630700',
+        'Comunicación Oral y Escrita',
+        8.5,
+        1,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0270',
+        'K2022630700',
+        'Fundamentos Económicos',
+        7.0,
+        1,
+        '2022-1',
+        '2022-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 2 - 5 materias aprobadas
+    (
+        'UAA0271',
+        'K2022630700',
+        'Algoritmos y Estructuras de Datos',
+        8.0,
+        2,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0272',
+        'K2022630700',
+        'Álgebra Lineal',
+        7.5,
+        2,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0273',
+        'K2022630700',
+        'Mecánica y Electromagnetismo',
+        6.5,
+        2,
+        '2023-01-20',
+        '2023-01-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0274',
+        'K2022630700',
+        'Ingeniería, Ética y Sociedad',
+        8.5,
+        2,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0275',
+        'K2022630700',
+        'Liderazgo Personal',
+        8.0,
+        2,
+        '2022-2',
+        '2022-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 3 - 6 materias aprobadas (una por ETS)
+    (
+        'UAA0276',
+        'K2022630700',
+        'Análisis y Diseño de Algoritmos',
+        8.0,
+        3,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0277',
+        'K2022630700',
+        'Cálculo Aplicado',
+        7.5,
+        3,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0278',
+        'K2022630700',
+        'Ecuaciones Diferenciales',
+        6.0,
+        3,
+        '2023-07-25',
+        '2023-07-25',
+        'ETS'
+    ),
+    (
+        'UAA0279',
+        'K2022630700',
+        'Fundamentos de Diseño Digital',
+        8.5,
+        3,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0280',
+        'K2022630700',
+        'Bases de Datos',
+        8.0,
+        3,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0281',
+        'K2022630700',
+        'Finanzas Empresariales',
+        7.5,
+        3,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 4 - 6 materias aprobadas
+    (
+        'UAA0282',
+        'K2022630700',
+        'Teoría de la Computación',
+        7.5,
+        4,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0283',
+        'K2022630700',
+        'Probabilidad y Estadística',
+        8.0,
+        4,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0284',
+        'K2022630700',
+        'Matemáticas Avanzadas para la Ingeniería',
+        7.0,
+        4,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0285',
+        'K2022630700',
+        'Fundamentos de Inteligencia Artificial',
+        8.5,
+        4,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0286',
+        'K2022630700',
+        'Diseño de Sistemas Digitales',
+        7.5,
+        4,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0287',
+        'K2022630700',
+        'Análisis y Diseño de Sistemas',
+        8.0,
+        4,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 5 - 5 materias aprobadas
+    (
+        'UAA0288',
+        'K2022630700',
+        'Procesamiento de Señales',
+        7.5,
+        5,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0289',
+        'K2022630700',
+        'Paradigmas de Programación',
+        8.0,
+        5,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0290',
+        'K2022630700',
+        'Tecnologías para el Desarrollo de Aplicaciones Web',
+        8.5,
+        5,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0291',
+        'K2022630700',
+        'Procesamiento Digital de Señales',
+        7.0,
+        5,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0292',
+        'K2022630700',
+        'Gestión Empresarial',
+        7.5,
+        5,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 6 - 5 materias aprobadas
+    (
+        'UAA0293',
+        'K2022630700',
+        'Aprendizaje de Máquina',
+        8.0,
+        6,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0294',
+        'K2022630700',
+        'Tecnologías de Lenguaje Natural',
+        7.5,
+        6,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0295',
+        'K2022630700',
+        'Cómputo Paralelo',
+        8.0,
+        6,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0296',
+        'K2022630700',
+        'Ingeniería de Software para Sistemas Inteligentes',
+        8.5,
+        6,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0297',
+        'K2022630700',
+        'Metodología de la Investigación y Divulgación Científica',
+        7.5,
+        6,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    -- Historial académico del alumno regular de 6to semestre IIA con reprobadas recuperadas (2023630800)
+    -- Semestre 1 - 5 materias (2 reprobadas y recuperadas)
+    (
+        'UAA0298',
+        'K2023630800',
+        'Fundamentos de Programación',
+        7.0,
+        1,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0299',
+        'K2023630800',
+        'Matemáticas Discretas',
+        6.5,
+        1,
+        '2023-07-20',
+        '2023-07-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0300',
+        'K2023630800',
+        'Cálculo',
+        8.0,
+        1,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0301',
+        'K2023630800',
+        'Comunicación Oral y Escrita',
+        6.0,
+        1,
+        '2023-08-10',
+        '2023-08-10',
+        'ETS'
+    ),
+    (
+        'UAA0302',
+        'K2023630800',
+        'Fundamentos Económicos',
+        7.5,
+        1,
+        '2023-1',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 2 - 5 materias (1 reprobada y recuperada por Extraordinario)
+    (
+        'UAA0303',
+        'K2023630800',
+        'Algoritmos y Estructuras de Datos',
+        8.0,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0304',
+        'K2023630800',
+        'Álgebra Lineal',
+        7.0,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0305',
+        'K2023630800',
+        'Mecánica y Electromagnetismo',
+        6.5,
+        2,
+        '2024-01-15',
+        '2024-01-15',
+        'Extraordinario'
+    ),
+    (
+        'UAA0306',
+        'K2023630800',
+        'Ingeniería, Ética y Sociedad',
+        8.5,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0307',
+        'K2023630800',
+        'Liderazgo Personal',
+        7.5,
+        2,
+        '2023-2',
+        '2023-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 3 - 6 materias (2 reprobadas, recuperadas por ETS y Extraordinario)
+    (
+        'UAA0308',
+        'K2023630800',
+        'Análisis y Diseño de Algoritmos',
+        7.5,
+        3,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0309',
+        'K2023630800',
+        'Cálculo Aplicado',
+        6.0,
+        3,
+        '2024-07-20',
+        '2024-07-20',
+        'Extraordinario'
+    ),
+    (
+        'UAA0310',
+        'K2023630800',
+        'Ecuaciones Diferenciales',
+        8.0,
+        3,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0311',
+        'K2023630800',
+        'Fundamentos de Diseño Digital',
+        6.5,
+        3,
+        '2024-08-15',
+        '2024-08-15',
+        'ETS'
+    ),
+    (
+        'UAA0312',
+        'K2023630800',
+        'Bases de Datos',
+        8.5,
+        3,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0313',
+        'K2023630800',
+        'Finanzas Empresariales',
+        7.0,
+        3,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 4 - 6 materias (1 reprobada y recuperada por Extraordinario)
+    (
+        'UAA0314',
+        'K2023630800',
+        'Teoría de la Computación',
+        7.5,
+        4,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0315',
+        'K2023630800',
+        'Probabilidad y Estadística',
+        8.0,
+        4,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0316',
+        'K2023630800',
+        'Matemáticas Avanzadas para la Ingeniería',
+        6.5,
+        4,
+        '2025-01-10',
+        '2025-01-10',
+        'Extraordinario'
+    ),
+    (
+        'UAA0317',
+        'K2023630800',
+        'Fundamentos de Inteligencia Artificial',
+        8.5,
+        4,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0318',
+        'K2023630800',
+        'Diseño de Sistemas Digitales',
+        7.0,
+        4,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0319',
+        'K2023630800',
+        'Análisis y Diseño de Sistemas',
+        8.0,
+        4,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 5 - 5 materias (todas aprobadas en ordinario)
+    (
+        'UAA0320',
+        'K2023630800',
+        'Procesamiento de Señales',
+        7.5,
+        5,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0321',
+        'K2023630800',
+        'Paradigmas de Programación',
+        8.0,
+        5,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0322',
+        'K2023630800',
+        'Tecnologías para el Desarrollo de Aplicaciones Web',
+        8.5,
+        5,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0323',
+        'K2023630800',
+        'Procesamiento Digital de Señales',
+        7.0,
+        5,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0324',
+        'K2023630800',
+        'Gestión Empresarial',
+        7.5,
+        5,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    -- Historial académico del alumno regular de 5to semestre IIA sin reprobadas (2024630900)
+    -- Semestre 1 - 5 materias (todas aprobadas en ordinario)
+    (
+        'UAA0325',
+        'K2024630900',
+        'Fundamentos de Programación',
+        9.0,
+        1,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0326',
+        'K2024630900',
+        'Matemáticas Discretas',
+        8.5,
+        1,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0327',
+        'K2024630900',
+        'Cálculo',
+        9.0,
+        1,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0328',
+        'K2024630900',
+        'Comunicación Oral y Escrita',
+        8.5,
+        1,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0329',
+        'K2024630900',
+        'Fundamentos Económicos',
+        8.0,
+        1,
+        '2024-1',
+        '2024-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 2 - 5 materias (todas aprobadas en ordinario)
+    (
+        'UAA0330',
+        'K2024630900',
+        'Algoritmos y Estructuras de Datos',
+        9.0,
+        2,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0331',
+        'K2024630900',
+        'Álgebra Lineal',
+        8.5,
+        2,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0332',
+        'K2024630900',
+        'Mecánica y Electromagnetismo',
+        8.5,
+        2,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0333',
+        'K2024630900',
+        'Ingeniería, Ética y Sociedad',
+        9.0,
+        2,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0334',
+        'K2024630900',
+        'Liderazgo Personal',
+        8.5,
+        2,
+        '2024-2',
+        '2024-12-20',
+        'Ordinario'
+    ),
+    -- Semestre 3 - 6 materias (todas aprobadas en ordinario)
+    (
+        'UAA0335',
+        'K2024630900',
+        'Análisis y Diseño de Algoritmos',
+        9.0,
+        3,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0336',
+        'K2024630900',
+        'Cálculo Aplicado',
+        8.5,
+        3,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0337',
+        'K2024630900',
+        'Ecuaciones Diferenciales',
+        9.0,
+        3,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0338',
+        'K2024630900',
+        'Fundamentos de Diseño Digital',
+        8.5,
+        3,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0339',
+        'K2024630900',
+        'Bases de Datos',
+        9.0,
+        3,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0340',
+        'K2024630900',
+        'Finanzas Empresariales',
+        8.5,
+        3,
+        '2025-1',
+        '2025-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 4 - 6 materias (todas aprobadas en ordinario)
+    (
+        'UAA0341',
+        'K2024630900',
+        'Teoría de la Computación',
+        9.0,
+        4,
+        '2025-2',
+        '2025-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0342',
+        'K2024630900',
+        'Probabilidad y Estadística',
+        9.0,
+        4,
+        '2025-2',
+        '2025-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0343',
+        'K2024630900',
+        'Matemáticas Avanzadas para la Ingeniería',
+        8.5,
+        4,
+        '2025-2',
+        '2025-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0344',
+        'K2024630900',
+        'Fundamentos de Inteligencia Artificial',
+        9.5,
+        4,
+        '2025-2',
+        '2025-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0345',
+        'K2024630900',
+        'Diseño de Sistemas Digitales',
+        8.5,
+        4,
+        '2025-2',
+        '2025-12-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0346',
+        'K2024630900',
+        'Análisis y Diseño de Sistemas',
+        9.0,
+        4,
+        '2025-2',
+        '2025-12-20',
+        'Ordinario'
+    ),
+    -- Alumno Regular 4to Semestre IIA con Materias Recuperadas (2025631000)
+    -- Semestre 1: 5 materias (3 Ordinario, 2 recuperadas)
+    (
+        'UAA0347',
+        'K2025631000',
+        'Cálculo Diferencial',
+        9.0,
+        1,
+        '2023-2',
+        '2023-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0348',
+        'K2025631000',
+        'Álgebra Lineal',
+        8.5,
+        1,
+        '2023-2',
+        '2023-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0349',
+        'K2025631000',
+        'Fundamentos de Programación',
+        7.5,
+        1,
+        '2023-2',
+        '2023-06-15',
+        'ETS'
+    ),
+    (
+        'UAA0350',
+        'K2025631000',
+        'Cultura y Comunicación',
+        8.0,
+        1,
+        '2023-2',
+        '2023-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0351',
+        'K2025631000',
+        'Matemáticas Discretas',
+        8.0,
+        1,
+        '2023-2',
+        '2023-06-10',
+        'Extraordinario'
+    ),
+    -- Semestre 2: 5 materias (4 Ordinario, 1 recuperada)
+    (
+        'UAA0352',
+        'K2025631000',
+        'Cálculo Integral',
+        8.5,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0353',
+        'K2025631000',
+        'Álgebra Abstracta',
+        9.0,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0354',
+        'K2025631000',
+        'Estructura de Datos',
+        7.0,
+        2,
+        '2023-3',
+        '2023-12-15',
+        'ETS'
+    ),
+    (
+        'UAA0355',
+        'K2025631000',
+        'Física para Ingeniería',
+        8.0,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0356',
+        'K2025631000',
+        'Desarrollo Humano',
+        8.5,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    -- Semestre 3: 5 materias (3 Ordinario, 2 recuperadas)
+    (
+        'UAA0357',
+        'K2025631000',
+        'Procesamiento de Señales',
+        8.0,
+        3,
+        '2024-1',
+        '2024-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0358',
+        'K2025631000',
+        'Paradigmas de Programación',
+        7.5,
+        3,
+        '2024-1',
+        '2024-06-10',
+        'Extraordinario'
+    ),
+    (
+        'UAA0359',
+        'K2025631000',
+        'Desarrollo Web',
+        8.5,
+        3,
+        '2024-1',
+        '2024-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0360',
+        'K2025631000',
+        'Señales y Sistemas Digitales',
+        8.0,
+        3,
+        '2024-1',
+        '2024-06-15',
+        'ETS'
+    ),
+    (
+        'UAA0361',
+        'K2025631000',
+        'Gestión Empresarial',
+        9.0,
+        3,
+        '2024-1',
+        '2024-01-20',
+        'Ordinario'
+    ),
+    -- Alumno Regular 3er Semestre ISC sin Reprobadas (2026631100)
+    -- Semestre 1: 5 materias (todas Ordinario)
+    (
+        'UAA0362',
+        'K2026631100',
+        'Fundamentos de Programación',
+        9.5,
+        1,
+        '2023-2',
+        '2023-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0363',
+        'K2026631100',
+        'Matemáticas Discretas',
+        9.0,
+        1,
+        '2023-2',
+        '2023-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0364',
+        'K2026631100',
+        'Cálculo',
+        8.5,
+        1,
+        '2023-2',
+        '2023-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0365',
+        'K2026631100',
+        'Análisis Vectorial',
+        9.0,
+        1,
+        '2023-2',
+        '2023-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0366',
+        'K2026631100',
+        'Comunicación Oral y Escrita',
+        9.0,
+        1,
+        '2023-2',
+        '2023-01-20',
+        'Ordinario'
+    ),
+    -- Semestre 2: 5 materias (todas Ordinario)
+    (
+        'UAA0367',
+        'K2026631100',
+        'Álgebra Lineal',
+        9.5,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0368',
+        'K2026631100',
+        'Cálculo Aplicado',
+        9.0,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0369',
+        'K2026631100',
+        'Mecánica y Electromagnetismo',
+        8.5,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0370',
+        'K2026631100',
+        'Ingeniería, Ética y Sociedad',
+        9.0,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0371',
+        'K2026631100',
+        'Fundamentos Económicos',
+        9.0,
+        2,
+        '2023-3',
+        '2023-06-20',
+        'Ordinario'
+    ),
+    -- Alumno Regular 2do Semestre ISC con Reprobadas (2027631200)
+    -- Semestre 1: 5 materias (2 Ordinario, 3 recuperadas)
+    (
+        'UAA0372',
+        'K2027631200',
+        'Fundamentos de Programación',
+        7.0,
+        1,
+        '2024-2',
+        '2024-06-15',
+        'ETS'
+    ),
+    (
+        'UAA0373',
+        'K2027631200',
+        'Matemáticas Discretas',
+        8.0,
+        1,
+        '2024-2',
+        '2024-01-20',
+        'Ordinario'
+    ),
+    (
+        'UAA0374',
+        'K2027631200',
+        'Cálculo',
+        7.5,
+        1,
+        '2024-2',
+        '2024-06-10',
+        'Extraordinario'
+    ),
+    (
+        'UAA0375',
+        'K2027631200',
+        'Análisis Vectorial',
+        7.0,
+        1,
+        '2024-2',
+        '2024-06-15',
+        'ETS'
+    ),
+    (
+        'UAA0376',
+        'K2027631200',
+        'Comunicación Oral y Escrita',
+        8.5,
+        1,
+        '2024-2',
+        '2024-01-20',
+        'Ordinario'
     );
 
 -- ==================================================================
@@ -1185,7 +3126,25 @@ VALUES
     ('H2024630310', '2024630310'),
     ('H2024630311', '2024630311'),
     ('H2024630312', '2024630312'),
-    ('H2024630313', '2024630313');
+    ('H2024630313', '2024630313'),
+    -- Horario Alumno Desfasado (cursando materias de 3ro, 4to y 5to)
+    ('H2022630400', '2022630400'),
+    -- Horario Alumno Sin Semestres (cursando materias pendientes)
+    ('H2019630500', '2019630500'),
+    -- Horario Alumno Regular 8vo Semestre IIA
+    ('H2021630600', '2021630600'),
+    -- Horario Alumno Regular 7mo Semestre IIA con Reprobadas
+    ('H2022630700', '2022630700'),
+    -- Horario Alumno Regular 6to Semestre IIA con Reprobadas Recuperadas
+    ('H2023630800', '2023630800'),
+    -- Horario Alumno Regular 5to Semestre IIA sin Reprobadas
+    ('H2024630900', '2024630900'),
+    -- Horario Alumno Regular 4to Semestre IIA con Materias Recuperadas
+    ('H2025631000', '2025631000'),
+    -- Horario Alumno Regular 3er Semestre ISC sin Reprobadas
+    ('H2026631100', '2026631100'),
+    -- Horario Alumno Regular 2do Semestre ISC con Reprobadas
+    ('H2027631200', '2027631200');
 
 DELETE FROM inscripcion;
 
@@ -1454,6 +3413,69 @@ VALUES (
     (
         'I2024630313',
         '2024630313',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Desfasado
+    (
+        'I2022630400',
+        '2022630400',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Sin Semestres (cursando materias pendientes)
+    (
+        'I2019630500',
+        '2019630500',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Regular 8vo Semestre IIA
+    (
+        'I2021630600',
+        '2021630600',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Regular 7mo Semestre IIA con Reprobadas
+    (
+        'I2022630700',
+        '2022630700',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Regular 6to Semestre IIA con Reprobadas Recuperadas
+    (
+        'I2023630800',
+        '2023630800',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Regular 5to Semestre IIA sin Reprobadas
+    (
+        'I2024630900',
+        '2024630900',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Regular 4to Semestre IIA con Materias Recuperadas
+    (
+        'I2025631000',
+        '2025631000',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Regular 3er Semestre ISC sin Reprobadas
+    (
+        'I2026631100',
+        '2026631100',
+        NOW(),
+        DATE_ADD(NOW(), INTERVAL 30 DAY)
+    ),
+    -- Inscripción Alumno Regular 2do Semestre ISC con Reprobadas
+    (
+        'I2027631200',
+        '2027631200',
         NOW(),
         DATE_ADD(NOW(), INTERVAL 30 DAY)
     );
@@ -2387,7 +4409,91 @@ VALUES
     ('M0042', 'H2024630312', 'G0009', NULL),
     ('M0043', 'H2024630313', 'G0009', NULL),
     ('M0044', 'H2024630301', 'G0009', NULL),
-    ('M0045', 'H2024630302', 'G0009', NULL);
+    ('M0045', 'H2024630302', 'G0009', NULL),
+    
+    -- ==========================================
+    -- MATERIAS INSCRITAS ALUMNO DESFASADO (2022630400) - ISC
+    -- Cursando materias de 3er y 4to semestre (desfasado)
+    -- Materias que reprobó y está cursando actualmente
+    -- ==========================================
+    -- Materia de 3er semestre reprobada: Fundamentos de Diseño Digital (UA0014)
+    ('M0046', 'H2022630400', (SELECT id FROM grupo WHERE nombre = '3CM1' AND id_ua = 'UA0014' LIMIT 1), NULL),
+    -- Materia de 3er semestre reprobada: Bases de Datos (UA0015)
+    ('M0047', 'H2022630400', (SELECT id FROM grupo WHERE nombre = '3CM2' AND id_ua = 'UA0015' LIMIT 1), NULL),
+    -- Materia de 4to semestre pendiente: Probabilidad y Estadística (UA0019)
+    ('M0048', 'H2022630400', (SELECT id FROM grupo WHERE nombre = '4CM1' AND id_ua = 'UA0019' LIMIT 1), NULL),
+    -- Materia de 4to semestre pendiente: Matemáticas Avanzadas para la Ingeniería (UA0020)
+    ('M0049', 'H2022630400', (SELECT id FROM grupo WHERE nombre = '4CM2' AND id_ua = 'UA0020' LIMIT 1), NULL),
+    
+    -- ==========================================
+    -- MATERIAS INSCRITAS ALUMNO SIN SEMESTRES (2019630500) - LCD
+    -- Cursando materias pendientes que le faltan para terminar
+    -- ==========================================
+    -- Materias de semestres 3, 4, 5 que tiene pendientes
+    ('M0050', 'H2019630500', (SELECT id FROM grupo WHERE nombre = '3AM1' AND id_ua = 'UA0066' LIMIT 1), NULL),
+    ('M0051', 'H2019630500', (SELECT id FROM grupo WHERE nombre = '4AM1' AND id_ua = 'UA0071' LIMIT 1), NULL),
+    ('M0052', 'H2019630500', (SELECT id FROM grupo WHERE nombre = '5AM1' AND id_ua = 'UA0077' LIMIT 1), NULL),
+    -- ==========================================
+    -- ALUMNO REGULAR 8VO SEMESTRE IIA (2021630600)
+    -- ==========================================
+    -- Materias de 8vo semestre IIA
+    ('M0053', 'H2021630600', 'G0021', NULL),
+    ('M0054', 'H2021630600', 'G0022', NULL),
+    ('M0055', 'H2021630600', 'G0023', NULL),
+    -- ==========================================
+    -- ALUMNO REGULAR 7MO SEMESTRE IIA CON REPROBADAS (2022630700)
+    -- ==========================================
+    -- Materias de 7mo semestre IIA
+    ('M0056', 'H2022630700', 'G0024', NULL),
+    ('M0057', 'H2022630700', 'G0025', NULL),
+    ('M0058', 'H2022630700', 'G0026', NULL),
+    ('M0059', 'H2022630700', 'G0027', NULL),
+    -- ==========================================
+    -- ALUMNO REGULAR 6TO SEMESTRE IIA CON REPROBADAS RECUPERADAS (2023630800)
+    -- ==========================================
+    -- Materias de 6to semestre IIA
+    ('M0060', 'H2023630800', 'G0028', NULL),
+    ('M0061', 'H2023630800', 'G0029', NULL),
+    ('M0062', 'H2023630800', 'G0030', NULL),
+    ('M0063', 'H2023630800', 'G0031', NULL),
+    ('M0064', 'H2023630800', 'G0032', NULL),
+    -- ==========================================
+    -- ALUMNO REGULAR 5TO SEMESTRE IIA SIN REPROBADAS (2024630900)
+    -- ==========================================
+    -- Materias de 5to semestre IIA
+    ('M0065', 'H2024630900', 'G0033', NULL),
+    ('M0066', 'H2024630900', 'G0034', NULL),
+    ('M0067', 'H2024630900', 'G0035', NULL),
+    ('M0068', 'H2024630900', 'G0036', NULL),
+    ('M0069', 'H2024630900', 'G0037', NULL),
+    
+    -- ALUMNO REGULAR 4TO SEMESTRE IIA CON MATERIAS RECUPERADAS (2025631000)
+    -- ==========================================
+    -- Materias de 4to semestre IIA (6to semestre de plan)
+    ('M0070', 'H2025631000', 'G0028', NULL),
+    ('M0071', 'H2025631000', 'G0029', NULL),
+    ('M0072', 'H2025631000', 'G0030', NULL),
+    ('M0073', 'H2025631000', 'G0031', NULL),
+    ('M0074', 'H2025631000', 'G0032', NULL),
+    
+    -- ALUMNO REGULAR 3ER SEMESTRE ISC SIN REPROBADAS (2026631100)
+    -- ==========================================
+    -- Materias de 3er semestre ISC
+    ('M0075', 'H2026631100', 'G0038', NULL),
+    ('M0076', 'H2026631100', 'G0039', NULL),
+    ('M0077', 'H2026631100', 'G0040', NULL),
+    ('M0078', 'H2026631100', 'G0041', NULL),
+    ('M0079', 'H2026631100', 'G0042', NULL),
+    
+    -- ALUMNO REGULAR 2DO SEMESTRE ISC CON REPROBADAS (2027631200)
+    -- ==========================================
+    -- Materias de 2do semestre ISC
+    ('M0080', 'H2027631200', 'G0043', NULL),
+    ('M0081', 'H2027631200', 'G0044', NULL),
+    ('M0082', 'H2027631200', 'G0045', NULL),
+    ('M0083', 'H2027631200', 'G0046', NULL),
+    ('M0084', 'H2027631200', 'G0047', NULL),
+    ('M0085', 'H2027631200', 'G0048', NULL);
 
 -- ==================================================================
 -- GRUPOS PARA MATERIAS OPTATIVAS
@@ -2984,7 +5090,7 @@ VALUES (
 
 --=== DISTRIBUCIÓN DE HORARIOS PARA GRUPOS OPTATIVAS===
 --=== Horario estándar: Lunes, Miércoles, Viernes 10:30-12:00 (Matutino) o 6:30-8:00 (Vespertino)===
-DELETE FROM distribucion;
+DELETE FROM distribucion WHERE id_grupo LIKE 'G_OPT%';
 
 -- ISC Semestre 6 - Matutino
 INSERT INTO

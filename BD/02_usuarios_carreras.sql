@@ -1,18 +1,7 @@
--- ==================================================
--- Datos básicos: Usuarios y Carreras
--- ==================================================
--- Descripción: Inserta usuarios iniciales (admin, profesores) y catálogo de carreras
--- Orden de ejecución: 2
--- Prerequisito: Ejecutar 01_init.sql
--- ==================================================
-
 USE SAES;
 
--- ==================================================
--- USUARIOS INICIALES (Administrador y Profesores)
--- ==================================================
-
 -- Se utiliza lista de columnas explicitas para asegurar compatibilidad con la definición de tablas en 01_init.sql
+
 INSERT INTO datos_personales (
     id, contrasena, tipo_usuario, nombre, ape_paterno, ape_materno,
     fecha_nacimiento, RFC, tipo_sangre, CURP, nacionalidad, calle,
@@ -129,7 +118,7 @@ NULL,
 9
 ),
 
--- Agregar usuarios que aparecen en bd.sql (P0001RSV, P0002KND, P0003HGR) para reproducir exactamente los registros de bd.sql
+-- Agregar usuarios (P0001RSV, P0002KND, P0003HGR)
 (
 'P0001RSV',
 '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
