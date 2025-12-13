@@ -26,6 +26,7 @@ export function InscripcionAdmin() {
   const [filtroCarreraGrupo, setFiltroCarreraGrupo] = useState("todas");
   const [filtroTurno, setFiltroTurno] = useState("todos");
     const [cursadas, setCursadas] = useState([]);
+    const [NoReinscripcion, setNoReinscripcion] = useState([]);
     const safeArray = (value) => (Array.isArray(value) ? value : []);
 
   // Modal confirmación
@@ -45,7 +46,11 @@ export function InscripcionAdmin() {
           const nombres = safeArray(data?.historial).map(
             (h) => h.unidad_aprendizaje
           );
+          const materiasre = safeArray(data?.materiasreprobadas).map(
+            (h) => h.id_ua
+          );
           setCursadas(nombres);
+          setNoReinscripcion(materiasre);
         })
         .catch(() => setCursadas([]));
     }, []);
@@ -121,6 +126,7 @@ export function InscripcionAdmin() {
           turno: c.turno, // "Matutino" / "Vespertino"
           cupo: c.cupo,
           ua: ua.nombre,
+          ua_id : ua.id,
           tipo: ua.tipo,
           creditos: ua.credito,
           carrera: ua.carrera,
@@ -394,6 +400,7 @@ export function InscripcionAdmin() {
                   gruposDisponiblesFiltrados.map((g) => {
                     const yaInscrito = idsGruposInscritos.has(g.idGrupo);
                     const estaCursada = cursadas.includes(g.ua);
+                    const noReinscribe = NoReinscripcion.includes(String(g.ua_id));
 
                     return (
                       <tr key={g.idGrupo}>
@@ -426,7 +433,7 @@ export function InscripcionAdmin() {
                             <button
                               className="btn-primario"
                               disabled = {
-                                estaCursada
+                                estaCursada || noReinscribe
                               }
                               onClick={() => intentarInscribir(g)}
                             >

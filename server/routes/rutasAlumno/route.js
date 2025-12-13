@@ -1453,9 +1453,21 @@ module.exports = (passport) => {
       });
     }
 
-    const us = req.params.id;
     try {
-      const k = await bd.Kardex.findOne({ where: { id_alumno: us } });
+      const { id } = req.params;
+      const materiasre = await bd.Materia_Reprobada.findAll({
+        where: { recurse: 0 },
+        include: [
+          {
+            model: bd.Estudiante,
+            where: { id_usuario: id },
+            required: true,
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      const k = await bd.Kardex.findOne({ where: { id_alumno: id } });
 
       if (!k) {
         return res.json({ historial: [], semestres: [] });
@@ -1467,7 +1479,7 @@ module.exports = (passport) => {
         nest: true,
       });
       const car = await bd.DatosPersonales.findOne({
-        where: { id: us },
+        where: { id: id },
       });
 
       const semestres = [...new Set(sems.map((s) => s.semestre))];
@@ -1476,6 +1488,7 @@ module.exports = (passport) => {
         historial: sems,
         semestres: semestres,
         carrera: car.carrera,
+        materiasreprobadas: materiasre,
       });
     } catch (err) {
       console.error("Error en /ObtenerHistorial:", err);

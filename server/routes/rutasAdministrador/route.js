@@ -2060,6 +2060,16 @@ module.exports = (passport) => {
       try {
         const idMat = uuidv4().replace(/-/g, "").substring(0, 15);
 
+        await bd.Materia_Reprobada.update(
+          { recurse: 0 },
+          {
+            where: {
+              id_ua: grupo.id_ua,
+              id_estudiante: estudiante.id, // o id_estudiante
+            },
+          }
+        );
+
         await bd.Mat_Inscritos.create(
           {
             id: idMat,
@@ -2178,6 +2188,18 @@ module.exports = (passport) => {
             },
             { where: { id_usuario: idAlumno }, transaction: t }
           );
+          const mr = await bd.Materia_Reprobada.findOne({
+            where: {
+              id_ua: grupo.id_ua,
+              id_estudiante: estudiante.id,
+            },
+          });
+          if (mr) {
+            await bd.Materia_Reprobada.update(
+              { recurse: 1 },
+              { where: { id: mr.id }, transaction: t }
+            );
+          }
 
           await t.commit();
 
