@@ -1,32 +1,57 @@
 DROP DATABASE IF EXISTS SAES;
+
 CREATE DATABASE SAES;
+
 USE SAES;
 
 -- ==================================================================
 -- 1. DEFINICIÓN DE TABLAS (DDL)
 -- ==================================================================
+
 DROP TABLE IF EXISTS fechas_relevantes;
+
 DROP TABLE IF EXISTS avisos;
+
 DROP TABLE IF EXISTS ets;
+
 DROP TABLE IF EXISTS ets_grupo;
+
 DROP TABLE IF EXISTS materia_reprobada;
+
 DROP TABLE IF EXISTS contador;
+
 DROP TABLE IF EXISTS mensaje_chat;
+
 DROP TABLE IF EXISTS lista;
+
 DROP TABLE IF EXISTS borrador_horario;
+
 DROP TABLE IF EXISTS ua_aprobada;
+
 DROP TABLE IF EXISTS kardex;
+
 DROP TABLE IF EXISTS resena;
+
 DROP TABLE IF EXISTS inscripcion;
+
 DROP TABLE IF EXISTS mat_inscritos;
+
 DROP TABLE IF EXISTS horario;
+
 DROP TABLE IF EXISTS distribucion;
+
 DROP TABLE IF EXISTS grupo;
+
 DROP TABLE IF EXISTS unidad_de_aprendizaje;
+
 DROP TABLE IF EXISTS carrera;
+
 DROP TABLE IF EXISTS estudiante;
+
 DROP TABLE IF EXISTS enfermedades;
+
 DROP TABLE IF EXISTS datos_medicos;
+
 DROP TABLE IF EXISTS datos_personales;
 
 CREATE TABLE datos_personales (
@@ -1960,10 +1985,11 @@ VALUES
     );
 
 -- ==================================================================
--- 4. INSERCIÓN DE GRUPOS Y DISTRIBUCIÓN DE HORARIOS
+-- 3. INSERCIÓN DE GRUPOS Y DISTRIBUCIÓN DE HORARIOS
 -- Se crean grupos Matutinos (M1) y Vespertinos (V1) para todas las UAs OBLIGATORIAS.
 -- ==================================================================
 DELETE FROM grupo;
+
 DELETE FROM distribucion;
 
 -- Definición de Patrones de Horario (1.5 horas por sesión)
@@ -6326,14 +6352,14 @@ INSERT INTO
 VALUES (
         '2025-02-03 00:00:00', -- inicio_semestre
         '2025-06-20 23:59:59', -- fin_semestre
-        '2025-12-01 00:00:00', -- registro_primer_parcial
-        '2025-12-07 23:59:59', -- fin_registro_primer_parcial
-        '2025-04-01 00:00:00', -- registro_segundo_parcial
-        '2025-04-07 23:59:59', -- fin_registro_segundo_parcial
-        '2025-05-01 00:00:00', -- registro_tercer_parcial
-        '2025-05-07 23:59:59', -- fin_registro_tercer_parcial
-        '2025-06-10 00:00:00', -- registro_extra
-        '2025-06-12 23:59:59', -- fin_registro_extra
+        '2025-12-02 00:00:00', -- registro_primer_parcial
+        '2025-12-10 23:59:59', -- fin_registro_primer_parcial
+        '2025-12-02 00:00:00', -- registro_segundo_parcial
+        '2025-12-10 23:59:59', -- fin_registro_segundo_parcial
+        '2025-12-03 00:00:00', -- registro_tercer_parcial
+        '2025-12-01 23:59:59', -- fin_registro_tercer_parcial
+        '2025-12-11 00:00:00', -- registro_extra
+        '2025-12-12 23:59:59', -- fin_registro_extra
         '2025-12-01 00:00:00', -- evalu_profe
         '2025-12-15 23:59:59', -- fin_evalu_profe
         '2025-12-01 00:00:00', -- inscribir_ets
@@ -6941,6 +6967,138 @@ WHERE
 -- Se mantienen todas sus calificaciones sin cambios
 
 -- Verificar las actualizaciones
+INSERT INTO
+    lista (
+        id,
+        id_inscrito,
+        fecha,
+        asistencia
+    )
+VALUES
+    -- 10 registros para 0ac265d713204fd
+    (
+        '1451',
+        '22d20299fd21402',
+        '2025-12-01',
+        'Si'
+    ),
+    (
+        '1452',
+        '22d20299fd21402',
+        '2025-12-02',
+        'Si'
+    ),
+    (
+        '1453',
+        '22d20299fd21402',
+        '2025-12-03',
+        'Si'
+    ),
+    (
+        '1454',
+        '22d20299fd21402',
+        '2025-12-04',
+        'Si'
+    ),
+    (
+        '1455',
+        '22d20299fd21402',
+        '2025-12-05',
+        'Si'
+    ),
+    (
+        '1456',
+        '22d20299fd21402',
+        '2025-12-06',
+        'No'
+    ),
+    (
+        '1457',
+        '22d20299fd21402',
+        '2025-12-07',
+        'Si'
+    ),
+    (
+        '1458',
+        '22d20299fd21402',
+        '2025-12-08',
+        'No'
+    ),
+    (
+        '1459',
+        '22d20299fd21402',
+        '2025-12-09',
+        'Si'
+    ),
+    (
+        '1460',
+        '22d20299fd21402',
+        '2025-12-10',
+        'Si'
+    ),
+
+-- 10 registros para aeeed67d3547440
+(
+    '1461',
+    'da44c18b33114ae',
+    '2025-12-01',
+    'Si'
+),
+(
+    '1462',
+    'da44c18b33114ae',
+    '2025-12-02',
+    'No'
+),
+(
+    '1463',
+    'da44c18b33114ae',
+    '2025-12-03',
+    'No'
+),
+(
+    '1464',
+    'da44c18b33114ae',
+    '2025-12-04',
+    'No'
+),
+(
+    '1465',
+    'da44c18b33114ae',
+    '2025-12-05',
+    'Si'
+),
+(
+    '1466',
+    'da44c18b33114ae',
+    '2025-12-06',
+    'Si'
+),
+(
+    '1467',
+    'da44c18b33114ae',
+    '2025-12-07',
+    'Si'
+),
+(
+    '1468',
+    'da44c18b33114ae',
+    '2025-12-08',
+    'Si'
+),
+(
+    '1469',
+    'da44c18b33114ae',
+    '2025-12-09',
+    'Si'
+),
+(
+    '1470',
+    'da44c18b33114ae',
+    '2025-12-10',
+    'Si'
+);
+
 SELECT
     g.nombre AS grupo,
     ua.nombre AS materia,
