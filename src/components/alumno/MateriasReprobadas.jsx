@@ -293,8 +293,7 @@ export function MateriasReprobadas() {
               // 3) NO se puede inscribir (Recurse / Desfasada)
               // ============================
               if (
-                materia.estado_actual === "Recurse" ||
-                materia.estado_actual === "Desfasada"
+                materia.estado_actual === "Recurse" || (materia.periodos_restantes <= 0 && materia.estado_actual === "Desfasada")
               ) {
                 return " ";
               }
