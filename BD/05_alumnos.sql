@@ -3,7 +3,7 @@
 -- ==================================================
 -- Descripción: Inserta alumnos con sus datos personales, kardex y estado académico
 -- Orden de ejecución: 5
--- Prerequisito: Ejecutar 05_grupos_horarios.sql
+-- Prerequisito: Ejecutar 04_grupos_horarios.sql
 -- ==================================================
 
 USE SAES;
@@ -38,7 +38,9 @@ INSERT INTO
         calificacion,
         carrera
     )
-VALUES (
+VALUES 
+    -- ===== 10 Alumnos IIA =====
+    (
         '2024630101',
         '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
         'alumno',
@@ -89,266 +91,6 @@ VALUES (
         'activo',
         8.5,
         'Ingenieria en Inteligencia Artificial'
-    ),
-    (
-        '2024630201',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Ana',
-        'Díaz',
-        'Flores',
-        '2006-01-10',
-        'RFC2024630201',
-        'B+',
-        'CURP2024630201',
-        'mexicana',
-        'Calle Palmeras',
-        '123',
-        'n/a',
-        '01234',
-        'Colonia Central',
-        'Delegacion Insurgentes',
-        'CDMX',
-        '550201',
-        '2024630201@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Licenciatura en Ciencia de Datos'
-    ),
-    (
-        '2024630202',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Pedro',
-        'Martínez',
-        'López',
-        '2005-08-14',
-        'RFC2024630202',
-        'O+',
-        'CURP2024630202',
-        'mexicana',
-        'Calle Primaveral',
-        '123',
-        'n/a',
-        '01234',
-        'Colonia Central',
-        'Delegacion Xochimilco',
-        'CDMX',
-        '550202',
-        '2024630202@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Licenciatura en Ciencia de Datos'
-    ),
-    (
-        '2024630301',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Sofía',
-        'Ramírez',
-        'Vargas',
-        '2006-05-29',
-        'RFC2024630301',
-        'A-',
-        'CURP2024630301',
-        'mexicana',
-        'Calle Jacarandas',
-        '123',
-        'n/a',
-        '01234',
-        'Colonia Central',
-        'Delegacion Coyacán',
-        'CDMX',
-        '550301',
-        '2024630301@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    (
-        '2024630302',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Ricardo',
-        'Torres',
-        'Pérez',
-        '2005-12-01',
-        'RFC2024630302',
-        'AB+',
-        'CURP2024630302',
-        'mexicana',
-        'Calle Comunicaciones',
-        '123',
-        'n/a',
-        '01234',
-        'Colonia Central',
-        'Delegacion Buena Vista',
-        'CDMX',
-        '550302',
-        '2024630302@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    (
-        '2023630107',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Elena',
-        'Vega',
-        'Ríos',
-        '2004-07-19',
-        'RFC2023630107',
-        'A+',
-        'CURP2023630107',
-        'mexicana',
-        'Calle Juarez',
-        '123',
-        'n/a',
-        '01234',
-        'Colonia Central',
-        'Delegacion Benito Juárez',
-        'CDMX',
-        '550107',
-        '2023630107@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Ingenieria en Inteligencia Artificial'
-    ),
-    (
-        '2022630208',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Javier',
-        'Morales',
-        'Guzmán',
-        '2003-02-02',
-        'RFC2022630208',
-        'O+',
-        'CURP2022630208',
-        'mexicana',
-        'Calle Neptuno',
-        '123',
-        'n/a',
-        '01234',
-        'Colonia Central',
-        'Delegacion Tlalpan',
-        'CDMX',
-        '550208',
-        '2022630208@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Licenciatura en Ciencia de Datos'
-    ),
-    (
-        '2021630309',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Laura',
-        'Castro',
-        'Mendoza',
-        '2002-09-11',
-        'RFC2021630309',
-        'B-',
-        'CURP2021630309',
-        'mexicana',
-        'Calle Laureles',
-        '123',
-        'n/a',
-        '01234',
-        'Colonia Central',
-        'Delegacion Xochimilco',
-        'CDMX',
-        '550309',
-        '2021630309@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    (
-        '2021630310',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Alejandro',
-        'Soto',
-        'Núñez',
-        '2002-04-25',
-        'RFC2021630310',
-        'O+',
-        'CURP2021630310',
-        'mexicana',
-        'Calle Violetas',
-        '123',
-        'n/a',
-        '01234',
-        'Colonia Central',
-        'Delegacion Cuauhtémoc',
-        'CDMX',
-        '550310',
-        '2021630310@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    (
-        '2021630311',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Valeria',
-        'Morales',
-        'Castillo',
-        '2002-07-18',
-        'RFC2021630311',
-        'A+',
-        'CURP2021630311',
-        'mexicana',
-        'Calle Azucenas',
-        '456',
-        'n/a',
-        '01235',
-        'Colonia Norte',
-        'Delegacion Tlalpan',
-        'CDMX',
-        '550311',
-        '2021630311@ipn.mx',
-        NULL,
-        'activo',
-        8.7,
-        'Ingenieria en Inteligencia Artificial'
-    ),
-    (
-        '2021630312',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Fernando',
-        'Jiménez',
-        'Ortega',
-        '2002-09-03',
-        'RFC2021630312',
-        'B+',
-        'CURP2021630312',
-        'mexicana',
-        'Calle Magnolias',
-        '789',
-        'n/a',
-        '01236',
-        'Colonia Sur',
-        'Delegacion Benito Juárez',
-        'CDMX',
-        '550312',
-        '2021630312@ipn.mx',
-        NULL,
-        'activo',
-        9.0,
-        'Licenciatura en Ciencia de Datos'
     ),
     (
         '2024630103',
@@ -558,85 +300,59 @@ VALUES (
         8.4,
         'Ingenieria en Inteligencia Artificial'
     ),
+    -- ===== 10 Alumnos LCD =====
     (
-        '2024630111',
+        '2024630201',
         '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
         'alumno',
-        'Emiliano',
-        'Peña',
-        'Campos',
-        '2006-09-14',
-        'RFC2024630111',
-        'A-',
-        'CURP2024630111',
-        'mexicana',
-        'Calle Fresnos',
-        '890',
-        'n/a',
-        '01248',
-        'Colonia Doctores',
-        'Delegacion Cuauhtémoc',
-        'CDMX',
-        '550111',
-        '2024630111@ipn.mx',
-        NULL,
-        'activo',
-        8.0,
-        'Ingenieria en Inteligencia Artificial'
-    ),
-    (
-        '2024630112',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Daniela',
-        'Rojas',
-        'Estrada',
-        '2006-11-20',
-        'RFC2024630112',
+        'Ana',
+        'Díaz',
+        'Flores',
+        '2006-01-10',
+        'RFC2024630201',
         'AB-',
-        'CURP2024630112',
+        'CURP2024630201',
         'mexicana',
-        'Calle Nogales',
+        'Calle Tulipanes',
         '123',
         'n/a',
-        '01249',
-        'Colonia Juárez',
-        'Delegacion Cuauhtémoc',
+        '01230',
+        'Colonia Sur',
+        'Delegacion Coyoacán',
         'CDMX',
-        '550112',
-        '2024630112@ipn.mx',
+        '550201',
+        '2024630201@ipn.mx',
         NULL,
         'activo',
-        7.7,
-        'Ingenieria en Inteligencia Artificial'
+        9.2,
+        'Licenciatura en Ciencia de Datos'
     ),
     (
-        '2024630113',
+        '2024630202',
         '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
         'alumno',
-        'Maximiliano',
-        'Cortés',
-        'Figueroa',
-        '2006-10-05',
-        'RFC2024630113',
-        'O+',
-        'CURP2024630113',
+        'Carlos',
+        'López',
+        'García',
+        '2005-07-15',
+        'RFC2024630202',
+        'B+',
+        'CURP2024630202',
         'mexicana',
-        'Calle Arces',
+        'Calle Primavera',
         '456',
         'n/a',
-        '01250',
-        'Colonia Tabacalera',
-        'Delegacion Cuauhtémoc',
+        '01231',
+        'Colonia Oriente',
+        'Delegacion Benito Juárez',
         'CDMX',
-        '550113',
-        '2024630113@ipn.mx',
+        '550202',
+        '2024630202@ipn.mx',
         NULL,
         'activo',
-        8.3,
-        'Ingenieria en Inteligencia Artificial'
+        6.5,
+        'Licenciatura en Ciencia de Datos'
     ),
-    -- =====Alumnos adicionales LCD (11)=====
     (
         '2024630203',
         '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
@@ -845,85 +561,59 @@ VALUES (
         8.7,
         'Licenciatura en Ciencia de Datos'
     ),
+    -- ===== 10 Alumnos ISC =====
     (
-        '2024630211',
+        '2024630301',
         '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
         'alumno',
-        'Luciana',
-        'Ibarra',
-        'Soto',
-        '2006-11-07',
-        'RFC2024630211',
-        'B-',
-        'CURP2024630211',
+        'Roberto',
+        'Ramírez',
+        'Vargas',
+        '2006-05-29',
+        'RFC2024630301',
+        'A-',
+        'CURP2024630301',
         'mexicana',
-        'Calle Lirios',
-        '567',
-        'n/a',
-        '01259',
-        'Colonia Maza',
-        'Delegacion Cuauhtémoc',
-        'CDMX',
-        '550211',
-        '2024630211@ipn.mx',
-        NULL,
-        'activo',
-        7.4,
-        'Licenciatura en Ciencia de Datos'
-    ),
-    (
-        '2024630212',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Joaquín',
-        'Lara',
-        'Villalobos',
-        '2006-01-31',
-        'RFC2024630212',
-        'AB-',
-        'CURP2024630212',
-        'mexicana',
-        'Calle Margaritas',
-        '890',
-        'n/a',
-        '01260',
-        'Colonia Valle Gómez',
-        'Delegacion Cuauhtémoc',
-        'CDMX',
-        '550212',
-        '2024630212@ipn.mx',
-        NULL,
-        'activo',
-        8.6,
-        'Licenciatura en Ciencia de Datos'
-    ),
-    (
-        '2024630213',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Martina',
-        'Campos',
-        'Alcántara',
-        '2006-12-12',
-        'RFC2024630213',
-        'O+',
-        'CURP2024630213',
-        'mexicana',
-        'Calle Gladiolas',
+        'Calle Jacarandas',
         '123',
         'n/a',
-        '01261',
-        'Colonia Atlampa',
-        'Delegacion Cuauhtémoc',
+        '01234',
+        'Colonia Central',
+        'Delegacion Coyacán',
         'CDMX',
-        '550213',
-        '2024630213@ipn.mx',
+        '550301',
+        '2024630301@ipn.mx',
         NULL,
         'activo',
-        7.9,
-        'Licenciatura en Ciencia de Datos'
+        8.5,
+        'Ingenieria en Sistemas Computacionales'
     ),
-    -- Alumnos adicionales ISC (11 más)
+    (
+        '2024630302',
+        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
+        'alumno',
+        'Ricardo',
+        'Torres',
+        'Pérez',
+        '2005-12-01',
+        'RFC2024630302',
+        'AB+',
+        'CURP2024630302',
+        'mexicana',
+        'Calle Comunicaciones',
+        '123',
+        'n/a',
+        '01234',
+        'Colonia Central',
+        'Delegacion Buena Vista',
+        'CDMX',
+        '550302',
+        '2024630302@ipn.mx',
+        NULL,
+        'activo',
+        8.5,
+        'Ingenieria en Sistemas Computacionales'
+    ),
     (
         '2024630303',
         '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
@@ -1131,354 +821,6 @@ VALUES (
         'activo',
         9.2,
         'Ingenieria en Sistemas Computacionales'
-    ),
-    (
-        '2024630311',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Axel',
-        'Carranza',
-        'Luna',
-        '2006-11-15',
-        'RFC2024630311',
-        'AB-',
-        'CURP2024630311',
-        'mexicana',
-        'Calle Pensamientos',
-        '234',
-        'n/a',
-        '01270',
-        'Colonia Aeronáutica Militar',
-        'Delegacion Venustiano Carranza',
-        'CDMX',
-        '550311',
-        '2024630311@ipn.mx',
-        NULL,
-        'activo',
-        7.6,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    (
-        '2024630312',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Julieta',
-        'Villegas',
-        'Trejo',
-        '2006-01-21',
-        'RFC2024630312',
-        'O+',
-        'CURP2024630312',
-        'mexicana',
-        'Calle Amapolas',
-        '567',
-        'n/a',
-        '01271',
-        'Colonia Pueblo Aeropuerto',
-        'Delegacion Venustiano Carranza',
-        'CDMX',
-        '550312',
-        '2024630312@ipn.mx',
-        NULL,
-        'activo',
-        8.0,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    (
-        '2024630313',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Thiago',
-        'Bermúdez',
-        'Cárdenas',
-        '2006-10-04',
-        'RFC2024630313',
-        'B+',
-        'CURP2024630313',
-        'mexicana',
-        'Calle Violetas',
-        '890',
-        'n/a',
-        '01272',
-        'Colonia Federal',
-        'Delegacion Venustiano Carranza',
-        'CDMX',
-        '550313',
-        '2024630313@ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    -- Alumno Desfasado - Cursando 5to semestre pero con materias atrasadas de 3ro y 4to
-    (
-        '2022630400',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Miguel',
-        'Reyes',
-        'Domínguez',
-        '2004-09-12',
-        'RFC2022630400',
-        'A+',
-        'CURP2022630400',
-        'mexicana',
-        'Calle Insurgentes',
-        '456',
-        'Int 3',
-        '06700',
-        'Colonia Roma',
-        'Delegacion Cuauhtémoc',
-        'CDMX',
-        '555400',
-        '2022630400@ipn.mx',
-        NULL,
-        'activo',
-        7.2,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    -- Alumno Sin Semestres Disponibles - Agotó sus semestres reglamentarios
-    (
-        '2019630500',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Andrea',
-        'Morales',
-        'Silva',
-        '2001-03-25',
-        'RFC2019630500',
-        'B-',
-        'CURP2019630500',
-        'mexicana',
-        'Calle Reforma',
-        '890',
-        'Depto 5',
-        '06600',
-        'Colonia Juárez',
-        'Delegacion Cuauhtémoc',
-        'CDMX',
-        '555500',
-        '2019630500@ipn.mx',
-        NULL,
-        'activo',
-        6.8,
-        'Licenciatura en Ciencia de Datos'
-    ),
-    -- Alumno regular de 8vo semestre IIA
-    (
-        '2021630600',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Roberto',
-        'Jiménez',
-        'Castillo',
-        '2003-03-12',
-        'JICR030312ABC',
-        'O+',
-        'JICR030312HDFJSB01',
-        'mexicana',
-        'Calle Jacarandas',
-        '456',
-        '3A',
-        '14000',
-        'Del Valle',
-        'Benito Juárez',
-        'CDMX',
-        '5598765432',
-        'roberto.jimenez@alumno.ipn.mx',
-        NULL,
-        'activo',
-        8.5,
-        'Ingenieria en Inteligencia Artificial'
-    ),
-    -- Alumno regular de 7mo semestre IIA con materias reprobadas
-    (
-        '2022630700',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Carolina',
-        'Mendoza',
-        'Vargas',
-        '2004-07-20',
-        'MEVC040720ABC',
-        'A+',
-        'MEVC040720MDFNRR02',
-        'mexicana',
-        'Avenida Insurgentes',
-        '123',
-        '2B',
-        '03310',
-        'Portales',
-        'Benito Juárez',
-        'CDMX',
-        '5543219876',
-        'carolina.mendoza@alumno.ipn.mx',
-        NULL,
-        'activo',
-        7.8,
-        'Ingenieria en Inteligencia Artificial'
-    ),
-    -- Alumno regular de 6to semestre IIA con reprobadas recuperadas
-    (
-        '2023630800',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Diego',
-        'Torres',
-        'Ramírez',
-        '2005-11-08',
-        'TORD051108ABC',
-        'O-',
-        'TORD051108HDFRGG05',
-        'mexicana',
-        'Calle Querétaro',
-        '567',
-        '1C',
-        '06700',
-        'Roma Norte',
-        'Cuauhtémoc',
-        'CDMX',
-        '5512345678',
-        'diego.torres@alumno.ipn.mx',
-        NULL,
-        'activo',
-        7.6,
-        'Ingenieria en Inteligencia Artificial'
-    ),
-    -- Alumno regular de 5to semestre IIA sin materias reprobadas
-    (
-        '2024630900',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Valeria',
-        'Sánchez',
-        'Ortiz',
-        '2006-02-14',
-        'SAOV060214ABC',
-        'A+',
-        'SAOV060214MDFRRT04',
-        'mexicana',
-        'Calle Puebla',
-        '234',
-        '4B',
-        '06100',
-        'Condesa',
-        'Cuauhtémoc',
-        'CDMX',
-        '5567891234',
-        'valeria.sanchez@alumno.ipn.mx',
-        NULL,
-        'activo',
-        8.8,
-        'Ingenieria en Inteligencia Artificial'
-    ),
-    -- Datos Personales Alumno Regular 4to Semestre IIA con Materias Recuperadas
-    (
-        '2025631000',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Sofía',
-        'Ramírez',
-        'Castro',
-        '2003-04-15',
-        'RFC2025631000',
-        'AB+',
-        'CURP2025631000',
-        'mexicana',
-        'Calle Insurgentes',
-        '890',
-        'n/a',
-        '03100',
-        'Del Valle',
-        'Benito Juárez',
-        'CDMX',
-        '5587654321',
-        'sofia.ramirez2003@alumno.ipn.mx',
-        NULL,
-        'activo',
-        8.3,
-        'Ingenieria en Inteligencia Artificial'
-    ),
-    -- Datos Personales Alumno Regular 3er Semestre ISC sin Reprobadas
-    (
-        '2026631100',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Luis',
-        'García',
-        'López',
-        '2003-08-25',
-        'RFC2026631100',
-        'O+',
-        'CURP2026631100',
-        'mexicana',
-        'Avenida Reforma',
-        '567',
-        'n/a',
-        '06600',
-        'Juárez',
-        'Cuauhtémoc',
-        'CDMX',
-        '5598765432',
-        'luis.garcia2003@alumno.ipn.mx',
-        NULL,
-        'activo',
-        9.0,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    -- Datos Personales Alumno Regular 2do Semestre ISC con Reprobadas
-    (
-        '2027631200',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'María',
-        'Hernández',
-        'Torres',
-        '2003-12-05',
-        'RFC2027631200',
-        'B-',
-        'CURP2027631200',
-        'mexicana',
-        'Calle Morelos',
-        '123',
-        'n/a',
-        '07800',
-        'Lindavista',
-        'Gustavo A. Madero',
-        'CDMX',
-        '5576543210',
-        'maria.hernandez2003@alumno.ipn.mx',
-        NULL,
-        'activo',
-        7.5,
-        'Ingenieria en Sistemas Computacionales'
-    ),
-    -- Alumno Desfasado Adicional - Cursando 6to semestre pero con materias atrasadas de 4to y 5to
-    (
-        '2022630401',
-        '$2b$10$FVM7xU.TbCeLwfOmDq1QeeF0DCu6FlpuS8f.hqSL55HmZojG1ZbNG',
-        'alumno',
-        'Juana',
-        'Sánchez',
-        'Ruiz',
-        '2003-11-28',
-        'RFC2022630401',
-        'B+',
-        'CURP2022630401',
-        'mexicana',
-        'Avenida Paseo de la Reforma',
-        '505',
-        'Apto 8B',
-        '06500',
-        'Colonia Juárez',
-        'Delegacion Cuauhtémoc',
-        'CDMX',
-        '5559876543',
-        '2022630401@ipn.mx',
-        NULL,
-        'activo',
-        7.4,
-        'Ingenieria en Inteligencia Artificial'
     );
 
 -- ==================================================================
@@ -1494,404 +836,40 @@ INSERT INTO
         creditos_disponibles,
         estado_academico
     )
-VALUES (
-        'EST2024630101',
-        '2024630101',
-        7,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630102',
-        '2024630102',
-        8,
-        25.0,
-        'Irregular'
-    ),
-    (
-        'EST2024630201',
-        '2024630201',
-        9.2,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630202',
-        '2024630202',
-        6.5,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630301',
-        '2024630301',
-        8,
-        25.0,
-        'Irregular'
-    ),
-    (
-        'EST2024630302',
-        '2024630302',
-        7.7,
-        25.0,
-        'Irregular'
-    ),
-    (
-        'EST2023630107',
-        '2023630107',
-        7.7,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2022630208',
-        '2022630208',
-        8.2,
-        25.0,
-        'Irregular'
-    ),
-    (
-        'EST2021630309',
-        '2021630309',
-        8.5,
-        25.0,
-        'Irregular'
-    ),
-    (
-        'EST2021630310',
-        '2021630310',
-        9.8,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2021630311',
-        '2021630311',
-        8.7,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2021630312',
-        '2021630312',
-        9.0,
-        25.0,
-        'Regular'
-    ),
-    -- Nuevos estudiantes IIA (11 más)
-    (
-        'EST2024630103',
-        '2024630103',
-        7.8,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630104',
-        '2024630104',
-        8.9,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630105',
-        '2024630105',
-        8.2,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630106',
-        '2024630106',
-        7.5,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630107',
-        '2024630107',
-        8.6,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630108',
-        '2024630108',
-        9.1,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630109',
-        '2024630109',
-        7.9,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630110',
-        '2024630110',
-        8.4,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630111',
-        '2024630111',
-        8.0,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630112',
-        '2024630112',
-        7.7,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630113',
-        '2024630113',
-        8.3,
-        25.0,
-        'Regular'
-    ),
-    -- Nuevos estudiantes LCD (11 más)
-    (
-        'EST2024630203',
-        '2024630203',
-        8.1,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630204',
-        '2024630204',
-        8.8,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630205',
-        '2024630205',
-        7.6,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630206',
-        '2024630206',
-        8.5,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630207',
-        '2024630207',
-        9.0,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630208',
-        '2024630208',
-        7.8,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630209',
-        '2024630209',
-        8.2,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630210',
-        '2024630210',
-        8.7,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630211',
-        '2024630211',
-        7.4,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630212',
-        '2024630212',
-        8.6,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630213',
-        '2024630213',
-        7.9,
-        25.0,
-        'Regular'
-    ),
-    -- Nuevos estudiantes ISC (11 más)
-    (
-        'EST2024630303',
-        '2024630303',
-        8.9,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630304',
-        '2024630304',
-        7.5,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630305',
-        '2024630305',
-        8.3,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630306',
-        '2024630306',
-        8.1,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630307',
-        '2024630307',
-        8.7,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630308',
-        '2024630308',
-        7.2,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630309',
-        '2024630309',
-        8.4,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630310',
-        '2024630310',
-        9.2,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630311',
-        '2024630311',
-        7.6,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630312',
-        '2024630312',
-        8.0,
-        25.0,
-        'Regular'
-    ),
-    (
-        'EST2024630313',
-        '2024630313',
-        8.5,
-        25.0,
-        'Regular'
-    ),
-    -- Estudiante Desfasado (Irregular por materias pendientes)
-    (
-        'EST2022630400',
-        '2022630400',
-        7.2,
-        25.0,
-        'Irregular'
-    ),
-    -- Estudiante Sin Semestres Disponibles (Agotó semestres reglamentarios)
-    (
-        'EST2019630500',
-        '2019630500',
-        6.8,
-        25.0,
-        'Sin Semestres'
-    ),
-    -- Estudiante Regular de 8vo Semestre IIA
-    (
-        'EST2021630600',
-        '2021630600',
-        8.5,
-        37.5,
-        'Regular'
-    ),
-    -- Estudiante Regular de 7mo Semestre IIA con Reprobadas
-    (
-        'EST2022630700',
-        '2022630700',
-        7.8,
-        30.0,
-        'Regular'
-    ),
-    -- Estudiante Regular de 6to Semestre IIA con Reprobadas Recuperadas
-    (
-        'EST2023630800',
-        '2023630800',
-        7.6,
-        37.5,
-        'Regular'
-    ),
-    -- Estudiante Regular de 5to Semestre IIA sin Reprobadas
-    (
-        'EST2024630900',
-        '2024630900',
-        8.8,
-        37.5,
-        'Regular'
-    ),
-    -- Estudiante Regular de 4to Semestre IIA con Materias Recuperadas
-    (
-        'EST2025631000',
-        '2025631000',
-        8.3,
-        37.5,
-        'Regular'
-    ),
-    -- Estudiante Regular de 3er Semestre ISC sin Reprobadas
-    (
-        'EST2026631100',
-        '2026631100',
-        9.0,
-        37.5,
-        'Regular'
-    ),
-    -- Estudiante Regular de 2do Semestre ISC con Reprobadas
-    (
-        'EST2027631200',
-        '2027631200',
-        7.5,
-        30.0,
-        'Regular'
-    ),
-    -- Estudiante Desfasado Adicional - Cursando 6to semestre con materias atrasadas
-    (
-        'EST2022630401',
-        '2022630401',
-        7.4,
-        25.0,
-        'Irregular'
-    );
+VALUES 
+    -- IIA (10)
+    ('EST2024630101', '2024630101', 8.5, 25.0, 'Regular'),
+    ('EST2024630102', '2024630102', 8.5, 25.0, 'Regular'),
+    ('EST2024630103', '2024630103', 7.8, 25.0, 'Regular'),
+    ('EST2024630104', '2024630104', 8.9, 25.0, 'Regular'),
+    ('EST2024630105', '2024630105', 8.2, 25.0, 'Regular'),
+    ('EST2024630106', '2024630106', 7.5, 25.0, 'Regular'),
+    ('EST2024630107', '2024630107', 8.6, 25.0, 'Regular'),
+    ('EST2024630108', '2024630108', 9.1, 25.0, 'Regular'),
+    ('EST2024630109', '2024630109', 7.9, 25.0, 'Regular'),
+    ('EST2024630110', '2024630110', 8.4, 25.0, 'Regular'),
+    -- LCD (10)
+    ('EST2024630201', '2024630201', 9.2, 25.0, 'Regular'),
+    ('EST2024630202', '2024630202', 6.5, 25.0, 'Regular'),
+    ('EST2024630203', '2024630203', 8.1, 25.0, 'Regular'),
+    ('EST2024630204', '2024630204', 8.8, 25.0, 'Regular'),
+    ('EST2024630205', '2024630205', 7.6, 25.0, 'Regular'),
+    ('EST2024630206', '2024630206', 8.5, 25.0, 'Regular'),
+    ('EST2024630207', '2024630207', 9.0, 25.0, 'Regular'),
+    ('EST2024630208', '2024630208', 7.8, 25.0, 'Regular'),
+    ('EST2024630209', '2024630209', 8.2, 25.0, 'Regular'),
+    ('EST2024630210', '2024630210', 8.7, 25.0, 'Regular'),
+    -- ISC (10)
+    ('EST2024630301', '2024630301', 8.5, 25.0, 'Regular'),
+    ('EST2024630302', '2024630302', 8.5, 25.0, 'Regular'),
+    ('EST2024630303', '2024630303', 8.9, 25.0, 'Regular'),
+    ('EST2024630304', '2024630304', 7.5, 25.0, 'Regular'),
+    ('EST2024630305', '2024630305', 8.3, 25.0, 'Regular'),
+    ('EST2024630306', '2024630306', 8.1, 25.0, 'Regular'),
+    ('EST2024630307', '2024630307', 8.7, 25.0, 'Regular'),
+    ('EST2024630308', '2024630308', 7.2, 25.0, 'Regular'),
+    ('EST2024630309', '2024630309', 8.4, 25.0, 'Regular'),
+    ('EST2024630310', '2024630310', 9.2, 25.0, 'Regular');
 
 DELETE FROM kardex;
 
@@ -1904,464 +882,41 @@ INSERT INTO
         semestres_restantes,
         creditos_obtenidos
     )
-VALUES (
-        'K2024630101',
-        '2024630101',
-        8.5,
-        'Regular',
-        1,
-        37.5
-    ),
-    (
-        'K2024630102',
-        '2024630102',
-        8.5,
-        'Regular',
-        5,
-        30.0
-    ),
-    (
-        'K2024630201',
-        '2024630201',
-        8.5,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630202',
-        '2024630202',
-        8.5,
-        'Regular',
-        7,
-        45.0
-    ),
-    (
-        'K2024630301',
-        '2024630301',
-        8.5,
-        'Regular',
-        1,
-        52.5
-    ),
-    (
-        'K2024630302',
-        '2024630302',
-        8.5,
-        'Regular',
-        1,
-        40.5
-    ),
-    (
-        'K2023630107',
-        '2023630107',
-        8.8,
-        'Regular',
-        5,
-        60.0
-    ),
-    (
-        'K2022630208',
-        '2022630208',
-        8.6,
-        'Regular',
-        3,
-        112.5
-    ),
-    (
-        'K2021630309',
-        '2021630309',
-        8.5,
-        'Irregular',
-        1,
-        142.5
-    ),
-    (
-        'K2021630310',
-        '2021630310',
-        8.7,
-        'Regular',
-        2,
-        157.5
-    ),
-    (
-        'K2021630311',
-        '2021630311',
-        8.8,
-        'Regular',
-        2,
-        159.0
-    ),
-    (
-        'K2021630312',
-        '2021630312',
-        9.0,
-        'Regular',
-        2,
-        156.0
-    ),
-    -- Nuevos kardex IIA (11 más)
-    (
-        'K2024630103',
-        '2024630103',
-        7.8,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630104',
-        '2024630104',
-        8.9,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630105',
-        '2024630105',
-        8.2,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630106',
-        '2024630106',
-        7.5,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630107',
-        '2024630107',
-        8.6,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630108',
-        '2024630108',
-        9.1,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630109',
-        '2024630109',
-        7.9,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630110',
-        '2024630110',
-        8.4,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630111',
-        '2024630111',
-        8.0,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630112',
-        '2024630112',
-        7.7,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630113',
-        '2024630113',
-        8.3,
-        'Regular',
-        7,
-        22.5
-    ),
-    -- Nuevos kardex LCD (11 más)
-    (
-        'K2024630203',
-        '2024630203',
-        8.1,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630204',
-        '2024630204',
-        8.8,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630205',
-        '2024630205',
-        7.6,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630206',
-        '2024630206',
-        8.5,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630207',
-        '2024630207',
-        9.0,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630208',
-        '2024630208',
-        7.8,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630209',
-        '2024630209',
-        8.2,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630210',
-        '2024630210',
-        8.7,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630211',
-        '2024630211',
-        7.4,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630212',
-        '2024630212',
-        8.6,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630213',
-        '2024630213',
-        7.9,
-        'Regular',
-        7,
-        22.5
-    ),
-    -- Nuevos kardex ISC (11 más)
-    (
-        'K2024630303',
-        '2024630303',
-        8.9,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630304',
-        '2024630304',
-        7.5,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630305',
-        '2024630305',
-        8.3,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630306',
-        '2024630306',
-        8.1,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630307',
-        '2024630307',
-        8.7,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630308',
-        '2024630308',
-        7.2,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630309',
-        '2024630309',
-        8.4,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630310',
-        '2024630310',
-        9.2,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630311',
-        '2024630311',
-        7.6,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630312',
-        '2024630312',
-        8.0,
-        'Regular',
-        7,
-        22.5
-    ),
-    (
-        'K2024630313',
-        '2024630313',
-        8.5,
-        'Regular',
-        7,
-        22.5
-    ),
-    -- Kardex Alumno Sin Semestres - Agotó sus 12 semestres reglamentarios
-    -- Ha cursado más de 6 años y aún no termina la carrera
-    (
-        'K2019630500',
-        '2019630500',
-        6.8,
-        'Sin Semestres',
-        0,
-        180.0
-    ),
-    -- Kardex Alumno Regular 8vo Semestre - IIA
-    -- Alumno en situación regular, cursando 8vo semestre
-    (
-        'K2021630600',
-        '2021630600',
-        8.5,
-        'Regular',
-        1,
-        210.0
-    ),
-    -- Kardex Alumno Regular 7mo Semestre IIA con Reprobadas
-    -- Alumno regular pero con materias reprobadas pendientes
-    (
-        'K2022630700',
-        '2022630700',
-        7.8,
-        'Regular',
-        2,
-        172.5
-    ),
-    -- Kardex Alumno Regular 6to Semestre IIA con Reprobadas Recuperadas
-    -- Alumno regular que ha recuperado todas sus materias reprobadas
-    (
-        'K2023630800',
-        '2023630800',
-        7.6,
-        'Regular',
-        3,
-        135.0
-    ),
-    -- Kardex Alumno Regular 5to Semestre IIA sin Reprobadas
-    -- Alumno con excelente desempeño académico, sin materias reprobadas
-    (
-        'K2024630900',
-        '2024630900',
-        8.8,
-        'Regular',
-        4,
-        97.5
-    ),
-    -- Kardex Alumno Regular 4to Semestre IIA con Materias Recuperadas
-    -- Alumno con reprobadas recuperadas aleatoriamente (ETS/Extraordinario)
-    (
-        'K2025631000',
-        '2025631000',
-        8.3,
-        'Regular',
-        5,
-        75.0
-    ),
-    -- Kardex Alumno Regular 3er Semestre ISC sin Reprobadas
-    -- Alumno con excelente desempeño académico
-    (
-        'K2026631100',
-        '2026631100',
-        9.0,
-        'Regular',
-        6,
-        52.5
-    ),
-    -- Kardex Alumno Regular 2do Semestre ISC con Reprobadas
-    -- Alumno con algunas materias reprobadas en 1er semestre
-    (
-        'K2027631200',
-        '2027631200',
-        7.5,
-        'Regular',
-        7,
-        30.0
-    ),
-    -- Kardex Alumno Desfasado Adicional - Cursando 6to semestre con materias pendientes
-    -- Alumno en situación irregular por materias atrasadas de 4to y 5to semestre
-    (
-        'K2022630401',
-        '2022630401',
-        7.4,
-        'Irregular',
-        2,
-        90.0
-    );
+VALUES 
+    -- IIA (10)
+    ('K2024630101', '2024630101', 8.5, 'Regular', 7, 22.5),
+    ('K2024630102', '2024630102', 8.5, 'Regular', 7, 22.5),
+    ('K2024630103', '2024630103', 7.8, 'Regular', 7, 22.5),
+    ('K2024630104', '2024630104', 8.9, 'Regular', 7, 22.5),
+    ('K2024630105', '2024630105', 8.2, 'Regular', 7, 22.5),
+    ('K2024630106', '2024630106', 7.5, 'Regular', 7, 22.5),
+    ('K2024630107', '2024630107', 8.6, 'Regular', 7, 22.5),
+    ('K2024630108', '2024630108', 9.1, 'Regular', 7, 22.5),
+    ('K2024630109', '2024630109', 7.9, 'Regular', 7, 22.5),
+    ('K2024630110', '2024630110', 8.4, 'Regular', 7, 22.5),
+    -- LCD (10)
+    ('K2024630201', '2024630201', 9.2, 'Regular', 7, 22.5),
+    ('K2024630202', '2024630202', 6.5, 'Regular', 7, 22.5),
+    ('K2024630203', '2024630203', 8.1, 'Regular', 7, 22.5),
+    ('K2024630204', '2024630204', 8.8, 'Regular', 7, 22.5),
+    ('K2024630205', '2024630205', 7.6, 'Regular', 7, 22.5),
+    ('K2024630206', '2024630206', 8.5, 'Regular', 7, 22.5),
+    ('K2024630207', '2024630207', 9.0, 'Regular', 7, 22.5),
+    ('K2024630208', '2024630208', 7.8, 'Regular', 7, 22.5),
+    ('K2024630209', '2024630209', 8.2, 'Regular', 7, 22.5),
+    ('K2024630210', '2024630210', 8.7, 'Regular', 7, 22.5),
+    -- ISC (10)
+    ('K2024630301', '2024630301', 8.5, 'Regular', 7, 22.5),
+    ('K2024630302', '2024630302', 8.5, 'Regular', 7, 22.5),
+    ('K2024630303', '2024630303', 8.9, 'Regular', 7, 22.5),
+    ('K2024630304', '2024630304', 7.5, 'Regular', 7, 22.5),
+    ('K2024630305', '2024630305', 8.3, 'Regular', 7, 22.5),
+    ('K2024630306', '2024630306', 8.1, 'Regular', 7, 22.5),
+    ('K2024630307', '2024630307', 8.7, 'Regular', 7, 22.5),
+    ('K2024630308', '2024630308', 7.2, 'Regular', 7, 22.5),
+    ('K2024630309', '2024630309', 8.4, 'Regular', 7, 22.5),
+    ('K2024630310', '2024630310', 9.2, 'Regular', 7, 22.5);
 
--- ==================================================================
--- 6. INSERCIÓN DE UA APROBADA (HISTORIAL ACADÉMICO REALISTA)
--- Se incluye historial para alumnos de 3er semestre en adelante.
--- ==================================================================
 DELETE FROM ua_aprobada;
 
 INSERT INTO
@@ -2376,1627 +931,267 @@ INSERT INTO
         metodo_aprobado
     )
 VALUES
+    -- IIA historial de 1er semestre (10 x 3 materias)
     ('UAA0001', 'K2024630101', 'Fundamentos de Programación', 8.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
     ('UAA0002', 'K2024630101', 'Matemáticas Discretas', 8.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
     ('UAA0003', 'K2024630101', 'Cálculo', 7.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0004', 'K2023630107', 'Comunicación Oral y Escrita', 9.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0005', 'K2023630107', 'Fundamentos Económicos', 8.7, 1, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0006', 'K2023630107', 'Algoritmos y Estructuras de Datos', 9.1, 2, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0007', 'K2023630107', 'Álgebra Lineal', 8.5, 2, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0008', 'K2023630107', 'Mecánica y Electromagnetismo', 7.3, 2, '2024-2', '2024-12-20', 'Extraordinario'),
-    ('UAA0009', 'K2023630107', 'Ingeniería, Ética y Sociedad', 9.8, 2, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0010', 'K2023630107', 'Liderazgo Personal', 8.0, 2, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0011', 'K2022630208', 'Fundamentos de Programación', 9.5, 1, '2023-1', '2023-06-20', 'Ordinario'),
-    ('UAA0012', 'K2022630208', 'Matemáticas Discretas', 9.2, 1, '2023-1', '2023-06-20', 'Ordinario'),
-    ('UAA0013', 'K2022630208', 'Cálculo', 8.1, 1, '2023-1', '2023-06-20', 'Ordinario'),
-    ('UAA0014', 'K2022630208', 'Comunicación Oral y Escrita', 9.8, 1, '2023-06-20', '2023-06-20', 'Ordinario'),
-    ('UAA0015', 'K2022630208', 'Introducción a la Ciencia de Datos', 7.7, 1, '2023-1', '2023-06-20', 'Ordinario'),
-    ('UAA0016', 'K2022630208', 'Algoritmos y Estructuras de Datos', 8.5, 2, '2023-2', '2023-12-20', 'Ordinario'),
-    ('UAA0017', 'K2022630208', 'Álgebra Lineal', 7.4, 2, '2023-2', '2023-12-20', 'Extraordinario'),
-    ('UAA0018', 'K2022630208', 'Cálculo Multivariable', 9.0, 2, '2023-12-20', '2023-12-20', 'Ordinario'),
-    ('UAA0019', 'K2022630208', 'Ética y Legalidad', 8.8, 2, '2023-2', '2023-12-20', 'Ordinario'),
-    ('UAA0020', 'K2022630208', 'Fundamentos Económicos', 8.6, 2, '2023-12-20', '2023-12-20', 'Ordinario'),
-    ('UAA0021', 'K2022630208', 'Análisis y Diseño de Algoritmos', 8.1, 3, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0022', 'K2022630208', 'Programación para Ciencia de Datos', 7.8, 3, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0023', 'K2022630208', 'Probabilidad', 9.3, 3, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0024', 'K2022630208', 'Bases de Datos', 8.9, 3, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0025', 'K2022630208', 'Métodos Numéricos', 8.2, 3, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0026', 'K2022630208', 'Finanzas Empresariales', 9.7, 3, '2024-1', '2024-06-20', 'Ordinario'),
-    ('UAA0027', 'K2022630208', 'Desarrollo de Aplicaciones Web', 8.5, 4, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0028', 'K2022630208', 'Cómputo de Alto Desempeño', 8.1, 4, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0029', 'K2022630208', 'Estadística', 7.0, 4, '2024-2', '2024-12-20', 'Extraordinario'),
-    ('UAA0030', 'K2022630208', 'Base de Datos Avanzadas', 8.6, 4, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0031', 'K2022630208', 'Desarrollo de Aplicaciones para Análisis de Datos', 9.1, 4, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0032', 'K2022630208', 'Liderazgo Personal', 8.3, 4, '2024-2', '2024-12-20', 'Ordinario'),
-    ('UAA0033', 'K2021630309', 'Fundamentos de Programación', 8.0, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0034', 'K2021630309', 'Matemáticas Discretas', 7.5, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0035', 'K2021630309', 'Cálculo', 9.9, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0036', 'K2021630309', 'Análisis Vectorial', 8.4, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0037', 'K2021630309', 'Comunicación Oral y Escrita', 9.2, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0038', 'K2021630310', 'Fundamentos de Programación', 8.2, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0039', 'K2021630310', 'Matemáticas Discretas', 7.8, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0040', 'K2021630310', 'Cálculo', 8.9, 1, '2022-06-20', '2022-06-20', 'Ordinario'),
-    ('UAA0041', 'K2021630311', 'Fundamentos de Programación', 8.5, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0042', 'K2021630311', 'Matemáticas Discretas', 8.2, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0043', 'K2021630311', 'Cálculo', 9.1, 1, '2022-06-20', '2022-06-20', 'Ordinario'),
-    ('UAA0044', 'K2021630312', 'Fundamentos de Programación', 8.3, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0045', 'K2021630312', 'Matemáticas Discretas', 8.7, 1, '2022-1', '2022-06-20', 'Ordinario'),
-    ('UAA0046', 'K2021630312', 'Cálculo', 8.9, 1, '2022-06-20', '2022-06-20', 'Ordinario'),
-
-    
-    (
-        'UAA0047',
-        'K2021630309',
-        'Bases de Datos',
-        9.0,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0048',
-        'K2021630309',
-        'Finanzas Empresariales',
-        8.1,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0049',
-        'K2021630309',
-        'Paradigmas de Programación',
-        7.7,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0050',
-        'K2021630309',
-        'Análisis y Diseño de Algoritmos',
-        8.5,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0051',
-        'K2021630309',
-        'Probabilidad y Estadística',
-        8.2,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0052',
-        'K2021630309',
-        'Matemáticas Avanzadas para la Ingeniería',
-        7.6,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0053',
-        'K2021630309',
-        'Electrónica Analógica',
-        8.8,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0054',
-        'K2021630309',
-        'Diseño de Sistemas Digitales',
-        9.3,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0055',
-        'K2021630309',
-        'Tecnologías para el Desarrollo de Aplicaciones Web',
-        8.0,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0056',
-        'K2021630309',
-        'Sistemas Operativos',
-        7.5,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0057',
-        'K2021630309',
-        'Teoría de la Computación',
-        8.7,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0058',
-        'K2021630309',
-        'Procesamiento Digital de Señales',
-        8.4,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0059',
-        'K2021630309',
-        'Instrumentación y Control',
-        7.8,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0060',
-        'K2021630309',
-        'Arquitectura de Computadoras',
-        9.1,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0061',
-        'K2021630309',
-        'Análisis y Diseño de Sistemas',
-        8.2,
-        5,
-        '2024-06-20',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0062',
-        'K2021630309',
-        'Formulación y Evaluación de Proyectos Informáticos',
-        7.0,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Extraordinario'
-    ),
-    (
-        'UAA0063',
-        'K2021630309',
-        'Compiladores',
-        8.9,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0064',
-        'K2021630309',
-        'Redes de Computadoras',
-        8.5,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0065',
-        'K2021630309',
-        'Sistemas en Chip',
-        8.7,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0068',
-        'K2021630309',
-        'Métodos Cuantitativos para la Toma de Decisiones',
-        8.1,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0069',
-        'K2021630309',
-        'Ingeniería de Software',
-        9.0,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0070',
-        'K2021630309',
-        'Inteligencia Artificial',
-        7.4,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Extraordinario'
-    ),
-    (
-        'UAA0071',
-        'K2021630309',
-        'Aplicaciones para Comunicaciones en Red',
-        8.6,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    -- Alumno 2021630310 (ISC - 8vo semestre) - Historial completo de semestres 1-7
-    -- Semestre 1
-    (
-        'UAA0072',
-        'K2021630310',
-        'Fundamentos de Programación',
-        8.2,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0073',
-        'K2021630310',
-        'Matemáticas Discretas',
-        7.8,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0074',
-        'K2021630310',
-        'Cálculo',
-        8.9,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0075',
-        'K2021630310',
-        'Análisis Vectorial',
-        8.1,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0076',
-        'K2021630310',
-        'Comunicación Oral y Escrita',
-        9.0,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 2
-    (
-        'UAA0077',
-        'K2021630310',
-        'Álgebra Lineal',
-        8.6,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0078',
-        'K2021630310',
-        'Cálculo Aplicado',
-        7.5,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Extraordinario'
-    ),
-    (
-        'UAA0079',
-        'K2021630310',
-        'Mecánica y Electromagnetismo',
-        8.0,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0080',
-        'K2021630310',
-        'Ingeniería, Ética y Sociedad',
-        9.5,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0081',
-        'K2021630310',
-        'Fundamentos Económicos',
-        8.4,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0082',
-        'K2021630310',
-        'Algoritmos y Estructuras de Datos',
-        8.8,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 3
-    (
-        'UAA0083',
-        'K2021630310',
-        'Ecuaciones Diferenciales',
-        8.3,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0084',
-        'K2021630310',
-        'Circuitos Eléctricos',
-        7.9,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0085',
-        'K2021630310',
-        'Fundamentos de Diseño Digital',
-        8.5,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0086',
-        'K2021630310',
-        'Bases de Datos',
-        9.2,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0087',
-        'K2021630310',
-        'Finanzas Empresariales',
-        8.7,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0088',
-        'K2021630310',
-        'Paradigmas de Programación',
-        8.1,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0089',
-        'K2021630310',
-        'Análisis y Diseño de Algoritmos',
-        9.0,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 4
-    (
-        'UAA0090',
-        'K2021630310',
-        'Probabilidad y Estadística',
-        8.4,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0091',
-        'K2021630310',
-        'Matemáticas Avanzadas para la Ingeniería',
-        7.8,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0092',
-        'K2021630310',
-        'Electrónica Analógica',
-        8.9,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0093',
-        'K2021630310',
-        'Diseño de Sistemas Digitales',
-        9.1,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0094',
-        'K2021630310',
-        'Tecnologías para el Desarrollo de Aplicaciones Web',
-        8.6,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0095',
-        'K2021630310',
-        'Sistemas Operativos',
-        8.2,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0096',
-        'K2021630310',
-        'Teoría de la Computación',
-        9.0,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 5
-    (
-        'UAA0097',
-        'K2021630310',
-        'Procesamiento Digital de Señales',
-        8.7,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0098',
-        'K2021630310',
-        'Instrumentación y Control',
-        8.0,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0099',
-        'K2021630310',
-        'Arquitectura de Computadoras',
-        9.3,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0100',
-        'K2021630310',
-        'Análisis y Diseño de Sistemas',
-        8.5,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0101',
-        'K2021630310',
-        'Formulación y Evaluación de Proyectos Informáticos',
-        7.2,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Extraordinario'
-    ),
-    (
-        'UAA0102',
-        'K2021630310',
-        'Compiladores',
-        8.8,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0103',
-        'K2021630310',
-        'Redes de Computadoras',
-        8.4,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 6
-    (
-        'UAA0104',
-        'K2021630310',
-        'Sistemas en Chip',
-        8.6,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0105',
-        'K2021630310',
-        'Métodos Cuantitativos para la Toma de Decisiones',
-        8.3,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0106',
-        'K2021630310',
-        'Ingeniería de Software',
-        9.1,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0107',
-        'K2021630310',
-        'Inteligencia Artificial',
-        8.0,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0108',
-        'K2021630310',
-        'Aplicaciones para Comunicaciones en Red',
-        8.9,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0109',
-        'K2021630310',
-        'Seguridad Informática',
-        9.0,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 7
-    (
-        'UAA0111',
-        'K2021630310',
-        'Desarrollo de Aplicaciones Móviles Nativas',
-        8.4,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0114',
-        'K2021630310',
-        'Sistemas Distribuidos',
-        8.2,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0115',
-        'K2021630310',
-        'Administración de Servicios en Red',
-        8.7,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    -- Alumno 2021630311 (IIA - 8vo semestre) - Historial completo de semestres 1-7
-    -- Semestre 1
-    (
-        'UAA0116',
-        'K2021630311',
-        'Fundamentos de Programación',
-        8.5,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0117',
-        'K2021630311',
-        'Matemáticas Discretas',
-        8.2,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0118',
-        'K2021630311',
-        'Cálculo',
-        9.1,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0119',
-        'K2021630311',
-        'Comunicación Oral y Escrita',
-        8.8,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0120',
-        'K2021630311',
-        'Fundamentos Económicos',
-        8.0,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 2
-    (
-        'UAA0121',
-        'K2021630311',
-        'Algoritmos y Estructuras de Datos',
-        8.9,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0122',
-        'K2021630311',
-        'Álgebra Lineal',
-        8.4,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0123',
-        'K2021630311',
-        'Mecánica y Electromagnetismo',
-        7.5,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Extraordinario'
-    ),
-    (
-        'UAA0124',
-        'K2021630311',
-        'Ingeniería, Ética y Sociedad',
-        9.2,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0125',
-        'K2021630311',
-        'Liderazgo Personal',
-        8.7,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 3
-    (
-        'UAA0126',
-        'K2021630311',
-        'Análisis y Diseño de Algoritmos',
-        8.6,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0127',
-        'K2021630311',
-        'Cálculo Aplicado',
-        8.3,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0128',
-        'K2021630311',
-        'Ecuaciones Diferenciales',
-        8.8,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0129',
-        'K2021630311',
-        'Fundamentos de Diseño Digital',
-        9.0,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0130',
-        'K2021630311',
-        'Bases de Datos',
-        9.3,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0131',
-        'K2021630311',
-        'Finanzas Empresariales',
-        8.5,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 4
-    (
-        'UAA0132',
-        'K2021630311',
-        'Teoría de la Computación',
-        8.7,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0133',
-        'K2021630311',
-        'Probabilidad y Estadística',
-        9.0,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0134',
-        'K2021630311',
-        'Matemáticas Avanzadas para la Ingeniería',
-        8.2,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0135',
-        'K2021630311',
-        'Fundamentos de Inteligencia Artificial',
-        9.4,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0136',
-        'K2021630311',
-        'Diseño de Sistemas Digitales',
-        8.6,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0137',
-        'K2021630311',
-        'Análisis y Diseño de Sistemas',
-        8.9,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 5
-    (
-        'UAA0138',
-        'K2021630311',
-        'Procesamiento de Señales',
-        8.4,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0139',
-        'K2021630311',
-        'Paradigmas de Programación',
-        8.8,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0140',
-        'K2021630311',
-        'Tecnologías para el Desarrollo de Aplicaciones Web',
-        9.1,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0141',
-        'K2021630311',
-        'Procesamiento Digital de Señales',
-        8.5,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0142',
-        'K2021630311',
-        'Gestión Empresarial',
-        8.3,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 6
-    (
-        'UAA0143',
-        'K2021630311',
-        'Aprendizaje de Máquina',
-        9.5,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0144',
-        'K2021630311',
-        'Tecnologías de Lenguaje Natural',
-        9.2,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0145',
-        'K2021630311',
-        'Cómputo Paralelo',
-        8.7,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0146',
-        'K2021630311',
-        'Ingeniería de Software para Sistemas Inteligentes',
-        9.0,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0147',
-        'K2021630311',
-        'Metodología de la Investigación y Divulgación Científica',
-        8.8,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 7
-    (
-        'UAA0148',
-        'K2021630311',
-        'Visión Artificial',
-        9.3,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0149',
-        'K2021630311',
-        'Reconocimiento de Voz',
-        9.1,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0150',
-        'K2021630311',
-        'Algoritmos Bioinspirados',
-        8.9,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0151',
-        'K2021630311',
-        'Redes Neuronales y Aprendizaje Profundo',
-        9.6,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    -- Alumno 2021630312 (LCD - 8vo semestre) - Historial completo de semestres 1-7
-    -- Semestre 1
-    (
-        'UAA0152',
-        'K2021630312',
-        'Fundamentos de Programación',
-        8.3,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0153',
-        'K2021630312',
-        'Matemáticas Discretas',
-        8.7,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0154',
-        'K2021630312',
-        'Cálculo',
-        8.9,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0155',
-        'K2021630312',
-        'Comunicación Oral y Escrita',
-        9.0,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0156',
-        'K2021630312',
-        'Introducción a la Ciencia de Datos',
-        9.2,
-        1,
-        '2022-06-20',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 2
-    (
-        'UAA0157',
-        'K2021630312',
-        'Algoritmos y Estructuras de Datos',
-        8.6,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0158',
-        'K2021630312',
-        'Álgebra Lineal',
-        8.8,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0159',
-        'K2021630312',
-        'Cálculo Multivariable',
-        8.4,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0160',
-        'K2021630312',
-        'Ética y Legalidad',
-        9.3,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0161',
-        'K2021630312',
-        'Fundamentos Económicos',
-        8.5,
-        2,
-        '2022-12-20',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 3
-    (
-        'UAA0162',
-        'K2021630312',
-        'Análisis y Diseño de Algoritmos',
-        8.9,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0163',
-        'K2021630312',
-        'Programación para Ciencia de Datos',
-        9.1,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0164',
-        'K2021630312',
-        'Probabilidad',
-        8.7,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0165',
-        'K2021630312',
-        'Bases de Datos',
-        9.0,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0166',
-        'K2021630312',
-        'Métodos Numéricos',
-        8.5,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0167',
-        'K2021630312',
-        'Finanzas Empresariales',
-        8.6,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 4
-    (
-        'UAA0168',
-        'K2021630312',
-        'Desarrollo de Aplicaciones Web',
-        8.8,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0169',
-        'K2021630312',
-        'Cómputo de Alto Desempeño',
-        8.4,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0170',
-        'K2021630312',
-        'Estadística',
-        9.2,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0171',
-        'K2021630312',
-        'Base de Datos Avanzadas',
-        8.9,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0172',
-        'K2021630312',
-        'Desarrollo de Aplicaciones para Análisis de Datos',
-        9.0,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0173',
-        'K2021630312',
-        'Liderazgo Personal',
-        8.7,
-        4,
-        '2023-2',
-        '2023-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 5
-    (
-        'UAA0174',
-        'K2021630312',
-        'Minería de Datos',
-        9.3,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0175',
-        'K2021630312',
-        'Matemáticas Avanzadas para Ciencia de Datos',
-        8.6,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0176',
-        'K2021630312',
-        'Procesos Estocásticos',
-        8.8,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0177',
-        'K2021630312',
-        'Aprendizaje de Máquina e Inteligencia Artificial',
-        9.5,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0178',
-        'K2021630312',
-        'Analítica y Visualización de Datos',
-        9.1,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0179',
-        'K2021630312',
-        'Metodología de la Investigación y Divulgación Científica',
-        8.9,
-        5,
-        '2024-1',
-        '2024-06-20',
-        'Ordinario'
-    ),
-    -- Semestre 6
-    (
-        'UAA0180',
-        'K2021630312',
-        'Modelado Predictivo',
-        9.2,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0181',
-        'K2021630312',
-        'Procesamiento de Lenguaje Natural',
-        8.8,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0182',
-        'K2021630312',
-        'Análisis de Series de Tiempo',
-        9.0,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0183',
-        'K2021630312',
-        'Analítica Avanzada de Datos',
-        9.3,
-        6,
-        '2024-2',
-        '2024-12-20',
-        'Ordinario'
-    ),
-    -- Semestre 7
-    (
-        'UAA0184',
-        'K2021630312',
-        'Big Data',
-        9.4,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0185',
-        'K2021630312',
-        'Modelos Econométricos',
-        8.9,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0186',
-        'K2021630312',
-        'Trabajo Terminal I',
-        9.6,
-        7,
-        '2025-1',
-        '2025-06-20',
-        'Ordinario'
-    ),
-    -- Historial académico del Alumno Desfasado 2022630401 - Cursando 6to semestre con materias atrasadas
-    (
-        'UAA0187',
-        'K2022630401',
-        'Fundamentos de Programación',
-        8.0,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0188',
-        'K2022630401',
-        'Matemáticas Discretas',
-        7.8,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0189',
-        'K2022630401',
-        'Cálculo',
-        8.5,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0190',
-        'K2022630401',
-        'Comunicación Oral y Escrita',
-        8.9,
-        1,
-        '2022-1',
-        '2022-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0191',
-        'K2022630401',
-        'Algoritmos y Estructuras de Datos',
-        7.6,
-        2,
-        '2022-2',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0192',
-        'K2022630401',
-        'Álgebra Lineal',
-        7.2,
-        2,
-        '2022-2',
-        '2022-12-20',
-        'Extraordinario'
-    ),
-    (
-        'UAA0193',
-        'K2022630401',
-        'Cálculo Multivariable',
-        8.3,
-        2,
-        '2022-2',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0194',
-        'K2022630401',
-        'Fundamentos Económicos',
-        8.1,
-        2,
-        '2022-2',
-        '2022-12-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0195',
-        'K2022630401',
-        'Análisis y Diseño de Algoritmos',
-        7.9,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0196',
-        'K2022630401',
-        'Programación para Ciencia de Datos',
-        8.2,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0197',
-        'K2022630401',
-        'Probabilidad',
-        7.4,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Extraordinario'
-    ),
-    (
-        'UAA0198',
-        'K2022630401',
-        'Bases de Datos',
-        8.6,
-        3,
-        '2023-1',
-        '2023-06-20',
-        'Ordinario'
-    );
+    ('UAA0004', 'K2024630102', 'Fundamentos de Programación', 8.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0005', 'K2024630102', 'Matemáticas Discretas', 8.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0006', 'K2024630102', 'Cálculo', 8.1, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0007', 'K2024630103', 'Fundamentos de Programación', 7.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0008', 'K2024630103', 'Matemáticas Discretas', 7.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0009', 'K2024630103', 'Cálculo', 8.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0010', 'K2024630104', 'Fundamentos de Programación', 8.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0011', 'K2024630104', 'Matemáticas Discretas', 9.1, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0012', 'K2024630104', 'Cálculo', 8.7, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0013', 'K2024630105', 'Fundamentos de Programación', 8.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0014', 'K2024630105', 'Matemáticas Discretas', 8.0, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0015', 'K2024630105', 'Cálculo', 8.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0016', 'K2024630106', 'Fundamentos de Programación', 7.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0017', 'K2024630106', 'Matemáticas Discretas', 7.3, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0018', 'K2024630106', 'Cálculo', 7.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0019', 'K2024630107', 'Fundamentos de Programación', 8.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0020', 'K2024630107', 'Matemáticas Discretas', 8.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0021', 'K2024630107', 'Cálculo', 8.7, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0022', 'K2024630108', 'Fundamentos de Programación', 9.1, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0023', 'K2024630108', 'Matemáticas Discretas', 9.0, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0024', 'K2024630108', 'Cálculo', 9.3, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0025', 'K2024630109', 'Fundamentos de Programación', 7.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0026', 'K2024630109', 'Matemáticas Discretas', 7.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0027', 'K2024630109', 'Cálculo', 8.0, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0028', 'K2024630110', 'Fundamentos de Programación', 8.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0029', 'K2024630110', 'Matemáticas Discretas', 8.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0030', 'K2024630110', 'Cálculo', 8.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    -- LCD historial (10 x 3 materias)
+    ('UAA0031', 'K2024630201', 'Fundamentos de Programación', 9.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0032', 'K2024630201', 'Introducción a Ciencia de Datos', 9.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0033', 'K2024630201', 'Cálculo', 8.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0034', 'K2024630202', 'Fundamentos de Programación', 6.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0035', 'K2024630202', 'Introducción a Ciencia de Datos', 6.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0036', 'K2024630202', 'Cálculo', 6.0, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0037', 'K2024630203', 'Fundamentos de Programación', 8.1, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0038', 'K2024630203', 'Introducción a Ciencia de Datos', 8.0, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0039', 'K2024630203', 'Cálculo', 8.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0040', 'K2024630204', 'Fundamentos de Programación', 8.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0041', 'K2024630204', 'Introducción a Ciencia de Datos', 8.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0042', 'K2024630204', 'Cálculo', 8.7, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0043', 'K2024630205', 'Fundamentos de Programación', 7.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0044', 'K2024630205', 'Introducción a Ciencia de Datos', 7.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0045', 'K2024630205', 'Cálculo', 7.7, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0046', 'K2024630206', 'Fundamentos de Programación', 8.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0047', 'K2024630206', 'Introducción a Ciencia de Datos', 8.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0048', 'K2024630206', 'Cálculo', 8.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0049', 'K2024630207', 'Fundamentos de Programación', 9.0, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0050', 'K2024630207', 'Introducción a Ciencia de Datos', 9.1, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0051', 'K2024630207', 'Cálculo', 8.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0052', 'K2024630208', 'Fundamentos de Programación', 7.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0053', 'K2024630208', 'Introducción a Ciencia de Datos', 7.7, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0054', 'K2024630208', 'Cálculo', 7.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0055', 'K2024630209', 'Fundamentos de Programación', 8.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0056', 'K2024630209', 'Introducción a Ciencia de Datos', 8.1, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0057', 'K2024630209', 'Cálculo', 8.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0058', 'K2024630210', 'Fundamentos de Programación', 8.7, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0059', 'K2024630210', 'Introducción a Ciencia de Datos', 8.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0060', 'K2024630210', 'Cálculo', 8.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    -- ISC historial (10 x 3 materias)
+    ('UAA0061', 'K2024630301', 'Fundamentos de Programación', 8.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0062', 'K2024630301', 'Matemáticas Discretas', 8.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0063', 'K2024630301', 'Cálculo', 8.3, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0064', 'K2024630302', 'Fundamentos de Programación', 8.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0065', 'K2024630302', 'Matemáticas Discretas', 8.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0066', 'K2024630302', 'Cálculo', 8.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0067', 'K2024630303', 'Fundamentos de Programación', 8.9, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0068', 'K2024630303', 'Matemáticas Discretas', 9.0, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0069', 'K2024630303', 'Cálculo', 8.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0070', 'K2024630304', 'Fundamentos de Programación', 7.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0071', 'K2024630304', 'Matemáticas Discretas', 7.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0072', 'K2024630304', 'Cálculo', 7.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0073', 'K2024630305', 'Fundamentos de Programación', 8.3, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0074', 'K2024630305', 'Matemáticas Discretas', 8.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0075', 'K2024630305', 'Cálculo', 8.5, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0076', 'K2024630306', 'Fundamentos de Programación', 8.1, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0077', 'K2024630306', 'Matemáticas Discretas', 8.0, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0078', 'K2024630306', 'Cálculo', 8.3, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0079', 'K2024630307', 'Fundamentos de Programación', 8.7, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0080', 'K2024630307', 'Matemáticas Discretas', 8.8, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0081', 'K2024630307', 'Cálculo', 8.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0082', 'K2024630308', 'Fundamentos de Programación', 7.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0083', 'K2024630308', 'Matemáticas Discretas', 7.1, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0084', 'K2024630308', 'Cálculo', 7.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0085', 'K2024630309', 'Fundamentos de Programación', 8.4, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0086', 'K2024630309', 'Matemáticas Discretas', 8.3, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0087', 'K2024630309', 'Cálculo', 8.6, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0088', 'K2024630310', 'Fundamentos de Programación', 9.2, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0089', 'K2024630310', 'Matemáticas Discretas', 9.3, 1, '2024-1', '2024-06-20', 'Ordinario'),
+    ('UAA0090', 'K2024630310', 'Cálculo', 9.1, 1, '2024-1', '2024-06-20', 'Ordinario');
 
 -- ==================================================================
--- 7. INSERCIÓN DE MATERIAS REPROBADAS/DESFASADAS
+-- 5. INSERCIÓN DE HORARIOS PARA ESTUDIANTES
 -- ==================================================================
-DELETE FROM materia_reprobada;
+DELETE FROM mat_inscritos;
+DELETE FROM horario;
 
-INSERT INTO
-    materia_reprobada (
-        id,
-        id_estudiante,
-        id_ua,
-        periodos_restantes,
-        recurse,
-        estado_actual
-    )
-VALUES
-    -- Materias desfasadas del alumno 2022630401 (Cursando 6to semestre con materias de 4to y 5to pendientes)
-    (
-        'MR2022630401001',
-        'EST2022630401',
-        'UA0112',
-        2,
-        0,
-        'Desfasada'
-    ),
-    (
-        'MR2022630401002',
-        'EST2022630401',
-        'UA0113',
-        2,
-        0,
-        'Desfasada'
-    ),
-    (
-        'MR2022630401003',
-        'EST2022630401',
-        'UA0110',
-        2,
-        0,
-        'Desfasada'
-    ),
-    (
-        'MR2022630401004',
-        'EST2022630401',
-        'UA0111',
-        2,
-        0,
-        'Desfasada'
-    );
-
--- ==================================================================
--- 8. INSCRIPCIÓN DE ALUMNO DESFASADO A MATERIA Y REGISTROS DE ASISTENCIA
--- ==================================================================
--- Crear horario para el alumno desfasado (2022630401)
+-- ===== HORARIOS PARA IIA (10 alumnos) =====
 INSERT INTO horario (id, id_alumno)
-VALUES ('HOR20226304', '2022630401');
-
--- Inscribir al alumno en una materia del grupo existente (UA0112 - Desarrollo de Aplicaciones Web)
--- Usando grupo válido 'G_OPT_001' que existe en la tabla grupo
-INSERT INTO mat_inscritos (id, id_horario, id_grupo)
-VALUES ('MAT20226304', 'HOR20226304', 'G_OPT_001');
-
--- Agregar 10 registros de asistencia para el alumno (del 1 al 10 de diciembre de 2025)
-INSERT INTO lista (id, id_inscrito, fecha, asistencia)
 VALUES
-    ('LIS202263040001', 'MAT20226304', '2025-12-01', 'Si'),
-    ('LIS202263040002', 'MAT20226304', '2025-12-02', 'Si'),
-    ('LIS202263040003', 'MAT20226304', '2025-12-03', 'No'),
-    ('LIS202263040004', 'MAT20226304', '2025-12-04', 'Si'),
-    ('LIS202263040005', 'MAT20226304', '2025-12-05', 'Si'),
-    ('LIS202263040006', 'MAT20226304', '2025-12-08', 'Si'),
-    ('LIS202263040007', 'MAT20226304', '2025-12-09', 'Si'),
-    ('LIS202263040008', 'MAT20226304', '2025-12-10', 'Si'),
-    ('LIS202263040009', 'MAT20226304', '2025-12-11', 'Si'),
-    ('LIS202263040010', 'MAT20226304', '2025-12-12', 'Si');
+    ('HOR2024630101', '2024630101'),
+    ('HOR2024630102', '2024630102'),
+    ('HOR2024630103', '2024630103'),
+    ('HOR2024630104', '2024630104'),
+    ('HOR2024630105', '2024630105'),
+    ('HOR2024630106', '2024630106'),
+    ('HOR2024630107', '2024630107'),
+    ('HOR2024630108', '2024630108'),
+    ('HOR2024630109', '2024630109'),
+    ('HOR2024630110', '2024630110'),
+    -- ===== HORARIOS PARA LCD (10 alumnos) =====
+    ('HOR2024630201', '2024630201'),
+    ('HOR2024630202', '2024630202'),
+    ('HOR2024630203', '2024630203'),
+    ('HOR2024630204', '2024630204'),
+    ('HOR2024630205', '2024630205'),
+    ('HOR2024630206', '2024630206'),
+    ('HOR2024630207', '2024630207'),
+    ('HOR2024630208', '2024630208'),
+    ('HOR2024630209', '2024630209'),
+    ('HOR2024630210', '2024630210'),
+    -- ===== HORARIOS PARA ISC (10 alumnos) =====
+    ('HOR2024630301', '2024630301'),
+    ('HOR2024630302', '2024630302'),
+    ('HOR2024630303', '2024630303'),
+    ('HOR2024630304', '2024630304'),
+    ('HOR2024630305', '2024630305'),
+    ('HOR2024630306', '2024630306'),
+    ('HOR2024630307', '2024630307'),
+    ('HOR2024630308', '2024630308'),
+    ('HOR2024630309', '2024630309'),
+    ('HOR2024630310', '2024630310');
+
+-- ===== INSCRIPCIONES A MATERIAS (mat_inscritos) =====
+-- IIA - Fundamentos de Programación
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246301011', 'HOR2024630101', 'G001M', 8.5, 8.8, 9.0, 8.8, NULL),
+    ('MAT20246301021', 'HOR2024630102', 'G001M', 8.2, 8.5, 8.7, 8.5, NULL),
+    ('MAT20246301031', 'HOR2024630103', 'G001M', 7.8, 8.0, 8.2, 8.0, NULL),
+    ('MAT20246301041', 'HOR2024630104', 'G001M', 8.9, 9.0, 9.2, 9.0, NULL),
+    ('MAT20246301051', 'HOR2024630105', 'G001M', 8.0, 8.3, 8.4, 8.2, NULL),
+    ('MAT20246301061', 'HOR2024630106', 'G001V', 7.5, 7.6, 7.7, 7.6, NULL),
+    ('MAT20246301071', 'HOR2024630107', 'G001V', 8.5, 8.7, 8.8, 8.7, NULL),
+    ('MAT20246301081', 'HOR2024630108', 'G001V', 9.0, 9.1, 9.3, 9.1, NULL),
+    ('MAT20246301091', 'HOR2024630109', 'G001V', 7.8, 8.0, 8.1, 8.0, NULL),
+    ('MAT20246301101', 'HOR2024630110', 'G001V', 8.3, 8.5, 8.6, 8.5, NULL);
+
+-- IIA - Matemáticas Discretas
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246301012', 'HOR2024630101', 'G002M', 8.8, 8.9, 8.7, 8.8, NULL),
+    ('MAT20246301022', 'HOR2024630102', 'G002M', 8.0, 8.3, 8.4, 8.2, NULL),
+    ('MAT20246301032', 'HOR2024630103', 'G002M', 7.3, 7.6, 7.8, 7.5, NULL),
+    ('MAT20246301042', 'HOR2024630104', 'G002M', 9.1, 9.0, 9.2, 9.1, NULL),
+    ('MAT20246301052', 'HOR2024630105', 'G002M', 7.9, 8.1, 8.2, 8.0, NULL),
+    ('MAT20246301062', 'HOR2024630106', 'G002V', 7.1, 7.4, 7.5, 7.3, NULL),
+    ('MAT20246301072', 'HOR2024630107', 'G002V', 8.4, 8.6, 8.7, 8.5, NULL),
+    ('MAT20246301082', 'HOR2024630108', 'G002V', 8.9, 9.1, 9.0, 9.0, NULL),
+    ('MAT20246301092', 'HOR2024630109', 'G002V', 7.6, 7.9, 8.0, 7.8, NULL),
+    ('MAT20246301102', 'HOR2024630110', 'G002V', 8.4, 8.6, 8.5, 8.5, NULL);
+
+-- IIA - Cálculo
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246301013', 'HOR2024630101', 'G003M', 7.8, 8.0, 8.1, 7.9, NULL),
+    ('MAT20246301023', 'HOR2024630102', 'G003M', 8.0, 8.2, 8.3, 8.1, NULL),
+    ('MAT20246301033', 'HOR2024630103', 'G003M', 8.0, 8.3, 8.4, 8.2, NULL),
+    ('MAT20246301043', 'HOR2024630104', 'G003M', 8.5, 8.8, 8.9, 8.7, NULL),
+    ('MAT20246301053', 'HOR2024630105', 'G003M', 8.2, 8.5, 8.6, 8.4, NULL),
+    ('MAT20246301063', 'HOR2024630106', 'G003V', 7.4, 7.6, 7.8, 7.6, NULL),
+    ('MAT20246301073', 'HOR2024630107', 'G003V', 8.6, 8.8, 8.9, 8.7, NULL),
+    ('MAT20246301083', 'HOR2024630108', 'G003V', 9.1, 9.3, 9.4, 9.3, NULL),
+    ('MAT20246301093', 'HOR2024630109', 'G003V', 7.8, 8.0, 8.2, 8.0, NULL),
+    ('MAT20246301103', 'HOR2024630110', 'G003V', 8.1, 8.3, 8.4, 8.2, NULL);
+
+-- LCD - Fundamentos de Programación
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246302011', 'HOR2024630201', 'G004M', 9.0, 9.2, 9.4, 9.2, NULL),
+    ('MAT20246302021', 'HOR2024630202', 'G004M', 6.5, 6.7, 6.8, 6.7, NULL),
+    ('MAT20246302031', 'HOR2024630203', 'G004M', 8.0, 8.2, 8.3, 8.1, NULL),
+    ('MAT20246302041', 'HOR2024630204', 'G004M', 8.6, 8.8, 9.0, 8.8, NULL),
+    ('MAT20246302051', 'HOR2024630205', 'G004M', 7.5, 7.7, 7.8, 7.6, NULL),
+    ('MAT20246302061', 'HOR2024630206', 'G004V', 8.4, 8.6, 8.7, 8.5, NULL),
+    ('MAT20246302071', 'HOR2024630207', 'G004V', 8.8, 9.0, 9.2, 9.0, NULL),
+    ('MAT20246302081', 'HOR2024630208', 'G004V', 7.6, 7.8, 8.0, 7.8, NULL),
+    ('MAT20246302091', 'HOR2024630209', 'G004V', 8.0, 8.2, 8.4, 8.2, NULL),
+    ('MAT20246302101', 'HOR2024630210', 'G004V', 8.5, 8.7, 8.9, 8.7, NULL);
+
+-- LCD - Introducción a Ciencia de Datos
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246302012', 'HOR2024630201', 'G005M', 9.2, 9.4, 9.5, 9.4, NULL),
+    ('MAT20246302022', 'HOR2024630202', 'G005M', 6.6, 6.8, 7.0, 6.8, NULL),
+    ('MAT20246302032', 'HOR2024630203', 'G005M', 8.0, 8.1, 8.2, 8.0, NULL),
+    ('MAT20246302042', 'HOR2024630204', 'G005M', 8.8, 8.9, 9.1, 8.9, NULL),
+    ('MAT20246302052', 'HOR2024630205', 'G005M', 7.4, 7.6, 7.7, 7.5, NULL),
+    ('MAT20246302062', 'HOR2024630206', 'G005V', 8.3, 8.5, 8.6, 8.4, NULL),
+    ('MAT20246302072', 'HOR2024630207', 'G005V', 9.0, 9.2, 9.3, 9.2, NULL),
+    ('MAT20246302082', 'HOR2024630208', 'G005V', 7.7, 7.9, 8.1, 7.9, NULL),
+    ('MAT20246302092', 'HOR2024630209', 'G005V', 8.1, 8.2, 8.4, 8.2, NULL),
+    ('MAT20246302102', 'HOR2024630210', 'G005V', 8.6, 8.8, 9.0, 8.8, NULL);
+
+-- LCD - Cálculo
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246302013', 'HOR2024630201', 'G006M', 8.8, 9.0, 9.1, 8.9, NULL),
+    ('MAT20246302023', 'HOR2024630202', 'G006M', 5.8, 6.0, 6.2, 6.0, NULL),
+    ('MAT20246302033', 'HOR2024630203', 'G006M', 8.0, 8.2, 8.4, 8.2, NULL),
+    ('MAT20246302043', 'HOR2024630204', 'G006M', 8.6, 8.8, 8.9, 8.7, NULL),
+    ('MAT20246302053', 'HOR2024630205', 'G006M', 7.5, 7.7, 7.9, 7.7, NULL),
+    ('MAT20246302063', 'HOR2024630206', 'G006V', 8.4, 8.6, 8.8, 8.6, NULL),
+    ('MAT20246302073', 'HOR2024630207', 'G006V', 8.7, 8.9, 9.1, 8.9, NULL),
+    ('MAT20246302083', 'HOR2024630208', 'G006V', 7.7, 7.9, 8.1, 7.9, NULL),
+    ('MAT20246302093', 'HOR2024630209', 'G006V', 8.2, 8.4, 8.6, 8.4, NULL),
+    ('MAT20246302103', 'HOR2024630210', 'G006V', 8.4, 8.6, 8.8, 8.6, NULL);
+
+-- ISC - Fundamentos de Programación
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246303011', 'HOR2024630301', 'G007M', 8.4, 8.6, 8.7, 8.5, NULL),
+    ('MAT20246303021', 'HOR2024630302', 'G007M', 8.4, 8.6, 8.7, 8.5, NULL),
+    ('MAT20246303031', 'HOR2024630303', 'G007M', 8.8, 9.0, 9.1, 8.9, NULL),
+    ('MAT20246303041', 'HOR2024630304', 'G007M', 7.4, 7.6, 7.7, 7.5, NULL),
+    ('MAT20246303051', 'HOR2024630305', 'G007M', 8.2, 8.3, 8.5, 8.3, NULL),
+    ('MAT20246303061', 'HOR2024630306', 'G007V', 8.0, 8.2, 8.3, 8.1, NULL),
+    ('MAT20246303071', 'HOR2024630307', 'G007V', 8.6, 8.8, 8.9, 8.7, NULL),
+    ('MAT20246303081', 'HOR2024630308', 'G007V', 7.1, 7.3, 7.4, 7.2, NULL),
+    ('MAT20246303091', 'HOR2024630309', 'G007V', 8.3, 8.5, 8.6, 8.4, NULL),
+    ('MAT20246303101', 'HOR2024630310', 'G007V', 9.0, 9.2, 9.3, 9.2, NULL);
+
+-- ISC - Matemáticas Discretas
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246303012', 'HOR2024630301', 'G008M', 8.5, 8.7, 8.8, 8.6, NULL),
+    ('MAT20246303022', 'HOR2024630302', 'G008M', 8.3, 8.5, 8.6, 8.4, NULL),
+    ('MAT20246303032', 'HOR2024630303', 'G008M', 8.9, 9.1, 9.2, 9.0, NULL),
+    ('MAT20246303042', 'HOR2024630304', 'G008M', 7.3, 7.5, 7.6, 7.4, NULL),
+    ('MAT20246303052', 'HOR2024630305', 'G008M', 8.1, 8.3, 8.4, 8.2, NULL),
+    ('MAT20246303062', 'HOR2024630306', 'G008V', 7.9, 8.1, 8.2, 8.0, NULL),
+    ('MAT20246303072', 'HOR2024630307', 'G008V', 8.7, 8.9, 9.0, 8.8, NULL),
+    ('MAT20246303082', 'HOR2024630308', 'G008V', 7.0, 7.2, 7.3, 7.1, NULL),
+    ('MAT20246303092', 'HOR2024630309', 'G008V', 8.2, 8.4, 8.5, 8.3, NULL),
+    ('MAT20246303102', 'HOR2024630310', 'G008V', 9.2, 9.3, 9.4, 9.3, NULL);
+
+-- ISC - Cálculo
+INSERT INTO mat_inscritos (id, id_horario, id_grupo, calificacion_primer, calificacion_segundo, calificacion_tercer, calificacion_final, extra)
+VALUES
+    ('MAT20246303013', 'HOR2024630301', 'G009M', 8.2, 8.4, 8.5, 8.3, NULL),
+    ('MAT20246303023', 'HOR2024630302', 'G009M', 8.5, 8.7, 8.8, 8.6, NULL),
+    ('MAT20246303033', 'HOR2024630303', 'G009M', 8.7, 8.9, 9.0, 8.8, NULL),
+    ('MAT20246303043', 'HOR2024630304', 'G009M', 7.5, 7.7, 7.8, 7.6, NULL),
+    ('MAT20246303053', 'HOR2024630305', 'G009M', 8.4, 8.6, 8.7, 8.5, NULL),
+    ('MAT20246303063', 'HOR2024630306', 'G009V', 8.2, 8.4, 8.5, 8.3, NULL),
+    ('MAT20246303073', 'HOR2024630307', 'G009V', 8.5, 8.7, 8.8, 8.6, NULL),
+    ('MAT20246303083', 'HOR2024630308', 'G009V', 7.3, 7.5, 7.6, 7.5, NULL),
+    ('MAT20246303093', 'HOR2024630309', 'G009V', 8.5, 8.7, 8.8, 8.6, NULL),
+    ('MAT20246303103', 'HOR2024630310', 'G009V', 9.0, 9.2, 9.3, 9.1, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
-
-
-
-
