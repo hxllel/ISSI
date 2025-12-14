@@ -1347,9 +1347,10 @@ module.exports = (passport) => {
         // Verificar traslapes
         for (const dis of distriNuevo) {
           for (const dis2 of distribucionesExistentes) {
+            console.log(dis);
+            console.log(dis2);
             if (seTraslapan(dis, dis2)) {
               val = 0;
-
               // Marcar el grupo existente como no válido
               await bd.Borrador_Horario.update(
                 { valido: 0 },

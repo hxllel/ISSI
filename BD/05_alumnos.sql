@@ -1392,7 +1392,7 @@ INSERT INTO
         metodo_aprobado
     )
 VALUES
-    -- IIA historial de 1er semestre (10 x 3 materias)
+    (-- IIA historial de 1er semestre (10 x 3 materias)
     (
         'UAA0001',
         'K2024630101',
@@ -1401,297 +1401,239 @@ VALUES
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0002',
+        'Extraordinario '),
+    ('UAA0002',
         'K2024630101',
         'Matemáticas Discretas',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0003',
+        'Ordinario'),
+    ('UAA0003',
         'K2024630101',
         'Cálculo',
         7.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0004',
+        'Ordinario'),
+    ('UAA0004',
         'K2024630102',
         'Fundamentos de Programación',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0005',
+        'Ordinario'),
+    ('UAA0005',
         'K2024630102',
         'Matemáticas Discretas',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0006',
+        'Ordinario'),
+    ('UAA0006',
         'K2024630102',
         'Cálculo',
         8.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0007',
+        'Ordinario'),
+    ('UAA0007',
         'K2024630103',
         'Fundamentos de Programación',
         7.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0008',
+        'Extraordinario '),
+    ('UAA0008',
         'K2024630103',
         'Matemáticas Discretas',
         7.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0009',
+        'Ordinario'),
+    ('UAA0009',
         'K2024630103',
         'Cálculo',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0010',
+        'Ordinario'),
+    ('UAA0010',
         'K2024630104',
         'Fundamentos de Programación',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0011',
+        'Ordinario'),
+    ('UAA0011',
         'K2024630104',
         'Matemáticas Discretas',
         9.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0012',
+        'Ordinario'),
+    ('UAA0012',
         'K2024630104',
         'Cálculo',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0013',
+        'Extraordinario '),
+    ('UAA0013',
         'K2024630105',
         'Fundamentos de Programación',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0014',
+        'Ordinario'),
+    ('UAA0014',
         'K2024630105',
         'Matemáticas Discretas',
         8.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0015',
+        'Ordinario'),
+    ('UAA0015',
         'K2024630105',
         'Cálculo',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0016',
+        'Extraordinario '),
+    ('UAA0016',
         'K2024630106',
         'Fundamentos de Programación',
         7.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0017',
+        'Ordinario'),
+    ('UAA0017',
         'K2024630106',
         'Matemáticas Discretas',
         7.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0018',
+        'Extraordinario en recurse'),
+    ('UAA0018',
         'K2024630106',
         'Cálculo',
         7.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0019',
+        'Extraordinario en recurse'),
+    ('UAA0019',
         'K2024630107',
         'Fundamentos de Programación',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0020',
+        'Recurse'),
+    ('UAA0020',
         'K2024630107',
         'Matemáticas Discretas',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0021',
+        'Recurse'),
+    ('UAA0021',
         'K2024630107',
         'Cálculo',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0022',
+        'Ordinario'),
+    ('UAA0022',
         'K2024630108',
         'Fundamentos de Programación',
         9.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0023',
+        'Extraordinario en recurse'),
+    ('UAA0023',
         'K2024630108',
         'Matemáticas Discretas',
         9.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0024',
+        'Extraordinario '),
+    ('UAA0024',
         'K2024630108',
         'Cálculo',
         9.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0025',
+        'Recurse'),
+    ('UAA0025',
         'K2024630109',
         'Fundamentos de Programación',
         7.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0026',
+        'Recurse'),
+    ('UAA0026',
         'K2024630109',
         'Matemáticas Discretas',
         7.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0027',
+        'Ordinario'),
+    ('UAA0027',
         'K2024630109',
         'Cálculo',
         8.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0028',
+        'Extraordinario '),
+    ('UAA0028',
         'K2024630110',
         'Fundamentos de Programación',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0029',
+        'Ordinario'),
+    ('UAA0029',
         'K2024630110',
         'Matemáticas Discretas',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0030',
+        'Extraordinario en recurse'),
+    ('UAA0030',
         'K2024630110',
         'Cálculo',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
+        'Recurse'
     ),
     -- LCD historial (10 x 3 materias)
     (
@@ -1702,297 +1644,239 @@ VALUES
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0032',
+        'Extraordinario '),
+    ('UAA0032',
         'K2024630201',
-        'Introducción a Ciencia de Datos',
+        'Fundamentos de Programación',
         9.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0033',
+        'Ordinario'),
+    ('UAA0033',
         'K2024630201',
         'Cálculo',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0034',
+        'Ordinario'),
+    ('UAA0034',
         'K2024630202',
         'Fundamentos de Programación',
         6.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0035',
+        'Ordinario'),
+    ('UAA0035',
         'K2024630202',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         6.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0036',
+        'Recurse'),
+    ('UAA0036',
         'K2024630202',
         'Cálculo',
         6.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0037',
+        'Recurse'),
+    ('UAA0037',
         'K2024630203',
         'Fundamentos de Programación',
         8.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0038',
+        'Ordinario'),
+    ('UAA0038',
         'K2024630203',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         8.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0039',
+        'Recurse'),
+    ('UAA0039',
         'K2024630203',
         'Cálculo',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0040',
+        'Extraordinario '),
+    ('UAA0040',
         'K2024630204',
         'Fundamentos de Programación',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0041',
+        'Extraordinario en recurse'),
+    ('UAA0041',
         'K2024630204',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0042',
+        'Ordinario'),
+    ('UAA0042',
         'K2024630204',
         'Cálculo',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0043',
+        'Extraordinario '),
+    ('UAA0043',
         'K2024630205',
         'Fundamentos de Programación',
         7.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0044',
+        'Extraordinario '),
+    ('UAA0044',
         'K2024630205',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         7.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0045',
+        'Ordinario'),
+    ('UAA0045',
         'K2024630205',
         'Cálculo',
         7.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0046',
+        'Ordinario'),
+    ('UAA0046',
         'K2024630206',
         'Fundamentos de Programación',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0047',
+        'Ordinario'),
+    ('UAA0047',
         'K2024630206',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0048',
+        'Ordinario'),
+    ('UAA0048',
         'K2024630206',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0049',
+        'Ordinario'),
+    ('UAA0049',
         'K2024630207',
         'Fundamentos de Programación',
         9.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0050',
+        'Ordinario'),
+    ('UAA0050',
         'K2024630207',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         9.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0051',
+        'Recurse'),
+    ('UAA0051',
         'K2024630207',
         'Cálculo',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0052',
+        'Ordinario'),
+    ('UAA0052',
         'K2024630208',
         'Fundamentos de Programación',
         7.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0053',
+        'Ordinario'),
+    ('UAA0053',
         'K2024630208',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         7.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0054',
+        'Ordinario'),
+    ('UAA0054',
         'K2024630208',
         'Cálculo',
         7.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0055',
+        'Recurse'),
+    ('UAA0055',
         'K2024630209',
         'Fundamentos de Programación',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0056',
+        'Ordinario'),
+    ('UAA0056',
         'K2024630209',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         8.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0057',
+        'Ordinario'),
+    ('UAA0057',
         'K2024630209',
         'Cálculo',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0058',
+        'Ordinario'),
+    ('UAA0058',
         'K2024630210',
         'Fundamentos de Programación',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0059',
+        'Ordinario'),
+    ('UAA0059',
         'K2024630210',
-        'Introducción a Ciencia de Datos',
+        'Matemáticas Discretas',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0060',
+        'Extraordinario en recurse'),
+    ('UAA0060',
         'K2024630210',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
+        'Extraordinario en recurse'
     ),
     -- ISC historial (10 x 3 materias)
     (
@@ -2003,298 +1887,3253 @@ VALUES
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0062',
+        'Extraordinario '),
+    ('UAA0062',
         'K2024630301',
         'Matemáticas Discretas',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0063',
+        'Ordinario'),
+    ('UAA0063',
         'K2024630301',
         'Cálculo',
         8.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0064',
+        'Ordinario'),
+    ('UAA0064',
         'K2024630302',
         'Fundamentos de Programación',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0065',
+        'Ordinario'),
+    ('UAA0065',
         'K2024630302',
         'Matemáticas Discretas',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0066',
+        'Ordinario'),
+    ('UAA0066',
         'K2024630302',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0067',
+        'Ordinario'),
+    ('UAA0067',
         'K2024630303',
         'Fundamentos de Programación',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0068',
+        'Ordinario'),
+    ('UAA0068',
         'K2024630303',
         'Matemáticas Discretas',
         9.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0069',
+        'Extraordinario en recurse'),
+    ('UAA0069',
         'K2024630303',
         'Cálculo',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0070',
+        'Recurse'),
+    ('UAA0070',
         'K2024630304',
         'Fundamentos de Programación',
         7.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0071',
+        'Recurse'),
+    ('UAA0071',
         'K2024630304',
         'Matemáticas Discretas',
         7.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0072',
+        'Ordinario'),
+    ('UAA0072',
         'K2024630304',
         'Cálculo',
         7.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0073',
+        'Ordinario'),
+    ('UAA0073',
         'K2024630305',
         'Fundamentos de Programación',
         8.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0074',
+        'Ordinario'),
+    ('UAA0074',
         'K2024630305',
         'Matemáticas Discretas',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0075',
+        'Ordinario'),
+    ('UAA0075',
         'K2024630305',
         'Cálculo',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0076',
+        'Extraordinario '),
+    ('UAA0076',
         'K2024630306',
         'Fundamentos de Programación',
         8.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0077',
+        'Ordinario'),
+    ('UAA0077',
         'K2024630306',
         'Matemáticas Discretas',
         8.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0078',
+        'ETS'),
+    ('UAA0078',
         'K2024630306',
         'Cálculo',
         8.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0079',
+        'ETS'),
+    ('UAA0079',
         'K2024630307',
         'Fundamentos de Programación',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0080',
+        'Ordinario'),
+    ('UAA0080',
         'K2024630307',
         'Matemáticas Discretas',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0081',
+        'ETS'),
+    ('UAA0081',
         'K2024630307',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0082',
+        'ETS'),
+    ('UAA0082',
         'K2024630308',
         'Fundamentos de Programación',
         7.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0083',
+        'Extraordinario '),
+    ('UAA0083',
         'K2024630308',
         'Matemáticas Discretas',
         7.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0084',
+        'Ordinario'),
+    ('UAA0084',
         'K2024630308',
         'Cálculo',
         7.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0085',
+        'Ordinario'),
+    ('UAA0085',
         'K2024630309',
         'Fundamentos de Programación',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0086',
+        'Ordinario'),
+    ('UAA0086',
         'K2024630309',
         'Matemáticas Discretas',
         8.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0087',
+        'Ordinario'),
+    ('UAA0087',
         'K2024630309',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0088',
+        'ETS'),
+    ('UAA0088',
         'K2024630310',
         'Fundamentos de Programación',
         9.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0089',
+        'Extraordinario '),
+    ('UAA0089',
         'K2024630310',
         'Matemáticas Discretas',
         9.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    ),
-    (
-        'UAA0090',
+        'ETS'),
+    ('UAA0090',
         'K2024630310',
         'Cálculo',
         9.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'
-    );
+        'ETS'
+    ),
+    -- --------------------------------------------------
+    -- ADICION: 10 UAs APROBADAS ADICIONALES POR ALUMNO
+    -- Para cada `kardex` K2024630xxxx se agregan 10 registros
+    -- Los nombres se eligieron para ser coherentes con la carrera
+    -- y evitar duplicar los tres asuntos actuales en `mat_inscritos`.
+    -- IDs generados de UAA0091 hasta UAA0390 (300 filas)
+    -- ==================================================
+
+-- IIA (K2024630101 .. K2024630110) 10 UAs por alumno
+(
+    'UAA0091',
+    'K2024630101',
+    'Programación Orientada a Objetos',
+    8.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0092',
+    'K2024630101',
+    'Algoritmos y Estructuras de Datos',
+    8.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0093',
+    'K2024630101',
+    'Ingeniería de Software',
+    8.7,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0094',
+    'K2024630101',
+    'Sistemas Operativos',
+    8.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'ETS'
+),
+(
+    'UAA0095',
+    'K2024630101',
+    'Bases de Datos',
+    8.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'ETS'
+),
+(
+    'UAA0096',
+    'K2024630101',
+    'Álgebra Lineal',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0097',
+    'K2024630101',
+    'Álgebra Lineal',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0098',
+    'K2024630101',
+    'Probabilidad y Estadística',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0099',
+    'K2024630101',
+    'Teoría de la Computación',
+    9.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0100',
+    'K2024630101',
+    'Matemáticas Avanzadas para la Ingeniería',
+    9.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0101',
+    'K2024630102',
+    'Algoritmos y Estructuras de Datos',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0102',
+    'K2024630102',
+    'Álgebra Lineal',
+    7.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'ETS'
+),
+(
+    'UAA0103',
+    'K2024630102',
+    'Ingeniería de Software',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0104',
+    'K2024630102',
+    'Sistemas Operativos',
+    7.8,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0105',
+    'K2024630102',
+    'Bases de Datos',
+    8.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0106',
+    'K2024630102',
+    'Mecánica y Electromagnetismo',
+    7.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0107',
+    'K2024630102',
+    'Álgebra Lineal',
+    7.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0108',
+    'K2024630102',
+    'Probabilidad y Estadística',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0109',
+    'K2024630102',
+    'Teoría de la Computación',
+    8.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0110',
+    'K2024630102',
+    'Matemáticas Avanzadas para la Ingeniería',
+    8.9,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0111',
+    'K2024630103',
+    'Algoritmos y Estructuras de Datos',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'ETS'
+),
+(
+    'UAA0112',
+    'K2024630103',
+    'Álgebra Lineal',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0113',
+    'K2024630103',
+    'Ingeniería de Software',
+    8.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0114',
+    'K2024630103',
+    'Sistemas Operativos',
+    7.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0115',
+    'K2024630103',
+    'Bases de Datos',
+    8.5,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0116',
+    'K2024630103',
+    'Mecánica y Electromagnetismo',
+    7.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0117',
+    'K2024630103',
+    'Álgebra Lineal',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0118',
+    'K2024630103',
+    'Probabilidad y Estadística',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0119',
+    'K2024630103',
+    'Teoría de la Computación',
+    8.7,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0120',
+    'K2024630103',
+    'Matemáticas Avanzadas para la Ingeniería',
+    8.8,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0121',
+    'K2024630104',
+    'Algoritmos y Estructuras de Datos',
+    8.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0122',
+    'K2024630104',
+    'Álgebra Lineal',
+    8.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0123',
+    'K2024630104',
+    'Ingeniería de Software',
+    8.7,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0124',
+    'K2024630104',
+    'Sistemas Operativos',
+    8.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0125',
+    'K2024630104',
+    'Bases de Datos',
+    8.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'ETS'
+),
+(
+    'UAA0126',
+    'K2024630104',
+    'Mecánica y Electromagnetismo',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'ETS'
+),
+(
+    'UAA0127',
+    'K2024630104',
+    'Álgebra Lineal',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'ETS'
+),
+(
+    'UAA0128',
+    'K2024630104',
+    'Probabilidad y Estadística',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0129',
+    'K2024630104',
+    'Teoría de la Computación',
+    9.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0130',
+    'K2024630104',
+    'Matemáticas Avanzadas para la Ingeniería',
+    9.2,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0131',
+    'K2024630105',
+    'Algoritmos y Estructuras de Datos',
+    7.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0132',
+    'K2024630105',
+    'Álgebra Lineal',
+    7.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0133',
+    'K2024630105',
+    'Ingeniería de Software',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0134',
+    'K2024630105',
+    'Sistemas Operativos',
+    7.6,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0135',
+    'K2024630105',
+    'Bases de Datos',
+    8.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'ETS'
+),
+(
+    'UAA0136',
+    'K2024630105',
+    'Mecánica y Electromagnetismo',
+    7.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0137',
+    'K2024630105',
+    'Álgebra Lineal',
+    7.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0138',
+    'K2024630105',
+    'Probabilidad y Estadística',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0139',
+    'K2024630105',
+    'Teoría de la Computación',
+    8.4,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0140',
+    'K2024630105',
+    'Matemáticas Avanzadas para la Ingeniería',
+    8.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0141',
+    'K2024630106',
+    'Algoritmos y Estructuras de Datos',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0142',
+    'K2024630106',
+    'Álgebra Lineal',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0143',
+    'K2024630106',
+    'Ingeniería de Software',
+    8.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0144',
+    'K2024630106',
+    'Sistemas Operativos',
+    7.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0145',
+    'K2024630106',
+    'Bases de Datos',
+    8.3,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0146',
+    'K2024630106',
+    'Mecánica y Electromagnetismo',
+    7.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0147',
+    'K2024630106',
+    'Álgebra Lineal',
+    7.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0148',
+    'K2024630106',
+    'Probabilidad y Estadística',
+    7.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0149',
+    'K2024630106',
+    'Teoría de la Computación',
+    8.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0150',
+    'K2024630106',
+    'Matemáticas Avanzadas para la Ingeniería',
+    8.7,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0151',
+    'K2024630107',
+    'Algoritmos y Estructuras de Datos',
+    8.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0152',
+    'K2024630107',
+    'Álgebra Lineal',
+    8.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0153',
+    'K2024630107',
+    'Ingeniería de Software',
+    8.5,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0154',
+    'K2024630107',
+    'Sistemas Operativos',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0155',
+    'K2024630107',
+    'Bases de Datos',
+    8.6,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0156',
+    'K2024630107',
+    'Mecánica y Electromagnetismo',
+    7.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0157',
+    'K2024630107',
+    'Álgebra Lineal',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0158',
+    'K2024630107',
+    'Probabilidad y Estadística',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0159',
+    'K2024630107',
+    'Teoría de la Computación',
+    8.8,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0160',
+    'K2024630107',
+    'Matemáticas Avanzadas para la Ingeniería',
+    8.9,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0161',
+    'K2024630108',
+    'Algoritmos y Estructuras de Datos',
+    9.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0162',
+    'K2024630108',
+    'Álgebra Lineal',
+    8.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0163',
+    'K2024630108',
+    'Ingeniería de Software',
+    8.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0164',
+    'K2024630108',
+    'Sistemas Operativos',
+    8.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0165',
+    'K2024630108',
+    'Bases de Datos',
+    8.8,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0166',
+    'K2024630108',
+    'Mecánica y Electromagnetismo',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0167',
+    'K2024630108',
+    'Álgebra Lineal',
+    8.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0168',
+    'K2024630108',
+    'Probabilidad y Estadística',
+    8.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0169',
+    'K2024630108',
+    'Teoría de la Computación',
+    9.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0170',
+    'K2024630108',
+    'Matemáticas Avanzadas para la Ingeniería',
+    9.3,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0171',
+    'K2024630109',
+    'Algoritmos y Estructuras de Datos',
+    7.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0172',
+    'K2024630109',
+    'Álgebra Lineal',
+    7.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0173',
+    'K2024630109',
+    'Ingeniería de Software',
+    7.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0174',
+    'K2024630109',
+    'Sistemas Operativos',
+    7.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0175',
+    'K2024630109',
+    'Bases de Datos',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0176',
+    'K2024630109',
+    'Mecánica y Electromagnetismo',
+    7.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0177',
+    'K2024630109',
+    'Álgebra Lineal',
+    7.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0178',
+    'K2024630109',
+    'Probabilidad y Estadística',
+    7.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0179',
+    'K2024630109',
+    'Teoría de la Computación',
+    8.2,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0180',
+    'K2024630109',
+    'Matemáticas Avanzadas para la Ingeniería',
+    8.3,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0181',
+    'K2024630110',
+    'Algoritmos y Estructuras de Datos',
+    8.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0182',
+    'K2024630110',
+    'Álgebra Lineal',
+    8.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0183',
+    'K2024630110',
+    'Ingeniería de Software',
+    8.7,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0184',
+    'K2024630110',
+    'Sistemas Operativos',
+    8.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0185',
+    'K2024630110',
+    'Bases de Datos',
+    8.6,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0186',
+    'K2024630110',
+    'Cálculo Multivariable',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0187',
+    'K2024630110',
+    'Álgebra Lineal',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0188',
+    'K2024630110',
+    'Probabilidad y Estadística',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0189',
+    'K2024630110',
+    'Desarrollo de Aplicaciones Web',
+    9.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0190',
+    'K2024630110',
+    'Cómputo de Alto Desempeño',
+    9.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+
+-- LCD (K2024630201 .. K2024630210)
+(
+    'UAA0191',
+    'K2024630201',
+    'Programación para Datos',
+    9.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0192',
+    'K2024630201',
+    'Álgebra Lineal',
+    9.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0193',
+    'K2024630201',
+    'Cálculo Aplicado',
+    8.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0194',
+    'K2024630201',
+    'Ecuaciones Diferenciales',
+    9.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0195',
+    'K2024630201',
+    'Minería de Datos',
+    9.3,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0196',
+    'K2024630201',
+    'Probabilidad y Estadística',
+    9.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0197',
+    'K2024630201',
+    'Matemáticas Avanzadas para la Ingeniería',
+    8.9,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0198',
+    'K2024630201',
+    'Electrónica Analógica',
+    9.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0199',
+    'K2024630201',
+    'Mecánica y Electromagnetismo',
+    8.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0200',
+    'K2024630201',
+    'Ingeniería, Ética y Sociedad',
+    9.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0201',
+    'K2024630202',
+    'Algoritmos y Estructuras de Datos',
+    6.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0202',
+    'K2024630202',
+    'Álgebra Lineal',
+    6.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0203',
+    'K2024630202',
+    'Cálculo Multivariable',
+    7.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0204',
+    'K2024630202',
+    'Análisis y Diseño de Algoritmos',
+    7.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0205',
+    'K2024630202',
+    'Minería de Datos',
+    7.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0206',
+    'K2024630202',
+    'Desarrollo de Aplicaciones Web',
+    7.3,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0207',
+    'K2024630202',
+    'Cómputo de Alto Desempeño',
+    7.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0208',
+    'K2024630202',
+    'Estadística',
+    7.8,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0209',
+    'K2024630202',
+    'Ética y Legalidad',
+    6.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0210',
+    'K2024630202',
+    'Fundamentos Económicos',
+    6.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0211',
+    'K2024630203',
+    'Algoritmos y Estructuras de Datos',
+    8.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0212',
+    'K2024630203',
+    'Álgebra Lineal',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0213',
+    'K2024630203',
+    'Cálculo Multivariable',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0214',
+    'K2024630203',
+    'Análisis y Diseño de Algoritmos',
+    8.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0215',
+    'K2024630203',
+    'Minería de Datos',
+    8.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0216',
+    'K2024630203',
+    'Desarrollo de Aplicaciones Web',
+    8.3,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0217',
+    'K2024630203',
+    'Cómputo de Alto Desempeño',
+    8.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0218',
+    'K2024630203',
+    'Estadística',
+    8.7,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0219',
+    'K2024630203',
+    'Ética y Legalidad',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0220',
+    'K2024630203',
+    'Fundamentos Económicos',
+    8.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0221',
+    'K2024630204',
+    'Algoritmos y Estructuras de Datos',
+    8.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0222',
+    'K2024630204',
+    'Álgebra Lineal',
+    8.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0223',
+    'K2024630204',
+    'Cálculo Multivariable',
+    8.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0224',
+    'K2024630204',
+    'Análisis y Diseño de Algoritmos',
+    8.8,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0225',
+    'K2024630204',
+    'Minería de Datos',
+    9.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0226',
+    'K2024630204',
+    'Desarrollo de Aplicaciones Web',
+    8.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0227',
+    'K2024630204',
+    'Cómputo de Alto Desempeño',
+    8.9,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0228',
+    'K2024630204',
+    'Estadística',
+    9.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0229',
+    'K2024630204',
+    'Ética y Legalidad',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0230',
+    'K2024630204',
+    'Fundamentos Económicos',
+    8.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0231',
+    'K2024630205',
+    'Algoritmos y Estructuras de Datos',
+    7.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0232',
+    'K2024630205',
+    'Álgebra Lineal',
+    7.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0233',
+    'K2024630205',
+    'Cálculo Multivariable',
+    7.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0234',
+    'K2024630205',
+    'Análisis y Diseño de Algoritmos',
+    7.8,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0235',
+    'K2024630205',
+    'Minería de Datos',
+    7.9,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0236',
+    'K2024630205',
+    'Desarrollo de Aplicaciones Web',
+    7.7,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0237',
+    'K2024630205',
+    'Cómputo de Alto Desempeño',
+    8.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0238',
+    'K2024630205',
+    'Estadística',
+    8.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0239',
+    'K2024630205',
+    'Ética y Legalidad',
+    7.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0240',
+    'K2024630205',
+    'Fundamentos Económicos',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0241',
+    'K2024630206',
+    'Algoritmos y Estructuras de Datos',
+    8.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0242',
+    'K2024630206',
+    'Álgebra Lineal',
+    8.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0243',
+    'K2024630206',
+    'Cálculo Multivariable',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0244',
+    'K2024630206',
+    'Análisis y Diseño de Algoritmos',
+    8.5,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0245',
+    'K2024630206',
+    'Minería de Datos',
+    8.7,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0246',
+    'K2024630206',
+    'Desarrollo de Aplicaciones Web',
+    8.3,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0247',
+    'K2024630206',
+    'Cómputo de Alto Desempeño',
+    8.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0248',
+    'K2024630206',
+    'Estadística',
+    8.8,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0249',
+    'K2024630206',
+    'Ética y Legalidad',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0250',
+    'K2024630206',
+    'Fundamentos Económicos',
+    8.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0251',
+    'K2024630207',
+    'Algoritmos y Estructuras de Datos',
+    9.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0252',
+    'K2024630207',
+    'Álgebra Lineal',
+    9.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0253',
+    'K2024630207',
+    'Cálculo Multivariable',
+    8.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0254',
+    'K2024630207',
+    'Análisis y Diseño de Algoritmos',
+    9.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0255',
+    'K2024630207',
+    'Minería de Datos',
+    9.4,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Extraordinario'
+),
+(
+    'UAA0256',
+    'K2024630207',
+    'Desarrollo de Aplicaciones Web',
+    9.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Extraordinario'
+),
+(
+    'UAA0257',
+    'K2024630207',
+    'Cómputo de Alto Desempeño',
+    9.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Extraordinario en recurse'
+),
+(
+    'UAA0258',
+    'K2024630207',
+    'Estadística',
+    9.3,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0259',
+    'K2024630207',
+    'Ética y Legalidad',
+    8.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0260',
+    'K2024630207',
+    'Fundamentos Económicos',
+    9.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0261',
+    'K2024630208',
+    'Algoritmos y Estructuras de Datos',
+    7.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0262',
+    'K2024630208',
+    'Álgebra Lineal',
+    7.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0263',
+    'K2024630208',
+    'Cálculo Multivariable',
+    7.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0264',
+    'K2024630208',
+    'Análisis y Diseño de Algoritmos',
+    7.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0265',
+    'K2024630208',
+    'Minería de Datos',
+    7.8,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Extraordinario'
+),
+(
+    'UAA0266',
+    'K2024630208',
+    'Desarrollo de Aplicaciones Web',
+    7.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0267',
+    'K2024630208',
+    'Cómputo de Alto Desempeño',
+    7.9,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0268',
+    'K2024630208',
+    'Estadística',
+    8.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0269',
+    'K2024630208',
+    'Ética y Legalidad',
+    7.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0270',
+    'K2024630208',
+    'Fundamentos Económicos',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0271',
+    'K2024630209',
+    'Algoritmos y Estructuras de Datos',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0272',
+    'K2024630209',
+    'Álgebra Lineal',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0273',
+    'K2024630209',
+    'Cálculo Multivariable',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0274',
+    'K2024630209',
+    'Análisis y Diseño de Algoritmos',
+    8.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0275',
+    'K2024630209',
+    'Minería de Datos',
+    8.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0276',
+    'K2024630209',
+    'Desarrollo de Aplicaciones Web',
+    8.2,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0277',
+    'K2024630209',
+    'Cómputo de Alto Desempeño',
+    8.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0278',
+    'K2024630209',
+    'Estadística',
+    8.7,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0279',
+    'K2024630209',
+    'Ética y Legalidad',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Extraordinario'
+),
+(
+    'UAA0280',
+    'K2024630209',
+    'Fundamentos Económicos',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0281',
+    'K2024630210',
+    'Álgebra Lineal',
+    8.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0282',
+    'K2024630210',
+    'Cálculo Aplicado',
+    8.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0283',
+    'K2024630210',
+    'Mecánica y Electromagnetismo',
+    8.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0284',
+    'K2024630210',
+    'Ecuaciones Diferenciales',
+    8.7,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0285',
+    'K2024630210',
+    'Minería de Datos',
+    8.9,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0286',
+    'K2024630210',
+    'Probabilidad y Estadística',
+    8.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0287',
+    'K2024630210',
+    'Matemáticas Avanzadas para la Ingeniería',
+    8.8,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0288',
+    'K2024630210',
+    'Electrónica Analógica',
+    9.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0289',
+    'K2024630210',
+    'Ingeniería, Ética y Sociedad',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0290',
+    'K2024630210',
+    'Fundamentos Económicos',
+    8.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+
+-- ISC (K2024630301 .. K2024630310)
+(
+    'UAA0291',
+    'K2024630301',
+    'Programación Orientada a Objetos',
+    8.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0292',
+    'K2024630301',
+    'Álgebra Lineal',
+    8.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0293',
+    'K2024630301',
+    'Sistemas Operativos',
+    8.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0294',
+    'K2024630301',
+    'Redes de Computadoras',
+    8.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0295',
+    'K2024630301',
+    'Bases de Datos',
+    8.6,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0296',
+    'K2024630301',
+    'Ingeniería de Software',
+    8.3,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0297',
+    'K2024630301',
+    'Cálculo Aplicado',
+    7.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0298',
+    'K2024630301',
+    'Álgebra Lineal',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0299',
+    'K2024630301',
+    'Compiladores',
+    8.4,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0300',
+    'K2024630301',
+    'Seguridad Informática',
+    8.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0301',
+    'K2024630302',
+    'Álgebra Lineal',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0302',
+    'K2024630302',
+    'Cálculo Aplicado',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0303',
+    'K2024630302',
+    'Sistemas Operativos',
+    7.8,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0304',
+    'K2024630302',
+    'Redes de Computadoras',
+    7.6,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0305',
+    'K2024630302',
+    'Bases de Datos',
+    8.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0306',
+    'K2024630302',
+    'Ingeniería de Software',
+    7.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0307',
+    'K2024630302',
+    'Mecánica y Electromagnetismo',
+    7.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0308',
+    'K2024630302',
+    'Álgebra Lineal',
+    7.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0309',
+    'K2024630302',
+    'Compiladores',
+    8.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0310',
+    'K2024630302',
+    'Seguridad Informática',
+    8.2,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0311',
+    'K2024630303',
+    'Álgebra Lineal',
+    8.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0312',
+    'K2024630303',
+    'Cálculo Aplicado',
+    8.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0313',
+    'K2024630303',
+    'Sistemas Operativos',
+    8.3,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0314',
+    'K2024630303',
+    'Redes de Computadoras',
+    8.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0315',
+    'K2024630303',
+    'Bases de Datos',
+    8.7,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0316',
+    'K2024630303',
+    'Ingeniería de Software',
+    8.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0317',
+    'K2024630303',
+    'Mecánica y Electromagnetismo',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0318',
+    'K2024630303',
+    'Álgebra Lineal',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0319',
+    'K2024630303',
+    'Compiladores',
+    8.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0320',
+    'K2024630303',
+    'Seguridad Informática',
+    8.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0321',
+    'K2024630304',
+    'Álgebra Lineal',
+    7.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0322',
+    'K2024630304',
+    'Cálculo Aplicado',
+    7.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0323',
+    'K2024630304',
+    'Sistemas Operativos',
+    7.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0324',
+    'K2024630304',
+    'Redes de Computadoras',
+    7.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0325',
+    'K2024630304',
+    'Bases de Datos',
+    7.8,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0326',
+    'K2024630304',
+    'Ingeniería de Software',
+    7.5,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0327',
+    'K2024630304',
+    'Mecánica y Electromagnetismo',
+    7.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0328',
+    'K2024630304',
+    'Álgebra Lineal',
+    7.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0329',
+    'K2024630304',
+    'Compiladores',
+    7.9,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0330',
+    'K2024630304',
+    'Seguridad Informática',
+    8.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0331',
+    'K2024630305',
+    'Álgebra Lineal',
+    8.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0332',
+    'K2024630305',
+    'Cálculo Aplicado',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0333',
+    'K2024630305',
+    'Sistemas Operativos',
+    8.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0334',
+    'K2024630305',
+    'Redes de Computadoras',
+    7.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0335',
+    'K2024630305',
+    'Bases de Datos',
+    8.3,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0336',
+    'K2024630305',
+    'Ingeniería de Software',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0337',
+    'K2024630305',
+    'Mecánica y Electromagnetismo',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0338',
+    'K2024630305',
+    'Álgebra Lineal',
+    7.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0339',
+    'K2024630305',
+    'Compiladores',
+    8.2,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0340',
+    'K2024630305',
+    'Seguridad Informática',
+    8.4,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0341',
+    'K2024630306',
+    'Álgebra Lineal',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0342',
+    'K2024630306',
+    'Cálculo Aplicado',
+    7.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0343',
+    'K2024630306',
+    'Sistemas Operativos',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0344',
+    'K2024630306',
+    'Redes de Computadoras',
+    7.8,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0345',
+    'K2024630306',
+    'Bases de Datos',
+    8.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0346',
+    'K2024630306',
+    'Ingeniería de Software',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0347',
+    'K2024630306',
+    'Mecánica y Electromagnetismo',
+    7.7,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0348',
+    'K2024630306',
+    'Álgebra Lineal',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0349',
+    'K2024630306',
+    'Compiladores',
+    8.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0350',
+    'K2024630306',
+    'Seguridad Informática',
+    8.3,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0351',
+    'K2024630307',
+    'Álgebra Lineal',
+    8.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0352',
+    'K2024630307',
+    'Cálculo Aplicado',
+    8.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0353',
+    'K2024630307',
+    'Sistemas Operativos',
+    8.2,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0354',
+    'K2024630307',
+    'Redes de Computadoras',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0355',
+    'K2024630307',
+    'Bases de Datos',
+    8.6,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0356',
+    'K2024630307',
+    'Ingeniería de Software',
+    8.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0357',
+    'K2024630307',
+    'Mecánica y Electromagnetismo',
+    8.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0358',
+    'K2024630307',
+    'Álgebra Lineal',
+    8.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0359',
+    'K2024630307',
+    'Compiladores',
+    8.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0360',
+    'K2024630307',
+    'Seguridad Informática',
+    8.6,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0361',
+    'K2024630308',
+    'Álgebra Lineal',
+    7.3,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0362',
+    'K2024630308',
+    'Cálculo Aplicado',
+    7.1,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0363',
+    'K2024630308',
+    'Sistemas Operativos',
+    7.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0364',
+    'K2024630308',
+    'Redes de Computadoras',
+    6.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0365',
+    'K2024630308',
+    'Bases de Datos',
+    7.6,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0366',
+    'K2024630308',
+    'Ingeniería de Software',
+    7.4,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0367',
+    'K2024630308',
+    'Mecánica y Electromagnetismo',
+    6.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0368',
+    'K2024630308',
+    'Álgebra Lineal',
+    6.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0369',
+    'K2024630308',
+    'Compiladores',
+    7.5,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0370',
+    'K2024630308',
+    'Seguridad Informática',
+    7.7,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0371',
+    'K2024630309',
+    'Álgebra Lineal',
+    8.4,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0372',
+    'K2024630309',
+    'Cálculo Aplicado',
+    8.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0373',
+    'K2024630309',
+    'Sistemas Operativos',
+    8.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0374',
+    'K2024630309',
+    'Redes de Computadoras',
+    7.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0375',
+    'K2024630309',
+    'Bases de Datos',
+    8.3,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0376',
+    'K2024630309',
+    'Ingeniería de Software',
+    8.0,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0377',
+    'K2024630309',
+    'Mecánica y Electromagnetismo',
+    7.8,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0378',
+    'K2024630309',
+    'Álgebra Lineal',
+    7.9,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0379',
+    'K2024630309',
+    'Compiladores',
+    8.2,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0380',
+    'K2024630309',
+    'Seguridad Informática',
+    8.4,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0381',
+    'K2024630310',
+    'Álgebra Lineal',
+    9.2,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0382',
+    'K2024630310',
+    'Cálculo Aplicado',
+    9.0,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0383',
+    'K2024630310',
+    'Sistemas Operativos',
+    8.8,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0384',
+    'K2024630310',
+    'Redes de Computadoras',
+    8.6,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0385',
+    'K2024630310',
+    'Bases de Datos',
+    9.1,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0386',
+    'K2024630310',
+    'Ingeniería de Software',
+    8.9,
+    3,
+    '2024-1',
+    '2024-06-20',
+    'Ordinario'
+),
+(
+    'UAA0387',
+    'K2024630310',
+    'Mecánica y Electromagnetismo',
+    8.5,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0388',
+    'K2024630310',
+    'Álgebra Lineal',
+    8.6,
+    2,
+    '2023-2',
+    '2023-12-15',
+    'Ordinario'
+),
+(
+    'UAA0389',
+    'K2024630310',
+    'Compiladores',
+    9.0,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+),
+(
+    'UAA0390',
+    'K2024630310',
+    'Seguridad Informática',
+    9.1,
+    4,
+    '2024-2',
+    '2024-12-15',
+    'Ordinario'
+);
 
 -- ==================================================================
 -- 5. INSERCIÓN DE HORARIOS PARA ESTUDIANTES
@@ -2316,7 +5155,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246301011',
-        'HOR2024630101',
+        'H2024630101',
         'G00001',
         8.5,
         8.8,
@@ -2326,7 +5165,7 @@ VALUES (
     ),
     (
         'MAT20246301021',
-        'HOR2024630102',
+        'H2024630102',
         'G00001',
         8.2,
         8.5,
@@ -2336,7 +5175,7 @@ VALUES (
     ),
     (
         'MAT20246301031',
-        'HOR2024630103',
+        'H2024630103',
         'G00001',
         7.8,
         8.0,
@@ -2346,7 +5185,7 @@ VALUES (
     ),
     (
         'MAT20246301041',
-        'HOR2024630104',
+        'H2024630104',
         'G00001',
         8.9,
         9.0,
@@ -2356,7 +5195,7 @@ VALUES (
     ),
     (
         'MAT20246301051',
-        'HOR2024630105',
+        'H2024630105',
         'G00001',
         8.0,
         8.3,
@@ -2366,7 +5205,7 @@ VALUES (
     ),
     (
         'MAT20246301061',
-        'HOR2024630106',
+        'H2024630106',
         'G00002',
         7.5,
         7.6,
@@ -2376,7 +5215,7 @@ VALUES (
     ),
     (
         'MAT20246301071',
-        'HOR2024630107',
+        'H2024630107',
         'G00002',
         8.5,
         8.7,
@@ -2386,7 +5225,7 @@ VALUES (
     ),
     (
         'MAT20246301081',
-        'HOR2024630108',
+        'H2024630108',
         'G00002',
         9.0,
         9.1,
@@ -2396,7 +5235,7 @@ VALUES (
     ),
     (
         'MAT20246301091',
-        'HOR2024630109',
+        'H2024630109',
         'G00002',
         7.8,
         8.0,
@@ -2406,7 +5245,7 @@ VALUES (
     ),
     (
         'MAT20246301101',
-        'HOR2024630110',
+        'H2024630110',
         'G00002',
         8.3,
         8.5,
@@ -2429,7 +5268,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246301012',
-        'HOR2024630101',
+        'H2024630101',
         'G00003',
         8.8,
         8.9,
@@ -2439,7 +5278,7 @@ VALUES (
     ),
     (
         'MAT20246301022',
-        'HOR2024630102',
+        'H2024630102',
         'G00003',
         8.0,
         8.3,
@@ -2449,7 +5288,7 @@ VALUES (
     ),
     (
         'MAT20246301032',
-        'HOR2024630103',
+        'H2024630103',
         'G00003',
         7.3,
         7.6,
@@ -2459,7 +5298,7 @@ VALUES (
     ),
     (
         'MAT20246301042',
-        'HOR2024630104',
+        'H2024630104',
         'G00003',
         9.1,
         9.0,
@@ -2469,7 +5308,7 @@ VALUES (
     ),
     (
         'MAT20246301052',
-        'HOR2024630105',
+        'H2024630105',
         'G00003',
         7.9,
         8.1,
@@ -2479,7 +5318,7 @@ VALUES (
     ),
     (
         'MAT20246301062',
-        'HOR2024630106',
+        'H2024630106',
         'G00004',
         7.1,
         7.4,
@@ -2489,7 +5328,7 @@ VALUES (
     ),
     (
         'MAT20246301072',
-        'HOR2024630107',
+        'H2024630107',
         'G00004',
         8.4,
         8.6,
@@ -2499,7 +5338,7 @@ VALUES (
     ),
     (
         'MAT20246301082',
-        'HOR2024630108',
+        'H2024630108',
         'G00004',
         8.9,
         9.1,
@@ -2509,7 +5348,7 @@ VALUES (
     ),
     (
         'MAT20246301092',
-        'HOR2024630109',
+        'H2024630109',
         'G00004',
         7.6,
         7.9,
@@ -2519,7 +5358,7 @@ VALUES (
     ),
     (
         'MAT20246301102',
-        'HOR2024630110',
+        'H2024630110',
         'G00004',
         8.4,
         8.6,
@@ -2542,7 +5381,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246301013',
-        'HOR2024630101',
+        'H2024630101',
         'G00005',
         7.8,
         8.0,
@@ -2552,7 +5391,7 @@ VALUES (
     ),
     (
         'MAT20246301023',
-        'HOR2024630102',
+        'H2024630102',
         'G00005',
         8.0,
         8.2,
@@ -2562,7 +5401,7 @@ VALUES (
     ),
     (
         'MAT20246301033',
-        'HOR2024630103',
+        'H2024630103',
         'G00005',
         8.0,
         8.3,
@@ -2572,7 +5411,7 @@ VALUES (
     ),
     (
         'MAT20246301043',
-        'HOR2024630104',
+        'H2024630104',
         'G00005',
         8.5,
         8.8,
@@ -2582,7 +5421,7 @@ VALUES (
     ),
     (
         'MAT20246301053',
-        'HOR2024630105',
+        'H2024630105',
         'G00005',
         8.2,
         8.5,
@@ -2592,7 +5431,7 @@ VALUES (
     ),
     (
         'MAT20246301063',
-        'HOR2024630106',
+        'H2024630106',
         'G00006',
         7.4,
         7.6,
@@ -2602,7 +5441,7 @@ VALUES (
     ),
     (
         'MAT20246301073',
-        'HOR2024630107',
+        'H2024630107',
         'G00006',
         8.6,
         8.8,
@@ -2612,7 +5451,7 @@ VALUES (
     ),
     (
         'MAT20246301083',
-        'HOR2024630108',
+        'H2024630108',
         'G00006',
         9.1,
         9.3,
@@ -2622,7 +5461,7 @@ VALUES (
     ),
     (
         'MAT20246301093',
-        'HOR2024630109',
+        'H2024630109',
         'G00006',
         7.8,
         8.0,
@@ -2632,7 +5471,7 @@ VALUES (
     ),
     (
         'MAT20246301103',
-        'HOR2024630110',
+        'H2024630110',
         'G00006',
         8.1,
         8.3,
@@ -2655,7 +5494,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246302011',
-        'HOR2024630201',
+        'H2024630201',
         'G00007',
         9.0,
         9.2,
@@ -2665,7 +5504,7 @@ VALUES (
     ),
     (
         'MAT20246302021',
-        'HOR2024630202',
+        'H2024630202',
         'G00007',
         6.5,
         6.7,
@@ -2675,7 +5514,7 @@ VALUES (
     ),
     (
         'MAT20246302031',
-        'HOR2024630203',
+        'H2024630203',
         'G00007',
         8.0,
         8.2,
@@ -2685,7 +5524,7 @@ VALUES (
     ),
     (
         'MAT20246302041',
-        'HOR2024630204',
+        'H2024630204',
         'G00007',
         8.6,
         8.8,
@@ -2695,7 +5534,7 @@ VALUES (
     ),
     (
         'MAT20246302051',
-        'HOR2024630205',
+        'H2024630205',
         'G00007',
         7.5,
         7.7,
@@ -2705,7 +5544,7 @@ VALUES (
     ),
     (
         'MAT20246302061',
-        'HOR2024630206',
+        'H2024630206',
         'G00008',
         8.4,
         8.6,
@@ -2715,7 +5554,7 @@ VALUES (
     ),
     (
         'MAT20246302071',
-        'HOR2024630207',
+        'H2024630207',
         'G00008',
         8.8,
         9.0,
@@ -2725,7 +5564,7 @@ VALUES (
     ),
     (
         'MAT20246302081',
-        'HOR2024630208',
+        'H2024630208',
         'G00008',
         7.6,
         7.8,
@@ -2735,7 +5574,7 @@ VALUES (
     ),
     (
         'MAT20246302091',
-        'HOR2024630209',
+        'H2024630209',
         'G00008',
         8.0,
         8.2,
@@ -2745,7 +5584,7 @@ VALUES (
     ),
     (
         'MAT20246302101',
-        'HOR2024630210',
+        'H2024630210',
         'G00008',
         8.5,
         8.7,
@@ -2768,7 +5607,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246302012',
-        'HOR2024630201',
+        'H2024630201',
         'G00009',
         9.2,
         9.4,
@@ -2778,7 +5617,7 @@ VALUES (
     ),
     (
         'MAT20246302022',
-        'HOR2024630202',
+        'H2024630202',
         'G00009',
         6.6,
         6.8,
@@ -2788,7 +5627,7 @@ VALUES (
     ),
     (
         'MAT20246302032',
-        'HOR2024630203',
+        'H2024630203',
         'G00009',
         8.0,
         8.1,
@@ -2798,7 +5637,7 @@ VALUES (
     ),
     (
         'MAT20246302042',
-        'HOR2024630204',
+        'H2024630204',
         'G00009',
         8.8,
         8.9,
@@ -2808,7 +5647,7 @@ VALUES (
     ),
     (
         'MAT20246302052',
-        'HOR2024630205',
+        'H2024630205',
         'G00009',
         7.4,
         7.6,
@@ -2818,7 +5657,7 @@ VALUES (
     ),
     (
         'MAT20246302062',
-        'HOR2024630206',
+        'H2024630206',
         'G00010',
         8.3,
         8.5,
@@ -2828,7 +5667,7 @@ VALUES (
     ),
     (
         'MAT20246302072',
-        'HOR2024630207',
+        'H2024630207',
         'G00010',
         9.0,
         9.2,
@@ -2838,7 +5677,7 @@ VALUES (
     ),
     (
         'MAT20246302082',
-        'HOR2024630208',
+        'H2024630208',
         'G00010',
         7.7,
         7.9,
@@ -2848,7 +5687,7 @@ VALUES (
     ),
     (
         'MAT20246302092',
-        'HOR2024630209',
+        'H2024630209',
         'G00010',
         8.1,
         8.2,
@@ -2858,7 +5697,7 @@ VALUES (
     ),
     (
         'MAT20246302102',
-        'HOR2024630210',
+        'H2024630210',
         'G00010',
         8.6,
         8.8,
@@ -2881,7 +5720,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246302013',
-        'HOR2024630201',
+        'H2024630201',
         'G00011',
         8.8,
         9.0,
@@ -2891,7 +5730,7 @@ VALUES (
     ),
     (
         'MAT20246302023',
-        'HOR2024630202',
+        'H2024630202',
         'G00011',
         5.8,
         6.0,
@@ -2901,7 +5740,7 @@ VALUES (
     ),
     (
         'MAT20246302033',
-        'HOR2024630203',
+        'H2024630203',
         'G00011',
         8.0,
         8.2,
@@ -2911,7 +5750,7 @@ VALUES (
     ),
     (
         'MAT20246302043',
-        'HOR2024630204',
+        'H2024630204',
         'G00011',
         8.6,
         8.8,
@@ -2921,7 +5760,7 @@ VALUES (
     ),
     (
         'MAT20246302053',
-        'HOR2024630205',
+        'H2024630205',
         'G00011',
         7.5,
         7.7,
@@ -2931,7 +5770,7 @@ VALUES (
     ),
     (
         'MAT20246302063',
-        'HOR2024630206',
+        'H2024630206',
         'G00012',
         8.4,
         8.6,
@@ -2941,7 +5780,7 @@ VALUES (
     ),
     (
         'MAT20246302073',
-        'HOR2024630207',
+        'H2024630207',
         'G00012',
         8.7,
         8.9,
@@ -2951,7 +5790,7 @@ VALUES (
     ),
     (
         'MAT20246302083',
-        'HOR2024630208',
+        'H2024630208',
         'G00012',
         7.7,
         7.9,
@@ -2961,7 +5800,7 @@ VALUES (
     ),
     (
         'MAT20246302093',
-        'HOR2024630209',
+        'H2024630209',
         'G00012',
         8.2,
         8.4,
@@ -2971,7 +5810,7 @@ VALUES (
     ),
     (
         'MAT20246302103',
-        'HOR2024630210',
+        'H2024630210',
         'G00012',
         8.4,
         8.6,
@@ -2994,7 +5833,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246303011',
-        'HOR2024630301',
+        'H2024630301',
         'G00013',
         8.4,
         8.6,
@@ -3004,7 +5843,7 @@ VALUES (
     ),
     (
         'MAT20246303021',
-        'HOR2024630302',
+        'H2024630302',
         'G00013',
         8.4,
         8.6,
@@ -3014,7 +5853,7 @@ VALUES (
     ),
     (
         'MAT20246303031',
-        'HOR2024630303',
+        'H2024630303',
         'G00013',
         8.8,
         9.0,
@@ -3024,7 +5863,7 @@ VALUES (
     ),
     (
         'MAT20246303041',
-        'HOR2024630304',
+        'H2024630304',
         'G00013',
         7.4,
         7.6,
@@ -3034,7 +5873,7 @@ VALUES (
     ),
     (
         'MAT20246303051',
-        'HOR2024630305',
+        'H2024630305',
         'G00013',
         8.2,
         8.3,
@@ -3044,7 +5883,7 @@ VALUES (
     ),
     (
         'MAT20246303061',
-        'HOR2024630306',
+        'H2024630306',
         'G00014',
         8.0,
         8.2,
@@ -3054,7 +5893,7 @@ VALUES (
     ),
     (
         'MAT20246303071',
-        'HOR2024630307',
+        'H2024630307',
         'G00014',
         8.6,
         8.8,
@@ -3064,7 +5903,7 @@ VALUES (
     ),
     (
         'MAT20246303081',
-        'HOR2024630308',
+        'H2024630308',
         'G00014',
         7.1,
         7.3,
@@ -3074,7 +5913,7 @@ VALUES (
     ),
     (
         'MAT20246303091',
-        'HOR2024630309',
+        'H2024630309',
         'G00014',
         8.3,
         8.5,
@@ -3084,7 +5923,7 @@ VALUES (
     ),
     (
         'MAT20246303101',
-        'HOR2024630310',
+        'H2024630310',
         'G00014',
         9.0,
         9.2,
@@ -3107,7 +5946,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246303012',
-        'HOR2024630301',
+        'H2024630301',
         'G00015',
         8.5,
         8.7,
@@ -3117,7 +5956,7 @@ VALUES (
     ),
     (
         'MAT20246303022',
-        'HOR2024630302',
+        'H2024630302',
         'G00015',
         8.3,
         8.5,
@@ -3127,7 +5966,7 @@ VALUES (
     ),
     (
         'MAT20246303032',
-        'HOR2024630303',
+        'H2024630303',
         'G00015',
         8.9,
         9.1,
@@ -3137,7 +5976,7 @@ VALUES (
     ),
     (
         'MAT20246303042',
-        'HOR2024630304',
+        'H2024630304',
         'G00015',
         7.3,
         7.5,
@@ -3147,7 +5986,7 @@ VALUES (
     ),
     (
         'MAT20246303052',
-        'HOR2024630305',
+        'H2024630305',
         'G00015',
         8.1,
         8.3,
@@ -3157,7 +5996,7 @@ VALUES (
     ),
     (
         'MAT20246303062',
-        'HOR2024630306',
+        'H2024630306',
         'G00016',
         7.9,
         8.1,
@@ -3167,7 +6006,7 @@ VALUES (
     ),
     (
         'MAT20246303072',
-        'HOR2024630307',
+        'H2024630307',
         'G00016',
         8.7,
         8.9,
@@ -3177,7 +6016,7 @@ VALUES (
     ),
     (
         'MAT20246303082',
-        'HOR2024630308',
+        'H2024630308',
         'G00016',
         7.0,
         7.2,
@@ -3187,7 +6026,7 @@ VALUES (
     ),
     (
         'MAT20246303092',
-        'HOR2024630309',
+        'H2024630309',
         'G00016',
         8.2,
         8.4,
@@ -3197,7 +6036,7 @@ VALUES (
     ),
     (
         'MAT20246303102',
-        'HOR2024630310',
+        'H2024630310',
         'G00016',
         9.2,
         9.3,
@@ -3220,7 +6059,7 @@ INSERT INTO
     )
 VALUES (
         'MAT20246303013',
-        'HOR2024630301',
+        'H2024630301',
         'G00017',
         8.2,
         8.4,
@@ -3230,7 +6069,7 @@ VALUES (
     ),
     (
         'MAT20246303023',
-        'HOR2024630302',
+        'H2024630302',
         'G00017',
         8.5,
         8.7,
@@ -3240,7 +6079,7 @@ VALUES (
     ),
     (
         'MAT20246303033',
-        'HOR2024630303',
+        'H2024630303',
         'G00017',
         8.7,
         8.9,
@@ -3250,7 +6089,7 @@ VALUES (
     ),
     (
         'MAT20246303043',
-        'HOR2024630304',
+        'H2024630304',
         'G00017',
         7.5,
         7.7,
@@ -3260,7 +6099,7 @@ VALUES (
     ),
     (
         'MAT20246303053',
-        'HOR2024630305',
+        'H2024630305',
         'G00017',
         8.4,
         8.6,
@@ -3270,7 +6109,7 @@ VALUES (
     ),
     (
         'MAT20246303063',
-        'HOR2024630306',
+        'H2024630306',
         'G00018',
         8.2,
         8.4,
@@ -3280,7 +6119,7 @@ VALUES (
     ),
     (
         'MAT20246303073',
-        'HOR2024630307',
+        'H2024630307',
         'G00018',
         8.5,
         8.7,
@@ -3290,7 +6129,7 @@ VALUES (
     ),
     (
         'MAT20246303083',
-        'HOR2024630308',
+        'H2024630308',
         'G00018',
         7.3,
         7.5,
@@ -3300,7 +6139,7 @@ VALUES (
     ),
     (
         'MAT20246303093',
-        'HOR2024630309',
+        'H2024630309',
         'G00018',
         8.5,
         8.7,
@@ -3310,7 +6149,7 @@ VALUES (
     ),
     (
         'MAT20246303103',
-        'HOR2024630310',
+        'H2024630310',
         'G00018',
         9.0,
         9.2,
