@@ -29,11 +29,9 @@ SET
 
 SET @num_profesores = 30;
 
-SELECT 'Generando grupos obligatorios...' AS status;
+SET @last_nombre := '';
 
--- ==================================================================
--- INSERTAR GRUPOS OBLIGATORIOS CON DISTRIBUCIONES
--- ==================================================================
+SET @salon_actual := '';
 
 INSERT INTO
     grupo (
@@ -43,6 +41,7 @@ INSERT INTO
         id_prof,
         turno,
         cupo,
+        salon,
         reg_final,
         reg_extra
     )
@@ -54,9 +53,9 @@ SELECT
             5,
             '0'
         )
-    ) AS id,
+    ),
     CONCAT(
-        semestre,
+        ua.semestre,
         (
             SELECT prefijo_grupo
             FROM carrera
@@ -70,166 +69,55 @@ SELECT
         ),
         '1'
     ) AS nombre,
-    ua.id AS id_ua,
+    ua.id,
     SUBSTRING_INDEX(
         SUBSTRING_INDEX(
             @profesores,
             ',',
             (
-                (
-                    @prof_index := @prof_index + 1
-                ) % @num_profesores
-            ) + 1
+                @prof_index := @prof_index + 1
+            ) % @num_profesores + 1
         ),
         ',',
         -1
-    ) AS id_prof,
+    ),
     IF(
         @grupo_id_counter % 2 = 0,
         'Matutino',
         'Vespertino'
-    ) AS turno,
-    35 AS cupo,
-    0 AS reg_final,
-    0 AS reg_extra
-FROM unidad_de_aprendizaje ua
-WHERE
-    tipo = 'OBLIGATORIA'
-ORDER BY carrera, semestre, id;
-
-SELECT CONCAT(
-        'Grupos obligatorios generados: ', COUNT(*)
-    ) AS resultado
-FROM grupo;
-
-SELECT 'Generando distribuciones para grupos obligatorios...' AS status;
-
--- ==================================================================
--- GENERAR DISTRIBUCIONES PARA GRUPOS OBLIGATORIOS
--- ==================================================================
-
--- Insertar distribuciones (3-5 sesiones por grupo según créditos)
-INSERT INTO
-    distribucion (
-        id,
-        id_grupo,
-        hora_ini,
-        hora_fin,
-        dia
-    )
-SELECT
-    CONCAT(
-        'D',
-        LPAD(
+    ),
+    35,
+    -- SALON: mismo para mismo nombre
+    @salon_actual := IF(
+        @last_nombre = CONCAT(
+            ua.semestre,
             (
-                @dist_id_counter := @dist_id_counter + 1
+                SELECT prefijo_grupo
+                FROM carrera
+                WHERE
+                    nombre = ua.carrera
             ),
-            5,
-            '0'
+            IF(
+                @grupo_id_counter % 2 = 0,
+                'M',
+                'V'
+            ),
+            '1'
+        ),
+        @salon_actual,
+        CONCAT(
+            'SAL-',
+            FLOOR(RAND() * 900 + 100)
         )
-    ) AS id,
-    g.id AS id_grupo,
-    CASE
-        WHEN g.turno = 'Matutino' THEN CASE (
-                FLOOR(
-                    (@prof_index - 1) / @num_profesores
-                )
-            ) % 4
-            WHEN 0 THEN '7:00'
-            WHEN 1 THEN '8:30'
-            WHEN 2 THEN '10:30'
-            WHEN 3 THEN '12:00'
-        END
-        ELSE CASE (
-                FLOOR(
-                    (@prof_index - 1) / @num_profesores
-                )
-            ) % 4
-            WHEN 0 THEN '15:00'
-            WHEN 1 THEN '16:30'
-            WHEN 2 THEN '18:30'
-            WHEN 3 THEN '20:00'
-        END
-    END AS hora_ini,
-    CASE
-        WHEN g.turno = 'Matutino' THEN CASE (
-                FLOOR(
-                    (@prof_index - 1) / @num_profesores
-                )
-            ) % 4
-            WHEN 0 THEN '8:30'
-            WHEN 1 THEN '10:00'
-            WHEN 2 THEN '12:00'
-            WHEN 3 THEN '13:30'
-        END
-        ELSE CASE (
-                FLOOR(
-                    (@prof_index - 1) / @num_profesores
-                )
-            ) % 4
-            WHEN 0 THEN '16:30'
-            WHEN 1 THEN '18:00'
-            WHEN 2 THEN '20:00'
-            WHEN 3 THEN '21:30'
-        END
-    END AS hora_fin,
-    CASE sesion_num
-        WHEN 1 THEN IF(
-            g.turno = 'Matutino',
-            'Lunes',
-            'Martes'
-        )
-        WHEN 2 THEN IF(
-            g.turno = 'Matutino',
-            'Miercoles',
-            'Jueves'
-        )
-        WHEN 3 THEN 'Viernes'
-        WHEN 4 THEN IF(
-            g.turno = 'Matutino',
-            'Martes',
-            'Lunes'
-        )
-        WHEN 5 THEN IF(
-            g.turno = 'Matutino',
-            'Jueves',
-            'Miercoles'
-        )
-    END AS dia
-FROM
-    grupo g
-    INNER JOIN unidad_de_aprendizaje ua ON ua.id = g.id_ua
-    CROSS JOIN (
-        SELECT 1 AS sesion_num
-        UNION ALL
-        SELECT 2
-        UNION ALL
-        SELECT 3
-        UNION ALL
-        SELECT 4
-        UNION ALL
-        SELECT 5
-    ) sesiones
-WHERE
-    ua.tipo = 'OBLIGATORIA'
-    AND sesion_num <= CASE
-        WHEN ua.credito >= 10.5 THEN 5
-        WHEN ua.credito = 9.0 THEN 4
-        ELSE 3
-    END
-ORDER BY g.id, sesion_num;
+    ) AS salon,
+    0,
+    0
+FROM unidad_de_aprendizaje ua
+ORDER BY ua.carrera, ua.semestre, ua.id;
 
-SELECT CONCAT(
-        'Distribuciones generadas: ', COUNT(*)
-    ) AS resultado
-FROM distribucion;
-
-SELECT 'Generando grupos optativos...' AS status;
-
--- ==================================================================
--- INSERTAR GRUPOS OPTATIVOS CON DISTRIBUCIONES
--- ==================================================================
-
+-- ===============================================================
+-- INSERCION DE GRUPOS OPTATIVOS
+-- ===============================================================
 INSERT INTO
     grupo (
         id,
@@ -238,6 +126,7 @@ INSERT INTO
         id_prof,
         turno,
         cupo,
+        salon,
         reg_final,
         reg_extra
     )
@@ -249,9 +138,9 @@ SELECT
             5,
             '0'
         )
-    ) AS id,
+    ),
     CONCAT(
-        semestre,
+        ua.semestre,
         (
             SELECT prefijo_grupo
             FROM carrera
@@ -265,191 +154,173 @@ SELECT
         ),
         '1'
     ) AS nombre,
-    ua.id AS id_ua,
+    ua.id,
     SUBSTRING_INDEX(
         SUBSTRING_INDEX(
             @profesores,
             ',',
             (
-                (
-                    @prof_index := @prof_index + 1
-                ) % @num_profesores
-            ) + 1
+                @prof_index := @prof_index + 1
+            ) % @num_profesores + 1
         ),
         ',',
         -1
-    ) AS id_prof,
+    ),
     IF(
         @grupo_id_counter % 2 = 0,
         'Matutino',
         'Vespertino'
-    ) AS turno,
-    30 AS cupo,
-    0 AS reg_final,
-    0 AS reg_extra
-FROM unidad_de_aprendizaje ua
-WHERE
-    tipo = 'OPTATIVA'
-ORDER BY carrera, semestre, id;
-
-SELECT CONCAT(
-        'Grupos optativos generados: ', @grupo_id_counter - 1
-    ) AS resultado;
-
-SELECT 'Generando distribuciones para grupos optativos...' AS status;
-
--- ==================================================================
--- GENERAR DISTRIBUCIONES PARA GRUPOS OPTATIVOS
--- ==================================================================
-
-INSERT INTO
-    distribucion (
-        id,
-        id_grupo,
-        hora_ini,
-        hora_fin,
-        dia
-    )
-SELECT
-    CONCAT(
-        'D',
-        LPAD(
+    ),
+    30,
+    -- SALON: mismo para mismo nombre
+    @salon_actual := IF(
+        @last_nombre = CONCAT(
+            ua.semestre,
             (
-                @dist_id_counter := @dist_id_counter + 1
+                SELECT prefijo_grupo
+                FROM carrera
+                WHERE
+                    nombre = ua.carrera
             ),
-            5,
-            '0'
+            IF(
+                @grupo_id_counter % 2 = 0,
+                'M',
+                'V'
+            ),
+            '1'
+        ),
+        @salon_actual,
+        CONCAT(
+            'SAL-',
+            FLOOR(RAND() * 900 + 100)
         )
-    ) AS id,
-    g.id AS id_grupo,
-    CASE
-        WHEN g.turno = 'Matutino' THEN CASE (
-                FLOOR(
-                    (@prof_index - 1) / @num_profesores
-                )
-            ) % 4
-            WHEN 0 THEN '7:00'
-            WHEN 1 THEN '8:30'
-            WHEN 2 THEN '10:30'
-            WHEN 3 THEN '12:00'
-        END
-        ELSE CASE (
-                FLOOR(
-                    (@prof_index - 1) / @num_profesores
-                )
-            ) % 4
-            WHEN 0 THEN '15:00'
-            WHEN 1 THEN '16:30'
-            WHEN 2 THEN '18:30'
-            WHEN 3 THEN '20:00'
-        END
-    END AS hora_ini,
-    CASE
-        WHEN g.turno = 'Matutino' THEN CASE (
-                FLOOR(
-                    (@prof_index - 1) / @num_profesores
-                )
-            ) % 4
-            WHEN 0 THEN '8:30'
-            WHEN 1 THEN '10:00'
-            WHEN 2 THEN '12:00'
-            WHEN 3 THEN '13:30'
-        END
-        ELSE CASE (
-                FLOOR(
-                    (@prof_index - 1) / @num_profesores
-                )
-            ) % 4
-            WHEN 0 THEN '16:30'
-            WHEN 1 THEN '18:00'
-            WHEN 2 THEN '20:00'
-            WHEN 3 THEN '21:30'
-        END
-    END AS hora_fin,
-    CASE sesion_num
-        WHEN 1 THEN IF(
-            g.turno = 'Matutino',
-            'Lunes',
-            'Martes'
-        )
-        WHEN 2 THEN IF(
-            g.turno = 'Matutino',
-            'Miercoles',
-            'Jueves'
-        )
-        WHEN 3 THEN 'Viernes'
-        WHEN 4 THEN IF(
-            g.turno = 'Matutino',
-            'Martes',
-            'Lunes'
-        )
-        WHEN 5 THEN IF(
-            g.turno = 'Matutino',
-            'Jueves',
-            'Miercoles'
-        )
-    END AS dia
-FROM
-    grupo g
-    INNER JOIN unidad_de_aprendizaje ua ON ua.id = g.id_ua
-    CROSS JOIN (
-        SELECT 1 AS sesion_num
-        UNION ALL
-        SELECT 2
-        UNION ALL
-        SELECT 3
-        UNION ALL
-        SELECT 4
-        UNION ALL
-        SELECT 5
-    ) sesiones
-WHERE
-    ua.tipo = 'OPTATIVA'
-    AND sesion_num <= CASE
-        WHEN ua.credito >= 10.5 THEN 5
-        WHEN ua.credito = 9.0 THEN 4
-        ELSE 3
-    END
-ORDER BY g.id, sesion_num;
+    ) AS salon,
+    0,
+    0
+FROM unidad_de_aprendizaje ua
+ORDER BY ua.carrera, ua.semestre, ua.id;
 
-SELECT CONCAT(
-        'Total distribuciones generadas: ', @dist_id_counter - 1
-    ) AS resultado;
+-- =====================================================
+-- LIMPIEZA SOLO DISTRIBUCION
+-- =====================================================
+DELETE FROM distribucion;
 
--- ==================================================================
--- RESUMEN DE DISTRIBUCION
--- ==================================================================
+-- =====================================================
+-- CONTADOR
+-- =====================================================
+SET @dist_id_counter = 0;
 
-SELECT '=== RESUMEN DE GENERACION DE GRUPOS ===' AS titulo;
+-- =====================================================
+-- PROCEDURE GENERAR DISTRIBUCION SIN TRASLAPES
+-- =====================================================
+USE saes;
 
-SELECT
-    COUNT(*) AS total_grupos,
-    SUM(
-        CASE
-            WHEN turno = 'Matutino' THEN 1
-            ELSE 0
-        END
-    ) AS grupos_matutino,
-    SUM(
-        CASE
-            WHEN turno = 'Vespertino' THEN 1
-            ELSE 0
-        END
-    ) AS grupos_vespertino
-FROM grupo;
+DELETE FROM distribucion;
 
-SELECT
-    id_prof AS profesor,
-    COUNT(*) AS grupos_asignados
-FROM grupo
-GROUP BY
-    id_prof
-ORDER BY grupos_asignados DESC, id_prof;
+SET @dist_id = 0;
 
-SELECT CONCAT(
-        'Total de grupos: ', COUNT(DISTINCT g.id), ' | Distribuciones: ', COUNT(d.id), ' | Profesores: ', @num_profesores, ' | Promedio: ', ROUND(
-            COUNT(DISTINCT g.id) / @num_profesores, 2
-        ), ' grupos/profesor'
-    ) AS distribucion
-FROM grupo g
-    LEFT JOIN distribucion d ON d.id_grupo = g.id;
+DELIMITER $$
+
+CREATE PROCEDURE generar_distribucion()
+BEGIN
+    DECLARE done INT DEFAULT 0;
+
+    DECLARE v_grupo_id VARCHAR(15);
+    DECLARE v_nombre TEXT;
+
+    DECLARE v_day_offset INT;
+    DECLARE v_day_iter INT;
+    DECLARE v_dia_index INT;
+
+    DECLARE v_slot INT;
+    DECLARE v_insertados INT;
+
+    DECLARE v_dia VARCHAR(15);
+    DECLARE v_ini TIME;
+    DECLARE v_fin TIME;
+
+    DECLARE cur CURSOR FOR
+        SELECT id, nombre
+        FROM grupo
+        ORDER BY id;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN cur;
+
+    loop_grupos: LOOP
+        FETCH cur INTO v_grupo_id, v_nombre;
+        IF done THEN LEAVE loop_grupos; END IF;
+
+        SET v_insertados = 0;
+
+        -- offset pseudo-aleatorio por grupo (0..4)
+        SET v_day_offset = FLOOR(RAND() * 5);
+        SET v_day_iter = 0;
+
+        -- recorrer dias rotados hasta insertar 3
+        WHILE v_day_iter < 5 AND v_insertados < 3 DO
+            SET v_dia_index = (v_day_offset + v_day_iter) % 5;
+
+            SET v_dia = CASE v_dia_index
+                WHEN 0 THEN 'Lunes'
+                WHEN 1 THEN 'Martes'
+                WHEN 2 THEN 'Miercoles'
+                WHEN 3 THEN 'Jueves'
+                WHEN 4 THEN 'Viernes'
+            END;
+
+            SET v_slot = 0;
+
+            buscar_franja: LOOP
+                SET v_ini = ADDTIME('07:00', SEC_TO_TIME(v_slot * 5400));
+                SET v_fin = ADDTIME(v_ini, '01:30');
+
+                IF v_fin > '22:00' THEN
+                    LEAVE buscar_franja;
+                END IF;
+
+                IF NOT EXISTS (
+                    SELECT 1
+                    FROM distribucion d
+                    JOIN grupo g ON g.id = d.id_grupo
+                    WHERE g.nombre = v_nombre
+                      AND d.dia = v_dia
+                      AND NOT (
+                          v_fin <= CAST(d.hora_ini AS TIME)
+                          OR v_ini >= CAST(d.hora_fin AS TIME)
+                      )
+                ) THEN
+                    INSERT INTO distribucion (
+                        id,
+                        id_grupo,
+                        hora_ini,
+                        hora_fin,
+                        dia
+                    ) VALUES (
+                        CONCAT('D', LPAD(@dist_id := @dist_id + 1, 5, '0')),
+                        v_grupo_id,
+                        DATE_FORMAT(v_ini, '%H:%i'),
+                        DATE_FORMAT(v_fin, '%H:%i'),
+                        v_dia
+                    );
+
+                    SET v_insertados = v_insertados + 1;
+                    LEAVE buscar_franja;
+                END IF;
+
+                SET v_slot = v_slot + 1;
+            END LOOP;
+
+            SET v_day_iter = v_day_iter + 1;
+        END WHILE;
+    END LOOP;
+
+    CLOSE cur;
+END$$
+
+DELIMITER;
+
+CALL generar_distribucion ();
+
+DROP PROCEDURE generar_distribucion;
