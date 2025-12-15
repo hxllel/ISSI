@@ -9,57 +9,61 @@ const { requireAuth, requireRole } = require("../middleware/auth");
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // Límite de 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // Límite de 5MB
 });
 
 // Crear un nuevo aviso (solo administrador)
-router.post("/crear", requireAuth, requireRole(['administrador']), upload.single("imagen"), async (req, res) => {
-  try {
-    const { titulo, descripcion, objetivo, fecha_vencimiento } = req.body;
-    const imagen = req.file ? req.file.buffer : null;
+router.post(
+  "/crear",
+  requireAuth,
+  requireRole(["administrador"]),
+  upload.single("imagen"),
+  async (req, res) => {
+    try {
+      const { titulo, descripcion, objetivo, fecha_vencimiento } = req.body;
+      const imagen = req.file ? req.file.buffer : null;
 
-    // Generar ID único para el aviso
-    const ultimoAviso = await Avisos.findOne({
-      order: [["id", "DESC"]],
-    });
+      // Generar ID único para el aviso
+      const ultimoAviso = await Avisos.findOne({
+        order: [["id", "DESC"]],
+      });
 
-    let nuevoId = "AVI0001";
-    if (ultimoAviso) {
-      const numeroActual = parseInt(ultimoAviso.id.substring(3));
-      nuevoId = `AVI${String(numeroActual + 1).padStart(4, "0")}`;
+      let nuevoId = "AVI0001";
+      if (ultimoAviso) {
+        const numeroActual = parseInt(ultimoAviso.id.substring(3));
+        nuevoId = `AVI${String(numeroActual + 1).padStart(4, "0")}`;
+      }
+
+      const nuevoAviso = await Avisos.create({
+        id: nuevoId,
+        titulo,
+        descripcion,
+        imagen,
+        objetivo,
+        fecha_vencimiento,
+      });
+
+      res.status(201).json({
+        success: true,
+        message: "Aviso creado exitosamente",
+        aviso: {
+          id: nuevoAviso.id,
+          titulo: nuevoAviso.titulo,
+          descripcion: nuevoAviso.descripcion,
+          objetivo: nuevoAviso.objetivo,
+          fecha_vencimiento: nuevoAviso.fecha_vencimiento,
+        },
+      });
+    } catch (error) {
+      console.error("Error al crear aviso:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error al crear el aviso",
+        error: error.message,
+      });
     }
-
-    const nuevoAviso = await Avisos.create({
-      id: nuevoId,
-      titulo,
-      descripcion,
-      imagen,
-      objetivo,
-      fecha_vencimiento,
-    });
-
-    res.status(201).json({
-      success: true,
-      message: "Aviso creado exitosamente",
-      aviso: {
-        id: nuevoAviso.id,
-        titulo: nuevoAviso.titulo,
-        descripcion: nuevoAviso.descripcion,
-        objetivo: nuevoAviso.objetivo,
-        fecha_vencimiento: nuevoAviso.fecha_vencimiento,
-      },
-    });
-  } catch (error) {
-    console.error("Error al crear aviso:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error al crear el aviso",
-      error: error.message,
-    });
   }
-});
-
-
+);
 
 // Obtener todos los avisos vigentes (para administrador)
 router.get("/todos", requireAuth, async (req, res) => {
@@ -116,12 +120,9 @@ router.get("/por-objetivo/:objetivo", requireAuth, async (req, res) => {
             },
           },
           {
-            [Op.or]: [
-              { objetivo: objetivo },
-              { objetivo: "todos" }
-            ]
-          }
-        ]
+            [Op.or]: [{ objetivo: objetivo }, { objetivo: "todos" }],
+          },
+        ],
       },
       order: [["fecha_vencimiento", "DESC"]],
     });
@@ -152,33 +153,38 @@ router.get("/por-objetivo/:objetivo", requireAuth, async (req, res) => {
 });
 
 // Eliminar aviso (solo administrador)
-router.delete("/:id", requireAuth, requireRole(['administrador']), async (req, res) => {
-  try {
-    const { id } = req.params;
+router.delete(
+  "/:id",
+  requireAuth,
+  requireRole(["administrador"]),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
 
-    const resultado = await Avisos.destroy({
-      where: { id },
-    });
+      const resultado = await Avisos.destroy({
+        where: { id },
+      });
 
-    if (resultado === 0) {
-      return res.status(404).json({
+      if (resultado === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Aviso no encontrado",
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "Aviso eliminado exitosamente",
+      });
+    } catch (error) {
+      console.error("Error al eliminar aviso:", error);
+      res.status(500).json({
         success: false,
-        message: "Aviso no encontrado",
+        message: "Error al eliminar el aviso",
+        error: error.message,
       });
     }
-
-    res.status(200).json({
-      success: true,
-      message: "Aviso eliminado exitosamente",
-    });
-  } catch (error) {
-    console.error("Error al eliminar aviso:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error al eliminar el aviso",
-      error: error.message,
-    });
   }
-});
+);
 
 module.exports = router;
