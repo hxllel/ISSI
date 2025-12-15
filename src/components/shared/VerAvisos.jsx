@@ -63,10 +63,10 @@ export function VerAvisos({ objetivo }) {
               <div className="aviso-header">
                 <h3>{aviso.titulo}</h3>
                 <span className="aviso-badge">
-                  {aviso.objetivo === "todos"
+                  {aviso.objetivo === "Todos"
                     ? "General"
-                    : aviso.objetivo === "alumno"
-                    ? "Estudiantes"
+                    : aviso.objetivo === "Alumnos"
+                    ? "Alumnos"
                     : "Profesores"}
                 </span>
               </div>
