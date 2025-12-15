@@ -114,7 +114,11 @@ export function AdminSidebar() {
         </button>
       </aside>
 
-      {open && <div className="sidebar-overlay" onClick={() => setOpen(false)} />}
+<button
+  className={`sidebar-overlay ${open ? "show" : ""}`}
+  onClick={() => setOpen(false)}
+  aria-hidden="true"
+/>
 
     </>
   );

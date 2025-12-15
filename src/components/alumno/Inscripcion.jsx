@@ -64,12 +64,12 @@ const [paginaActual, setPaginaActual] = useState(1);
       .then((data) => {
         // El endpoint devuelve 404 si no hay cita, pero aún incluye datos del alumno
         if (data.tiempo) {
-          setTiempo(!true);
+          setTiempo(true);
         } else if (data.cita) {
-          setCita(!true);
+          setCita(true);
           setCitas(data.citas);
         } else {
-          setTiempo(!false);
+          setTiempo(true);
         }
 
         setPromedio(data.promedio);
