@@ -1391,9 +1391,7 @@ INSERT INTO
         fecha,
         metodo_aprobado
     )
-VALUES
-    (-- IIA historial de 1er semestre (10 x 3 materias)
-    (
+VALUES (
         'UAA0001',
         'K2024630101',
         'Fundamentos de Programación',
@@ -1401,232 +1399,290 @@ VALUES
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0002',
+        'Extraordinario '
+    ),
+    (
+        'UAA0002',
         'K2024630101',
         'Matemáticas Discretas',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0003',
+        'Ordinario'
+    ),
+    (
+        'UAA0003',
         'K2024630101',
         'Cálculo',
         7.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0004',
+        'Ordinario'
+    ),
+    (
+        'UAA0004',
         'K2024630102',
         'Fundamentos de Programación',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0005',
+        'Ordinario'
+    ),
+    (
+        'UAA0005',
         'K2024630102',
         'Matemáticas Discretas',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0006',
+        'Ordinario'
+    ),
+    (
+        'UAA0006',
         'K2024630102',
         'Cálculo',
         8.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0007',
+        'Ordinario'
+    ),
+    (
+        'UAA0007',
         'K2024630103',
         'Fundamentos de Programación',
         7.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0008',
+        'Extraordinario '
+    ),
+    (
+        'UAA0008',
         'K2024630103',
         'Matemáticas Discretas',
         7.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0009',
+        'Ordinario'
+    ),
+    (
+        'UAA0009',
         'K2024630103',
         'Cálculo',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0010',
+        'Ordinario'
+    ),
+    (
+        'UAA0010',
         'K2024630104',
         'Fundamentos de Programación',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0011',
+        'Ordinario'
+    ),
+    (
+        'UAA0011',
         'K2024630104',
         'Matemáticas Discretas',
         9.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0012',
+        'Ordinario'
+    ),
+    (
+        'UAA0012',
         'K2024630104',
         'Cálculo',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0013',
+        'Extraordinario '
+    ),
+    (
+        'UAA0013',
         'K2024630105',
         'Fundamentos de Programación',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0014',
+        'Ordinario'
+    ),
+    (
+        'UAA0014',
         'K2024630105',
         'Matemáticas Discretas',
         8.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0015',
+        'Ordinario'
+    ),
+    (
+        'UAA0015',
         'K2024630105',
         'Cálculo',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0016',
+        'Extraordinario '
+    ),
+    (
+        'UAA0016',
         'K2024630106',
         'Fundamentos de Programación',
         7.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0017',
+        'Ordinario'
+    ),
+    (
+        'UAA0017',
         'K2024630106',
         'Matemáticas Discretas',
         7.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario en recurse'),
-    ('UAA0018',
+        'Extraordinario en recurse'
+    ),
+    (
+        'UAA0018',
         'K2024630106',
         'Cálculo',
         7.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario en recurse'),
-    ('UAA0019',
+        'Extraordinario en recurse'
+    ),
+    (
+        'UAA0019',
         'K2024630107',
         'Fundamentos de Programación',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0020',
+        'Recurse'
+    ),
+    (
+        'UAA0020',
         'K2024630107',
         'Matemáticas Discretas',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0021',
+        'Recurse'
+    ),
+    (
+        'UAA0021',
         'K2024630107',
         'Cálculo',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0022',
+        'Ordinario'
+    ),
+    (
+        'UAA0022',
         'K2024630108',
         'Fundamentos de Programación',
         9.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario en recurse'),
-    ('UAA0023',
+        'Extraordinario en recurse'
+    ),
+    (
+        'UAA0023',
         'K2024630108',
         'Matemáticas Discretas',
         9.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0024',
+        'Extraordinario '
+    ),
+    (
+        'UAA0024',
         'K2024630108',
         'Cálculo',
         9.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0025',
+        'Recurse'
+    ),
+    (
+        'UAA0025',
         'K2024630109',
         'Fundamentos de Programación',
         7.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0026',
+        'Recurse'
+    ),
+    (
+        'UAA0026',
         'K2024630109',
         'Matemáticas Discretas',
         7.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0027',
+        'Ordinario'
+    ),
+    (
+        'UAA0027',
         'K2024630109',
         'Cálculo',
         8.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0028',
+        'Extraordinario '
+    ),
+    (
+        'UAA0028',
         'K2024630110',
         'Fundamentos de Programación',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0029',
+        'Ordinario'
+    ),
+    (
+        'UAA0029',
         'K2024630110',
         'Matemáticas Discretas',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario en recurse'),
-    ('UAA0030',
+        'Extraordinario en recurse'
+    ),
+    (
+        'UAA0030',
         'K2024630110',
         'Cálculo',
         8.2,
@@ -1644,232 +1700,290 @@ VALUES
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0032',
+        'Extraordinario '
+    ),
+    (
+        'UAA0032',
         'K2024630201',
         'Fundamentos de Programación',
         9.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0033',
+        'Ordinario'
+    ),
+    (
+        'UAA0033',
         'K2024630201',
         'Cálculo',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0034',
+        'Ordinario'
+    ),
+    (
+        'UAA0034',
         'K2024630202',
         'Fundamentos de Programación',
         6.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0035',
+        'Ordinario'
+    ),
+    (
+        'UAA0035',
         'K2024630202',
         'Matemáticas Discretas',
         6.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0036',
+        'Recurse'
+    ),
+    (
+        'UAA0036',
         'K2024630202',
         'Cálculo',
         6.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0037',
+        'Recurse'
+    ),
+    (
+        'UAA0037',
         'K2024630203',
         'Fundamentos de Programación',
         8.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0038',
+        'Ordinario'
+    ),
+    (
+        'UAA0038',
         'K2024630203',
         'Matemáticas Discretas',
         8.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0039',
+        'Recurse'
+    ),
+    (
+        'UAA0039',
         'K2024630203',
         'Cálculo',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0040',
+        'Extraordinario '
+    ),
+    (
+        'UAA0040',
         'K2024630204',
         'Fundamentos de Programación',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario en recurse'),
-    ('UAA0041',
+        'Extraordinario en recurse'
+    ),
+    (
+        'UAA0041',
         'K2024630204',
         'Matemáticas Discretas',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0042',
+        'Ordinario'
+    ),
+    (
+        'UAA0042',
         'K2024630204',
         'Cálculo',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0043',
+        'Extraordinario '
+    ),
+    (
+        'UAA0043',
         'K2024630205',
         'Fundamentos de Programación',
         7.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0044',
+        'Extraordinario '
+    ),
+    (
+        'UAA0044',
         'K2024630205',
         'Matemáticas Discretas',
         7.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0045',
+        'Ordinario'
+    ),
+    (
+        'UAA0045',
         'K2024630205',
         'Cálculo',
         7.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0046',
+        'Ordinario'
+    ),
+    (
+        'UAA0046',
         'K2024630206',
         'Fundamentos de Programación',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0047',
+        'Ordinario'
+    ),
+    (
+        'UAA0047',
         'K2024630206',
         'Matemáticas Discretas',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0048',
+        'Ordinario'
+    ),
+    (
+        'UAA0048',
         'K2024630206',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0049',
+        'Ordinario'
+    ),
+    (
+        'UAA0049',
         'K2024630207',
         'Fundamentos de Programación',
         9.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0050',
+        'Ordinario'
+    ),
+    (
+        'UAA0050',
         'K2024630207',
         'Matemáticas Discretas',
         9.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0051',
+        'Recurse'
+    ),
+    (
+        'UAA0051',
         'K2024630207',
         'Cálculo',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0052',
+        'Ordinario'
+    ),
+    (
+        'UAA0052',
         'K2024630208',
         'Fundamentos de Programación',
         7.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0053',
+        'Ordinario'
+    ),
+    (
+        'UAA0053',
         'K2024630208',
         'Matemáticas Discretas',
         7.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0054',
+        'Ordinario'
+    ),
+    (
+        'UAA0054',
         'K2024630208',
         'Cálculo',
         7.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0055',
+        'Recurse'
+    ),
+    (
+        'UAA0055',
         'K2024630209',
         'Fundamentos de Programación',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0056',
+        'Ordinario'
+    ),
+    (
+        'UAA0056',
         'K2024630209',
         'Matemáticas Discretas',
         8.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0057',
+        'Ordinario'
+    ),
+    (
+        'UAA0057',
         'K2024630209',
         'Cálculo',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0058',
+        'Ordinario'
+    ),
+    (
+        'UAA0058',
         'K2024630210',
         'Fundamentos de Programación',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0059',
+        'Ordinario'
+    ),
+    (
+        'UAA0059',
         'K2024630210',
         'Matemáticas Discretas',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario en recurse'),
-    ('UAA0060',
+        'Extraordinario en recurse'
+    ),
+    (
+        'UAA0060',
         'K2024630210',
         'Cálculo',
         8.6,
@@ -1887,232 +2001,290 @@ VALUES
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0062',
+        'Extraordinario '
+    ),
+    (
+        'UAA0062',
         'K2024630301',
         'Matemáticas Discretas',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0063',
+        'Ordinario'
+    ),
+    (
+        'UAA0063',
         'K2024630301',
         'Cálculo',
         8.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0064',
+        'Ordinario'
+    ),
+    (
+        'UAA0064',
         'K2024630302',
         'Fundamentos de Programación',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0065',
+        'Ordinario'
+    ),
+    (
+        'UAA0065',
         'K2024630302',
         'Matemáticas Discretas',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0066',
+        'Ordinario'
+    ),
+    (
+        'UAA0066',
         'K2024630302',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0067',
+        'Ordinario'
+    ),
+    (
+        'UAA0067',
         'K2024630303',
         'Fundamentos de Programación',
         8.9,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0068',
+        'Ordinario'
+    ),
+    (
+        'UAA0068',
         'K2024630303',
         'Matemáticas Discretas',
         9.0,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario en recurse'),
-    ('UAA0069',
+        'Extraordinario en recurse'
+    ),
+    (
+        'UAA0069',
         'K2024630303',
         'Cálculo',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0070',
+        'Recurse'
+    ),
+    (
+        'UAA0070',
         'K2024630304',
         'Fundamentos de Programación',
         7.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Recurse'),
-    ('UAA0071',
+        'Recurse'
+    ),
+    (
+        'UAA0071',
         'K2024630304',
         'Matemáticas Discretas',
         7.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0072',
+        'Ordinario'
+    ),
+    (
+        'UAA0072',
         'K2024630304',
         'Cálculo',
         7.6,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0073',
+        'Ordinario'
+    ),
+    (
+        'UAA0073',
         'K2024630305',
         'Fundamentos de Programación',
         8.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0074',
+        'Ordinario'
+    ),
+    (
+        'UAA0074',
         'K2024630305',
         'Matemáticas Discretas',
         8.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0075',
+        'Ordinario'
+    ),
+    (
+        'UAA0075',
         'K2024630305',
         'Cálculo',
         8.5,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0076',
+        'Extraordinario '
+    ),
+    (
+        'UAA0076',
         'K2024630306',
         'Fundamentos de Programación',
         8.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0077',
+        'Ordinario'
+    ),
+    (
+        'UAA0077',
         'K2024630306',
         'Matemáticas Discretas',
         8.0,
         1,
         '2024-1',
         '2024-06-20',
-        'ETS'),
-    ('UAA0078',
+        'ETS'
+    ),
+    (
+        'UAA0078',
         'K2024630306',
         'Cálculo',
         8.3,
         1,
         '2024-1',
         '2024-06-20',
-        'ETS'),
-    ('UAA0079',
+        'ETS'
+    ),
+    (
+        'UAA0079',
         'K2024630307',
         'Fundamentos de Programación',
         8.7,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0080',
+        'Ordinario'
+    ),
+    (
+        'UAA0080',
         'K2024630307',
         'Matemáticas Discretas',
         8.8,
         1,
         '2024-1',
         '2024-06-20',
-        'ETS'),
-    ('UAA0081',
+        'ETS'
+    ),
+    (
+        'UAA0081',
         'K2024630307',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'ETS'),
-    ('UAA0082',
+        'ETS'
+    ),
+    (
+        'UAA0082',
         'K2024630308',
         'Fundamentos de Programación',
         7.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0083',
+        'Extraordinario '
+    ),
+    (
+        'UAA0083',
         'K2024630308',
         'Matemáticas Discretas',
         7.1,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0084',
+        'Ordinario'
+    ),
+    (
+        'UAA0084',
         'K2024630308',
         'Cálculo',
         7.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0085',
+        'Ordinario'
+    ),
+    (
+        'UAA0085',
         'K2024630309',
         'Fundamentos de Programación',
         8.4,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0086',
+        'Ordinario'
+    ),
+    (
+        'UAA0086',
         'K2024630309',
         'Matemáticas Discretas',
         8.3,
         1,
         '2024-1',
         '2024-06-20',
-        'Ordinario'),
-    ('UAA0087',
+        'Ordinario'
+    ),
+    (
+        'UAA0087',
         'K2024630309',
         'Cálculo',
         8.6,
         1,
         '2024-1',
         '2024-06-20',
-        'ETS'),
-    ('UAA0088',
+        'ETS'
+    ),
+    (
+        'UAA0088',
         'K2024630310',
         'Fundamentos de Programación',
         9.2,
         1,
         '2024-1',
         '2024-06-20',
-        'Extraordinario '),
-    ('UAA0089',
+        'Extraordinario '
+    ),
+    (
+        'UAA0089',
         'K2024630310',
         'Matemáticas Discretas',
         9.3,
         1,
         '2024-1',
         '2024-06-20',
-        'ETS'),
-    ('UAA0090',
+        'ETS'
+    ),
+    (
+        'UAA0090',
         'K2024630310',
         'Cálculo',
         9.1,
@@ -5135,6 +5307,216 @@ VALUES
     'Ordinario'
 );
 
+DELETE from mat_inscritos where id_horario = "H2024630101";
+
+DELETE from mat_inscritos where id_horario = "H2024630102";
+
+DELETE d
+FROM distribucion d
+    JOIN grupo g ON d.id_grupo = g.id
+WHERE
+    g.id_prof = 'HIJKLMNO';
+
+delete from grupo where id_prof = 'HIJKLMNO';
+
+DELETE d
+FROM distribucion d
+    JOIN grupo g ON d.id_grupo = g.id
+WHERE
+    g.id_prof = 'P0027VWX';
+
+delete from grupo where id_prof = 'P0027VWX';
+
+DELETE d
+FROM distribucion d
+    JOIN grupo g ON d.id_grupo = g.id
+WHERE
+    g.id_prof = 'PROF0002';
+
+delete from grupo where id_prof = 'PROF0002';
+
+delete from grupo where id = '1';
+
+DELETE from grupo where id = '2';
+
+DELETE from grupo where id = '3';
+
+DELETE FROM grupo where id = '4';
+
+INSERT INTO
+    GRUPO (
+        id,
+        nombre,
+        id_ua,
+        id_prof,
+        turno,
+        cupo,
+        salon,
+        reg_final,
+        reg_extra
+    )
+VALUES (
+        '1',
+        '4BM3',
+        'UA0070',
+        'HIJKLMNO',
+        'Matutino',
+        0,
+        '4001',
+        0,
+        0
+    ),
+    (
+        '2',
+        '4BM3',
+        'UA0071',
+        'HIJKLMNO',
+        'Matutino',
+        0,
+        '4001',
+        0,
+        0
+    ),
+    (
+        '3',
+        '4BM3',
+        'UA0072',
+        'P0027VWX',
+        'Matutino',
+        0,
+        '4002',
+        0,
+        0
+    );
+
+-- Agregar cuarto grupo para la misma materia/nombre
+INSERT INTO
+    GRUPO (
+        id,
+        nombre,
+        id_ua,
+        id_prof,
+        turno,
+        cupo,
+        salon,
+        reg_final,
+        reg_extra
+    )
+VALUES (
+        '4',
+        '4BM3',
+        'UA0073',
+        'PROF0002',
+        'Matutino',
+        0,
+        '4003',
+        0,
+        0
+    );
+
+INSERT INTO
+    distribucion (
+        id,
+        id_grupo,
+        hora_ini,
+        hora_fin,
+        dia
+    )
+VALUES (
+        'D1',
+        '1',
+        '08:00',
+        '09:30',
+        'Lunes'
+    ),
+    (
+        'D2',
+        '1',
+        '08:00',
+        '09:30',
+        'Miercoles'
+    ),
+    (
+        'D3',
+        '1',
+        '08:00',
+        '09:30',
+        'Viernes'
+    ),
+    (
+        'D4',
+        '2',
+        '10:00',
+        '11:30',
+        'Lunes'
+    ),
+    (
+        'D5',
+        '2',
+        '10:00',
+        '11:30',
+        'Miercoles'
+    ),
+    (
+        'D6',
+        '2',
+        '10:00',
+        '11:30',
+        'Viernes'
+    ),
+    (
+        'D7',
+        '3',
+        '12:00',
+        '13:30',
+        'Martes'
+    ),
+    (
+        'D8',
+        '3',
+        '12:00',
+        '13:30',
+        'Jueves'
+    ),
+    (
+        'D9',
+        '3',
+        '12:00',
+        '13:30',
+        'Viernes'
+    );
+
+-- Distribucion para cuarto grupo adicional (id = '4')
+INSERT INTO
+    distribucion (
+        id,
+        id_grupo,
+        hora_ini,
+        hora_fin,
+        dia
+    )
+VALUES (
+        'D10',
+        '4',
+        '14:00',
+        '15:30',
+        'Lunes'
+    ),
+    (
+        'D11',
+        '4',
+        '14:00',
+        '15:30',
+        'Miercoles'
+    ),
+    (
+        'D12',
+        '4',
+        '14:00',
+        '15:30',
+        'Viernes'
+    );
+
 -- ==================================================================
 -- 5. INSERCIÓN DE HORARIOS PARA ESTUDIANTES
 -- ==================================================================
@@ -5156,7 +5538,7 @@ INSERT INTO
 VALUES (
         'MAT20246301011',
         'H2024630101',
-        'G00001',
+        '1',
         8.5,
         8.8,
         9.0,
@@ -5164,9 +5546,29 @@ VALUES (
         NULL
     ),
     (
-        'MAT20246301021',
+        'MAT1000',
+        'H2024630101',
+        '4',
+        8.5,
+        8.8,
+        9.0,
+        8.8,
+        NULL
+    ),
+    (
+        'MAT20246308382',
         'H2024630102',
-        'G00001',
+        '1',
+        8.2,
+        8.5,
+        8.7,
+        8.5,
+        NULL
+    ),
+    (
+        'MAT207347483',
+        'H2024630102',
+        '4',
         8.2,
         8.5,
         8.7,
@@ -5269,7 +5671,7 @@ INSERT INTO
 VALUES (
         'MAT20246301012',
         'H2024630101',
-        'G00003',
+        '2',
         8.8,
         8.9,
         8.7,
@@ -5279,7 +5681,7 @@ VALUES (
     (
         'MAT20246301022',
         'H2024630102',
-        'G00003',
+        '2',
         8.0,
         8.3,
         8.4,
@@ -5382,7 +5784,7 @@ INSERT INTO
 VALUES (
         'MAT20246301013',
         'H2024630101',
-        'G00005',
+        '3',
         7.8,
         8.0,
         8.1,
@@ -5392,7 +5794,7 @@ VALUES (
     (
         'MAT20246301023',
         'H2024630102',
-        'G00005',
+        '3',
         8.0,
         8.2,
         8.3,
@@ -6169,7 +6571,8 @@ INSERT INTO
         id_alumno,
         calificacion,
         comentarios,
-        fecha
+        fecha,
+        periodo
     )
 VALUES (
         'RES001',
@@ -6177,7 +6580,8 @@ VALUES (
         '2024630101',
         9.0,
         'Excelente profesor, explica muy bien los conceptos',
-        '2025-12-05'
+        '2024-12-05',
+        '2024-2'
     ),
     (
         'RES002',
@@ -6185,7 +6589,8 @@ VALUES (
         '2024630102',
         8.5,
         'Domina el tema y resuelve dudas eficientemente',
-        '2025-12-05'
+        '2024-12-05',
+        '2024-2'
     ),
     (
         'RES003',
@@ -6193,7 +6598,8 @@ VALUES (
         '2024630103',
         8.0,
         'Buen profesor, aunque a veces va muy rápido',
-        '2025-12-06'
+        '2024-12-06',
+        '2024-2'
     ),
     (
         'RES004',
@@ -6201,7 +6607,8 @@ VALUES (
         '2024630104',
         9.5,
         'El mejor profesor que he tenido, muy dedicado',
-        '2025-12-06'
+        '2024-12-06',
+        '2024-2'
     ),
     (
         'RES005',
@@ -6209,7 +6616,8 @@ VALUES (
         '2024630105',
         8.8,
         'Excelente metodología de enseñanza',
-        '2025-12-07'
+        '2024-12-07',
+        '2024-2'
     ),
     (
         'RES006',
@@ -6217,7 +6625,8 @@ VALUES (
         '2024630106',
         7.5,
         'Buen profesor pero podría mejorar la organización',
-        '2025-12-05'
+        '2024-12-05',
+        '2024-2'
     ),
     (
         'RES007',
@@ -6225,7 +6634,8 @@ VALUES (
         '2024630107',
         8.5,
         'Clases dinámicas y ejemplos prácticos',
-        '2025-12-06'
+        '2024-12-06',
+        '2024-2'
     ),
     (
         'RES008',
@@ -6233,7 +6643,8 @@ VALUES (
         '2024630108',
         8.0,
         'Explica bien los temas complejos',
-        '2025-12-06'
+        '2024-12-06',
+        '2024-2'
     ),
     (
         'RES009',
@@ -6241,47 +6652,234 @@ VALUES (
         '2024630109',
         8.2,
         'Buen dominio de la materia',
-        '2025-12-07'
+        '2024-12-07',
+        '2024-2'
     ),
     (
         'RES010',
         'PROF0002',
-        '2024630111',
+        '2024630110',
         9.0,
         'Excelente profesora, muy paciente',
-        '2025-12-05'
+        '2024-12-05',
+        '2024-2'
     ),
     (
         'RES011',
         'PROF0002',
-        '2024630112',
+        '2024630201',
         9.2,
         'La mejor profesora, siempre disponible para dudas',
-        '2025-12-06'
+        '2024-12-06',
+        '2024-2'
     ),
     (
         'RES012',
         'PROF0002',
-        '2024630113',
+        '2024630202',
         9.5,
         'Hace que el cálculo sea fácil de entender',
-        '2025-12-06'
+        '2024-12-06',
+        '2024-2'
     ),
     (
         'RES013',
         'PROF0002',
-        '2024630101',
+        '2024630203',
         8.8,
         'Excelente didáctica y paciencia',
-        '2025-12-07'
+        '2024-12-07',
+        '2024-2'
     ),
     (
         'RES014',
         'PROF0002',
-        '2024630102',
+        '2024630204',
         9.0,
         'Clases muy bien estructuradas',
-        '2025-12-07'
+        '2024-12-07',
+        '2024-2'
+    ),
+    -- 20 reseñas adicionales para varios profesores
+    (
+        'RES015',
+        'P0001RSV',
+        '2024630205',
+        8.7,
+        'Profesor dedicado con buena pedagogía',
+        '2024-12-08',
+        '2024-2'
+    ),
+    (
+        'RES016',
+        'P0001RSV',
+        '2024630206',
+        8.4,
+        'Enseña de manera clara y ordenada',
+        '2024-12-08',
+        '2024-2'
+    ),
+    (
+        'RES017',
+        'P0002KND',
+        '2024630207',
+        8.9,
+        'Muy atento con los estudiantes',
+        '2024-12-09',
+        '2024-2'
+    ),
+    (
+        'RES018',
+        'P0002KND',
+        '2024630208',
+        8.3,
+        'Buenas explicaciones pero poco tiempo en dudas',
+        '2024-12-09',
+        '2024-2'
+    ),
+    (
+        'RES019',
+        'P0003HGR',
+        '2024630209',
+        8.6,
+        'Profesional y exigente de buena manera',
+        '2024-12-10',
+        '2024-2'
+    ),
+    (
+        'RES020',
+        'P0003HGR',
+        '2024630210',
+        8.1,
+        'Clases interesantes aunque densas',
+        '2024-12-10',
+        '2024-2'
+    ),
+    (
+        'RES021',
+        'P0004ABC',
+        '2024630301',
+        8.8,
+        'Muy comprensivo y accesible',
+        '2024-12-11',
+        '2024-2'
+    ),
+    (
+        'RES022',
+        'P0004ABC',
+        '2024630302',
+        8.5,
+        'Propone actividades prácticas útiles',
+        '2024-12-11',
+        '2024-2'
+    ),
+    (
+        'RES023',
+        'P0005DEF',
+        '2024630303',
+        9.1,
+        'Excelente comunicación con alumnos',
+        '2024-12-12',
+        '2024-2'
+    ),
+    (
+        'RES024',
+        'P0005DEF',
+        '2024630304',
+        8.9,
+        'Domina completamente su materia',
+        '2024-12-12',
+        '2024-2'
+    ),
+    (
+        'RES025',
+        'HIJKLMNO',
+        '2024630305',
+        8.3,
+        'Retroalimentación constructiva siempre',
+        '2024-12-13',
+        '2024-2'
+    ),
+    (
+        'RES026',
+        'HIJKLMNO',
+        '2024630306',
+        8.6,
+        'Promueve el pensamiento crítico',
+        '2024-12-13',
+        '2024-2'
+    ),
+    (
+        'RES027',
+        'PROF0001',
+        '2024630307',
+        8.4,
+        'Accesible fuera de horario de clase',
+        '2024-12-14',
+        '2024-2'
+    ),
+    (
+        'RES028',
+        'PROF0001',
+        '2024630308',
+        8.7,
+        'Materiales de estudio muy completos',
+        '2024-12-14',
+        '2024-2'
+    ),
+    (
+        'RES029',
+        'PROF0002',
+        '2024630309',
+        8.9,
+        'Crea un ambiente de respeto y confianza',
+        '2024-12-15',
+        '2024-2'
+    ),
+    (
+        'RES030',
+        'PROF0002',
+        '2024630101',
+        8.6,
+        'Atiende a estudiantes con dificultades',
+        '2024-12-15',
+        '2024-2'
+    ),
+    (
+        'RES031',
+        'P0001RSV',
+        '2024630102',
+        8.8,
+        'Experto en su área de conocimiento',
+        '2024-12-16',
+        '2024-2'
+    ),
+    (
+        'RES032',
+        'P0001RSV',
+        '2024630103',
+        8.2,
+        'Clases algo monótonas pero informativas',
+        '2024-12-16',
+        '2024-2'
+    ),
+    (
+        'RES033',
+        'P0002KND',
+        '2024630104',
+        8.7,
+        'Enseña con ejemplos del mundo real',
+        '2024-12-17',
+        '2024-2'
+    ),
+    (
+        'RES034',
+        'P0003HGR',
+        '2024630105',
+        8.4,
+        'Evaluaciones justas y transparentes',
+        '2024-12-17',
+        '2024-2'
     );
 
 DELETE FROM avisos;
@@ -6333,7 +6931,7 @@ VALUES (
         'El sistema SAES estará en mantenimiento el día 10 de diciembre de 2025 de 22:00 a 24:00 hrs. Disculpen las molestias.',
         NULL,
         'Todos',
-        '2025-12-10 23:59:59'
+        '2025-12-20 23:59:59'
     ),
     (
         'AV006',
@@ -6341,7 +6939,7 @@ VALUES (
         'Recuerden mantener actualizados sus datos personales y de contacto en el sistema. Esto es importante para recibir notificaciones oficiales.',
         NULL,
         'Todos',
-        '2025-06-20 23:59:59'
+        '2025-12-20 23:59:59'
     );
 
 DELETE FROM materia_reprobada;
@@ -6377,25 +6975,17 @@ VALUES
     (
         '459',
         'EST2024630104',
-        'UA0058',
-        '2',
+        'UA0071',
         '1',
+        '0',
         'Reprobada'
     ),
     (
         '460',
         'EST2024630104',
-        'UA0061',
+        'UA0070',
         '2',
         '1',
-        'Reprobada'
-    ),
-    (
-        '461',
-        'EST2024630104',
-        'UA0065',
-        '1',
-        '0',
         'Reprobada'
     ),
     -- Alumno ISC 2024630306 (EST2024630306): 2 materias reprobadas
@@ -6591,3 +7181,538 @@ INSERT INTO
 VALUES ('HIJKLMNO', 42, 5),
     ('PROF0001', 38, 4),
     ('PROF0002', 45, 5);
+
+-- ==================================================================
+-- PASE DE LISTA PARA GRUPOS 1, 2, 3, 4
+-- ==================================================================
+DELETE FROM lista;
+
+-- GRUPO 1: 10 registros por alumno (MAT20246301011, MAT20246308382)
+INSERT INTO
+    lista (
+        id,
+        id_inscrito,
+        fecha,
+        asistencia
+    )
+VALUES (
+        'LIS00101',
+        'MAT20246301011',
+        '2024-12-02',
+        'Si'
+    ),
+    (
+        'LIS00102',
+        'MAT20246301011',
+        '2024-12-04',
+        'Si'
+    ),
+    (
+        'LIS00103',
+        'MAT20246301011',
+        '2024-12-06',
+        'No'
+    ),
+    (
+        'LIS00104',
+        'MAT20246301011',
+        '2024-12-09',
+        'Si'
+    ),
+    (
+        'LIS00105',
+        'MAT20246301011',
+        '2024-12-11',
+        'Si'
+    ),
+    (
+        'LIS00106',
+        'MAT20246301011',
+        '2024-12-13',
+        'Si'
+    ),
+    (
+        'LIS00107',
+        'MAT20246301011',
+        '2024-12-16',
+        'Si'
+    ),
+    (
+        'LIS00108',
+        'MAT20246301011',
+        '2024-12-18',
+        'No'
+    ),
+    (
+        'LIS00109',
+        'MAT20246301011',
+        '2024-12-20',
+        'Si'
+    ),
+    (
+        'LIS00110',
+        'MAT20246301011',
+        '2024-12-23',
+        'Si'
+    ),
+    (
+        'LIS00201',
+        'MAT20246308382',
+        '2024-12-02',
+        'Si'
+    ),
+    (
+        'LIS00202',
+        'MAT20246308382',
+        '2024-12-04',
+        'Si'
+    ),
+    (
+        'LIS00203',
+        'MAT20246308382',
+        '2024-12-06',
+        'Si'
+    ),
+    (
+        'LIS00204',
+        'MAT20246308382',
+        '2024-12-09',
+        'No'
+    ),
+    (
+        'LIS00205',
+        'MAT20246308382',
+        '2024-12-11',
+        'Si'
+    ),
+    (
+        'LIS00206',
+        'MAT20246308382',
+        '2024-12-13',
+        'Si'
+    ),
+    (
+        'LIS00207',
+        'MAT20246308382',
+        '2024-12-16',
+        'Si'
+    ),
+    (
+        'LIS00208',
+        'MAT20246308382',
+        '2024-12-18',
+        'Si'
+    ),
+    (
+        'LIS00209',
+        'MAT20246308382',
+        '2024-12-20',
+        'No'
+    ),
+    (
+        'LIS00210',
+        'MAT20246308382',
+        '2024-12-23',
+        'Si'
+    );
+
+-- GRUPO 2: 10 registros por alumno (MAT20246301012, MAT20246301022)
+INSERT INTO
+    lista (
+        id,
+        id_inscrito,
+        fecha,
+        asistencia
+    )
+VALUES (
+        'LIS00301',
+        'MAT20246301012',
+        '2024-12-03',
+        'Si'
+    ),
+    (
+        'LIS00302',
+        'MAT20246301012',
+        '2024-12-05',
+        'Si'
+    ),
+    (
+        'LIS00303',
+        'MAT20246301012',
+        '2024-12-10',
+        'Si'
+    ),
+    (
+        'LIS00304',
+        'MAT20246301012',
+        '2024-12-12',
+        'No'
+    ),
+    (
+        'LIS00305',
+        'MAT20246301012',
+        '2024-12-17',
+        'Si'
+    ),
+    (
+        'LIS00306',
+        'MAT20246301012',
+        '2024-12-19',
+        'Si'
+    ),
+    (
+        'LIS00307',
+        'MAT20246301012',
+        '2024-12-24',
+        'Si'
+    ),
+    (
+        'LIS00308',
+        'MAT20246301012',
+        '2024-12-26',
+        'Si'
+    ),
+    (
+        'LIS00309',
+        'MAT20246301012',
+        '2024-12-28',
+        'No'
+    ),
+    (
+        'LIS00310',
+        'MAT20246301012',
+        '2024-12-30',
+        'Si'
+    ),
+    (
+        'LIS00401',
+        'MAT20246301022',
+        '2024-12-03',
+        'Si'
+    ),
+    (
+        'LIS00402',
+        'MAT20246301022',
+        '2024-12-05',
+        'No'
+    ),
+    (
+        'LIS00403',
+        'MAT20246301022',
+        '2024-12-10',
+        'Si'
+    ),
+    (
+        'LIS00404',
+        'MAT20246301022',
+        '2024-12-12',
+        'Si'
+    ),
+    (
+        'LIS00405',
+        'MAT20246301022',
+        '2024-12-17',
+        'Si'
+    ),
+    (
+        'LIS00406',
+        'MAT20246301022',
+        '2024-12-19',
+        'No'
+    ),
+    (
+        'LIS00407',
+        'MAT20246301022',
+        '2024-12-24',
+        'Si'
+    ),
+    (
+        'LIS00408',
+        'MAT20246301022',
+        '2024-12-26',
+        'Si'
+    ),
+    (
+        'LIS00409',
+        'MAT20246301022',
+        '2024-12-28',
+        'Si'
+    ),
+    (
+        'LIS00410',
+        'MAT20246301022',
+        '2024-12-30',
+        'Si'
+    );
+
+-- GRUPO 3: 10 registros por alumno (MAT20246301013, MAT20246301023)
+INSERT INTO
+    lista (
+        id,
+        id_inscrito,
+        fecha,
+        asistencia
+    )
+VALUES (
+        'LIS00501',
+        'MAT20246301013',
+        '2024-12-02',
+        'Si'
+    ),
+    (
+        'LIS00502',
+        'MAT20246301013',
+        '2024-12-09',
+        'Si'
+    ),
+    (
+        'LIS00503',
+        'MAT20246301013',
+        '2024-12-16',
+        'No'
+    ),
+    (
+        'LIS00504',
+        'MAT20246301013',
+        '2024-12-23',
+        'Si'
+    ),
+    (
+        'LIS00505',
+        'MAT20246301013',
+        '2024-12-30',
+        'Si'
+    ),
+    (
+        'LIS00506',
+        'MAT20246301013',
+        '2024-12-06',
+        'Si'
+    ),
+    (
+        'LIS00507',
+        'MAT20246301013',
+        '2024-12-13',
+        'Si'
+    ),
+    (
+        'LIS00508',
+        'MAT20246301013',
+        '2024-12-20',
+        'No'
+    ),
+    (
+        'LIS00509',
+        'MAT20246301013',
+        '2024-12-27',
+        'Si'
+    ),
+    (
+        'LIS00510',
+        'MAT20246301013',
+        '2024-12-31',
+        'Si'
+    ),
+    (
+        'LIS00601',
+        'MAT20246301023',
+        '2024-12-02',
+        'No'
+    ),
+    (
+        'LIS00602',
+        'MAT20246301023',
+        '2024-12-09',
+        'Si'
+    ),
+    (
+        'LIS00603',
+        'MAT20246301023',
+        '2024-12-16',
+        'Si'
+    ),
+    (
+        'LIS00604',
+        'MAT20246301023',
+        '2024-12-23',
+        'Si'
+    ),
+    (
+        'LIS00605',
+        'MAT20246301023',
+        '2024-12-30',
+        'No'
+    ),
+    (
+        'LIS00606',
+        'MAT20246301023',
+        '2024-12-06',
+        'Si'
+    ),
+    (
+        'LIS00607',
+        'MAT20246301023',
+        '2024-12-13',
+        'Si'
+    ),
+    (
+        'LIS00608',
+        'MAT20246301023',
+        '2024-12-20',
+        'Si'
+    ),
+    (
+        'LIS00609',
+        'MAT20246301023',
+        '2024-12-27',
+        'Si'
+    ),
+    (
+        'LIS00610',
+        'MAT20246301023',
+        '2024-12-31',
+        'No'
+    );
+
+-- GRUPO 4: 10 registros por alumno (MAT1000, MAT207347483 - primera materia)
+INSERT INTO
+    lista (
+        id,
+        id_inscrito,
+        fecha,
+        asistencia
+    )
+VALUES (
+        'LIS00701',
+        'MAT1000',
+        '2024-12-02',
+        'Si'
+    ),
+    (
+        'LIS00702',
+        'MAT1000',
+        '2024-12-04',
+        'Si'
+    ),
+    (
+        'LIS00703',
+        'MAT1000',
+        '2024-12-06',
+        'Si'
+    ),
+    (
+        'LIS00704',
+        'MAT1000',
+        '2024-12-09',
+        'No'
+    ),
+    (
+        'LIS00705',
+        'MAT1000',
+        '2024-12-11',
+        'Si'
+    ),
+    (
+        'LIS00706',
+        'MAT1000',
+        '2024-12-13',
+        'Si'
+    ),
+    (
+        'LIS00707',
+        'MAT1000',
+        '2024-12-16',
+        'Si'
+    ),
+    (
+        'LIS00708',
+        'MAT1000',
+        '2024-12-18',
+        'Si'
+    ),
+    (
+        'LIS00709',
+        'MAT1000',
+        '2024-12-20',
+        'No'
+    ),
+    (
+        'LIS00710',
+        'MAT1000',
+        '2024-12-23',
+        'Si'
+    ),
+    (
+        'LIS00801',
+        'MAT207347483',
+        '2024-12-02',
+        'Si'
+    ),
+    (
+        'LIS00802',
+        'MAT207347483',
+        '2024-12-04',
+        'No'
+    ),
+    (
+        'LIS00803',
+        'MAT207347483',
+        '2024-12-06',
+        'Si'
+    ),
+    (
+        'LIS00804',
+        'MAT207347483',
+        '2024-12-09',
+        'Si'
+    ),
+    (
+        'LIS00805',
+        'MAT207347483',
+        '2024-12-11',
+        'Si'
+    ),
+    (
+        'LIS00806',
+        'MAT207347483',
+        '2024-12-13',
+        'No'
+    ),
+    (
+        'LIS00807',
+        'MAT207347483',
+        '2024-12-16',
+        'Si'
+    ),
+    (
+        'LIS00808',
+        'MAT207347483',
+        '2024-12-18',
+        'Si'
+    ),
+    (
+        'LIS00809',
+        'MAT207347483',
+        '2024-12-20',
+        'Si'
+    ),
+    (
+        'LIS00810',
+        'MAT207347483',
+        '2024-12-23',
+        'Si'
+    );
+
+insert into
+    inscripcion (
+        id,
+        id_alumno,
+        fecha_hora_in,
+        fecha_hora_cad
+    )
+values (
+        'INS2025112401',
+        '2024630101',
+        '2025-12-16 07:00:00',
+        '2025-11-24 15:00:00'
+    );

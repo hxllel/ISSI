@@ -30,7 +30,7 @@ VALUES
     -- Grupo ETS 1: Fundamentos de Programación (ISC - Semestre 1)
     (
         'ETSG001',
-        'UA0001',
+        'UA0071',
         'HIJKLMNO',
         'Matutino',
         '08:00',
