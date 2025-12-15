@@ -11,12 +11,32 @@ export function DatosPersonales() {
 
   const [alumno, setAlumno] = useState(null);
 
+  const [datosMedicos, setDatosMedicos] = useState(null);
+  const [loadingDM, setLoadingDM] = useState(true);
+
+
   useEffect(() => {
     fetch(`http://localhost:4000/ObtenerAlumno/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setAlumno(data.alumno || null))
       .catch((err) => console.error("Error al obtener el alumno:", err));
   }, [id]);
+
+  useEffect(() => {
+  fetch(`http://localhost:4000/alumno/datosMedicos`, {
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      setDatosMedicos(data.datos || null);
+      setLoadingDM(false);
+    })
+    .catch((err) => {
+      console.error("Error al obtener datos médicos:", err);
+      setLoadingDM(false);
+    });
+}, []);
+
 
   const handleEdit = () => navigate(`/alumno/editarDatos/${id}`);
   const handleIns = () => navigate(`/alumno/inscripcion/${id}`);
@@ -162,6 +182,41 @@ export function DatosPersonales() {
                     <p>{alumno.carrera}</p>
                   </div>
                 </div>
+                {/* Datos Médicos */}
+<div className="form-section">
+  <h3>Datos Médicos</h3>
+
+  {loadingDM ? (
+    <p>Cargando datos médicos...</p>
+  ) : datosMedicos ? (
+    <>
+      <div className="form-row">
+        <div className="form-group">
+          <label>Peso</label>
+          <p>{datosMedicos.peso ? `${datosMedicos.peso} kg` : "No registrado"}</p>
+        </div>
+        <div className="form-group">
+          <label>Altura</label>
+          <p>{datosMedicos.altura ? `${datosMedicos.altura} m` : "No registrada"}</p>
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Tipo de Sangre (médico)</label>
+          <p>{datosMedicos.tipo_sangre || "No registrado"}</p>
+        </div>
+        <div className="form-group">
+          <label>NSS</label>
+          <p>{datosMedicos.nss || "No registrado"}</p>
+        </div>
+      </div>
+    </>
+  ) : (
+    <p>No hay datos médicos registrados.</p>
+  )}
+</div>
+
               </div>
 
               <div className="form-actions">

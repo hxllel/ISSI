@@ -82,7 +82,9 @@ export function Administrador() {
 
   return (
     <div className="admin-container">
+      
       <AdminSidebar />
+      
       {/* Main content con DISEÑO DEL SEGUNDO */}
       <main className="main-content">
         <header className="chat-header">

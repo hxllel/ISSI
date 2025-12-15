@@ -21,6 +21,37 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   const [paginaActual, setPaginaActual] = useState(1);
   const resultadosPorPagina = 10;
 
+  // ===== FILTROS =====
+const [filtroMateria, setFiltroMateria] = useState("");
+const [filtroProfesor, setFiltroProfesor] = useState("");
+const [filtroTurno, setFiltroTurno] = useState("");
+const [filtroCarrera, setFiltroCarrera] = useState("");
+
+// ===== DATOS FILTRADOS =====
+const datosFiltrados = datos.filter((dato) => {
+  const matchMateria =
+    !filtroMateria ||
+    dato.Unidad_Aprendizaje?.nombre
+      ?.toLowerCase()
+      .includes(filtroMateria.toLowerCase());
+
+  const matchProfesor =
+    !filtroProfesor ||
+    `${dato.DatosPersonale?.nombre || ""} ${dato.DatosPersonale?.ape_paterno || ""} ${dato.DatosPersonale?.ape_materno || ""}`
+      .toLowerCase()
+      .includes(filtroProfesor.toLowerCase());
+
+  const matchTurno = !filtroTurno || dato.turno === filtroTurno;
+
+  const matchCarrera = filtroCarrera
+  ? dato.Unidad_Aprendizaje?.carrera?.toLowerCase() ===
+    filtroCarrera.toLowerCase()
+  : true;
+
+  return matchMateria && matchProfesor && matchTurno && matchCarrera;
+});
+
+
   const [add, setAdd] = useState(null);
   const [idgru, setIdgru] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -142,10 +173,19 @@ export default function Horarios({ alumnoId: propAlumnoId, onClose }) {
   }, [del]);
 
 // Datos paginados
-const totalPaginas = Math.max(1, Math.ceil(datos.length / resultadosPorPagina));
+const totalPaginas = Math.max(
+  1,
+  Math.ceil(datosFiltrados.length / resultadosPorPagina)
+);
 
 const indiceInicio = (paginaActual - 1) * resultadosPorPagina;
-const datosPagina = datos.slice(indiceInicio, indiceInicio + resultadosPorPagina);
+const datosPagina = datosFiltrados.slice(
+  indiceInicio,
+  indiceInicio + resultadosPorPagina
+);
+
+
+
 
 // Cambiar página
 const siguientePagina = () => {
@@ -159,7 +199,17 @@ const anteriorPagina = () => {
 // Si cambian los datos, regresar a página 1
 useEffect(() => {
   setPaginaActual(1);
-}, [datos]);
+}, [filtroMateria, filtroProfesor, filtroTurno, filtroCarrera]);
+
+
+const carrerasDisponibles = [
+  ...new Set(
+    datos
+      .map(d => d.Unidad_Aprendizaje?.carrera)
+      .filter(Boolean)
+  )
+];
+
 
   return (
     <div className="alumno-container">
@@ -176,6 +226,48 @@ useEffect(() => {
 
       
       <section className="gestion-alumnos">
+        <div className="filtros-horarios" style={{ display: "flex", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
+  <input
+    type="text"
+    placeholder="Buscar materia..."
+    value={filtroMateria}
+    onChange={(e) => setFiltroMateria(e.target.value)}
+    className="btn-ver"
+  />
+
+  <input
+    type="text"
+    placeholder="Buscar profesor..."
+    value={filtroProfesor}
+    onChange={(e) => setFiltroProfesor(e.target.value)}
+    className="btn-ver"
+  />
+
+  <select
+    value={filtroTurno}
+    onChange={(e) => setFiltroTurno(e.target.value)}
+    className="btn-ver"
+  >
+    <option value="">Todos los turnos</option>
+    <option value="Matutino">Matutino</option>
+    <option value="Vespertino">Vespertino</option>
+  </select>
+
+  <select
+  value={filtroCarrera}
+  onChange={(e) => setFiltroCarrera(e.target.value)}
+  className="btn-ver"
+>
+  <option value="">Todas las carreras</option>
+  {carrerasDisponibles.map((car) => (
+    <option key={car} value={car}>
+      {car}
+    </option>
+  ))}
+</select>
+
+</div>
+
       <table className="horario-table1">
         <thead>
           <tr>
@@ -258,7 +350,7 @@ useEffect(() => {
       </table>
       <div className="paginacion">
   <button
-    
+    className="btn-ver"
     onClick={anteriorPagina}
     disabled={paginaActual === 1}
   >
@@ -270,7 +362,7 @@ useEffect(() => {
   </span>
 
   <button
-    
+    className="btn-ver"
     onClick={siguientePagina}
     disabled={paginaActual === totalPaginas}
   >

@@ -237,7 +237,7 @@ sidebar/* --- Layout general --- */
   margin-right: 6px;
 }
 
-.icono.editar { color: #007bff; }
+.icono.editar { color: #8a1538; }
 .icono.eliminar { color: #d9534f; }
 
 /* --- Footer tabla --- */
@@ -327,4 +327,77 @@ sidebar/* --- Layout general --- */
   font-size: 1.8rem;         /* tamaño de la letra */
   font-weight: bold;       /* negrita */
   color: #333;             /* color del texto */
+}
+
+:root {
+  --vino: #7d0024;
+  --vino-light: #f6e6eb;
+  --vino-hover: #5a0019;
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.icono {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  font-size: 18px;
+
+  background: var(--vino-light);
+  color: var(--vino);
+
+  transition: all 0.2s ease;
+}
+
+/* Hover elegante */
+.icono:hover {
+  background: var(--vino);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(125, 0, 36, 0.35);
+}
+
+/* Active */
+.icono:active {
+  transform: scale(0.95);
+}
+
+.icono {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  background: #f6e6eb;
+  color: #7d0024; /* 🔑 ESTE ES EL COLOR DEL ICONO */
+
+  transition: all 0.2s ease;
+}
+
+/* MUY IMPORTANTE */
+.icono svg {
+  color: inherit;
+  font-size: 18px;
+}
+
+/* Hover */
+.icono:hover {
+  background: #7d0024;
+  color: #fff;
 }

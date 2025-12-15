@@ -206,62 +206,79 @@ const prevPage = () => {
 
       {/* MODAL simple sin librerías */}
       {modalOpen && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
-        }}>
-          <div style={{ background: '#fff', padding: 16, maxWidth: 480, width: '100%', borderRadius: 8 }}>
-            <h3>{editUA ? 'Editar UA' : 'Nueva UA'}</h3>
-            <form onSubmit={onSubmit} style={{ display: 'grid', gap: 8 }}>
-              <input
-                name="nombre"
-                placeholder="Nombre"
-                value={form.nombre}
-                onChange={onChange}
-                required
-              />
-              <input
-                name="credito"
-                type="number"
-                step="0.5"
-                placeholder="Crédito"
-                value={form.credito}
-                onChange={onChange}
-                required
-              />
+  <div className="ua-modal-overlay">
+    <div className="ua-modal">
+      <h3 className="ua-modal-title">
+        {editUA ? "Editar Unidad de Aprendizaje" : "Nueva Unidad de Aprendizaje"}
+      </h3>
 
-              {/* AQUÍ VA EL SELECT DE CARRERA EN VEZ DEL INPUT */}
-              <select
-                name="carrera"
-                value={form.carrera}
-                onChange={onChange}
-                required
-              >
-                <option value="">Seleccione una carrera</option>
-                {carreras.map((c) => (
-                  <option key={c.id || c.nombre} value={c.nombre}>
-                    {c.nombre}
-                  </option>
-                ))}
-              </select>
+      <form onSubmit={onSubmit} className="ua-form">
+        <div className="form-group">
+          <label>Nombre de la UA</label>
+          <input
+            name="nombre"
+            value={form.nombre}
+            onChange={onChange}
+            placeholder="Ej. Programación Orientada a Objetos"
+            required
+          />
+        </div>
 
-              <input
-                name="semestre"
-                type="number"
-                placeholder="Semestre"
-                value={form.semestre}
-                onChange={onChange}
-                required
-              />
+        <div className="form-row">
+          <div className="form-group">
+            <label>Créditos</label>
+            <input
+              name="credito"
+              type="number"
+              step="0.5"
+              value={form.credito}
+              onChange={onChange}
+              required
+            />
+          </div>
 
-              <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                <button type="submit">{editUA ? 'Guardar cambios' : 'Crear'}</button>
-                <button type="button" onClick={closeModal}>Cancelar</button>
-              </div>
-            </form>
+          <div className="form-group">
+            <label>Semestre</label>
+            <input
+              name="semestre"
+              type="number"
+              value={form.semestre}
+              onChange={onChange}
+              required
+            />
           </div>
         </div>
+
+        <div className="form-group">
+          <label>Carrera</label>
+          <select
+            name="carrera"
+            value={form.carrera}
+            onChange={onChange}
+            required
+          >
+            <option value="">Seleccione una carrera</option>
+            {carreras.map((c) => (
+              <option key={c.id || c.nombre} value={c.nombre}>
+                {c.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="ua-modal-actions">
+          <button type="submit" className="btn azul">
+            {editUA ? "Guardar cambios" : "Crear UA"}
+          </button>
+          <button type="button" className="btn blanco" onClick={closeModal}>
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 )}
+
 
     </div>
     

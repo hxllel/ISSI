@@ -73,7 +73,7 @@ export function ProfeSideBar() {
   return (
     <>
       {!open && (
-        <div className="sidebar-topbar">
+        <div>
           <button
             className="sidebar-topbar-btn"
             onClick={() => setOpen(true)}

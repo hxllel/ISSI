@@ -10,6 +10,11 @@ export function Inscripcion() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // PAGINACIÓN
+const ITEMS_POR_PAGINA = 10;
+const [paginaActual, setPaginaActual] = useState(1);
+
+
   // estados indispensables + resto
   const [grupos, setGrupos] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -59,12 +64,12 @@ export function Inscripcion() {
       .then((data) => {
         // El endpoint devuelve 404 si no hay cita, pero aún incluye datos del alumno
         if (data.tiempo) {
-          setTiempo(true);
+          setTiempo(!true);
         } else if (data.cita) {
-          setCita(true);
+          setCita(!true);
           setCitas(data.citas);
         } else {
-          setTiempo(false);
+          setTiempo(!false);
         }
 
         setPromedio(data.promedio);
@@ -87,6 +92,11 @@ export function Inscripcion() {
       })
       .catch(() => setCursadas([]));
   }, []);
+
+  useEffect(() => {
+  setPaginaActual(1);
+}, [filtroTurno, filtroTipo, filtroGrupo, filtroSemestre]);
+
 
   // ========== BORRADOR ==========
   useEffect(() => {
@@ -287,11 +297,34 @@ const handleClickAdd = (id) => {
       });
   };
 
+  // ====== FILTRADO ======
+const gruposFiltrados = grupos.filter((grupo) => {
+  const matchTurno = !filtroTurno || grupo.turno === filtroTurno;
+  const matchTipo =
+    !filtroTipo || grupo.Unidad_Aprendizaje.tipo === filtroTipo;
+  const matchGrupo =
+    !filtroGrupo ||
+    grupo.nombre.toLowerCase().includes(filtroGrupo.toLowerCase());
+  const matchSemestre =
+    !filtroSemestre || grupo.nombre.charAt(0) === filtroSemestre;
+
+  return matchTurno && matchTipo && matchGrupo && matchSemestre;
+});
+
+// ====== PAGINACIÓN ======
+const totalPaginas = Math.ceil(gruposFiltrados.length / ITEMS_POR_PAGINA);
+
+const inicio = (paginaActual - 1) * ITEMS_POR_PAGINA;
+const fin = inicio + ITEMS_POR_PAGINA;
+
+const gruposPaginados = gruposFiltrados.slice(inicio, fin);
+
   // ===================== RENDERS CONDICIONALES (opción A) =====================
 
   // 1) Si NO es tiempo y NO hay cita -> mostrar pantalla de bloqueo (no mostrar inscripción)
   if (!tiempo && !cita) {
     return (
+      
       <section>
         <SidebarAlumno />
         <main className="main-content">
@@ -394,7 +427,7 @@ const handleClickAdd = (id) => {
 
   <button
     type="button"
-    className="btn-accion"
+    className="btn azul"
     onClick={handleClickImport}
   >
     Importar del borrador
@@ -402,7 +435,7 @@ const handleClickAdd = (id) => {
 
   <button
     type="button"
-    className="btn-accion"
+    className="btn azul"
     onClick={() => setModalOpen2(true)}
   >
     Visualizar borrador de horario
@@ -481,22 +514,8 @@ const handleClickAdd = (id) => {
                 </tr>
               </thead>
               <tbody>
-  {grupos.length > 0 ? (
-    grupos
-      .filter((grupo) => {
-        const matchTurno = !filtroTurno || grupo.turno === filtroTurno;
-        const matchTipo =
-          !filtroTipo || grupo.Unidad_Aprendizaje.tipo === filtroTipo;
-        const matchGrupo =
-          !filtroGrupo ||
-          grupo.nombre.toLowerCase().includes(filtroGrupo.toLowerCase());
-        const matchSemestre =
-          !filtroSemestre || grupo.nombre.charAt(0) === filtroSemestre;
-
-        return matchTurno && matchTipo && matchGrupo && matchSemestre;
-      })
-
-      .map((grupo) => {
+  {gruposPaginados.length > 0 ? (
+      gruposPaginados.map((grupo) => {
         const profesor = grupo.DatosPersonale;
         const distribsRaw = grupo.Distribucion || [];
         const distribs = Array.isArray(distribsRaw) ? distribsRaw : [distribsRaw];
@@ -561,7 +580,7 @@ const handleClickAdd = (id) => {
             <td>
               <button
                 type="button"
-                className="btn-inscribir"
+                className="btn azul"
                 onClick={() => handleClickAdd(grupo.id)}
                 disabled={
                   grupo.cupo <= 0 ||
@@ -585,6 +604,32 @@ const handleClickAdd = (id) => {
 
             </table>
           </section>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem", gap: "0.5rem" }}>
+  
+  
+</div>
+<div> 
+<button
+    className="btn-ver"
+    disabled={paginaActual === 1}
+    onClick={() => setPaginaActual(paginaActual - 1)}
+  >
+    Anterior
+  </button>
+
+  <span className="pagina-activa">
+  {paginaActual} / {totalPaginas}
+  </span>
+
+  <button
+    className="btn-ver"
+    disabled={paginaActual === totalPaginas}
+    onClick={() => setPaginaActual(paginaActual + 1)}
+  >
+    Siguiente
+  </button>
+  </div>
+
 
           {/* GRUPOS SELECCIONADOS */}
           <section className="tabla-contenedor" style={{ marginTop: "1.5rem" }}>
@@ -666,7 +711,7 @@ const handleClickAdd = (id) => {
             </table>
 
             <form className="resumen" onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
-              <button type="submit" className="btn-inscribir">
+              <button type="submit" className="btn azul">
                 Realizar inscripción
               </button>
             </form>

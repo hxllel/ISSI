@@ -38,7 +38,7 @@ export function AdminSidebar() {
   return (
     <>
       {!open && (
-        <div className="sidebar-topbar">
+        <div>
           <button
             className="sidebar-topbar-btn"
             onClick={() => setOpen(true)}
@@ -114,7 +114,8 @@ export function AdminSidebar() {
         </button>
       </aside>
 
-      <button className={`sidebar-overlay ${open ? "show" : ""}`} onClick={() => setOpen(false)} />
+      {open && <div className="sidebar-overlay" onClick={() => setOpen(false)} />}
+
     </>
   );
 }
