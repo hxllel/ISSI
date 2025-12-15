@@ -11,6 +11,8 @@ export function EditarDatos() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const { alertState, showAlert, hideAlert } = useAlert();
+
   const [alumno, setAlumno] = useState({
     nombre: "",
     ape_paterno: "",
@@ -31,9 +33,6 @@ export function EditarDatos() {
     carrera: "",
   });
 
-  const [carreras, setCarreras] = useState([]);
-
-  // ----------------- ESTADO NUEVO: DATOS MÉDICOS Y ENFERMEDADES -----------------
   const [datosMedicos, setDatosMedicos] = useState({
     peso: "",
     altura: "",
@@ -43,35 +42,19 @@ export function EditarDatos() {
 
   const [enfermedades, setEnfermedades] = useState([]);
   const [loadingDM, setLoadingDM] = useState(false);
-  const [msgDM, setMsgDM] = useState("");
 
   const [showEnfModal, setShowEnfModal] = useState(false);
   const [editEnf, setEditEnf] = useState(null);
   const [descripcionEnf, setDescripcionEnf] = useState("");
-  // ------------------------------------------------------------------------------
 
-  // Hook para alertas modales
-  const { alertState, showAlert, hideAlert } = useAlert();
-
+  // ====================== CARGA INICIAL ======================
   useEffect(() => {
-    fetch(`http://localhost:4000/ObtenerAlumno/${id}`, {
-      credentials: "include",
-    })
+    fetch(`${API}/ObtenerAlumno/${id}`, { credentials: "include" })
       .then((res) => res.json())
-      .then((data) => {
-        if (data.alumno) setAlumno(data.alumno);
-      })
-      .catch((err) => console.error("Error al obtener el alumno:", err));
+      .then((data) => data.alumno && setAlumno(data.alumno))
+      .catch(() => showAlert("Error al obtener alumno", "error"));
   }, [id]);
 
-  useEffect(() => {
-    fetch("http://localhost:4000/ObtenerCarreras")
-      .then((res) => res.json())
-      .then((data) => setCarreras(data.carreras || []))
-      .catch((err) => console.error("Error al obtener las carreras:", err));
-  }, []);
-
-  // ----------------- NUEVA FUNCIÓN + useEffect: CARGAR DATOS MÉDICOS ------------
   const cargarDatosMedicos = async () => {
     try {
       setLoadingDM(true);
@@ -79,10 +62,7 @@ export function EditarDatos() {
         credentials: "include",
       });
 
-      if (!res.ok) {
-        setLoadingDM(false);
-        return;
-      }
+      if (!res.ok) return;
 
       const data = await res.json();
       if (data.datos) {
@@ -94,34 +74,30 @@ export function EditarDatos() {
         });
       }
       setEnfermedades(data.enfermedades || []);
-    } catch (e) {
-      console.error(e);
+    } catch {
+      showAlert("Error al cargar datos médicos", "error");
     } finally {
       setLoadingDM(false);
     }
   };
 
   useEffect(() => {
-    // Además de cargar datos personales/carreras, cargamos también datos médicos
     cargarDatosMedicos();
   }, []);
-  // ------------------------------------------------------------------------------
 
+  // ====================== HANDLERS ======================
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAlumno((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ----------------- HANDLERS NUEVOS: DATOS MÉDICOS -----------------------------
   const handleChangeDatosMedicos = (e) => {
     const { name, value } = e.target;
     setDatosMedicos((prev) => ({ ...prev, [name]: value }));
   };
 
-  const guardarDatosMedicos = async () => {
-  setMsgDM("");
-
-
+  const handleGuardarDatosMedicos = async (e) => {
+    e.preventDefault();
     try {
       const res = await fetch(`${API}/alumno/datosMedicos`, {
         method: "POST",
@@ -136,18 +112,16 @@ export function EditarDatos() {
       });
 
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No se pudo guardar");
+      if (!res.ok) throw new Error(data.error);
 
-      setMsgDM("Datos médicos guardados correctamente");
+      showAlert("Datos médicos guardados correctamente", "success");
       await cargarDatosMedicos();
     } catch (e) {
-      console.error(e);
-      setMsgDM(e.message || "Error al guardar datos médicos");
+      showAlert(e.message || "Error al guardar datos médicos", "error");
     }
   };
-  // ------------------------------------------------------------------------------
 
-  // ----------------- HANDLERS NUEVOS: ENFERMEDADES ------------------------------
+  // ====================== ENFERMEDADES ======================
   const abrirNuevaEnfermedad = () => {
     setEditEnf(null);
     setDescripcionEnf("");
@@ -168,32 +142,32 @@ export function EditarDatos() {
 
   const handleGuardarEnfermedad = async (e) => {
     e.preventDefault();
-    setMsgDM("");
-
     try {
       const url = editEnf
-        ? `${API}/alumno/datosMedicos/enfermedades/${encodeURIComponent(
-            editEnf.id
-          )}`
+        ? `${API}/alumno/datosMedicos/enfermedades/${editEnf.id}`
         : `${API}/alumno/datosMedicos/enfermedades`;
 
-      const method = editEnf ? "PUT" : "POST";
-
       const res = await fetch(url, {
-        method,
+        method: editEnf ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ descripcion: descripcionEnf }),
       });
 
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No se pudo guardar");
+      if (!res.ok) throw new Error(data.error);
+
+      showAlert(
+        editEnf
+          ? "Enfermedad actualizada correctamente"
+          : "Enfermedad agregada correctamente",
+        "success"
+      );
 
       await cargarDatosMedicos();
       cerrarEnfModal();
     } catch (e) {
-      console.error(e);
-      setMsgDM(e.message || "Error al guardar enfermedad");
+      showAlert(e.message || "Error al guardar enfermedad", "error");
     }
   };
 
@@ -202,92 +176,44 @@ export function EditarDatos() {
 
     try {
       const res = await fetch(
-        `${API}/alumno/datosMedicos/enfermedades/${encodeURIComponent(idEnf)}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
+        `${API}/alumno/datosMedicos/enfermedades/${idEnf}`,
+        { method: "DELETE", credentials: "include" }
       );
 
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No se pudo eliminar");
+      if (!res.ok) throw new Error(data.error);
 
+      showAlert("Enfermedad eliminada correctamente", "success");
       await cargarDatosMedicos();
     } catch (e) {
-      console.error(e);
-      setMsgDM(e.message || "Error al eliminar enfermedad");
+      showAlert(e.message || "Error al eliminar enfermedad", "error");
     }
   };
-  // ------------------------------------------------------------------------------
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
-    // 1️⃣ Guardar datos personales
-    const resAlumno = await fetch(`http://localhost:4000/EditarAlumno/${id}`, {
+  // ====================== SUBMIT ALUMNO ======================
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(`${API}/EditarAlumno/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(alumno),
-    });
-
-    const dataAlumno = await resAlumno.json();
-    if (!resAlumno.ok || !dataAlumno.success) {
-      throw new Error("Error al guardar datos personales");
-    }
-
-    // 2️⃣ Guardar datos médicos
-    const resMedicos = await fetch(`${API}/alumno/datosMedicos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        peso: datosMedicos.peso ? Number(datosMedicos.peso) : null,
-        altura: datosMedicos.altura ? Number(datosMedicos.altura) : null,
-        tipo_sangre: datosMedicos.tipo_sangre,
-        nss: datosMedicos.nss,
-      }),
-    });
-
-    if (!resMedicos.ok) {
-      throw new Error("Error al guardar datos médicos");
-    }
-
-    // ✅ Todo bien
-    showAlert("Datos actualizados correctamente", "success");
-    navigate(`/alumno/${id}`);
-
-  } catch (error) {
-    console.error(error);
-    showAlert(error.message || "Error al guardar cambios", "error");
-  }
-};
-
-
-  const handleInicio = () => {
-    navigate(`/alumno/${id}`);
-  };
-  const handleIns = () => {
-    navigate(`/alumno/inscripcion/${id}`);
-  };
-  const handleHorarios = () => {
-    navigate(`/alumno/horarios/${id}`);
-  };
-  const handleKardex = () => {
-    navigate("/alumno/Kardex");
-  };
-  const handleChat = () => {
-    navigate(`/alumno/Chat`, { state: { alumnoId: id } });
-  };
-  const handleEditPer = () => {
-    navigate(`/alumno/editarDatos/${id}`);
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          showAlert("Alumno editado con éxito", "success");
+          navigate(`/alumno/${id}`);
+        } else {
+          showAlert("Error al editar alumno", "error");
+        }
+      })
+      .catch(() => showAlert("Error al editar alumno", "error"));
   };
 
+  // ====================== JSX ======================
   return (
     <div className="admin-container">
-      {/* Sidebar */}
       <SidebarAlumno />
-
       {/* Contenido principal */}
       <main className="main-content">
         <section className="gestion-alumnos">
@@ -472,22 +398,22 @@ export function EditarDatos() {
                     />
                   </div>
                   <div className="form-group">
+                    <h3>Carrera</h3>
+                  <div className="form-group">
                     <label>Carrera</label>
-                    <select name="carrera" value={alumno.carrera} readOnly>
-                      <option value="">Seleccione una carrera</option>
-                      {carreras.map((c) => (
-                        <option key={c.nombre} value={c.nombre}>
-                          {c.nombre}
-                        </option>
-                      ))}
-                    </select>
+                    <input
+                      type="text"
+                      name="email"
+                      value={alumno.carrera}
+                      readOnly
+                    />
+                  </div>
                   </div>
                 </div>
 
                 {/* -------------------- NUEVA SECCIÓN: DATOS MÉDICOS -------------------- */}
                 <div className="form-section">
                   <h3>Datos Médicos</h3>
-                  {msgDM && <p>{msgDM}</p>}
                   {loadingDM ? (
                     <p>Cargando datos médicos...</p>
                   ) : (
@@ -534,6 +460,13 @@ export function EditarDatos() {
                           />
                         </div>
                       </div>
+                      <button
+                        type="button"
+                        className="btn azul"
+                        onClick={handleGuardarDatosMedicos}
+                      >
+                        Guardar datos médicos
+                      </button>
                     </>
                   )}
                 </div>
@@ -545,7 +478,7 @@ export function EditarDatos() {
                     <h3>Enfermedades</h3>
                     <button
                       type="button"
-                      className="btn blanco"
+                      className="btn azul"
                       onClick={abrirNuevaEnfermedad}
                     >
                       Agregar enfermedad
@@ -566,14 +499,14 @@ export function EditarDatos() {
                         <div className="enfermedad-actions">
                           <button
                             type="button"
-                            className="btn-secondary"
+                            className="btn-editar"
                             onClick={() => abrirEditarEnfermedad(enf)}
                           >
                             Editar
                           </button>
                           <button
                             type="button"
-                            className="btn-secondary"
+                            className="btn-eliminar"
                             onClick={() => handleEliminarEnfermedad(enf.id)}
                           >
                             Eliminar
@@ -589,13 +522,13 @@ export function EditarDatos() {
               <div className="form-actions">
                 <button
                   type="button"
-                  className="btn blanco"
+                  className="btn-eliminar"
                   onClick={() => navigate(-1)}
                 >
                   Cancelar
                 </button>
                 <button type="submit" className="btn azul">
-                  Guardar
+                  Editar Alumno
                 </button>
               </div>
             </form>
@@ -646,12 +579,12 @@ export function EditarDatos() {
               >
                 <button
                   type="button"
-                  className="btn blanco"
+                  className="btn-eliminar"
                   onClick={cerrarEnfModal}
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="submit-btn">
+                <button type="submit" className="btn azul">
                   Guardar
                 </button>
               </div>
@@ -671,4 +604,3 @@ export function EditarDatos() {
     </div>
   );
 }
-

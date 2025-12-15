@@ -65,9 +65,9 @@ export function Alumno() {
       }
 
       const normalizaDia = (d) =>
-        d === "Miércoles" || d === "Miércoles" ? "Miércoles" : d;
+        d === "Miercoles" || d === "Miércoles" ? "Miercoles" : d;
 
-      const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+      const dias = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
 
       const filas = horario.map((h, idx) => {
         const horasPorDia = dias.map((dia) => {
@@ -236,7 +236,7 @@ export function Alumno() {
                       <td>{h.profesor}</td>
                       <td>{h.materia}</td>
 
-                      {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((dia) => {
+                      {["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"].map((dia) => {
                         const distrib = h.distribuciones.filter((d) => d.dia === dia);
                         return (
                           <td key={dia}>

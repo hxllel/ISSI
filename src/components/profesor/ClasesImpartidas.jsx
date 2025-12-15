@@ -232,7 +232,7 @@ export function ClasesImpartidas({ profesorId: propProfesorId, onClose }) {
                   const horasPorDia = (dia) => {
                     if (dia === "Miércoles") {
                       return dist
-                        .filter((d) => d.dia === "Miércoles" || d.dia === "Miércoles")
+                        .filter((d) => d.dia === "Miércoles" || d.dia === "Miercoles")
                         .map((d) => `${d.hora_ini} - ${d.hora_fin}`)
                         .join(", ");
                     }
