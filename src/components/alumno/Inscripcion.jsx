@@ -69,7 +69,7 @@ const [paginaActual, setPaginaActual] = useState(1);
           setCita(true);
           setCitas(data.citas);
         } else {
-          setTiempo(true);
+          setTiempo(false);
         }
 
         setPromedio(data.promedio);
