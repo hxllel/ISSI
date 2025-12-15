@@ -232,3 +232,10 @@ main.main-content {
   max-width: 100% !important;
 }
 
+.sidebar.is-closed {
+  transform: translateX(-100%)  !important;
+}
+
+.sidebar.is-open {
+  transform: translateX(0) !important;
+}

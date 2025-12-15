@@ -4,6 +4,9 @@ import "./GestionarAlumnos.css";
 import { AdminSidebar } from "./AdminSidebar";
 import { AlertModal } from "../shared/AlertModal";
 import { useAlert } from "../../hooks/useAlert";
+import { FaEdit, FaBookOpen, FaTrash, FaBookMedical } from "react-icons/fa";
+import { MdMedicalInformation } from "react-icons/md";
+
 
 export function GestionarAlumnos() {
 
@@ -210,39 +213,44 @@ export function GestionarAlumnos() {
                     <td>{a.email}</td>
                     <td className="acciones">
 
-                      {/* Editar */}
-                      <button
-                        className="icono editar"
-                        onClick={() => handleClickEdit(a.id)}
-                      >
-                        ✎
-                      </button>
+  {/* Editar */}
+  <button
+    className="icono editar"
+    title="Editar alumno"
+    onClick={() => handleClickEdit(a.id)}
+  >
+    <FaEdit />
+  </button>
 
-                      {/* Eliminar */}
-                      <button
-                        className="icono eliminar"
-                        onClick={() => handleAbrirModal(a.id)}
-                      >
-                        🗑
-                      </button>
-                      {/* NUEVO: botón para inscripción admin */}
-                      <button
-                        className="icono inscribir"
-                        title="Inscribir / dar de baja materias"
-                        onClick={() => handleClickInscribir(a.id)}
-                      >
-                        📚
-                      </button>
+  {/* Eliminar */}
+  <button
+    className="icono eliminar"
+    title="Eliminar alumno"
+    onClick={() => handleAbrirModal(a.id)}
+  >
+    <FaTrash />
+  </button>
 
-                      {/* NUEVO → Datos Médicos */}
-                      <button
-                        className="icono medico"
-                        onClick={() => handleVerDatosMedicos(a.id)}
-                      >
-                        DM
-                      </button>
+  {/* Inscripción */}
+  <button
+    className="icono inscribir"
+    title="Inscribir / dar de baja materias"
+    onClick={() => handleClickInscribir(a.id)}
+  >
+    <FaBookOpen />
+  </button>
 
-                    </td>
+  {/* Datos médicos */}
+  <button
+    className="icono medico"
+    title="Datos médicos"
+    onClick={() => handleVerDatosMedicos(a.id)}
+  >
+    <MdMedicalInformation />
+  </button>
+
+</td>
+
                   </tr>
                 ))
               ) : (

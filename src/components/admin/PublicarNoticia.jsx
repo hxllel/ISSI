@@ -102,6 +102,7 @@ export function PublicarNoticia() {
 
       const response = await fetch(`${API}/api/avisos/crear`, {
         method: "POST",
+        credentials: "include",
         body: formDataToSend,
       });
 

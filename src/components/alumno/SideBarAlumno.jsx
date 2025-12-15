@@ -90,9 +90,10 @@ export function SidebarAlumno() {
   };
 
   return (
+    <div>
     <>
       {!open && (
-        <div className="sidebar-topbar">
+        <div>
           <button
             className="sidebar-topbar-btn"
             onClick={() => setOpen(true)}
@@ -198,5 +199,6 @@ export function SidebarAlumno() {
         type={alertState.type}
       />
     </>
+    </div>
   );
 }

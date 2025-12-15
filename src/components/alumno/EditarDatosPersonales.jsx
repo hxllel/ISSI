@@ -118,9 +118,9 @@ export function EditarDatos() {
     setDatosMedicos((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleGuardarDatosMedicos = async (e) => {
-    e.preventDefault();
-    setMsgDM("");
+  const guardarDatosMedicos = async () => {
+  setMsgDM("");
+
 
     try {
       const res = await fetch(`${API}/alumno/datosMedicos`, {
@@ -220,24 +220,49 @@ export function EditarDatos() {
   };
   // ------------------------------------------------------------------------------
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(`http://localhost:4000/EditarAlumno/${id}`, {
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    // 1️⃣ Guardar datos personales
+    const resAlumno = await fetch(`http://localhost:4000/EditarAlumno/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(alumno),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          showAlert("Alumno editado con éxito", "success");
-          navigate(`/alumno/${id}`);
-        } else {
-          showAlert("Error al editar el alumno", "error");
-        }
-      })
-      .catch((err) => console.error("Error al editar el alumno:", err));
-  };
+    });
+
+    const dataAlumno = await resAlumno.json();
+    if (!resAlumno.ok || !dataAlumno.success) {
+      throw new Error("Error al guardar datos personales");
+    }
+
+    // 2️⃣ Guardar datos médicos
+    const resMedicos = await fetch(`${API}/alumno/datosMedicos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        peso: datosMedicos.peso ? Number(datosMedicos.peso) : null,
+        altura: datosMedicos.altura ? Number(datosMedicos.altura) : null,
+        tipo_sangre: datosMedicos.tipo_sangre,
+        nss: datosMedicos.nss,
+      }),
+    });
+
+    if (!resMedicos.ok) {
+      throw new Error("Error al guardar datos médicos");
+    }
+
+    // ✅ Todo bien
+    showAlert("Datos actualizados correctamente", "success");
+    navigate(`/alumno/${id}`);
+
+  } catch (error) {
+    console.error(error);
+    showAlert(error.message || "Error al guardar cambios", "error");
+  }
+};
+
 
   const handleInicio = () => {
     navigate(`/alumno/${id}`);
@@ -509,13 +534,6 @@ export function EditarDatos() {
                           />
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        className="submit-btn"
-                        onClick={handleGuardarDatosMedicos}
-                      >
-                        Guardar datos médicos
-                      </button>
                     </>
                   )}
                 </div>
@@ -527,7 +545,7 @@ export function EditarDatos() {
                     <h3>Enfermedades</h3>
                     <button
                       type="button"
-                      className="btn-secondary"
+                      className="btn blanco"
                       onClick={abrirNuevaEnfermedad}
                     >
                       Agregar enfermedad
@@ -571,13 +589,13 @@ export function EditarDatos() {
               <div className="form-actions">
                 <button
                   type="button"
-                  className="btn-secondary"
+                  className="btn blanco"
                   onClick={() => navigate(-1)}
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="submit-btn">
-                  Editar Alumno
+                <button type="submit" className="btn azul">
+                  Guardar
                 </button>
               </div>
             </form>
@@ -628,7 +646,7 @@ export function EditarDatos() {
               >
                 <button
                   type="button"
-                  className="btn-secondary"
+                  className="btn blanco"
                   onClick={cerrarEnfModal}
                 >
                   Cancelar
