@@ -13,6 +13,7 @@ module.exports = (passport) => {
 
   // NO aplicar middleware global aquí porque algunas rutas son compartidas
   // En su lugar, aplicar requireAuth y requireRole a cada ruta individualmente según sea necesario
+  router.use(requireAuth);
 
   // ============================
   //  ADMIN: ESTADÍSTICAS GENERALES
