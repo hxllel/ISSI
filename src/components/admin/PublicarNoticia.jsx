@@ -10,7 +10,7 @@ export function PublicarNoticia() {
   const [formData, setFormData] = useState({
     titulo: "",
     descripcion: "",
-    objetivo: "todos",
+    objetivo: "Todos",
     fecha_vencimiento: "",
   });
   const [imagen, setImagen] = useState(null);
@@ -118,7 +118,7 @@ export function PublicarNoticia() {
         setFormData({
           titulo: "",
           descripcion: "",
-          objetivo: "todos",
+          objetivo: "Todos",
           fecha_vencimiento: "",
         });
         setImagen(null);
@@ -248,11 +248,11 @@ export function PublicarNoticia() {
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="todos">
+                  <option value="Todos">
                     Todos (Profesores y Alumnos)
                   </option>
-                  <option value="profesor">Solo Profesores</option>
-                  <option value="alumno">Solo Alumnos</option>
+                  <option value="Profesores">Solo Profesores</option>
+                  <option value="Alumnos">Solo Alumnos</option>
                 </select>
               </div>
 
