@@ -2,11 +2,13 @@
    CONTENEDOR GENERAL
 ================================ */
 .inscripcion-admin-main {
+    flex: 1;
     width: 100%;
     padding: 20px;
     background: #f4f6f9;
-    min-height: 100vh;
     box-sizing: border-box;
+    overflow-y: auto;
+    margin-left: 320px;
 }
 
 /* ================================
@@ -121,7 +123,11 @@
     padding: 10px;
     border-bottom: 1px solid #dedede;
 }
-
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
 .tabla tr:hover td {
     background: #f0f4ff;
 }

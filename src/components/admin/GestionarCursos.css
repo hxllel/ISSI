@@ -265,3 +265,114 @@
   flex-shrink: 0;     /* evita que se deforme */
   white-space: nowrap; /* evita que se parta el texto */
 }
+
+
+/* ============================
+   FILTROS + SEARCHBAR
+============================ */
+
+.gc-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 20px;
+  margin: 20px 0 25px;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Searchbar */
+.gc-filters input[type="text"] {
+  width: 280px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gc-filters input::placeholder {
+  color: #888;
+}
+
+.gc-filters input:focus {
+  outline: none;
+  border-color: #8a1538;
+  box-shadow: 0 0 0 2px rgba(138, 21, 56, 0.15);
+}
+
+/* Selects */
+.gc-filters select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gc-filters select:focus {
+  outline: none;
+  border-color: #8a1538;
+  box-shadow: 0 0 0 2px rgba(138, 21, 56, 0.15);
+}
+
+/* ============================
+   PAGINACIÓN
+============================ */
+
+.gc-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 10px;
+}
+
+.gc-pagination button {
+  border: none;
+  background: #eee;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.gc-pagination button:hover:not(:disabled) {
+  background: #f3e6ea;
+}
+
+.gc-pagination button:active {
+  transform: scale(0.95);
+}
+
+.gc-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.gc-pagination span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* ============================
+   RESPONSIVO
+============================ */
+
+@media (max-width: 768px) {
+  .gc-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gc-filters input[type="text"],
+  .gc-filters select {
+    width: 100%;
+  }
+}

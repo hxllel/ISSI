@@ -5,20 +5,23 @@ import { AdminSidebar } from "./AdminSidebar";
 import { AlertModal } from "../shared/AlertModal";
 import { useAlert } from "../../hooks/useAlert";
 
-
 export function GestionarCursos() {
   const [datos, setDatos] = useState([]);
   const [id_datos, setId_datos] = useState("");
   const [del, setDelete] = useState(false);
   const [mostrarModal, setmostrarModal] = useState(false);
+
+  // filtros
+  const [search, setSearch] = useState("");
+  const [tipo, setTipo] = useState("");
+  const [turno, setTurno] = useState("");
+
+  // paginación
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 8;
+
   const navigate = useNavigate();
-
-  // Hook para alertas modales
   const { alertState, showAlert, hideAlert } = useAlert();
-
-  const handleClickCur = () => {
-    navigate("registrarCurso");
-  };
 
   useEffect(() => {
     fetch("http://localhost:4000/ObtenerCursos", { credentials: "include" })
@@ -26,43 +29,6 @@ export function GestionarCursos() {
       .then((data) => setDatos(data.cursos))
       .catch((err) => console.error("Error al obtener los cursos:", err));
   }, []);
-
-  const handleEdit = (id) => {
-    navigate(`editarCurso/${id}`);
-  };
-
-  const handleClickDis = (id) => {
-    navigate(`distribucionHorarios/${id}`);
-  };
-
-  const handleRegis = (id) => {
-    navigate(`administrador/gestionarCursos/registrarCurso`);
-  };
-
- 
-  
-
-  const handleClickDelete = () => {
-    setDelete(true);
-  };
-
-  const handleAbrirModal = (id) => {
-    setmostrarModal(true);
-    setId_datos(id);
-  };
-
-  const handleCerrarModal = () => {
-    setmostrarModal(false);
-  };
-
-const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
-  const handleClickProf = () => navigate("../administrador/gestionarProfesores");
-  const handleClickCursos = () => navigate("../administrador/gestionarCursos");
-  const handleClickadmin = () => navigate("/administrador");
-  const handleRegistrarProf = () => navigate("registrarProfesor");
-  const handleClickEdit = (id) => navigate(`editarProfesor/${id}`);
-  
-  const handleLogout = () => {navigate(`/`);};
 
   useEffect(() => {
     if (!del) return;
@@ -87,88 +53,177 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
     setDelete(false);
   }, [del, id_datos]);
 
+  const datosFiltrados = datos.filter((d) => {
+    const texto =
+      `${d.nombre} ${d.salon} ${d.turno} ${d.Unidad_Aprendizaje?.nombre} ${d.Unidad_Aprendizaje?.carrera} ${d.DatosPersonale?.nombre}`
+        .toLowerCase();
+
+    const cumpleTexto = texto.includes(search.toLowerCase());
+    const cumpleTipo = tipo ? d.Unidad_Aprendizaje?.tipo === tipo : true;
+    const cumpleTurno = turno ? d.turno === turno : true;
+
+    return cumpleTexto && cumpleTipo && cumpleTurno;
+  });
+
+  const totalPages = Math.ceil(datosFiltrados.length / PAGE_SIZE);
+
+  const datosPaginados = datosFiltrados.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE
+  );
+
   return (
     <div className="admin-container">
-    
       <AdminSidebar />
+
       <main className="main-content">
-      <header className="chat-header">
-        <div className="encabezado-section">
-          <h1>Gestionar Cursos</h1>
+        <header className="chat-header">
+          <div className="encabezado-section">
+            <h1>Gestionar Cursos</h1>
           </div>
-          
-        <div>
-        <button className="btn azul" onClick={handleClickCur}>
-          + Registrar Grupo
-        </button>
+
+          <button className="btn azul" onClick={() => navigate("registrarCurso")}>
+            + Registrar Grupo
+          </button>
+
+          <img src="/escom.png" alt="Logo ESCOM" className="header-logo" />
+        </header>
+
+        {/* FILTROS */}
+        <div className="gc-filters">
+          <input
+            type="text"
+            placeholder="Buscar por grupo, UA, profesor, carrera…"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+          />
+
+          <select
+            value={tipo}
+            onChange={(e) => {
+              setTipo(e.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">Todos los tipos</option>
+            <option value="Obligatoria">Obligatoria</option>
+            <option value="Optativa">Optativa</option>
+          </select>
+
+          <select
+            value={turno}
+            onChange={(e) => {
+              setTurno(e.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">Todos los turnos</option>
+            <option value="Matutino">Matutino</option>
+            <option value="Vespertino">Vespertino</option>
+          </select>
         </div>
-        <img src="/escom.png" alt="Logo SCOM" className="header-logo" />
-      </header>
 
-      <div className="gc-card">
-        <div className="gc-table-wrapper">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Profesor</th>
-                <th>Salón</th>
-                <th>Unidad de Aprendizaje</th>
-                <th>Tipo</th>
-                <th>Turno</th>
-                <th>Carrera</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {datos.map((dato) => (
-                <tr key={dato.id}>
-                  <td>{dato.nombre}</td>
-                  <td>
-                    {dato.DatosPersonale.nombre}{" "}
-                    {dato.DatosPersonale.ape_paterno}{" "}
-                    {dato.DatosPersonale.ape_materno}
-                  </td>
-                  <td>{dato.salon}</td>
-                  <td>{dato.Unidad_Aprendizaje.nombre}</td>
-                  <td>{dato.Unidad_Aprendizaje.tipo}</td>
-                  <td>{dato.turno}</td>
-                  <td>{dato.Unidad_Aprendizaje.carrera}</td>
-                  <td className="gc-actions-cell">
-                    <button
-                      className="btn azul"
-                      onClick={() => handleEdit(dato.id)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="btn azul"
-                      onClick={() => handleAbrirModal(dato.id)}
-                    >
-                      Eliminar
-                    </button>
-                    <button
-                      className="btn blanco"
-                      onClick={() => handleClickDis(dato.id)}
-                    >
-                      Gestionar distribución
-                    </button>
-                  </td>
-                </tr>
-              ))}
-
-              {datos.length === 0 && (
+        {/* TABLA */}
+        <div className="gc-card">
+          <div className="gc-table-wrapper">
+            <table className="table">
+              <thead>
                 <tr>
-                  <td className="gc-empty" colSpan={6}>
-                    No hay grupos registrados todavía.
-                  </td>
+                  <th>ID</th>
+                  <th>Profesor</th>
+                  <th>Salón</th>
+                  <th>Unidad de Aprendizaje</th>
+                  <th>Tipo</th>
+                  <th>Turno</th>
+                  <th>Carrera</th>
+                  <th>Acciones</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              </thead>
 
+              <tbody>
+                {datosPaginados.map((dato) => (
+                  <tr key={dato.id}>
+                    <td>{dato.nombre}</td>
+                    <td>
+                      {dato.DatosPersonale.nombre}{" "}
+                      {dato.DatosPersonale.ape_paterno}{" "}
+                      {dato.DatosPersonale.ape_materno}
+                    </td>
+                    <td>{dato.salon}</td>
+                    <td>{dato.Unidad_Aprendizaje.nombre}</td>
+                    <td>{dato.Unidad_Aprendizaje.tipo}</td>
+                    <td>{dato.turno}</td>
+                    <td>{dato.Unidad_Aprendizaje.carrera}</td>
+                    <td className="gc-actions-cell">
+                      <button
+                        className="btn azul"
+                        onClick={() => navigate(`editarCurso/${dato.id}`)}
+                      >
+                        Editar
+                      </button>
+
+                      <button
+                        className="btn azul"
+                        onClick={() => {
+                          setmostrarModal(true);
+                          setId_datos(dato.id);
+                        }}
+                      >
+                        Eliminar
+                      </button>
+
+                      <button
+                        className="btn blanco"
+                        onClick={() =>
+                          navigate(`distribucionHorarios/${dato.id}`)
+                        }
+                      >
+                        Gestionar distribución
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+
+                {datosFiltrados.length === 0 && (
+                  <tr>
+                    <td colSpan={8} className="gc-empty">
+                      No hay resultados
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* PAGINACIÓN */}
+        {totalPages > 1 && (
+          <div className="gc-pagination">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage((p) => p - 1)}
+            >
+              ◀
+            </button>
+
+            <span>
+              Página {page} de {totalPages}
+            </span>
+
+            <button
+              disabled={page === totalPages}
+              onClick={() => setPage((p) => p + 1)}
+            >
+              ▶
+            </button>
+          </div>
+        )}
+      </main>
+
+      {/* MODAL CONFIRMAR */}
       {mostrarModal && (
         <div className="gc-modal-backdrop">
           <div className="gc-modal">
@@ -177,21 +232,23 @@ const handleClickAlu = () => navigate("../administrador/gestionarAlumnos");
               Esta acción no se puede deshacer. El grupo será eliminado
               permanentemente.
             </p>
+
             <div className="gc-modal-actions">
-              <button className="btn azul" onClick={handleClickDelete}>
+              <button className="btn azul" onClick={() => setDelete(true)}>
                 Confirmar
               </button>
-              <button className="btn blanco" onClick={handleCerrarModal}>
+              <button
+                className="btn blanco"
+                onClick={() => setmostrarModal(false)}
+              >
                 Cancelar
               </button>
             </div>
           </div>
-          
         </div>
       )}
-      </main>
-      
-      {/* Modal de alertas */}
+
+      {/* ALERTAS */}
       <AlertModal
         isOpen={alertState.isOpen}
         onClose={hideAlert}

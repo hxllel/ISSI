@@ -263,9 +263,6 @@ export function GestionarAlumnos() {
           </table>
 
           <div className="tabla-footer">
-            <div>
-              <button className="btn azul">Descargar Listado</button>
-            </div>
             <div className="paginacion">
               <button onClick={anteriorPagina} disabled={paginaActual === 1}>
                 Anterior
