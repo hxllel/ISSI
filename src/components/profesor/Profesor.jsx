@@ -157,7 +157,7 @@ export function Profesor() {
             )}
 
             <section className="avisos-section">
-              <VerAvisos objetivo="profesor" />
+              <VerAvisos objetivo="Profesores" />
             </section>
           </main>
         </>
