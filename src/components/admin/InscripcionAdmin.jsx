@@ -270,10 +270,7 @@ export function InscripcionAdmin() {
     <div className="layout">
       <AdminSidebar />
 
-      <main
-        className="contenido inscripcion-admin-main"
-        style={{ marginLeft: "260px", padding: "20px" }}
-      >
+      <main className="contenido inscripcion-admin-main">
         {/* ENCABEZADO */}
         <section className="inscripcion-header">
           <div>

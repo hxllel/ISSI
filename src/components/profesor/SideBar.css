@@ -13,18 +13,16 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 280px;
+  width: 320px;
   height: 100vh;
   background: #fff;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
   z-index: 10;
-  overflow-y: auto;
-  transform: translateX(0);
-  transition: transform 0.3s ease;
+  overflow: hidden;
 }
 
 .logo {

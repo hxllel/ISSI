@@ -129,7 +129,6 @@ export function Profesor() {
                         <tr>
                           <th>Materia</th>
                           <th>Grupo</th>
-                          <th>Número de estudiantes</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -143,7 +142,6 @@ export function Profesor() {
                             <tr key={c.id}>
                               <td>{materia}</td>
                               <td className="muted">{grupo}</td>
-                              <td><span className="pill">{inscritos} estudiantes</span></td>
                             </tr>
                           );
                         })}

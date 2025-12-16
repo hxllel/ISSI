@@ -7029,7 +7029,7 @@ VALUES
         'UA0057',
         '1',
         '0',
-        'Desfasada'
+        'Reprobada'
     ),
     -- Alumno ISC 2024630304 (EST2024630304): 2 materias reprobadas
     (
@@ -7038,7 +7038,7 @@ VALUES
         'UA0020',
         '0',
         '0',
-        'Desfasada'
+        'Reprobada'
     ),
     (
         '468',
